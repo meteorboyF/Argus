@@ -1,0 +1,44 @@
+# Model weights — never commit
+*.pth
+*.pt
+*.onnx
+*.trt
+*.engine
+*.gguf
+*.tflite
+*.bin
+
+# Datasets
+datasets/
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.so
+
+# Environments
+.env
+.venv/
+venv/
+env/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Logs and outputs
+logs/
+*.log
+runs/
+
+# Calibration (contains camera intrinsics — keep locally)
+configs/stereo_calib.npz
+
+# macOS / Windows artefacts
+.DS_Store
+Thumbs.db

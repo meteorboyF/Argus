@@ -1,0 +1,66 @@
+# ARGUS system configuration
+# All model weight paths are relative to base_dir.
+# Do NOT commit actual weight files — add to .gitignore.
+
+base_dir: /content/drive/MyDrive/ARGUS
+device: cuda   # cuda | cpu  (Jetson: cuda)
+
+cameras:
+  stereo_left_index:  0   # Arducam AR0234 left  (USB 3.0)
+  stereo_right_index: 1   # Arducam AR0234 right (USB 3.0)
+  wide_index:         2   # IMX477P wide camera  (USB 3.0)
+  stereo_width:  640
+  stereo_height: 480
+  wide_width:  1920
+  wide_height: 1080
+
+pipeline:
+  fps: 10                  # perception loop target FPS
+  speak_every_n_frames: 30 # ~3 s between guidance utterances at 10 Hz
+
+models:
+  yolo:             models/yolov8s_argus.pt
+  segformer:        models/segformer_argus/
+  insightface_root: models/insightface/
+  phi3_gguf:        models/phi3.5-mini-Q4_K_M.gguf
+  raft_stereo_onnx: models/raft_stereo.onnx
+  craft_weights:    scripts/CRAFT-pytorch/craft_mlt_25k.pth
+
+llm:
+  n_gpu_layers: 35   # layers to offload to Jetson GPU
+  n_ctx:        2048
+  max_tokens:   80
+  temperature:  0.1
+
+speech:
+  whisper_size:    tiny
+  whisper_device:  cpu
+  whisper_compute: int8
+  tts_model:  models/piper/en_US-lessac-medium.onnx
+  tts_config: models/piper/en_US-lessac-medium.onnx.json
+  wakeword_model: models/wakeword/argus.tflite
+  wakeword_threshold: 0.5
+
+segmentation:
+  img_size:    512
+  num_classes: 10
+  model_name:  nvidia/segformer-b2-finetuned-ade-512-512
+
+detection:
+  img_size:         640
+  conf_threshold:   0.35
+  iou_threshold:    0.45
+  tracker:          bytetrack.yaml
+
+depth:
+  baseline_mm:    60.0    # AR0234 stereo baseline
+  focal_px:      400.0    # approximate — update after calibration
+  max_depth_m:    10.0
+
+navigation:
+  stop_distance_m:     0.8
+  caution_distance_m:  2.0
+
+privacy:
+  blur_strength: 51       # Gaussian kernel size (odd number)
+  face_det_size: [320, 320]
