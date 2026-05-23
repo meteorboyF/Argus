@@ -299,10 +299,14 @@ else:
 section('5 / 8   SCRFD / insightface buffalo_s  (~90 MB)')
 
 PRIVACY_DIR = MODELS / 'privacy'
-BUFFALO_DIR = PRIVACY_DIR / 'buffalo_s'
+# insightface stores models under <root>/models/buffalo_s/
+BUFFALO_DIR = PRIVACY_DIR / 'models' / 'buffalo_s'
 
-if BUFFALO_DIR.exists() and any(BUFFALO_DIR.iterdir()):
-    print('  ✓ buffalo_s already downloaded')
+def _buffalo_ok():
+    return BUFFALO_DIR.exists() and any(BUFFALO_DIR.glob('*.onnx'))
+
+if _buffalo_ok():
+    print(f'  ✓ buffalo_s already downloaded ({BUFFALO_DIR})')
 else:
     subprocess.run([sys.executable, '-m', 'pip', 'install', '-q',
                     'insightface', 'onnxruntime'])
@@ -311,7 +315,10 @@ else:
                                         root=str(PRIVACY_DIR),
                                         providers=['CPUExecutionProvider'])
     app.prepare(ctx_id=-1)
-    print('  ✅ buffalo_s downloaded via insightface')
+    if _buffalo_ok():
+        print(f'  ✅ buffalo_s ready at {BUFFALO_DIR}')
+    else:
+        print(f'  ✗ buffalo_s not found at expected path: {BUFFALO_DIR}')
 
 # ── 6. CRAFT text detector ────────────────────────────────────────────────────
 section('6 / 8   CRAFT text detector  (~90 MB)')
@@ -319,28 +326,52 @@ section('6 / 8   CRAFT text detector  (~90 MB)')
 CRAFT_DIR  = MODELS / 'privacy'
 CRAFT_CKPT = CRAFT_DIR / 'craft_mlt_25k.pth'
 
-# Try sources in order — Google Drive is rate-limited; GitHub releases is reliable
+# Sources in reliability order — Google Drive rate-limits; pip package is most reliable
 CRAFT_SOURCES = [
-    ('wget',   'https://github.com/fcakyon/craft-text-detector/releases/download/0.0.1/craft_mlt_25k.pth'),
-    ('wget',   'https://huggingface.co/fcakyon/craft-text-detector/resolve/main/craft_mlt_25k.pth'),
-    ('gdown',  '1Jk4eGW7DHA09z_MmqnkkSqBkCHKnIPNF'),
+    ('wget', 'https://github.com/fcakyon/craft-text-detector/releases/download/0.0.1/craft_mlt_25k.pth'),
+    ('wget', 'https://huggingface.co/fcakyon/craft-text-detector/resolve/main/craft_mlt_25k.pth'),
+    ('wget', 'https://huggingface.co/smartwhiz/craft-text-detection/resolve/main/craft_mlt_25k.pth'),
+    ('gdown','1Jk4eGW7DHA09z_MmqnkkSqBkCHKnIPNF'),
 ]
 
 if _ok(CRAFT_CKPT, 80_000_000):
     print(f'  ✓ craft_mlt_25k.pth ready ({_size_mb(CRAFT_CKPT):.0f} MB)')
 else:
+    downloaded = False
     for method, src in CRAFT_SOURCES:
-        print(f'  Trying {src[:60]}...')
+        print(f'  Trying {src[:70]}...')
         if method == 'wget':
             ok = wget(src, CRAFT_CKPT, min_bytes=80_000_000, label='craft_mlt_25k.pth')
         else:
             ok = gdown_dl(src, CRAFT_CKPT, min_bytes=80_000_000, label='craft_mlt_25k.pth')
         if ok:
+            downloaded = True
             break
         if CRAFT_CKPT.exists():
             os.remove(CRAFT_CKPT)
-    if not _ok(CRAFT_CKPT, 80_000_000):
-        print('  ⚠ CRAFT weights unavailable — text blurring will be disabled on Jetson')
+
+    if not downloaded:
+        # Last resort: pip install craft-text-detector and copy cached weights
+        print('  Trying pip install craft-text-detector (auto-downloads weights)...')
+        subprocess.run([sys.executable, '-m', 'pip', 'install', '-q', 'craft-text-detector'])
+        try:
+            import craft_text_detector
+            pkg_dir = Path(craft_text_detector.__file__).parent
+            # Package stores weights in home dir
+            home_ckpt = Path.home() / '.craft_text_detector' / 'weights' / 'craft_mlt_25k.pth'
+            if not home_ckpt.exists():
+                # Trigger download by initialising (CPU mode, no GPU needed)
+                from craft_text_detector import Craft
+                _ = Craft(output_dir='/tmp', crop_type='poly', cuda=False)
+            if home_ckpt.exists():
+                shutil.copy2(home_ckpt, CRAFT_CKPT)
+                print(f'  ✓ Copied from pip cache: {CRAFT_CKPT}')
+                downloaded = True
+        except Exception as e:
+            print(f'  pip fallback failed: {e}')
+
+    if not downloaded:
+        print('  ⚠ CRAFT weights unavailable — text blurring disabled until weights are added manually')
 
 # ── 7. Phi-3.5 Mini GGUF ─────────────────────────────────────────────────────
 section('7 / 8   Phi-3.5 Mini Q4_K_M GGUF  (~2.7 GB)')
@@ -388,7 +419,7 @@ checks = [
     ('NYUv2',          _ok(NYU_FILE, NYU_MIN),                'segformer supplemental'),
     ('COCO 2017',      COCO_FLAG.exists(),                    'yolov8 training'),
     ('RAFT-Stereo wts',_ok(RAFT_CKPT, 20_000_000),           'depth model'),
-    ('SCRFD (buffalo_s)',BUFFALO_DIR.exists() and any(BUFFALO_DIR.iterdir()), 'face detection'),
+    ('SCRFD (buffalo_s)', _buffalo_ok(),                                      'face detection'),
     ('CRAFT weights',  _ok(CRAFT_CKPT, 80_000_000),          'text detection'),
     ('Phi-3.5 GGUF',   _ok(LLM_FILE, 2_000_000_000),         'LLM'),
     ('Piper TTS',      _ok(PIPER_ONNX, 55_000_000),          'TTS'),
