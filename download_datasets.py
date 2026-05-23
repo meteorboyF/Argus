@@ -111,7 +111,7 @@ def wget(url, dest, min_bytes, label=None):
     return False
 
 def gdown_dl(file_id, dest, min_bytes, label=None):
-    """Download from Google Drive by file ID."""
+    """Download from Google Drive by file ID. Returns False on rate-limit instead of crashing."""
     dest = Path(dest)
     label = label or dest.name
     if _ok(dest, min_bytes):
@@ -120,7 +120,11 @@ def gdown_dl(file_id, dest, min_bytes, label=None):
     subprocess.run([sys.executable, '-m', 'pip', 'install', '-q', 'gdown'])
     import gdown
     print(f'  ↓ Downloading {label} from Google Drive ...')
-    gdown.download(id=file_id, output=str(dest), resume=True, quiet=False)
+    try:
+        gdown.download(id=file_id, output=str(dest), resume=True, quiet=False, fuzzy=True)
+    except Exception as e:
+        print(f'  ✗ gdown failed: {e}')
+        return False
     if _ok(dest, min_bytes):
         print(f'  ✓ {label} done ({_size_mb(dest):.0f} MB)')
         return True
@@ -315,13 +319,28 @@ section('6 / 8   CRAFT text detector  (~90 MB)')
 CRAFT_DIR  = MODELS / 'privacy'
 CRAFT_CKPT = CRAFT_DIR / 'craft_mlt_25k.pth'
 
-# craft_mlt_25k.pth — hosted on Google Drive by clovaai
-CRAFT_GDRIVE_ID = '1Jk4eGW7DHA09z_MmqnkkSqBkCHKnIPNF'
+# Try sources in order — Google Drive is rate-limited; GitHub releases is reliable
+CRAFT_SOURCES = [
+    ('wget',   'https://github.com/fcakyon/craft-text-detector/releases/download/0.0.1/craft_mlt_25k.pth'),
+    ('wget',   'https://huggingface.co/fcakyon/craft-text-detector/resolve/main/craft_mlt_25k.pth'),
+    ('gdown',  '1Jk4eGW7DHA09z_MmqnkkSqBkCHKnIPNF'),
+]
+
 if _ok(CRAFT_CKPT, 80_000_000):
     print(f'  ✓ craft_mlt_25k.pth ready ({_size_mb(CRAFT_CKPT):.0f} MB)')
 else:
-    gdown_dl(CRAFT_GDRIVE_ID, CRAFT_CKPT, min_bytes=80_000_000,
-             label='craft_mlt_25k.pth')
+    for method, src in CRAFT_SOURCES:
+        print(f'  Trying {src[:60]}...')
+        if method == 'wget':
+            ok = wget(src, CRAFT_CKPT, min_bytes=80_000_000, label='craft_mlt_25k.pth')
+        else:
+            ok = gdown_dl(src, CRAFT_CKPT, min_bytes=80_000_000, label='craft_mlt_25k.pth')
+        if ok:
+            break
+        if CRAFT_CKPT.exists():
+            os.remove(CRAFT_CKPT)
+    if not _ok(CRAFT_CKPT, 80_000_000):
+        print('  ⚠ CRAFT weights unavailable — text blurring will be disabled on Jetson')
 
 # ── 7. Phi-3.5 Mini GGUF ─────────────────────────────────────────────────────
 section('7 / 8   Phi-3.5 Mini Q4_K_M GGUF  (~2.7 GB)')
