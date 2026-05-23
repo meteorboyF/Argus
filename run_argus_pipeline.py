@@ -286,6 +286,22 @@ def run_notebook(nb_idx: str, nb_name: str) -> tuple[bool, Path]:
     print(f"  Log:     {log_path}\n")
 
     returncode = None
+    import threading
+
+    def _heartbeat(t_start, stop_evt):
+        """Print elapsed time every 60 s so the terminal doesn't look frozen."""
+        while not stop_evt.wait(60):
+            elapsed = time.time() - t_start
+            h, rem  = divmod(int(elapsed), 3600)
+            m, s    = divmod(rem, 60)
+            print(f"\n  [heartbeat] NB {nb_idx} still running — "
+                  f"elapsed {h:02d}:{m:02d}:{s:02d} | {_ts()}", flush=True)
+
+    stop_evt  = threading.Event()
+    t_nb_start = time.time()
+    hb_thread  = threading.Thread(target=_heartbeat, args=(t_nb_start, stop_evt), daemon=True)
+    hb_thread.start()
+
     with open(log_path, "w", buffering=1) as log_f:
         log_f.write(f"=== ARGUS notebook_{nb_idx} started at {_ts()} ===\n")
         log_f.write(f"Command: {' '.join(cmd)}\n\n")
@@ -304,6 +320,8 @@ def run_notebook(nb_idx: str, nb_name: str) -> tuple[bool, Path]:
         returncode = proc.returncode
         log_f.write(f"\n=== Finished at {_ts()} | exit code: {returncode} ===\n")
 
+    stop_evt.set()
+    hb_thread.join()
     return returncode == 0, log_path
 
 
