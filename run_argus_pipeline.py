@@ -490,6 +490,40 @@ def final_report(gpu_name, vram_gb, ram_gb, nb_results, errors_by_nb,
 # Main
 # ═════════════════════════════════════════════════════════════════════════════
 
+def git_pull():
+    """Pull latest notebooks from GitHub so we always run up-to-date code."""
+    repo_dir = SCRIPT_DIR
+    print("\n" + "="*62)
+    print("  PHASE -1 — Git Pull (latest notebooks)")
+    print("="*62)
+    try:
+        # Check if this is a git repo
+        r = subprocess.run(["git", "-C", str(repo_dir), "rev-parse", "--is-inside-work-tree"],
+                           capture_output=True, text=True)
+        if r.returncode != 0:
+            print("  ⚠️  Not a git repo — skipping pull")
+            return
+        # Show current commit
+        cur = subprocess.run(["git", "-C", str(repo_dir), "log", "--oneline", "-1"],
+                             capture_output=True, text=True)
+        print(f"  Current: {cur.stdout.strip()}")
+        # Pull
+        pr = subprocess.run(["git", "-C", str(repo_dir), "pull", "--ff-only", "origin", "main"],
+                            capture_output=True, text=True)
+        if pr.returncode == 0:
+            after = subprocess.run(["git", "-C", str(repo_dir), "log", "--oneline", "-1"],
+                                   capture_output=True, text=True)
+            msg = pr.stdout.strip() or "Already up to date."
+            print(f"  ✅ {msg}")
+            print(f"  Now at:  {after.stdout.strip()}")
+        else:
+            print(f"  ⚠️  git pull failed (non-fatal): {pr.stderr.strip()}")
+            print("      Continuing with local notebooks.")
+    except FileNotFoundError:
+        print("  ⚠️  git not found — skipping pull")
+    print()
+
+
 def main():
     print(BANNER)
     print(f"  Started : {_ts()}")
@@ -497,6 +531,8 @@ def main():
     print(f"  Drive   : {BASE}")
 
     t_start = time.time()
+
+    git_pull()
 
     # Phase 0
     gpu_name, vram_gb, ram_gb = phase0()
