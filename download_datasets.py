@@ -229,15 +229,23 @@ COCO_FILES = [
      COCO_DIR / 'annotations.zip',    200_000_000, 'annotations.zip (240 MB)'),
 ]
 
+_coco_zips_ok = (_ok(COCO_DIR/'train2017.zip', 16_000_000_000) and
+                 _ok(COCO_DIR/'val2017.zip',   700_000_000) and
+                 _ok(COCO_DIR/'annotations.zip', 200_000_000))
 COCO_TRAIN_DIR = COCO_DIR / 'train2017'
 COCO_VAL_DIR   = COCO_DIR / 'val2017'
 COCO_ANN_DIR   = COCO_DIR / 'annotations'
-_coco_extracted = (COCO_TRAIN_DIR.is_dir() and any(COCO_TRAIN_DIR.iterdir()) and
-                   COCO_VAL_DIR.is_dir() and COCO_ANN_DIR.is_dir())
-if COCO_FLAG.exists() or _coco_extracted:
+_coco_extracted = (COCO_TRAIN_DIR.is_dir() and COCO_VAL_DIR.is_dir() and COCO_ANN_DIR.is_dir())
+
+if COCO_FLAG.exists() or _coco_zips_ok:
     if not COCO_FLAG.exists():
         COCO_FLAG.touch()  # backfill missing flag
-    print('  ✓ COCO 2017 already extracted')
+    print('  ✓ COCO 2017 zips already on Drive')
+    if not _coco_extracted:
+        print('  Extracting COCO zips to local /content for training ...')
+        for _, dest, _, _ in COCO_FILES:
+            if dest.exists():
+                _extract(dest, COCO_DIR)
 else:
     all_ok = True
     for url, dest, min_bytes, label in COCO_FILES:
