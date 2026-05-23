@@ -168,7 +168,9 @@ ADE_DIR  = DS / 'ade20k'
 ADE_ZIP  = ADE_DIR / 'ADEChallengeData2016.zip'
 ADE_FLAG = ADE_DIR / 'ade20k_done.flag'
 
-if ADE_FLAG.exists():
+ADE_EXTRACTED = ADE_DIR / 'ADEChallengeData2016'
+if ADE_FLAG.exists() or (ADE_EXTRACTED.is_dir() and any(ADE_EXTRACTED.iterdir())):
+    ADE_FLAG.touch()  # backfill missing flag
     print('  ✓ ADE20K already extracted')
 else:
     ok = wget(
@@ -227,7 +229,14 @@ COCO_FILES = [
      COCO_DIR / 'annotations.zip',    200_000_000, 'annotations.zip (240 MB)'),
 ]
 
-if COCO_FLAG.exists():
+COCO_TRAIN_DIR = COCO_DIR / 'train2017'
+COCO_VAL_DIR   = COCO_DIR / 'val2017'
+COCO_ANN_DIR   = COCO_DIR / 'annotations'
+_coco_extracted = (COCO_TRAIN_DIR.is_dir() and any(COCO_TRAIN_DIR.iterdir()) and
+                   COCO_VAL_DIR.is_dir() and COCO_ANN_DIR.is_dir())
+if COCO_FLAG.exists() or _coco_extracted:
+    if not COCO_FLAG.exists():
+        COCO_FLAG.touch()  # backfill missing flag
     print('  ✓ COCO 2017 already extracted')
 else:
     all_ok = True
