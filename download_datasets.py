@@ -329,7 +329,7 @@ CRAFT_CKPT = CRAFT_DIR / 'craft_mlt_25k.pth'
 def _craft_gdrive_requests(dest):
     """Browser-style Google Drive download that handles the virus-scan confirmation page."""
     import requests
-    file_id = '1Jk4eGW7DHA09z_MmqnkkSqBkCHKnIPNF'
+    file_id = '1Jk4eGD7crsqCCg9C9VjCLkMN3ze8kutZ'
     session = requests.Session()
     session.headers.update({'User-Agent': 'Mozilla/5.0'})
 
@@ -397,7 +397,7 @@ else:
         if CRAFT_CKPT.exists():
             os.remove(CRAFT_CKPT)
         print('  Trying gdown (Google Drive) ...')
-        downloaded = gdown_dl('1Jk4eGW7DHA09z_MmqnkkSqBkCHKnIPNF', CRAFT_CKPT,
+        downloaded = gdown_dl('1Jk4eGD7crsqCCg9C9VjCLkMN3ze8kutZ', CRAFT_CKPT,
                               min_bytes=80_000_000, label='craft_mlt_25k.pth')
 
     if not downloaded:
@@ -406,7 +406,7 @@ else:
         print('  Text blurring will be disabled until the file is added manually:')
         print(f'     {CRAFT_CKPT}')
         print('  Manual option: open this URL in a browser, download, upload to Drive:')
-        print('     https://drive.google.com/uc?id=1Jk4eGW7DHA09z_MmqnkkSqBkCHKnIPNF')
+        print('     https://drive.google.com/uc?id=1Jk4eGD7crsqCCg9C9VjCLkMN3ze8kutZ')
 
 # ── 7. Phi-3.5 Mini GGUF ─────────────────────────────────────────────────────
 section('7 / 8   Phi-3.5 Mini Q4_K_M GGUF  (~2.7 GB)')
