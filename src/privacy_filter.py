@@ -1,4 +1,4 @@
-"""Privacy filter — face blurring and CRAFT text-region detection."""
+"""Privacy filter — face blurring and EasyOCR text-region detection."""
 import cv2
 import numpy as np
 
@@ -24,62 +24,43 @@ def blur_faces(image_bgr, face_app, blur_strength=51):
     return result, n_faces
 
 
-def load_craft(weights_path: str, device: str = "cpu"):
+def load_text_detector(model_dir: str, gpu: bool = False):
     """
-    Load CRAFT text-detection model.
-
-    Requires:
-      git clone https://github.com/clovaai/CRAFT-pytorch  (add to PYTHONPATH)
-      Download craft_mlt_25k.pth from the CRAFT-pytorch releases.
+    Load EasyOCR text detector. Models are auto-downloaded on first use
+    (~30 MB) and cached in model_dir.
     """
-    import sys, os
-    craft_dir = os.path.join(os.path.dirname(__file__), "..", "scripts", "CRAFT-pytorch")
-    if craft_dir not in sys.path:
-        sys.path.insert(0, craft_dir)
-
-    from craft import CRAFT  # type: ignore
-    import torch
-    from collections import OrderedDict
-
-    net = CRAFT()
-    state = torch.load(weights_path, map_location=device)
-    # Strip 'module.' prefix added by DataParallel
-    new_state = OrderedDict()
-    for k, v in state.items():
-        name = k[7:] if k.startswith("module.") else k
-        new_state[name] = v
-    net.load_state_dict(new_state)
-    net = net.to(device).eval()
-    return net
+    import easyocr
+    reader = easyocr.Reader(['en'], gpu=gpu, model_storage_directory=model_dir,
+                             download_enabled=True, verbose=False)
+    return reader
 
 
-def detect_text_regions(image_bgr, craft_net, device: str = "cpu", text_threshold: float = 0.7,
-                         link_threshold: float = 0.4, low_text: float = 0.4):
-    """Return list of bounding-box polys for detected text regions."""
-    import sys, os
-    craft_dir = os.path.join(os.path.dirname(__file__), "..", "scripts", "CRAFT-pytorch")
-    if craft_dir not in sys.path:
-        sys.path.insert(0, craft_dir)
-
-    import torch
-    import craft_utils  # type: ignore
-    import imgproc      # type: ignore
-
-    img_resized, target_ratio, _ = imgproc.resize_aspect_ratio(
-        image_bgr, 1280, interpolation=cv2.INTER_LINEAR, mag_ratio=1.5
-    )
-    ratio_h = ratio_w = 1 / target_ratio
-
-    x = imgproc.normalizeMeanVariance(img_resized)
-    x = torch.from_numpy(x).permute(2, 0, 1).unsqueeze(0).to(device)
-
-    with torch.no_grad():
-        y, _ = craft_net(x)
-
-    score_text = y[0, :, :, 0].cpu().numpy()
-    score_link = y[0, :, :, 1].cpu().numpy()
-
-    boxes, _ = craft_utils.getDetBoxes(score_text, score_link, text_threshold,
-                                        link_threshold, low_text, False)
-    boxes = craft_utils.adjustResultCoordinates(boxes, ratio_w, ratio_h)
+def detect_text_regions(image_bgr, reader, confidence_threshold: float = 0.5):
+    """
+    Return list of bounding-box quads for detected text regions.
+    Each box is [[x1,y1],[x2,y1],[x2,y2],[x1,y2]].
+    Only returns regions with confidence >= confidence_threshold.
+    """
+    img_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
+    results = reader.detect(img_rgb, slope_ths=0.3, height_ths=1.0)
+    boxes = []
+    if results and results[0]:
+        for bbox in results[0]:
+            x_min, x_max, y_min, y_max = bbox
+            boxes.append([[x_min, y_min], [x_max, y_min],
+                          [x_max, y_max], [x_min, y_max]])
     return boxes
+
+
+def blur_text(image_bgr, reader, blur_strength=31, confidence_threshold=0.5):
+    """Detect text regions and blur them — keeps private text out of the World Model."""
+    result = image_bgr.copy()
+    boxes  = detect_text_regions(image_bgr, reader, confidence_threshold)
+    for box in boxes:
+        pts = np.array(box, dtype=np.int32)
+        x1, y1 = pts[:, 0].min(), pts[:, 1].min()
+        x2, y2 = pts[:, 0].max(), pts[:, 1].max()
+        roi = result[y1:y2, x1:x2]
+        if roi.size > 0:
+            result[y1:y2, x1:x2] = cv2.GaussianBlur(roi, (blur_strength, blur_strength), 0)
+    return result, len(boxes)

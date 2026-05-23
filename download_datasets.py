@@ -15,7 +15,7 @@ What gets downloaded:
   COCO annots     ~240 MB   → datasets/coco/
   RAFT-Stereo wts ~30 MB    → models/depth/              (depth model weights)
   SCRFD weights   ~90 MB    → models/privacy/            (face detection)
-  CRAFT weights   ~90 MB    → models/privacy/            (text detection)
+  EasyOCR models  ~30 MB    → models/privacy/easyocr/    (text detection)
   Phi-3.5 GGUF    ~2.7 GB   → models/llm/               (LLM)
   Piper TTS       ~65 MB    → models/speech/piper/       (text-to-speech)
   Whisper tiny    ~39 MB    → models/speech/whisper/     (speech-to-text, auto-cached)
@@ -320,93 +320,27 @@ else:
     else:
         print(f'  ✗ buffalo_s not found at expected path: {BUFFALO_DIR}')
 
-# ── 6. CRAFT text detector ────────────────────────────────────────────────────
-section('6 / 8   CRAFT text detector  (~90 MB)')
+# ── 6. EasyOCR text detector ──────────────────────────────────────────────────
+section('6 / 8   EasyOCR text detector  (~30 MB, auto-downloads)')
 
-CRAFT_DIR  = MODELS / 'privacy'
-CRAFT_CKPT = CRAFT_DIR / 'craft_mlt_25k.pth'
+EASYOCR_DIR  = MODELS / 'privacy' / 'easyocr'
+EASYOCR_FLAG = EASYOCR_DIR / 'easyocr_done.flag'
+os.makedirs(EASYOCR_DIR, exist_ok=True)
 
-def _craft_gdrive_requests(dest):
-    """Browser-style Google Drive download that handles the virus-scan confirmation page."""
-    import requests
-    file_id = '1Jk4eGD7crsqCCg9C9VjCLkMN3ze8kutZ'
-    session = requests.Session()
-    session.headers.update({'User-Agent': 'Mozilla/5.0'})
-
-    # Try new usercontent endpoint first (bypasses confirmation for many files)
-    for url in [
-        f'https://drive.usercontent.google.com/download?id={file_id}&export=download&confirm=t',
-        f'https://docs.google.com/uc?export=download&id={file_id}',
-    ]:
-        try:
-            resp = session.get(url, stream=True, timeout=30)
-            # Follow confirmation page if needed
-            if 'text/html' in resp.headers.get('Content-Type', ''):
-                token = next((v for k, v in resp.cookies.items()
-                              if k.startswith('download_warning')), None)
-                if token:
-                    resp = session.get(
-                        f'https://docs.google.com/uc?export=download&id={file_id}&confirm={token}',
-                        stream=True, timeout=30
-                    )
-            content_type = resp.headers.get('Content-Type', '')
-            if resp.status_code == 200 and 'html' not in content_type:
-                total = int(resp.headers.get('content-length', 0))
-                written = 0
-                with open(dest, 'wb') as f:
-                    for chunk in resp.iter_content(chunk_size=1 << 20):
-                        f.write(chunk)
-                        written += len(chunk)
-                        if total:
-                            pct = written / total * 100
-                            print(f'\r    {pct:.1f}%  ({written/1e6:.0f}/{total/1e6:.0f} MB)', end='', flush=True)
-                print()
-                return _ok(dest, 80_000_000)
-        except Exception as e:
-            print(f'    requests attempt failed: {e}')
-    return False
-
-if _ok(CRAFT_CKPT, 80_000_000):
-    print(f'  ✓ craft_mlt_25k.pth ready ({_size_mb(CRAFT_CKPT):.0f} MB)')
+if EASYOCR_FLAG.exists():
+    print('  ✓ EasyOCR models already downloaded')
 else:
-    downloaded = False
+    subprocess.run([sys.executable, '-m', 'pip', 'install', '-q', 'easyocr'])
+    import easyocr
+    print('  Downloading EasyOCR English models ...')
+    reader = easyocr.Reader(['en'], gpu=False,
+                             model_storage_directory=str(EASYOCR_DIR),
+                             download_enabled=True, verbose=True)
+    EASYOCR_FLAG.touch()
+    print('  ✅ EasyOCR ready')
 
-    # 1. Newer Google Drive usercontent URL (most likely to bypass rate limit)
-    print('  Trying drive.usercontent.google.com (requests) ...')
-    subprocess.run([sys.executable, '-m', 'pip', 'install', '-q', 'requests'])
-    if _craft_gdrive_requests(str(CRAFT_CKPT)):
-        downloaded = True
-        print(f'  ✓ craft_mlt_25k.pth ready ({_size_mb(CRAFT_CKPT):.0f} MB)')
-
-    # 2-4. Public wget sources
-    if not downloaded:
-        for url in [
-            'https://github.com/clovaai/CRAFT-pytorch/releases/download/pretraining/craft_mlt_25k.pth',
-            'https://huggingface.co/clovaai/CRAFT/resolve/main/craft_mlt_25k.pth',
-            'https://huggingface.co/baudm/craft/resolve/main/craft_mlt_25k.pth',
-        ]:
-            if CRAFT_CKPT.exists():
-                os.remove(CRAFT_CKPT)
-            print(f'  Trying {url[:70]}...')
-            if wget(url, CRAFT_CKPT, min_bytes=80_000_000, label='craft_mlt_25k.pth'):
-                downloaded = True
-                break
-
-    # 5. gdown with fuzzy flag
-    if not downloaded:
-        if CRAFT_CKPT.exists():
-            os.remove(CRAFT_CKPT)
-        print('  Trying gdown (Google Drive) ...')
-        downloaded = gdown_dl('1Jk4eGD7crsqCCg9C9VjCLkMN3ze8kutZ', CRAFT_CKPT,
-                              min_bytes=80_000_000, label='craft_mlt_25k.pth')
-
-    if not downloaded:
-        print()
-        print('  ⚠  CRAFT weights could not be downloaded automatically.')
-        print('  Text blurring will be disabled until the file is added manually:')
-        print(f'     {CRAFT_CKPT}')
-        print('  Manual option: open this URL in a browser, download, upload to Drive:')
-        print('     https://drive.google.com/uc?id=1Jk4eGD7crsqCCg9C9VjCLkMN3ze8kutZ')
+def _easyocr_ok():
+    return EASYOCR_FLAG.exists()
 
 # ── 7. Phi-3.5 Mini GGUF ─────────────────────────────────────────────────────
 section('7 / 8   Phi-3.5 Mini Q4_K_M GGUF  (~2.7 GB)')
@@ -455,7 +389,7 @@ checks = [
     ('COCO 2017',      COCO_FLAG.exists(),                    'yolov8 training'),
     ('RAFT-Stereo wts',_ok(RAFT_CKPT, 20_000_000),           'depth model'),
     ('SCRFD (buffalo_s)', _buffalo_ok(),                                      'face detection'),
-    ('CRAFT weights',  _ok(CRAFT_CKPT, 80_000_000),          'text detection'),
+    ('EasyOCR text detector', _easyocr_ok(),                 'text detection'),
     ('Phi-3.5 GGUF',   _ok(LLM_FILE, 2_000_000_000),         'LLM'),
     ('Piper TTS',      _ok(PIPER_ONNX, 55_000_000),          'TTS'),
 ]
