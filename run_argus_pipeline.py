@@ -69,7 +69,7 @@ BANNER = r"""
 ║     ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝             ║
 ║                                                              ║
 ║        Autonomous Colab Pipeline Runner v1.0                ║
-║        8 Notebooks  •  A100 40GB  •  Full Pipeline          ║
+║        8 Notebooks  •  A100 or T4  •  Full Pipeline         ║
 ╚══════════════════════════════════════════════════════════════╝
 """
 
@@ -129,13 +129,23 @@ def phase0():
     vram_gb  = torch.cuda.get_device_properties(0).total_memory / 1e9 if gpu_ok else 0
 
     chk("CUDA available",                gpu_ok,                    fatal=True)
-    chk(f"GPU is A100 (got: {gpu_name})", "A100" in gpu_name,       fatal=True,
-        note="Go to Runtime → Change runtime type → A100" if "A100" not in gpu_name else "")
-    chk(f"VRAM >= 38 GB (got: {vram_gb:.1f} GB)", vram_gb >= 38,   fatal=True)
+    # A100 needed for NB01-03 (heavy training). T4 is fine for NB04-07.
+    needs_a100 = not all([
+        _exists(BASE/"exports/tensorrt/raft_stereo_640x480.onnx"),
+        _exists(BASE/"models/segmentation/segformer_b2_argus/config.json"),
+        _exists(BASE/"models/detection/yolov8s_argus_final.pt"),
+    ])
+    if needs_a100 and "A100" not in gpu_name:
+        chk(f"GPU: {gpu_name} — A100 recommended for NB01-03", False, fatal=False,
+            note="NB01-03 not done yet — A100 trains 5x faster; T4 will work but slowly")
+    else:
+        chk(f"GPU: {gpu_name}", gpu_ok, fatal=False,
+            note="T4 is fine — NB01-03 already complete" if "A100" not in gpu_name else "")
+    chk(f"VRAM >= 14 GB (got: {vram_gb:.1f} GB)", vram_gb >= 14,   fatal=True)
 
     # RAM
     ram_gb = psutil.virtual_memory().total / 1e9
-    chk(f"System RAM >= 50 GB (got: {ram_gb:.1f} GB)", ram_gb >= 50, fatal=True)
+    chk(f"System RAM >= 12 GB (got: {ram_gb:.1f} GB)", ram_gb >= 12, fatal=True)
 
     # Drive
     drive_ok = _exists(BASE)
@@ -203,7 +213,7 @@ def verify_notebook(n: int) -> dict:
     elif n == 4:
         chk("privacy/ not empty",                    _notempty(B/"models/privacy"))
         chk("privacy_test.png saved",                _exists(B/"logs/privacy_test.png"))
-        chk("craft_mlt_25k.pth downloaded",          _mb(B/"models/craft_mlt_25k.pth") > 50)
+        chk("EasyOCR done flag",                     _exists(B/"models/privacy/easyocr/easyocr_done.flag"))
         chk("buffalo_s done flag",                   _exists(B/"models/privacy/buffalo_done.flag"))
 
     elif n == 5:
@@ -251,7 +261,7 @@ def is_done(n: int) -> bool:
     elif n == 3:
         return _mb(B/"models/detection/yolov8s_argus_final.pt") > 20
     elif n == 4:
-        return _exists(B/"logs/privacy_test.png") and _mb(B/"models/craft_mlt_25k.pth") > 50
+        return _exists(B/"logs/privacy_test.png") and _exists(B/"models/privacy/buffalo_done.flag")
     elif n == 5:
         return _exists(B/"models/piper/en_US-lessac-medium.onnx")
     elif n == 6:
@@ -361,8 +371,8 @@ def write_manifest():
             "insightface": {
                 "model_dir":    f"{B}/models/privacy/buffalo_s",
             },
-            "craft": {
-                "weights":      f"{B}/models/craft_mlt_25k.pth",
+            "easyocr": {
+                "model_dir":    f"{B}/models/privacy/easyocr",
             },
             "whisper": {
                 "model_dir":    f"{B}/models/speech/whisper",
