@@ -517,21 +517,24 @@ def git_pull():
         cur = subprocess.run(["git", "-C", str(repo_dir), "log", "--oneline", "-1"],
                              capture_output=True, text=True)
         print(f"  Current: {cur.stdout.strip()}")
-        # Reset notebooks to HEAD so nbconvert --inplace outputs don't block pull
-        subprocess.run(["git", "-C", str(repo_dir), "checkout", "--", "notebooks/"],
-                       capture_output=True, text=True)
-        # Pull
-        pr = subprocess.run(["git", "-C", str(repo_dir), "pull", "--ff-only", "origin", "main"],
+        # Fetch latest from remote
+        fr = subprocess.run(["git", "-C", str(repo_dir), "fetch", "origin", "main"],
                             capture_output=True, text=True)
-        if pr.returncode == 0:
-            after = subprocess.run(["git", "-C", str(repo_dir), "log", "--oneline", "-1"],
-                                   capture_output=True, text=True)
-            msg = pr.stdout.strip() or "Already up to date."
-            print(f"  ✅ {msg}")
-            print(f"  Now at:  {after.stdout.strip()}")
-        else:
-            print(f"  ⚠️  git pull failed (non-fatal): {pr.stderr.strip()}")
+        if fr.returncode != 0:
+            print(f"  ⚠️  git fetch failed (non-fatal): {fr.stderr.strip()}")
             print("      Continuing with local notebooks.")
+        else:
+            # Hard reset to remote — discards ALL local changes (nbconvert outputs, etc.)
+            rr = subprocess.run(["git", "-C", str(repo_dir), "reset", "--hard", "origin/main"],
+                                capture_output=True, text=True)
+            if rr.returncode == 0:
+                after = subprocess.run(["git", "-C", str(repo_dir), "log", "--oneline", "-1"],
+                                       capture_output=True, text=True)
+                print(f"  ✅ Reset to origin/main")
+                print(f"  Now at:  {after.stdout.strip()}")
+            else:
+                print(f"  ⚠️  git reset failed (non-fatal): {rr.stderr.strip()}")
+                print("      Continuing with local notebooks.")
     except FileNotFoundError:
         print("  ⚠️  git not found — skipping pull")
     print()
