@@ -517,6 +517,9 @@ def git_pull():
         cur = subprocess.run(["git", "-C", str(repo_dir), "log", "--oneline", "-1"],
                              capture_output=True, text=True)
         print(f"  Current: {cur.stdout.strip()}")
+        # Reset notebooks to HEAD so nbconvert --inplace outputs don't block pull
+        subprocess.run(["git", "-C", str(repo_dir), "checkout", "--", "notebooks/"],
+                       capture_output=True, text=True)
         # Pull
         pr = subprocess.run(["git", "-C", str(repo_dir), "pull", "--ff-only", "origin", "main"],
                             capture_output=True, text=True)
