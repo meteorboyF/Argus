@@ -8,7 +8,8 @@
 
 **ARGUS** is an AI-powered smart glasses system for the visually impaired.
 
-- **Training environment:** Google Colab Pro (A100 / T4 GPU)
+- **Training environment:** Google Colab Pro+ (A100 / L4 / T4 GPU — see GPU tier table below)
+- **Local machine:** GTX 1060 6GB, 150 GB free on D:\ (Windows) — use for debugging, data prep, calibration
 - **Deployment target:** NVIDIA Jetson Orin Nano Super (8 GB)
 - **Cameras:**
   - 2× Arducam AR0234 2.3MP Global Shutter USB 3.0 (stereo depth)
@@ -27,13 +28,40 @@ The script auto-pulls from GitHub, checks hardware, then runs NB01–NB07 in ord
 
 ## 2. Hardware Context
 
-| Resource | Value | Notes |
+### Colab Pro+ GPU Tier Reference
+
+| GPU | CU/hr | VRAM | Architecture | Use For ARGUS | Avoid When |
+|---|---|---|---|---|---|
+| Standard CPU | ~0.00 | — | — | Syntax debug, pip installs, unzipping | Any model forward/backward pass |
+| T4 | ~1.2–2.0 | 15 GB | Turing | NB04–07, lightweight inference tests, first-pass exploration | Large vision transformers (OOM risk) |
+| L4 | ~1.7–3.5 | 22.5 GB | Ada Lovelace | Mid-tier fine-tuning, FP16/BF16 mixed precision, stable alternatives to A100 | Massive pre-training, batches >24GB VRAM |
+| V100 (Legacy) | ~5.0–6.0 | 16 GB | Volta | Only if L4 unavailable | Modern FP8/BF16 pipelines — L4 beats it for fewer units |
+| A100 | ~13.0–15.0 | 40–80 GB | Ampere | NB01–03 heavy training only | Debugging, small datasets, CPU-bottlenecked scripts |
+| G4 / RTX 6000 | ~8.5–9.0 | 96 GB | Blackwell | Memory-bound tasks needing extreme VRAM | Tiny tasks — 96GB frame buffer is wasted |
+
+> ⚠️ **A100 costs 7–10× more per hour than T4.** Never use it for anything except confirmed-working training runs.
+
+### Decision Guide for ARGUS
+
+```
+Writing / debugging code?          → Local GTX 1060 or Colab CPU
+First test of new notebook?        → T4
+NB04–07 (privacy, speech, LLM)?    → T4 (15GB is sufficient)
+NB01–03 training (confirmed code)? → A100 (40GB needed for batch size)
+Need more than 15GB but <40GB?     → L4 (cheaper than A100, Ada architecture)
+Memory-bound, model won't fit A100?→ G4 RTX 6000 (96GB)
+```
+
+### Local Machine (Windows)
+- **GPU:** GTX 1060 6GB (CUDA 11.8 compatible)
+- **Free storage:** 150 GB on D:\
+- **Best uses:** Stereo calibration, data preprocessing, ONNX validation, small inference tests, debugging notebook logic before burning Colab units
+- **PyTorch install:** `pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118`
+
+### Deployment
+| Device | RAM | Role |
 |---|---|---|
-| A100 VRAM | 40 GB | Best for NB01–03 (training) |
-| T4 VRAM | 15.6 GB | Fine for NB04–07 (no heavy training) |
-| A100 compute cost | ~5.3 CU/hr | Colab Pro ≈ 100 CU/month |
-| T4 compute cost | ~2.0 CU/hr | Use T4 when A100 not needed |
-| Jetson Orin Nano Super | 8 GB unified RAM | Inference only — no training |
+| Jetson Orin Nano Super | 8 GB unified | Inference only — no training |
 
 **AR0234 cameras** use global shutter — no rolling shutter artifacts, critical for accurate stereo depth matching at walking speed.
 
@@ -335,14 +363,23 @@ Models were selected for the RTX 5060 Ti 16GB originally but A100 was used for t
 
 ## 8. Compute Budget Tracking
 
-| Event | CU used | Notes |
-|---|---|---|
-| NB01 (A100, ~1hr) | ~5 CU | Normal |
-| NB02 (A100, ~2hr) | ~10 CU | Normal |
-| NB03 — COCO from Drive (A100, ~10hr) | ~53 CU | **WASTED** — Drive FUSE I/O disaster |
-| NB03 — COCO from local (if re-run) | ~5 CU | Expected with local SSD |
-| **Total spent** | **~68 CU** | Out of ~100 CU/month |
-| NB04–07 (T4, ~2hr total) | ~4 CU | Use T4 to conserve budget |
+**Plan:** Colab Pro+ (~500 CU/month, priority A100 access)
+
+| Event | GPU | CU/hr | Hours | CU used | Notes |
+|---|---|---|---|---|---|
+| NB01 RAFT-Stereo training | A100 | ~14 | ~1 | ~14 CU | Normal |
+| NB02 SegFormer training | A100 | ~14 | ~2 | ~28 CU | Normal |
+| NB03 — COCO from Drive | A100 | ~14 | ~10 | ~140 CU | ❌ **WASTED** — Drive FUSE I/O disaster |
+| NB03 — COCO from local SSD | A100 | ~14 | ~0.5 | ~7 CU | ✅ Expected with fix applied |
+| NB04–07 | T4 | ~1.6 | ~2 | ~3 CU | Use T4, not A100 |
+
+> Note: Previous session was on Colab Pro (~100 CU/month). Pro+ has ~500 CU/month but A100 costs ~13–15 CU/hr (not ~5 as previously logged). Recalibrate estimates accordingly.
+
+**Efficiency targets going forward:**
+- Debug on CPU/local → test on T4 → train on A100 only when code is confirmed
+- Profile 1 epoch before full run — if GPU util < 80%, fix data pipeline first
+- Always `runtime.unassign()` at end of training — idle A100 = 14 CU/hr burned for nothing
+- Use L4 as the middle ground when T4 OOMs but A100 feels excessive
 
 ---
 
