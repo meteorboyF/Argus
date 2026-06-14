@@ -22,24 +22,34 @@ the Jetson, with a mic and bone-conduction audio out.
 
 ## Camera layout on the frame
 
+The ARGUS prototype mounts the cameras on a goggle/ski-mask frame:
+
 ```
-        [ AR0234 L ]························[ AR0234 R ]
-              \\           baseline B          //
-               \\                             //
-                \\        [ IMX477P ]        //
-                 \\        (wide, center)   //
-                  \\                        //
-                    ====  glasses front  ====
+   [ AR0234 L ]                              [ AR0234 R ]
+       \  toed outward on the curved sides  /
+        \         [ IMX477P wide ]         /
+         \         (top center)           /
+          ====  goggle front (curved)  ====
 ```
 
-- **Stereo pair (AR0234 L/R):** mount at the **same height**, lenses **parallel**,
-  separated by a fixed **baseline** B (≈ 6–10 cm). Rigidity matters more than the
-  exact distance — any flex changes depth scale. Global shutter means no motion
-  skew while walking.
-- **Wide camera (IMX477P):** mount **centered**, between/below the pair, facing
-  straight ahead. This is the frame the agent and YOLO-World see.
-- Keep all three **coplanar and forward-facing**. Note the chosen baseline; you'll
-  confirm it during calibration.
+- **Stereo pair (AR0234 L/R):** on the **curved left/right sides** of the goggle,
+  **toed outward**, with a **wide baseline**. They are deliberately **not**
+  parallel or coplanar — that's fine. **Full stereo calibration + rectification**
+  (see below) measures the actual geometry and corrects for it in software.
+- **Wide camera (IMX477P):** mounted **top-center**, facing straight ahead. This
+  is the frame the agent and YOLO-World see.
+- **The one thing that must not change after calibration: rigidity.** Once you
+  calibrate, the L/R cameras must stay fixed relative to each other. Any flex of
+  the frame invalidates the calibration — re-run it if the rig is bent or a
+  camera is re-seated. Global-shutter AR0234 means no motion skew while walking.
+
+> **Why calibration matters here:** plain stereo math assumes parallel,
+> row-aligned cameras. Your toed-out mounting violates that, so raw disparity
+> would be wrong. `scripts/calibrate_stereo.py` measures each camera's intrinsics
+> and the real rotation/translation between them, then computes rectification maps
+> + the Q reprojection matrix. `argus/depth.py` loads these and rectifies every
+> frame before matching — so depth is correct for *your* exact mounting, whatever
+> the angle.
 
 ---
 
@@ -74,10 +84,21 @@ v4l2-ctl -d /dev/video0 --all   # inspect a specific camera
 
 ## After assembly
 
-1. Note the physical **baseline** (cm) between the AR0234 lenses.
-2. Run `scripts/calibrate_stereo.py` and record `baseline_m` / `focal_px`.
-3. Put those into `/opt/argus/config/argus.yaml` under `depth:`.
+1. Print a flat checkerboard (glue it to stiff card so it stays flat).
+2. Run the smart calibrator — it auto-detects the camera pair and board, then
+   auto-captures as you move the board around the field of view:
+   ```bash
+   python scripts/calibrate_stereo.py --square-mm 25
+   ```
+   It saves rectification maps + Q + baseline/focal to
+   `/opt/argus/config/stereo_calib.npz` and reports quality (RMS + vertical
+   alignment error). Re-run until RMS < ~0.6 px and vertical error < ~1 px.
+3. No config edits needed — `argus/depth.py` auto-loads the `.npz` and rectifies
+   every frame. (`baseline_m`/`focal_px` are written in too, for reference.)
 4. Sanity-check depth: `python -m argus run --no-audio` and walk toward a wall —
    the fast loop should warn at the configured distances.
+
+> If the goggle frame ever flexes or a camera shifts, **re-run calibration** —
+> the rectification is only valid for the geometry it was measured on.
 
 See [JETSON_DEPLOYMENT.md](JETSON_DEPLOYMENT.md) for the software bring-up.

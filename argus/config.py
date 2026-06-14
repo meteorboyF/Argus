@@ -53,6 +53,9 @@ class DepthConfig:
     # Stereo baseline (metres) and focal length (px) — filled by calibration.
     baseline_m: float = 0.06
     focal_px: float = 700.0
+    # Calibration (rectification maps + Q) from scripts/calibrate_stereo.py.
+    # When present, depth is rectified and metric for the actual mounting geometry.
+    calibration_file: str = str(CONFIG_DIR / "stereo_calib.npz")
 
 
 @dataclass
