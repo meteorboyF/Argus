@@ -1,0 +1,12 @@
+# Force LF on files that run on Linux/Jetson — CRLF breaks bash shebangs.
+*.sh    text eol=lf
+*.py    text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+# Windows batch must stay CRLF.
+*.bat   text eol=crlf
+# Treat docs/binaries sensibly.
+*.md    text
+*.pdf   binary
+*.docx  binary
+*.ipynb text eol=lf

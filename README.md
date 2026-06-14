@@ -73,14 +73,35 @@ The previous design was a heavy *specialist ensemble* (RAFT-Stereo + SegFormer +
 ## Repository Structure
 
 ```
-argus_pc_test.ipynb     # PC test notebook (cameras, YOLO-World, speech, ONNX export)
+argus/                  # Jetson runtime package (the two-speed system)
+  config.py cameras.py depth.py safety.py privacy.py grounding.py
+  agent.py speech.py trt_runner.py orchestrator.py selftest.py __main__.py
+scripts/
+  setup_jetson.sh       # Jetson dependency installer (run on device)
+  run_llama_server.sh   # launch Gemma 4 E2B vision server
+  build_engines.sh      # ONNX -> TensorRT (on device)
+  calibrate_stereo.py   # AR0234 stereo calibration
+config/argus.yaml       # runtime config (seed template)
+requirements-jetson.txt # Jetson Python deps
+setup.py                # installs the `argus` package (python -m argus)
+setup_pc.bat            # PC-test env installer (Windows only)
+argus_pc_test.ipynb     # PC validation notebook (cameras, YOLO-World, speech, ONNX export)
 SETUP_LOCAL.md          # Step-by-step local PC setup guide
-README.md               # This file
 AGENT_HANDOFF.md        # Development history, lessons learned, efficiency rules
 docs/
-  ARGUS_Final_Pipeline.pdf    # Full design doc (with diagrams)
-  ARGUS_Final_Pipeline.docx   # Text transcription
+  PROJECT_OVERVIEW.md       # one-page orientation + repo map
+  ARCHITECTURE.md           # module-level design + diagrams
+  JETSON_DEPLOYMENT.md      # full on-device bring-up
+  HARDWARE.md               # wearable assembly + wiring
+  JETSON_CLAUDE_PROMPT.md   # kickoff prompt for Claude Code on the Jetson
+  ARGUS_Final_Pipeline.pdf  # authoritative design doc (with diagrams)
+  ARGUS_Final_Pipeline.docx # text transcription
 ```
+
+### Quick start
+- **Jetson (deployment):** clone, then `./scripts/setup_jetson.sh` → follow [docs/JETSON_DEPLOYMENT.md](docs/JETSON_DEPLOYMENT.md). To have Claude Code drive bring-up, use [docs/JETSON_CLAUDE_PROMPT.md](docs/JETSON_CLAUDE_PROMPT.md).
+- **PC (validation):** `setup_pc.bat` → open `argus_pc_test.ipynb` (see [SETUP_LOCAL.md](SETUP_LOCAL.md)).
+- Runtime CLI: `python -m argus selftest` · `python -m argus run` · `python -m argus query "what is in front of me?"`
 
 ### Branches
 - **`main`** — current **Two-Speed / YOLO-World** work (PC-test-first, then Jetson)

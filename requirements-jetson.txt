@@ -1,0 +1,29 @@
+# ARGUS Jetson runtime dependencies (JetPack 6 / Python 3.10, ARM64).
+#
+# NOT listed here (install separately — see docs/JETSON_DEPLOYMENT.md):
+#   - torch / torchvision : use the NVIDIA Jetson wheels matching your JetPack,
+#                            NOT the pip default (which has no CUDA for ARM).
+#   - tensorrt            : ships with JetPack.
+#   - pycuda             : installed by setup_jetson.sh (needs CUDA on PATH).
+#   - llama.cpp          : built from source by setup_jetson.sh (Gemma 4 vision).
+
+# Perception / grounding
+ultralytics>=8.4.0
+opencv-python>=4.9.0
+onnx>=1.16.0
+onnxruntime-gpu>=1.18.0        # falls back to onnxruntime if GPU build unavailable
+
+# Privacy gate
+insightface>=0.7.3
+
+# Speech (CPU)
+faster-whisper>=1.0.0
+openwakeword>=0.6.0
+piper-tts>=1.2.0
+sounddevice>=0.4.6
+soundfile>=0.12.1
+
+# Agent client + utils
+requests>=2.31.0
+numpy>=1.24.0
+PyYAML>=6.0

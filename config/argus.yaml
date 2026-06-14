@@ -1,0 +1,50 @@
+# ARGUS runtime configuration.
+# Copied to /opt/argus/config/argus.yaml by setup_jetson.sh. Edit there on-device.
+# Only override what you need; anything omitted uses the dataclass defaults in
+# argus/config.py.
+
+camera:
+  left_index: 0          # AR0234 left  — confirm with: v4l2-ctl --list-devices
+  right_index: 1         # AR0234 right
+  wide_index: 2          # IMX477P wide
+  stereo_width: 1280
+  stereo_height: 720
+  stereo_fps: 30
+  wide_width: 1920
+  wide_height: 1080
+  wide_fps: 30
+
+depth:
+  backend: sgbm          # "sgbm" (CPU, always works) or "raft_trt" (TensorRT engine)
+  num_disparities: 128
+  block_size: 5
+  baseline_m: 0.06       # set from stereo calibration
+  focal_px: 700.0        # set from stereo calibration
+
+safety:
+  warn_distance_m: 1.5
+  danger_distance_m: 0.7
+  tick_hz: 10.0
+
+grounding:
+  conf_threshold: 0.25
+  imgsz: 640
+
+agent:
+  server_url: "http://127.0.0.1:8080"
+  ctx_size: 2048
+  max_tokens: 256
+  temperature: 0.3
+
+speech:
+  wake_model: "alexa"    # openWakeWord built-in; replace with custom "ARGUS" .onnx later
+  wake_threshold: 0.5
+  whisper_model: "tiny"
+  whisper_compute: "int8"
+  record_seconds: 5.0
+
+privacy:
+  face_model: "buffalo_s"
+  det_size: 640
+  blur_kernel: 51
+  enable_text_blur: false
