@@ -4,27 +4,41 @@
 # argus/config.py.
 
 camera:
-  left_index: 0          # AR0234 left  — confirm with: v4l2-ctl --list-devices
-  right_index: 1         # AR0234 right
-  wide_index: 2          # IMX477P wide
+  # Smart discovery (default): cameras are identified by V4L2 device name and
+  # left/right are re-bound to the physical cameras recorded at calibration
+  # time (USB port paths), so indices surviving a reboot don't matter.
+  auto_detect: true
+  stereo_name_hint: "AR0234"   # substring of the stereo cams' V4L2 name
+  wide_name_hint: "IMX477"     # substring of the wide cam's V4L2 name
+  # Fallback / manual override (used when auto_detect is false or inconclusive).
+  left_index: 0                # confirm with: v4l2-ctl --list-devices
+  right_index: 1
+  wide_index: 2
   stereo_width: 1280
   stereo_height: 720
   stereo_fps: 30
   wide_width: 1920
   wide_height: 1080
   wide_fps: 30
+  reconnect: true              # reopen a camera that stops delivering frames
 
 depth:
   backend: sgbm          # "sgbm" (CPU, always works) or "raft_trt" (TensorRT engine)
   num_disparities: 128
   block_size: 5
-  baseline_m: 0.06       # set from stereo calibration
-  focal_px: 700.0        # set from stereo calibration
+  fast_downscale: 2      # SGBM matches at 1/N resolution so the 10 Hz loop holds rate
+  baseline_m: 0.06       # fallback only — the calibration file overrides these
+  focal_px: 700.0
 
 safety:
   warn_distance_m: 1.5
   danger_distance_m: 0.7
+  obstacle_percentile: 5.0     # robust "nearest obstacle" statistic (not a raw min)
+  floor_drop_invalid_fraction: 0.75
+  drop_far_m: 3.0
   tick_hz: 10.0
+  danger_repeat_s: 2.0
+  warn_repeat_s: 6.0
 
 grounding:
   conf_threshold: 0.25
@@ -35,16 +49,23 @@ agent:
   ctx_size: 2048
   max_tokens: 256
   temperature: 0.3
+  request_timeout_s: 60.0
+  tool_protocol: prompt  # "prompt" works with every llama.cpp template; "native"
+                         # needs --jinja + a tool-capable chat template
+  image_max_side: 1024   # gated frame is downscaled to this before the VLM
 
 speech:
-  wake_model: "alexa"    # openWakeWord built-in; replace with custom "ARGUS" .onnx later
+  wake_model: "hey_jarvis"  # openWakeWord built-in; replace with custom "ARGUS" .onnx later
   wake_threshold: 0.5
   whisper_model: "tiny"
   whisper_compute: "int8"
   record_seconds: 5.0
+  input_device: null     # mic: index or name substring (e.g. "USB"); null = default
+  output_device: null    # speaker/bone-conduction: index or name substring
 
 privacy:
   face_model: "buffalo_s"
   det_size: 640
   blur_kernel: 51
   enable_text_blur: false
+  require_gate: true     # HARD RULE: never call the agent if face blur is unavailable

@@ -24,10 +24,10 @@ def _cmd_run(args):
 def _cmd_query(args):
     from .orchestrator import Orchestrator
     cfg = load_config(args.config)
-    orch = Orchestrator(cfg, enable_audio=True)
-    import threading
-    t = threading.Thread(target=orch._fast_loop, daemon=True)  # noqa: SLF001
-    t.start()
+    orch = Orchestrator(cfg, enable_audio=not args.no_audio)
+    orch.start_fast_loop()
+    import time
+    time.sleep(1.0)  # let the fast loop produce a first depth map
     orch.handle_query(args.text)
     orch.stop()
 
@@ -48,6 +48,7 @@ def main(argv=None):
 
     pq = sub.add_parser("query", help="run one slow-path interaction")
     pq.add_argument("text", help="the question to ask")
+    pq.add_argument("--no-audio", action="store_true", help="print the answer instead of speaking")
     pq.set_defaults(func=_cmd_query)
 
     ps = sub.add_parser("selftest", help="check environment, models, camera, llama server")

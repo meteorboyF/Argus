@@ -14,29 +14,48 @@ The fix is full stereo calibration + rectification:
   4. Compute Q, the 4x4 reprojection matrix, so depth.py can turn disparity
      straight into metric 3D (handles your geometry automatically).
 
-It is "smart" about setup:
-  - Auto-detects camera indices (two matching-resolution = the stereo pair).
+It is "smart" about setup — ANY camera arrangement works:
+  - Auto-detects the stereo pair by V4L2 device name (AR0234) with a
+    matching-resolution fallback; no fixed indices needed.
+  - Captures at the RUNTIME stereo resolution (from argus.yaml) so the
+    rectification maps match what the depth loop actually sees.
   - Auto-detects the checkerboard dimensions from a list of common sizes.
   - Auto-captures a view when the board is detected in BOTH cameras and steady,
     spread across the field of view (you just move the board around).
+  - Detects SWAPPED left/right cameras from the recovered geometry (the sign of
+    the baseline) and fixes the assignment automatically — plug the cameras into
+    any port, in any order.
+  - Records each camera's USB port path so the runtime re-binds left/right to
+    the same physical cameras on every boot, however V4L2 renumbers them.
   - Validates the result (reprojection error + post-rectification vertical
-    alignment) and refuses to save a bad calibration.
+    alignment) and warns loudly on a bad calibration.
+  - --verify shows (or, headless, prints) live rectified depth so you can
+    sanity-check with a tape measure before trusting it.
 
 Usage (just plug the board in and move it around):
-    python scripts/calibrate_stereo.py --square-mm 25
+    python3 scripts/calibrate_stereo.py --square-mm 25
+
+Verify an existing calibration against live depth:
+    python3 scripts/calibrate_stereo.py --verify
 
 Or pin things down explicitly:
-    python scripts/calibrate_stereo.py --left 0 --right 1 \
+    python3 scripts/calibrate_stereo.py --left 0 --right 1 \
         --rows 6 --cols 9 --square-mm 25 \
         --out /opt/argus/config/stereo_calib.npz
 """
 from __future__ import annotations
 
 import argparse
+import os
+import sys
 import time
+from pathlib import Path
 
 import cv2
 import numpy as np
+
+# Allow running straight from the repo before `pip install -e .`.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 # Common inner-corner layouts to try when --rows/--cols are not given.
 # (cols, rows) = (inner corners along x, inner corners along y).
@@ -47,49 +66,61 @@ CHESS_FLAGS = (cv2.CALIB_CB_ADAPTIVE_THRESH
                | cv2.CALIB_CB_FAST_CHECK)
 SUBPIX_CRIT = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
+DEFAULT_OUT = os.path.join(os.environ.get("ARGUS_HOME", "/opt/argus"),
+                           "config", "stereo_calib.npz")
+
 
 # ---------------------------------------------------------------------------
 # Camera discovery
 # ---------------------------------------------------------------------------
-def _open(idx: int) -> cv2.VideoCapture | None:
-    cap = cv2.VideoCapture(idx)
+def _open(idx: int, width: int, height: int, fps: int = 30) -> cv2.VideoCapture | None:
+    cap = cv2.VideoCapture(idx, cv2.CAP_V4L2) if sys.platform.startswith("linux") \
+        else cv2.VideoCapture(idx)
     if not cap.isOpened():
         return None
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+    cap.set(cv2.CAP_PROP_FPS, fps)
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
     return cap
 
 
-def autodetect_pair(max_index: int = 8) -> tuple[int, int]:
-    """Find two cameras with matching resolution = the AR0234 stereo pair.
-
-    The IMX477P wide camera has a different (higher) resolution, so the two that
-    match are the stereo pair. Returns (left_index, right_index) ordered by index
-    (you can swap with --left/--right if mirrored)."""
-    found = {}
-    for idx in range(max_index):
-        cap = _open(idx)
-        if cap is None:
-            continue
-        w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        cap.release()
-        found[idx] = (w, h)
-    if not found:
+def autodetect_pair(cfg) -> tuple[int, int]:
+    """Find the AR0234 stereo pair using the same smart discovery as the runtime
+    (V4L2 device names first, resolution grouping fallback)."""
+    from argus.cameras import probe_cameras
+    nodes = probe_cameras(cfg.max_probe_index if cfg else 10)
+    if not nodes:
         raise SystemExit("No cameras found. Check connections / v4l2-ctl --list-devices")
 
-    # Group by resolution; the largest group of size >= 2 is the stereo pair.
-    by_res: dict[tuple[int, int], list[int]] = {}
-    for idx, res in found.items():
-        by_res.setdefault(res, []).append(idx)
-    pairs = [idxs for idxs in by_res.values() if len(idxs) >= 2]
-    if not pairs:
-        raise SystemExit(
-            f"Could not auto-detect a matching stereo pair. Detected: {found}\n"
-            "Pass --left and --right explicitly."
-        )
-    pair = sorted(max(pairs, key=len))[:2]
-    print(f"Auto-detected stereo pair: left={pair[0]}, right={pair[1]} "
-          f"(resolution {found[pair[0]]}). Use --left/--right to override/swap.")
-    return pair[0], pair[1]
+    hint = (cfg.stereo_name_hint if cfg else "AR0234").lower()
+    stereo = [n for n in nodes if hint and hint in n.name.lower()]
+    if len(stereo) != 2:
+        by_res: dict[tuple[int, int], list] = {}
+        for n in nodes:
+            by_res.setdefault((n.width, n.height), []).append(n)
+        groups = [g for g in by_res.values() if len(g) >= 2]
+        if not groups:
+            raise SystemExit(
+                f"Could not auto-detect a matching stereo pair. Detected: "
+                f"{[(n.index, n.name, (n.width, n.height)) for n in nodes]}\n"
+                "Pass --left and --right explicitly.")
+        stereo = sorted(max(groups, key=len), key=lambda n: n.index)[:2]
+    stereo = sorted(stereo, key=lambda n: n.index)
+    print(f"Auto-detected stereo pair: /dev/video{stereo[0].index} and "
+          f"/dev/video{stereo[1].index} ('{stereo[0].name}'). Left/right order "
+          "will be verified geometrically after calibration.")
+    return stereo[0].index, stereo[1].index
+
+
+def usb_port_of(index: int) -> str:
+    """Stable USB port path for /dev/video<index> ('' off-Linux)."""
+    d = Path(f"/sys/class/video4linux/video{index}/device")
+    try:
+        return d.resolve().name.split(":")[0]
+    except OSError:
+        return ""
 
 
 # ---------------------------------------------------------------------------
@@ -110,6 +141,12 @@ def autodetect_board(grayL, grayR) -> tuple[int, int] | None:
         if okL and okR:
             return pattern
     return None
+
+
+def make_object_points(pattern: tuple[int, int], square_m: float) -> np.ndarray:
+    obj = np.zeros((pattern[0] * pattern[1], 3), np.float32)
+    obj[:, :2] = np.mgrid[0:pattern[0], 0:pattern[1]].T.reshape(-1, 2) * square_m
+    return obj
 
 
 def _coverage_cell(corners, w, h, grid=3):
@@ -155,6 +192,71 @@ def rectification_error(ptsL, ptsR, mtxL, distL, R1, P1, mtxR, distR, R2, P2):
 
 
 # ---------------------------------------------------------------------------
+# Live depth verification
+# ---------------------------------------------------------------------------
+def verify_depth(calib_path: str, seconds: float = 20.0, headless: bool = False):
+    """Open the calibrated pair, rectify live frames, run SGBM, and report the
+    median depth in the central patch — point the rig at a wall or hold your
+    hand up and compare against a tape measure."""
+    from argus.config import load_config
+    from argus.depth import DepthEstimator
+
+    cfg = load_config()
+    cfg.depth.calibration_file = calib_path
+    est = DepthEstimator(cfg.depth)
+    if not est.calibrated:
+        raise SystemExit(f"No usable calibration at {calib_path} — run calibration first.")
+
+    left_idx, right_idx = autodetect_pair(cfg.camera)
+    # Honour saved swap: re-bind to the ports the calibration recorded.
+    data = np.load(calib_path, allow_pickle=True)
+    lp = str(data["left_port"]) if "left_port" in data else ""
+    rp = str(data["right_port"]) if "right_port" in data else ""
+    if lp and rp:
+        if usb_port_of(left_idx) == rp and usb_port_of(right_idx) == lp:
+            left_idx, right_idx = right_idx, left_idx
+
+    capL = _open(left_idx, cfg.camera.stereo_width, cfg.camera.stereo_height)
+    capR = _open(right_idx, cfg.camera.stereo_width, cfg.camera.stereo_height)
+    if capL is None or capR is None:
+        raise SystemExit("Could not open the stereo cameras for verification.")
+
+    print("\nVerification: aim the rig at a flat surface 0.5–3 m away.")
+    print("Compare the printed centre distance with a tape measure. Ctrl-C to stop.\n")
+    t_end = time.time() + seconds
+    try:
+        while time.time() < t_end:
+            okL, fL = capL.read()
+            okR, fR = capR.read()
+            if not (okL and okR):
+                continue
+            depth = est.depth_map(fL, fR)
+            h, w = depth.shape[:2]
+            patch = depth[h // 2 - 20:h // 2 + 20, w // 2 - 20:w // 2 + 20]
+            finite = patch[np.isfinite(patch)]
+            centre = float(np.median(finite)) if finite.size else float("nan")
+            valid_pct = 100.0 * np.isfinite(depth).mean()
+            print(f"\r  centre depth: {centre:5.2f} m   valid pixels: {valid_pct:4.1f}%   ",
+                  end="", flush=True)
+            if not headless:
+                vis = np.clip(depth, 0, 4.0) / 4.0
+                vis = cv2.applyColorMap((255 - vis * 255).astype(np.uint8), cv2.COLORMAP_TURBO)
+                vis[~np.isfinite(depth)] = 0
+                cv2.rectangle(vis, (w // 2 - 20, h // 2 - 20), (w // 2 + 20, h // 2 + 20),
+                              (255, 255, 255), 2)
+                cv2.imshow("ARGUS depth verification (q to quit)", vis)
+                if cv2.waitKey(1) & 0xFF in (27, ord("q")):
+                    break
+    except KeyboardInterrupt:
+        pass
+    finally:
+        print()
+        capL.release(); capR.release()
+        if not headless:
+            cv2.destroyAllWindows()
+
+
+# ---------------------------------------------------------------------------
 # Main capture loop
 # ---------------------------------------------------------------------------
 def main():
@@ -166,27 +268,49 @@ def main():
     ap.add_argument("--cols", type=int, default=None, help="inner corners per row (auto if omitted)")
     ap.add_argument("--square-mm", type=float, default=25.0, help="checkerboard square size (mm)")
     ap.add_argument("--min-views", type=int, default=15, help="views required before solving")
-    ap.add_argument("--out", default="/opt/argus/config/stereo_calib.npz")
+    ap.add_argument("--out", default=DEFAULT_OUT)
     ap.add_argument("--no-auto", action="store_true", help="manual capture (SPACE) only")
-    ap.add_argument("--headless", action="store_true", help="no preview window")
+    ap.add_argument("--headless", action="store_true", help="no preview window (SSH-friendly)")
+    ap.add_argument("--verify", action="store_true",
+                    help="skip calibration; live-check depth against the saved file")
+    ap.add_argument("--max-seconds", type=float, default=300.0,
+                    help="headless capture time limit")
     args = ap.parse_args()
+
+    try:
+        from argus.config import load_config
+        cam_cfg = load_config().camera
+    except Exception:  # noqa: BLE001 — argus package not installed yet
+        cam_cfg = None
+
+    if args.verify:
+        verify_depth(args.out, headless=args.headless)
+        return
 
     left_idx, right_idx = (args.left, args.right)
     if left_idx is None or right_idx is None:
-        left_idx, right_idx = autodetect_pair()
+        left_idx, right_idx = autodetect_pair(cam_cfg)
 
-    capL, capR = _open(left_idx), _open(right_idx)
+    # Calibrate at the RUNTIME stereo resolution so the rectification maps match
+    # what the depth loop sees. (A mismatch silently costs accuracy.)
+    cw = cam_cfg.stereo_width if cam_cfg else 1280
+    ch = cam_cfg.stereo_height if cam_cfg else 720
+
+    capL = _open(left_idx, cw, ch)
+    capR = _open(right_idx, cw, ch)
     if capL is None or capR is None:
         raise SystemExit(f"Could not open cameras {left_idx}/{right_idx}.")
 
     pattern = (args.cols, args.rows) if (args.cols and args.rows) else None
     square_m = args.square_mm / 1000.0
+    obj = make_object_points(pattern, square_m) if pattern else None
 
     objpoints, ptsL, ptsR = [], [], []
     covered: set[int] = set()
     size = None
     last_capture = 0.0
     prev_center = None
+    t_start = time.time()
 
     print("\nMove the checkerboard slowly around the whole view (corners, center,")
     print("tilted, near, far). Auto-capture fires when it's seen in BOTH cameras")
@@ -204,8 +328,7 @@ def main():
         if pattern is None:
             pattern = autodetect_board(gL, gR)
             if pattern is not None:
-                obj = np.zeros((pattern[0] * pattern[1], 3), np.float32)
-                obj[:, :2] = np.mgrid[0:pattern[0], 0:pattern[1]].T.reshape(-1, 2) * square_m
+                obj = make_object_points(pattern, square_m)
                 print(f"Detected checkerboard: {pattern[0]}x{pattern[1]} inner corners.")
 
         okcL = okcR = False
@@ -213,9 +336,6 @@ def main():
         if pattern is not None:
             okcL, cL = detect_board(gL, pattern)
             okcR, cR = detect_board(gR, pattern)
-            if "obj" not in dir():
-                obj = np.zeros((pattern[0] * pattern[1], 3), np.float32)
-                obj[:, :2] = np.mgrid[0:pattern[0], 0:pattern[1]].T.reshape(-1, 2) * square_m
 
         both = okcL and okcR
         # Steadiness: board center barely moved since last frame.
@@ -255,9 +375,13 @@ def main():
             ptsR.append(cR)
             covered.add(_coverage_cell(cL, size[0], size[1]))
             last_capture = time.time()
-            print(f"  captured view {len(objpoints)} (coverage {len(covered)}/9)")
-            if args.headless and len(objpoints) >= args.min_views:
+            print(f"  captured view {len(objpoints)}/{args.min_views} "
+                  f"(coverage {len(covered)}/9)")
+            if args.headless and len(objpoints) >= args.min_views and len(covered) >= 6:
                 break
+        if args.headless and (time.time() - t_start) > args.max_seconds:
+            print("Headless time limit reached.")
+            break
 
     capL.release(); capR.release()
     if not args.headless:
@@ -269,6 +393,20 @@ def main():
 
     print(f"\nCalibrating from {len(objpoints)} views...")
     rms, mtxL, distL, mtxR, distR, R, T = calibrate(objpoints, ptsL, ptsR, size)
+
+    # --- Automatic left/right disambiguation -------------------------------
+    # Convention: P_right = R @ P_left + T, so for a physically correct
+    # left/right assignment the left camera sits at x = T[0] < 0 in right-camera
+    # coordinates. T[0] > 0 means the cameras were connected swapped — fix it by
+    # swapping the point sets and re-solving, no re-capture needed.
+    swapped = False
+    if float(T[0]) > 0:
+        print("  Detected swapped cameras (baseline sign positive) — auto-correcting.")
+        left_idx, right_idx = right_idx, left_idx
+        ptsL, ptsR = ptsR, ptsL
+        rms, mtxL, distL, mtxR, distR, R, T = calibrate(objpoints, ptsL, ptsR, size)
+        swapped = True
+
     R1, R2, P1, P2, Q, m1x, m1y, m2x, m2y = rectify(mtxL, distL, mtxR, distR, size, R, T)
     v_err = rectification_error(ptsL, ptsR, mtxL, distL, R1, P1, mtxR, distR, R2, P2)
 
@@ -278,6 +416,10 @@ def main():
     angle = float(np.degrees(np.arccos(np.clip((np.trace(R) - 1) / 2, -1, 1))))
 
     print("\n=== Calibration result ===")
+    if swapped:
+        print(f"  cameras were SWAPPED — corrected: left=/dev/video{left_idx}, "
+              f"right=/dev/video{right_idx}")
+    print(f"  image size                    : {size[0]}x{size[1]}")
     print(f"  stereo RMS reprojection error : {rms:.3f} px   (aim < 0.6)")
     print(f"  post-rectification vert. error: {v_err:.3f} px   (aim < 1.0)")
     print(f"  baseline                      : {baseline_m*100:.2f} cm")
@@ -288,6 +430,7 @@ def main():
         print("\n  WARNING: calibration quality is poor. Re-run with more, better-spread,")
         print("  well-lit views of a rigid (flat!) checkerboard before trusting depth.")
 
+    os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     np.savez(
         args.out,
         # intrinsics / extrinsics
@@ -299,11 +442,16 @@ def main():
         baseline_m=baseline_m, focal_px=focal_px, image_size=np.array(size),
         rms=rms, vertical_error=v_err, toe_angle_deg=angle,
         left_index=left_idx, right_index=right_idx, pattern=np.array(pattern),
+        # stable physical identity so the runtime re-binds left/right correctly
+        # across reboots however V4L2 renumbers the devices
+        left_port=usb_port_of(left_idx), right_port=usb_port_of(right_idx),
     )
     print(f"\nSaved calibration -> {args.out}")
-    print("depth.py will auto-load this (rectification maps + Q) and produce metric")
-    print("depth that accounts for your exact camera mounting. No config edits needed —")
-    print("though baseline_m / focal_px are also written for reference.")
+    print("depth.py auto-loads this (rectification maps + Q) and produces metric depth")
+    print("for your exact mounting; cameras.py re-binds left/right by USB port.")
+    print("\nNow sanity-check it against a tape measure:")
+    print(f"  python3 scripts/calibrate_stereo.py --verify"
+          + (" --headless" if args.headless else ""))
 
 
 if __name__ == "__main__":

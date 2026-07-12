@@ -420,4 +420,66 @@ c8cd10b  Fix git pull blocking + NB06 llama-cpp-python
 
 ---
 
-*Last updated: 2026-05-27 | Session by Claude Sonnet*
+## 11. Jetson-Hardening Pass (2026-07-13, PC-side)
+
+A full review-and-fix pass over the `argus/` runtime to make Jetson bring-up
+straightforward. Everything below was implemented and syntax/logic-tested on the
+PC; **nothing has run on a physical Jetson yet** — the on-device checklist is
+`docs/KNOWN_GAPS.md` section A.
+
+### Real bugs fixed (each would have broken the device demo)
+
+| Where | Bug | Fix |
+|---|---|---|
+| `safety.py` | `floor_drop_threshold_m` (a distance in metres) was compared against a *fraction of invalid pixels* → with SGBM's invalid borders this fires false "step down" DANGER almost constantly | Proper `floor_drop_invalid_fraction` on the central bottom strip, invalid-or-far test, debounced over N ticks |
+| `safety.py` | Obstacle distance was the raw single-pixel min → speckle noise = constant false DANGER | Percentile-based distance (`obstacle_percentile`) + `min_valid_pixels` guard |
+| `orchestrator.py` | Fed openWakeWord a re-sent rolling 1 s window; the model keeps internal streaming state → detection ruined | Feed each 80 ms (1280-sample) block exactly once; `reset()` after each query |
+| `speech.py` | Wake score keys are versioned (`alexa_v0.1`), so the configured name never matched → fell through to "any model over threshold" = false wakes from ~10 unrelated hotwords | Prefix matching; no any-model fallback |
+| `agent.py` | OpenAI `tools` param is ignored by llama-server without `--jinja`, and Gemma chat templates typically reject the `tool` role → tool calling silently never worked | Default prompt-JSON tool protocol (works with every template); native `tool_calls` still parsed; second turn sent as plain text; `--jinja` added to the server script |
+| `orchestrator.py` | "Privacy gate is a hard precondition" was not enforced — if insightface failed to init, the agent got unblurred frames | `privacy.require_gate: true` refuses construction/queries without a working gate |
+| `requirements-jetson.txt` | `onnxruntime-gpu` has **no aarch64 wheel on PyPI** → `pip install -r` aborts `setup_jetson.sh` (set -e) | CPU `onnxruntime` in requirements; GPU wheel documented as optional |
+| `selftest.py` / general | Camera indices assumed stable; V4L2 renumbers on every boot and each USB cam exposes a non-capture metadata node | Smart discovery (below) |
+| `calibrate_stereo.py` | Calibrated at the camera's *default* resolution while the runtime captures 1280×720 → maps mismatch, silent accuracy loss | Calibrates at the runtime resolution from `argus.yaml`; selftest checks the match |
+
+### New capabilities
+
+- **Smart camera discovery** (`cameras.py`): identify by V4L2 device name
+  (AR0234/IMX477 hints) with resolution-grouping fallback; filter out metadata
+  nodes by requiring an actual frame; left/right re-bound across reboots via
+  **USB port paths recorded in the calibration file**; auto-reconnect on stall.
+- **Position-agnostic calibration** (`calibrate_stereo.py`): automatic
+  left/right swap correction from the sign of the recovered baseline (no
+  re-capture), `--verify` live tape-measure check, `--headless` SSH flow,
+  records USB ports, writes to `$ARGUS_HOME`.
+- **Fast-loop performance**: SGBM matching at `depth.fast_downscale` (default ½
+  resolution), disparity rescaled so Q stays metric.
+- **Agent robustness**: image downscaled before base64 (`image_max_side`),
+  retries, `AgentError` → spoken fallback instead of a crash.
+- **Grounding**: YOLO-World `set_classes` cached (CLIP text encoding is
+  expensive on Jetson).
+- **Speech**: selectable input/output devices, thread-safe Speaker (fast +
+  slow loop share it), WARN messages now voiced on a slow cadence.
+- **Selftest**: now covers calibration quality/resolution, camera discovery,
+  audio devices, privacy-gate init, and required-vs-optional model files.
+- **Scripts**: `download_models.sh` (YOLO-World + Piper + wake-word models,
+  Gemma instructions); `setup_jetson.sh` hardened (swap check, CUDA arch 87,
+  -j4 build, alsa-utils); llama server binds 127.0.0.1 with `--jinja`.
+- **Docs**: `JETSON_DEPLOYMENT.md` rewritten with verification steps and
+  concrete torch/onnxruntime guidance; new `CALIBRATION.md` and
+  `KNOWN_GAPS.md`; `JETSON_CLAUDE_PROMPT.md` updated to the new flow.
+
+### Notes for the next agent
+
+- Default wake word changed `alexa` → `hey_jarvis` (saying "alexa" triggers
+  nearby Echo devices; custom "ARGUS" model still TODO — KNOWN_GAPS B5).
+- The Gemma GGUF filenames in config are placeholders until the exact HF repo
+  is chosen on-device (KNOWN_GAPS A2).
+- The YOLO-World TensorRT engine is built by `build_engines.sh` but not yet
+  consumed by `grounding.py` — the `.pt` torch path is the working default
+  (KNOWN_GAPS B1).
+- `argus_pc_test.ipynb` predates this pass; the `argus/` package is the source
+  of truth where they disagree.
+
+---
+
+*Last updated: 2026-07-13 | Jetson-hardening session by Claude (Fable 5)*

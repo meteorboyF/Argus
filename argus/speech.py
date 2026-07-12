@@ -4,17 +4,44 @@
 - Transcriber: faster-whisper (tiny, INT8), transcribes a short recording.
 - Speaker:    Piper TTS, synthesizes and plays a spoken reply.
 
-Audio capture/playback uses sounddevice. On a headless bring-up without audio
-hardware, construct with enabled=False to no-op safely.
+Audio capture/playback uses sounddevice. Devices are selectable via
+speech.input_device / speech.output_device in argus.yaml (index or name
+substring — list with `python3 -m sounddevice`). On a headless bring-up without
+audio hardware, construct Speaker with enabled=False to no-op safely.
+
+openWakeWord usage note: the model keeps INTERNAL streaming state and must be
+fed consecutive, non-overlapping 80 ms blocks (1280 samples at 16 kHz). Feeding
+it a re-sent rolling window corrupts the stream and kills detection accuracy —
+pass each mic block exactly once.
 """
 from __future__ import annotations
 
 import queue
+import threading
 import wave
 
 import numpy as np
 
 from .config import SpeechConfig
+
+
+def _resolve_device(selector, kind: str):
+    """Turn an index / name-substring selector into a sounddevice device id.
+    Returns None (system default) if the selector is None or nothing matches."""
+    if selector is None:
+        return None
+    if isinstance(selector, int):
+        return selector
+    if isinstance(selector, str) and selector.strip().lstrip("-").isdigit():
+        return int(selector)
+    import sounddevice as sd
+    want = str(selector).lower()
+    key = "max_input_channels" if kind == "input" else "max_output_channels"
+    for i, dev in enumerate(sd.query_devices()):
+        if want in dev["name"].lower() and dev[key] > 0:
+            return i
+    print(f"[speech] no {kind} device matching {selector!r}; using system default")
+    return None
 
 
 class WakeWord:
@@ -24,21 +51,34 @@ class WakeWord:
         try:
             import openwakeword
             openwakeword.utils.download_models()
-        except Exception:  # noqa: BLE001
+        except Exception:  # noqa: BLE001 — already downloaded / offline
             pass
-        # If wake_model is a known name use wordlist; if it's a path, load it.
-        if cfg.wake_model.endswith(".onnx"):
+        # If wake_model is a path to a custom model, load just that; otherwise
+        # load the pretrained pack and match the requested name against scores.
+        if cfg.wake_model.endswith((".onnx", ".tflite")):
             self.model = Model(wakeword_models=[cfg.wake_model])
         else:
             self.model = Model()
-        self.target = cfg.wake_model
+        self.target = cfg.wake_model.rsplit("/", 1)[-1].split(".")[0].lower()
 
     def detected(self, audio_int16: np.ndarray) -> bool:
+        """Feed ONE new mic block (consecutive audio, not a rolling window)."""
         scores = self.model.predict(audio_int16)
-        # Trigger if any model (or the named one) crosses threshold.
-        if self.target in scores:
-            return scores[self.target] >= self.cfg.wake_threshold
-        return any(v >= self.cfg.wake_threshold for v in scores.values())
+        # Score keys are versioned (e.g. "hey_jarvis_v0.1"); match by prefix so a
+        # configured name like "hey_jarvis" works. Never fall back to "any model
+        # fired" — with the full pretrained pack loaded that means constant
+        # false wakes from unrelated hotwords.
+        for key, score in scores.items():
+            if key.lower().startswith(self.target) and score >= self.cfg.wake_threshold:
+                return True
+        return False
+
+    def reset(self):
+        """Clear streaming state (call after handling a query)."""
+        try:
+            self.model.reset()
+        except Exception:  # noqa: BLE001 — older openwakeword lacks reset()
+            pass
 
 
 class Transcriber:
@@ -53,10 +93,14 @@ class Transcriber:
 
 
 class Speaker:
+    """Thread-safe: the fast safety loop and the slow agent loop can both call
+    speak(); playback is serialized so warnings don't overlap mid-sentence."""
+
     def __init__(self, cfg: SpeechConfig, enabled: bool = True):
         self.cfg = cfg
         self.enabled = enabled
         self._voice = None
+        self._lock = threading.Lock()
         if enabled:
             try:
                 from piper import PiperVoice
@@ -66,31 +110,36 @@ class Speaker:
                 self.enabled = False
 
     def speak(self, text: str):
-        if not self.enabled or self._voice is None or not text:
+        if not text:
+            return
+        if not self.enabled or self._voice is None:
             print(f"[ARGUS says] {text}")
             return
         import io
         import sounddevice as sd
         import soundfile as sf
-        buf = io.BytesIO()
-        with wave.open(buf, "wb") as wf:
-            self._voice.synthesize(text, wf)
-        buf.seek(0)
-        data, sr = sf.read(buf, dtype="float32")
-        sd.play(data, sr)
-        sd.wait()
+        with self._lock:
+            buf = io.BytesIO()
+            with wave.open(buf, "wb") as wf:
+                self._voice.synthesize(text, wf)
+            buf.seek(0)
+            data, sr = sf.read(buf, dtype="float32")
+            sd.play(data, sr, device=_resolve_device(self.cfg.output_device, "output"))
+            sd.wait()
 
 
-def record(seconds: float, sample_rate: int) -> np.ndarray:
+def record(seconds: float, sample_rate: int, device=None) -> np.ndarray:
     """Blocking mic capture -> float32 mono in [-1, 1]."""
     import sounddevice as sd
-    audio = sd.rec(int(seconds * sample_rate), samplerate=sample_rate, channels=1, dtype="float32")
+    audio = sd.rec(int(seconds * sample_rate), samplerate=sample_rate, channels=1,
+                   dtype="float32", device=_resolve_device(device, "input"))
     sd.wait()
     return audio.flatten()
 
 
-def mic_stream(sample_rate: int, block_ms: int = 80):
-    """Generator yielding int16 audio blocks for continuous wake-word listening."""
+def mic_stream(sample_rate: int, block_ms: int = 80, device=None):
+    """Generator yielding consecutive int16 audio blocks for wake-word listening.
+    80 ms at 16 kHz = 1280 samples = exactly one openWakeWord frame."""
     import sounddevice as sd
     q: queue.Queue = queue.Queue()
     block = int(sample_rate * block_ms / 1000)
@@ -99,6 +148,7 @@ def mic_stream(sample_rate: int, block_ms: int = 80):
         q.put((indata[:, 0] * 32767).astype(np.int16).copy())
 
     with sd.InputStream(samplerate=sample_rate, channels=1, dtype="float32",
-                        blocksize=block, callback=cb):
+                        blocksize=block, device=_resolve_device(device, "input"),
+                        callback=cb):
         while True:
             yield q.get()
