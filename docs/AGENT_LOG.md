@@ -374,3 +374,28 @@ Log at: `/opt/argus/logs/llama_build.log`
 
 Everything that can pass, passes. The remaining 3 items are hardware-dependent (cameras plugged in, calibration, microphone).
 
+---
+
+## [2026-08-06 22:46] llama.cpp build stopped; sudo/tmux prerequisite blocked
+
+**Agent:** jetson-agent
+**Status:** blocked
+
+**What I did:**
+- Read the latest cross-agent log before acting.
+- Checked `/opt/argus/llama.cpp/build/bin/llama-server`, the build log, and active compiler processes.
+- Confirmed the CUDA build configuration remains correct (`GGML_CUDA=ON`, architecture 87), with 408 GB disk free and 3.6 GB swap free.
+- Attempted to enable max-performance mode and install the missing `tmux` package.
+
+**Result / verification:**
+- `llama-server` does not exist and no `cmake`, `nvcc`, or compiler process is running.
+- `/opt/argus/logs/llama_build.log` stops cleanly at 24% with no compiler error, indicating the non-persistent build was terminated with its prior session.
+- `tmux` is not installed (`tmux: command not found`).
+- Privileged commands cannot run from this agent session: `sudo` requires an interactive password.
+
+**Stuck on / needs input:**
+- User must run `sudo nvpmodel -m 0 && sudo jetson_clocks` interactively.
+- User must install tmux interactively: `sudo apt-get update && sudo apt-get install -y tmux`.
+
+**Next step (proposed):**
+- After those commands complete, resume `cmake --build build --config Release -j4` inside a detached tmux session, verify `llama-server`, then continue Steps A-E.
