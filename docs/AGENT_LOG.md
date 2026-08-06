@@ -329,3 +329,48 @@ Log at: `/opt/argus/logs/llama_build.log`
 5. Run fast loop: `python3 -m argus run --no-audio`
 6. If mic available: `python3 -m argus run`
 
+---
+
+## [2026-08-06 22:45] All components except llama-server verified — build at 17%
+
+**Agent:** jetson-agent
+**Status:** in-progress (llama.cpp CUDA build active, ~17% — flash attention templates)
+
+**Additional items verified and fixed since last entry:**
+
+**WakeWord / openWakeWord:**
+- `hey_jarvis_v0.1.onnx` and `.tflite` were missing (never downloaded). Downloaded all built-in models.
+- `WakeWord(cfg.speech)` now initialises cleanly. Target `hey_jarvis` confirmed via prefix match.
+- `speech.py` calls `download_models()` on init, so this will be automatic in future sessions.
+
+**Whisper (faster_whisper):**
+- `WhisperModel("tiny", device="cpu", compute_type="int8")` downloads model on first use.
+- Pre-downloaded and smoke-tested: transcribe on 1s silent audio → `lang: en`, no crash.
+
+**Privacy gate:**
+- `buffalo_s` already cached at `~/.insightface/models/buffalo_s/`.
+- `PrivacyGate(cfg.privacy)` initialises with `ready=True` and `require_gate=True`.
+
+**Config sync:**
+- `/opt/argus/config/argus.yaml` updated to match hardening-pass template.
+- All new fields confirmed loading correctly via `load_config()`.
+
+**Full pre-server selftest status:**
+
+| # | Check | State |
+|---|---|---|
+| 1 | yaml, cv2, numpy, requests | ✅ PASS |
+| 1 | insightface, sounddevice, piper | ✅ PASS |
+| 1 | faster_whisper, openwakeword, onnxruntime | ✅ PASS |
+| 2 | torch.cuda.is_available() | ✅ PASS |
+| 3 | tensorrt import + trtexec | ✅ PASS |
+| 4 | model files (all 5) | ✅ PASS |
+| 5 | calibration file | ⚠️ FAIL (deferred — no checkerboard) |
+| 6 | cameras | ⚠️ FAIL (unplugged during test) |
+| 7 | audio input | ⚠️ WARN (only internal APE — no USB mic present) |
+| 7 | audio output | ✅ PASS (HDMI + APE present) |
+| 8 | privacy gate | ✅ PASS |
+| 9 | llama server | ⏳ FAIL (server not yet running — build in progress) |
+
+Everything that can pass, passes. The remaining 3 items are hardware-dependent (cameras plugged in, calibration, microphone).
+
