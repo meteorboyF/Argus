@@ -8,6 +8,14 @@ Detects:
   - obstacles ahead within warn / danger distance
   - floor drop-offs (steps down, kerbs, holes) in the path region
 Returns a SafetyState the orchestrator can voice immediately.
+
+Robustness notes (why this isn't a raw argmin):
+  - The obstacle distance is a low PERCENTILE of the valid depths in the path
+    ROI, not the single minimum pixel — SGBM speckle makes single-pixel minima
+    fire false DANGER constantly.
+  - SGBM cannot compute disparity in the left `num_disparities`-wide border, so
+    drop-off statistics only look at the central columns of the bottom strip.
+  - Drop-off detection is debounced over consecutive ticks.
 """
 from __future__ import annotations
 
@@ -45,6 +53,7 @@ def _direction_of(col: int, width: int) -> str:
 class SafetyReflex:
     def __init__(self, cfg: SafetyConfig):
         self.cfg = cfg
+        self._drop_ticks = 0  # consecutive ticks the drop signature was present
 
     def evaluate(self, depth_m: np.ndarray) -> SafetyState:
         h, w = depth_m.shape[:2]
@@ -53,18 +62,31 @@ class SafetyReflex:
         roi = depth_m[roi_top:, :]
 
         finite = np.isfinite(roi)
-        if not finite.any():
+        n_valid = int(finite.sum())
+        if n_valid < self.cfg.min_valid_pixels:
+            # Not enough signal to judge — stay quiet rather than guess.
             return SafetyState(Level.CLEAR, float("inf"), "center", False, "")
 
-        valid = np.where(finite, roi, np.inf)
-        min_idx = np.unravel_index(np.argmin(valid), valid.shape)
-        min_dist = float(valid[min_idx])
-        direction = _direction_of(min_idx[1], w)
+        valid_depths = roi[finite]
+        min_dist = float(np.percentile(valid_depths, self.cfg.obstacle_percentile))
 
-        # Floor drop-off: large patch of "very far / no return" in the near-bottom
-        # strip suggests the ground fell away (step down / hole).
-        bottom_strip = depth_m[int(h * 0.85):, :]
-        drop = bool((~np.isfinite(bottom_strip)).mean() > self.cfg.floor_drop_threshold_m)
+        # Direction: column of the nearest valid region (use the same percentile
+        # cutoff so the direction matches the distance we report).
+        near_mask = finite & (roi <= min_dist * 1.1)
+        cols = np.where(near_mask.any(axis=0))[0]
+        direction = _direction_of(int(np.median(cols)) if cols.size else w // 2, w)
+
+        # Floor drop-off: in the near-bottom strip the floor should return valid,
+        # close depths. If most central pixels are invalid OR far (> drop_far_m),
+        # the ground has fallen away (step down / kerb / hole).
+        strip = depth_m[int(h * 0.85):, int(w * 0.2):int(w * 0.8)]
+        if strip.size:
+            bad = ~np.isfinite(strip) | (strip > self.cfg.drop_far_m)
+            drop_now = bool(bad.mean() > self.cfg.floor_drop_invalid_fraction)
+        else:
+            drop_now = False
+        self._drop_ticks = self._drop_ticks + 1 if drop_now else 0
+        drop = self._drop_ticks >= self.cfg.drop_consecutive_ticks
 
         level = Level.CLEAR
         msg = ""

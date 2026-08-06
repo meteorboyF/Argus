@@ -72,6 +72,8 @@ ARGUS/
 | Test on the PC (1060) | [../SETUP_LOCAL.md](../SETUP_LOCAL.md) + `argus_pc_test.ipynb` |
 | Build the wearable | [HARDWARE.md](HARDWARE.md) |
 | Deploy on the Jetson | [JETSON_DEPLOYMENT.md](JETSON_DEPLOYMENT.md) |
+| Calibrate the stereo cameras | [CALIBRATION.md](CALIBRATION.md) |
+| Know what's NOT done yet | [KNOWN_GAPS.md](KNOWN_GAPS.md) |
 | Get Claude to drive Jetson bring-up | [JETSON_CLAUDE_PROMPT.md](JETSON_CLAUDE_PROMPT.md) |
 | See project history / lessons | [../AGENT_HANDOFF.md](../AGENT_HANDOFF.md) |
 

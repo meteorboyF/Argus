@@ -31,6 +31,7 @@ class Grounder:
     def __init__(self, cfg: GroundingConfig):
         self.cfg = cfg
         self._model = None
+        self._classes: list[str] | None = None
         self._load()
 
     def _load(self):
@@ -38,9 +39,16 @@ class Grounder:
         weights = self.cfg.weights_pt if os.path.exists(self.cfg.weights_pt) else "yolov8s-worldv2.pt"
         self._model = YOLOWorld(weights)
 
+    def _set_classes(self, names: list[str]):
+        # set_classes runs the CLIP text encoder — expensive on the Jetson.
+        # Skip it when the vocabulary hasn't changed since the last call.
+        if names != self._classes:
+            self._model.set_classes(names)
+            self._classes = names
+
     def find_object(self, name: str, frame_bgr: np.ndarray) -> Detection | None:
         """Detect the single best instance of `name` in the frame, or None."""
-        self._model.set_classes([name])
+        self._set_classes([name])
         results = self._model.predict(
             frame_bgr, conf=self.cfg.conf_threshold, imgsz=self.cfg.imgsz, verbose=False
         )
@@ -59,7 +67,7 @@ class Grounder:
 
     def find_all(self, names: list[str], frame_bgr: np.ndarray) -> list[Detection]:
         """Detect any of several named classes (e.g. a hazard watchlist)."""
-        self._model.set_classes(names)
+        self._set_classes(names)
         results = self._model.predict(
             frame_bgr, conf=self.cfg.conf_threshold, imgsz=self.cfg.imgsz, verbose=False
         )

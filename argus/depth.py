@@ -2,6 +2,9 @@
 
 Two backends:
   - "sgbm":     OpenCV StereoSGBM, CPU. Always available, no model needed.
+                Matching runs on images downscaled by depth.fast_downscale so the
+                10 Hz fast loop holds rate on the Orin Nano CPU; disparity is
+                rescaled to full-resolution pixel units so Q stays valid.
   - "raft_trt": RAFT-Stereo TensorRT engine (built on-device). Higher quality.
                 Falls back to SGBM if the engine is missing.
 
@@ -107,14 +110,25 @@ class DepthEstimator:
 
     # ------------------------------------------------------------------ disparity
     def disparity(self, left_bgr: np.ndarray, right_bgr: np.ndarray) -> np.ndarray:
+        """Disparity in FULL-resolution pixel units (so Q stays valid), even when
+        SGBM matching runs on downscaled images for fast-loop speed."""
         if self._calib is not None:
             left_bgr, right_bgr = self._rectify_pair(left_bgr, right_bgr)
         if self.backend == "raft_trt" and self._trt is not None:
             return self._raft_disparity(left_bgr, right_bgr)
         gl = cv2.cvtColor(left_bgr, cv2.COLOR_BGR2GRAY)
         gr = cv2.cvtColor(right_bgr, cv2.COLOR_BGR2GRAY)
+        s = max(1, int(self.cfg.fast_downscale))
+        if s > 1:
+            h, w = gl.shape
+            gl = cv2.resize(gl, (w // s, h // s), interpolation=cv2.INTER_AREA)
+            gr = cv2.resize(gr, (w // s, h // s), interpolation=cv2.INTER_AREA)
         # SGBM returns fixed-point disparity scaled by 16.
-        return self._sgbm.compute(gl, gr).astype(np.float32) / 16.0
+        disp = self._sgbm.compute(gl, gr).astype(np.float32) / 16.0
+        if s > 1:
+            # Invalid pixels (disp < 0) must not be blended into neighbours.
+            disp = cv2.resize(disp, (w, h), interpolation=cv2.INTER_NEAREST) * s
+        return disp
 
     def _raft_disparity(self, left_bgr, right_bgr) -> np.ndarray:
         h, w = 480, 640

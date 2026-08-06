@@ -42,3 +42,4 @@ configs/stereo_calib.npz
 # macOS / Windows artefacts
 .DS_Store
 Thumbs.db
+.claude/

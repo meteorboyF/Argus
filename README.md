@@ -78,9 +78,10 @@ argus/                  # Jetson runtime package (the two-speed system)
   agent.py speech.py trt_runner.py orchestrator.py selftest.py __main__.py
 scripts/
   setup_jetson.sh       # Jetson dependency installer (run on device)
+  download_models.sh    # fetch YOLO-World / Piper / wake-word models (on device)
   run_llama_server.sh   # launch Gemma 4 E2B vision server
   build_engines.sh      # ONNX -> TensorRT (on device)
-  calibrate_stereo.py   # AR0234 stereo calibration
+  calibrate_stereo.py   # smart AR0234 stereo calibration (any mounting; --verify)
 config/argus.yaml       # runtime config (seed template)
 requirements-jetson.txt # Jetson Python deps
 setup.py                # installs the `argus` package (python -m argus)
@@ -91,7 +92,9 @@ AGENT_HANDOFF.md        # Development history, lessons learned, efficiency rules
 docs/
   PROJECT_OVERVIEW.md       # one-page orientation + repo map
   ARCHITECTURE.md           # module-level design + diagrams
-  JETSON_DEPLOYMENT.md      # full on-device bring-up
+  JETSON_DEPLOYMENT.md      # full on-device bring-up (step-by-step, verified)
+  CALIBRATION.md            # smart stereo calibration — any mounting position
+  KNOWN_GAPS.md             # what is NOT done yet — read before assuming
   HARDWARE.md               # wearable assembly + wiring
   JETSON_CLAUDE_PROMPT.md   # kickoff prompt for Claude Code on the Jetson
   ARGUS_Final_Pipeline.pdf  # authoritative design doc (with diagrams)

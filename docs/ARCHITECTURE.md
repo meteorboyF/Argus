@@ -60,16 +60,16 @@ direction, and feeds that back to Gemma for the final spoken answer.
 | File | Responsibility |
 |---|---|
 | `argus/config.py` | Dataclass config + YAML loader (`/opt/argus/config/argus.yaml`) |
-| `argus/cameras.py` | `CameraRig`: 3 cameras, threaded wide-frame, synced stereo grab |
-| `argus/depth.py` | `DepthEstimator`: SGBM (CPU) or RAFT-Stereo (TensorRT) → metric depth |
-| `argus/safety.py` | `SafetyReflex`: non-ML obstacle + drop-off detection |
-| `argus/privacy.py` | `PrivacyGate`: SCRFD face blur — mandatory before the agent |
-| `argus/grounding.py` | `Grounder`: YOLO-World open-vocab `find_object` |
-| `argus/agent.py` | `GemmaAgent`: llama.cpp client, system prompt, tool contract |
-| `argus/speech.py` | `WakeWord`, `Transcriber` (Whisper), `Speaker` (Piper), mic I/O |
+| `argus/cameras.py` | `CameraRig` + smart discovery: cameras identified by V4L2 name / resolution, left-right re-bound by USB port from the calibration file, auto-reconnect on stall |
+| `argus/depth.py` | `DepthEstimator`: SGBM (CPU, downscaled matching for 10 Hz) or RAFT-Stereo (TensorRT) → rectified metric depth |
+| `argus/safety.py` | `SafetyReflex`: non-ML obstacle (percentile-based) + debounced drop-off detection |
+| `argus/privacy.py` | `PrivacyGate`: SCRFD face blur — mandatory before the agent (`require_gate` enforced) |
+| `argus/grounding.py` | `Grounder`: YOLO-World open-vocab `find_object` (class-embedding cache) |
+| `argus/agent.py` | `GemmaAgent`: llama.cpp client; prompt-JSON tool protocol (works with any chat template) + native tool_calls parsing |
+| `argus/speech.py` | `WakeWord` (block-fed openWakeWord), `Transcriber` (Whisper), thread-safe `Speaker` (Piper), device-selectable mic I/O |
 | `argus/trt_runner.py` | Minimal TensorRT engine runner (Jetson only) |
 | `argus/orchestrator.py` | Two-speed orchestration (the nervous system) |
-| `argus/selftest.py` | Bring-up checks (deps, CUDA, models, cameras, server) |
+| `argus/selftest.py` | Bring-up checks (deps, CUDA, models, calibration, cameras, audio, privacy, server) |
 | `argus/__main__.py` | CLI: `run`, `query`, `selftest` |
 
 ---
@@ -95,6 +95,15 @@ All components are resident simultaneously — no model swapping:
 
 1. ONNX exports use `dynamo=False` (PyTorch 2.x dynamo fails on some vision ops).
 2. TensorRT engines are **device-specific** — built on the Jetson, never cross-compiled.
-3. The privacy gate is a **hard precondition** of every agent call.
+3. The privacy gate is a **hard precondition** of every agent call —
+   `privacy.require_gate: true` makes the runtime refuse the agent path if the
+   face detector failed to initialise.
 4. The fast safety loop is **non-ML** and runs independently of the agent.
 5. Speech (wake/STT/TTS) runs on **CPU**.
+6. Cameras are found by **identity, not index** — V4L2 names + USB ports from
+   the calibration file. Never hardcode `/dev/videoN` assumptions into new code.
+7. Depth is only metric **after calibration** (any mounting position is fine —
+   see [CALIBRATION.md](CALIBRATION.md)); uncalibrated SGBM is a rough relative
+   scale and the runtime says so loudly.
+
+Unfinished work is tracked in [KNOWN_GAPS.md](KNOWN_GAPS.md).

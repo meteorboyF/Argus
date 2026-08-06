@@ -27,12 +27,15 @@ for f in "$MODEL" "$MMPROJ"; do
 done
 
 echo "Starting Gemma 4 E2B (vision) on :8080 ..."
+# --jinja enables the model's own chat template (needed for native tool calling
+# if agent.tool_protocol=native; harmless for the default prompt protocol).
 exec "$LLAMA_BIN" \
   --model "$MODEL" \
   --mmproj "$MMPROJ" \
   -ngl 99 \
   --flash-attn on \
   --ctx-size 2048 \
+  --jinja \
   --no-mmproj-offload \
-  --host 0.0.0.0 \
+  --host 127.0.0.1 \
   --port 8080

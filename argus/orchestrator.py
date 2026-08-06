@@ -4,11 +4,12 @@ Fast loop (thread, always on):
     stereo capture -> depth -> SafetyReflex -> speak urgent hazards immediately.
 
 Slow loop (main thread, event-driven):
-    wake word -> record -> transcribe -> wide frame -> PRIVACY GATE -> Gemma 4
+    wake word -> record -> transcribe -> wide frame -> PRIVACY GATE -> Gemma
     -> [optional find_object via YOLO-World + depth fusion] -> Piper speaks.
 
-The privacy gate is a hard precondition: the agent is never called on a frame
-that has not passed through it.
+The privacy gate is a hard precondition: with privacy.require_gate=true (the
+production default) the agent is never called unless the gate initialised, and
+never on a frame that has not passed through it.
 """
 from __future__ import annotations
 
@@ -17,7 +18,7 @@ import time
 
 import numpy as np
 
-from .agent import GemmaAgent
+from .agent import AgentError, GemmaAgent
 from .cameras import CameraRig
 from .config import ArgusConfig
 from .depth import DepthEstimator
@@ -47,14 +48,22 @@ class Orchestrator:
         self.speaker = Speaker(cfg.speech, enabled=enable_audio)
         self.enable_audio = enable_audio
 
+        if cfg.privacy.require_gate and not self.privacy.ready:
+            raise RuntimeError(
+                "Privacy gate failed to initialise and privacy.require_gate is true. "
+                "The agent must never see unblurred frames — fix insightface/onnxruntime "
+                "(see selftest), or set privacy.require_gate: false for bench debugging only.")
+
         self._latest_depth: np.ndarray | None = None
         self._depth_lock = threading.Lock()
         self._stop = threading.Event()
-        self._last_warned = 0.0
+        self._last_danger = 0.0
+        self._last_warn = 0.0
 
-        if enable_audio:
-            self.wake = WakeWord(cfg.speech)
-            self.stt = Transcriber(cfg.speech)
+        # Wake word + STT are created lazily in _listen_loop so `argus query`
+        # and --no-audio runs don't pay their load time (or need a microphone).
+        self.wake: WakeWord | None = None
+        self.stt: Transcriber | None = None
 
     # ------------------------------------------------------------------ fast loop
     def _fast_loop(self):
@@ -67,10 +76,15 @@ class Orchestrator:
                 with self._depth_lock:
                     self._latest_depth = depth_m
                 state = self.safety.evaluate(depth_m)
-                # Voice only DANGER, and rate-limit so we don't talk over ourselves.
-                if state.level == Level.DANGER and (time.perf_counter() - self._last_warned) > 2.0:
+                now = time.perf_counter()
+                # DANGER speaks immediately (rate-limited); WARN speaks on a
+                # longer cadence so the user isn't flooded.
+                if state.level == Level.DANGER and (now - self._last_danger) > self.cfg.safety.danger_repeat_s:
                     self.speaker.speak(state.message)
-                    self._last_warned = time.perf_counter()
+                    self._last_danger = now
+                elif state.level == Level.WARN and (now - self._last_warn) > self.cfg.safety.warn_repeat_s:
+                    self.speaker.speak(state.message)
+                    self._last_warn = now
             dt = time.perf_counter() - t0
             time.sleep(max(0.0, period - dt))
 
@@ -87,20 +101,32 @@ class Orchestrator:
             return
 
         # HARD PRECONDITION: privacy gate before the agent sees anything.
+        if self.cfg.privacy.require_gate and not self.privacy.ready:
+            self.speaker.speak("Privacy filter unavailable. I can't answer right now.")
+            return
         gated, n_faces = self.privacy.apply(frame)
 
-        reply = self.agent.ask(gated, question)
-
-        if reply.tool_call == "find_object":
-            name = (reply.tool_args or {}).get("name", "")
-            det = self.grounder.find_object(name, gated)
-            tool_result = self._fuse_detection(name, det, gated)
-            reply = self.agent.with_tool_result(question, tool_result)
+        try:
+            reply = self.agent.ask(gated, question)
+            if reply.tool_call == "find_object":
+                name = (reply.tool_args or {}).get("name", "")
+                det = self.grounder.find_object(name, gated) if name else None
+                tool_result = self._fuse_detection(name, det, gated)
+                reply = self.agent.with_tool_result(question, tool_result)
+        except AgentError as e:
+            print(f"[agent] {e}")
+            self.speaker.speak("Sorry, my reasoning engine is not responding.")
+            return
 
         self.speaker.speak(reply.text or "I'm not sure.")
 
     def _fuse_detection(self, name: str, det, frame) -> dict:
-        """Combine a YOLO-World box with the latest depth map -> 3D-ish position."""
+        """Combine a YOLO-World box with the latest depth map -> 3D-ish position.
+
+        NOTE: the box comes from the wide camera and depth from the stereo pair;
+        proportional sampling assumes their views roughly overlap. It is an
+        approximation — good for "about a metre to your right", not centimetres.
+        """
         if det is None:
             return {"found": False, "name": name}
         cx, cy = det.center
@@ -124,9 +150,13 @@ class Orchestrator:
         }
 
     # ------------------------------------------------------------------ lifecycle
+    def start_fast_loop(self):
+        """Start the safety fast loop in a background thread (used by `run` and
+        by one-shot `argus query` so depth fusion has data)."""
+        threading.Thread(target=self._fast_loop, daemon=True).start()
+
     def run(self):
-        fast = threading.Thread(target=self._fast_loop, daemon=True)
-        fast.start()
+        self.start_fast_loop()
         self.speaker.speak("ARGUS ready.")
         try:
             if not self.enable_audio:
@@ -142,19 +172,24 @@ class Orchestrator:
 
     def _listen_loop(self):
         from .speech import mic_stream
+        if self.wake is None:
+            self.wake = WakeWord(self.cfg.speech)
+        if self.stt is None:
+            self.stt = Transcriber(self.cfg.speech)
         sr = self.cfg.speech.sample_rate
-        buf = np.zeros(sr, dtype=np.int16)  # rolling 1s window for wake detection
-        for block in mic_stream(sr):
+        # openWakeWord keeps its own streaming state — feed each 80 ms block
+        # exactly once (see speech.py docstring).
+        for block in mic_stream(sr, device=self.cfg.speech.input_device):
             if self._stop.is_set():
                 break
-            buf = np.concatenate([buf, block])[-sr:]
-            if self.wake.detected(buf):
+            if self.wake.detected(block):
                 self.speaker.speak("Yes?")
-                audio = record(self.cfg.speech.record_seconds, sr)
+                audio = record(self.cfg.speech.record_seconds, sr,
+                               device=self.cfg.speech.input_device)
                 question = self.stt.transcribe(audio)
                 if question:
                     self.handle_query(question)
-                buf[:] = 0  # reset window after handling
+                self.wake.reset()
 
     def stop(self):
         self._stop.set()
