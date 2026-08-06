@@ -437,3 +437,27 @@ A clean CUDA build takes ~30–40 min on this device.
 
 **Next step (proposed):**
 - After those commands complete, resume `cmake --build build --config Release -j4` inside a detached tmux session, verify `llama-server`, then continue Steps A-E.
+
+---
+
+## [2026-08-06 23:05] llama.cpp built; Gemma 4 vision server healthy
+
+**Agent:** jetson-agent
+**Status:** done
+
+**What I did:**
+- Resumed and completed the native ARM64/CUDA llama.cpp build after regenerating two missing object files.
+- Verified the final build with `BUILD_EXIT=0` and `BUILD_SUCCESS`.
+- Diagnosed the default `-ngl 99` launch failure as CUDA unified-memory exhaustion on the 8 GB Orin Nano.
+- Tested partial GPU offload; 20 layers still exhausted CUDA memory, and auto-fit hit a scheduler assertion.
+- Established a stable CPU-resident profile and made it the launch-script default, with environment overrides for larger devices.
+
+**Result / verification:**
+- `/opt/argus/llama.cpp/build/bin/llama-server` is an executable ARM64 ELF with all dynamic libraries resolved.
+- Native Gemma 4 E2B loaded with `/opt/argus/models/mmproj-gemma4-e2b-f16.gguf`.
+- Server listens only on `127.0.0.1:8080` in tmux session `gemma`.
+- `GET /health` returned `{"status":"ok"}` with HTTP 200.
+- Working 8 GB defaults: `--device none`, `-ngl 0`, `--parallel 1`, `--fit off`, `--flash-attn off`, context 2048, Jinja enabled, projector on CPU.
+
+**Next step (proposed):**
+- Run `python3 -m argus selftest`, resolve unexpected failures, then validate the fast loop with cameras attached.
