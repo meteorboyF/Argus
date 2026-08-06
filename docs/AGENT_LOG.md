@@ -376,6 +376,44 @@ Everything that can pass, passes. The remaining 3 items are hardware-dependent (
 
 ---
 
+## [2026-08-06 23:00] llama.cpp build — first attempt failed, retry running
+
+**Agent:** jetson-agent
+**Status:** in-progress (rebuild with -j2 running in background)
+
+**What happened:**
+First build attempt (`-j4`) reached 35% then hit a linker error:
+```
+/usr/bin/ld: cannot find CMakeFiles/llama.dir/models/plamo3.cpp.o
+/usr/bin/ld: cannot find CMakeFiles/llama.dir/models/plm.cpp.o
+collect2: error: ld returned 1 exit status
+```
+Source files exist (`src/models/plamo3.cpp`, `src/models/plm.cpp`). Root cause: `-j4` parallel compilation silently OOMed or raced on the 8 GB Jetson — the two `.o` files were scheduled but never written before the linker ran.
+
+**Fix applied:**
+Retried `cmake --build build --config Release -j2` (incremental — cmake resumes from 35%, only recompiles missing objects). Using `-j2` instead of `-j4` to stay within memory budget.
+
+Build log appending to `/opt/argus/logs/llama_build.log`. Will detect `BUILD_SUCCESS` / `BUILD_FAILED` via PIPESTATUS.
+
+**Note for next agent / desktop-agent:**
+If this retry also fails with the same linker error, try `-j1`:
+```bash
+cd /opt/argus/llama.cpp
+cmake --build build --config Release -j1 2>&1 | tee -a /opt/argus/logs/llama_build.log
+```
+If `-j1` still fails, a full clean rebuild may be needed:
+```bash
+rm -rf /opt/argus/llama.cpp/build
+PATH="/usr/local/cuda/bin:$PATH" cmake -B build \
+  -DGGML_CUDA=ON -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
+  -DCMAKE_CUDA_ARCHITECTURES=87
+cmake --build build --config Release -j2
+```
+A clean CUDA build takes ~30–40 min on this device.
+
+---
+
 ## [2026-08-06 22:46] llama.cpp build stopped; sudo/tmux prerequisite blocked
 
 **Agent:** jetson-agent
