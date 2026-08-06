@@ -169,3 +169,58 @@ Triggers wake word → Whisper STT → privacy gate → Gemma 4 → Piper TTS.
 - No new large downloads required — all model artifacts already on disk.
 
 **Proceeding with Steps 0 and 1 now (trivially low risk). Will pause at Step 2 to confirm cmake finds CUDA before starting the build.**
+
+---
+
+## [2026-08-06 22:05] Status update for desktop-agent — handoff / review request
+
+**Agent:** jetson-agent
+**Status:** blocked (waiting on user to run sudo commands in a live terminal)
+
+**Summary of work completed this session:**
+
+Steps 1–5 of the Jetson bring-up are **done**. Here is the verified state of the device:
+
+### What's fully working
+- **Python environment:** Jetson torch 2.5.0a0 (CUDA=True), ultralytics, tensorrt 10.3.0, faster_whisper, openwakeword, onnxruntime — all installed and import-clean.
+- **Model artifacts:** All 5 present on disk:
+  - `gemma-4-E2B-it-Q4_K_M.gguf` (2.9 GB)
+  - `mmproj-gemma4-e2b-f16.gguf` (940 MB)
+  - `piper/en_US-lessac-medium.onnx` (61 MB)
+  - `yolov8s-worldv2.pt` (25 MB)
+  - `yoloworld_640.onnx` (49 MB)
+- **TensorRT engine:** `yoloworld_640_fp16.engine` (28 MB, FP16, PASSED at build time ~10 ms latency)
+- **Camera config:** 3 cameras identified via v4l2-ctl and config updated:
+  - left=4 (AR0234), right=0 (AR0234), wide=2 (IMX477P)
+- **argus package:** installed editable from repo, all modules present
+- **Stereo calibration:** deferred (no checkerboard available); placeholder values baseline_m=0.06, focal_px=700.0 in config
+
+### Current blocker (Step 6)
+`llama.cpp` was cloned to `/opt/argus/llama.cpp` but not yet built. cmake has been verified to find CUDA 12.6 (`/usr/local/cuda/bin/nvcc`). The build command is ready — blocked only because `sudo nvpmodel` and the build itself need a live terminal session from the user (can't sudo headlessly, and the 15–30 min cmake build should run in tmux).
+
+**Build command (ready to run):**
+```bash
+# Terminal 1 — set max perf (requires sudo)
+sudo nvpmodel -m 0 && sudo jetson_clocks
+
+# Terminal 2 — build in tmux (15–30 min)
+tmux new -s llamabuild
+cd /opt/argus/llama.cpp
+PATH="/usr/local/cuda/bin:$PATH" cmake -B build \
+  -DGGML_CUDA=ON -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc
+cmake --build build --config Release -j$(nproc)
+```
+
+### After build completes — remaining steps
+1. Start server: `tmux new -s gemma && ./scripts/run_llama_server.sh`
+2. Verify: `curl http://127.0.0.1:8080/health` → `{"status":"ok"}`
+3. Selftest: `python3 -m argus selftest`
+4. Fast loop: `python3 -m argus run --no-audio`
+5. Full run: `python3 -m argus run`
+
+### Docs discrepancy flagged
+`AGENT_HANDOFF.md` is stale — it still describes the old Colab/Phi-3.5-mini pipeline. The codebase has been fully redesigned to the two-speed FAST/SLOW architecture. Will rewrite it after Step 8 completes.
+
+**For desktop-agent:** No action needed from you right now. If you have any concerns about the llama.cpp build flags (`-DGGML_CUDA=ON`, `--no-mmproj-offload` in the server script), or the server config (ctx-size=2048, ngl=99, flash-attn=on), please leave a note here. I'll read this file at the start of the next session.
+
