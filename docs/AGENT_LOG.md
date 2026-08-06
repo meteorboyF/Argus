@@ -224,3 +224,54 @@ cmake --build build --config Release -j$(nproc)
 
 **For desktop-agent:** No action needed from you right now. If you have any concerns about the llama.cpp build flags (`-DGGML_CUDA=ON`, `--no-mmproj-offload` in the server script), or the server config (ctx-size=2048, ngl=99, flash-attn=on), please leave a note here. I'll read this file at the start of the next session.
 
+---
+
+## [2026-08-06 22:20] Merged desktop-agent hardening pass — acknowledgement
+
+**Agent:** jetson-agent
+**Status:** done (merge complete, pushed to origin/main)
+
+**What I did:**
+- Pulled and inspected commit `334c4b6` from desktop-agent (Claude Fable 5), pushed 2026-07-13.
+- This is a large, high-quality hardening commit touching 25 files (+1501/-346 lines). Changes are substantive fixes — not cosmetic. Summary of what landed on this device:
+
+**Bug fixes now in codebase (from desktop-agent's commit):**
+- `safety.py`: Drop-detection was comparing metres vs pixel fraction → constant false DANGER at SGBM borders. Fixed with percentile + debounce + central-strip test.
+- `speech.py`: openWakeWord fed a re-sent rolling window (breaks streaming state); wake name never matched versioned score keys → random false wakes. Fixed with block-feed + prefix match. Default wake word changed to `hey_jarvis`.
+- `agent.py`: OpenAI `tools` param silently ignored without `--jinja`; Gemma templates reject the `tool` role. Switched to prompt-JSON tool protocol (works with any llama.cpp template). Retries + spoken errors on server failures.
+- `privacy.py`: `require_gate` invariant now actually enforced — agent can never see unblurred frames.
+- `requirements-jetson.txt`: onnxruntime-gpu → onnxruntime (same fix we made — resolved conflict, took their better comment).
+
+**New capabilities now available:**
+- `cameras.py`: V4L2 name-based discovery, USB port binding, auto-reconnect on stall.
+- `calibrate_stereo.py`: Any mounting position, auto left/right swap correction, `--verify` live depth check, `--headless` for SSH sessions.
+- `depth.py`: SGBM at `fast_downscale` for reliable 10 Hz on Orin CPU.
+- `grounding.py`: Cached `set_classes` (CLIP text encoding saved per query).
+- `selftest.py`: Now checks calibration quality, camera discovery, audio devices, privacy gate.
+- `scripts/download_models.sh`: New helper for model downloads.
+- `scripts/setup_jetson.sh`: Hardened — llama.cpp build now pinned to CUDA arch 87, `-j4`.
+- `scripts/run_llama_server.sh`: Server now binds `127.0.0.1` only, `--jinja` flag added.
+- `docs/CALIBRATION.md`, `docs/KNOWN_GAPS.md`: New; cover calibration flow and on-device checklist A1-A9.
+- `docs/JETSON_DEPLOYMENT.md`: Rewritten with per-step verification.
+
+**Merge notes:**
+- Only one conflict: `requirements-jetson.txt` onnxruntime comment. Both sides made the same fix. Took desktop-agent's wording (mentions upgrade path to NVIDIA's Jetson onnxruntime-gpu wheel).
+- Our two commits (AGENT_LOG creation + onnxruntime fix) preserved on top.
+- Merged, committed as `a675082`, pushed to `origin/main`.
+
+**Impact on remaining bring-up steps:**
+- The new `setup_jetson.sh` pins llama.cpp cmake to `-DCMAKE_CUDA_ARCHITECTURES=87` and uses `-j4`. The build command I proposed earlier should use these flags instead:
+  ```bash
+  cd /opt/argus/llama.cpp
+  PATH="/usr/local/cuda/bin:$PATH" cmake -B build \
+    -DGGML_CUDA=ON -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
+    -DCMAKE_CUDA_ARCHITECTURES=87
+  cmake --build build --config Release -j4
+  ```
+- `run_llama_server.sh` now passes `--jinja` and binds `127.0.0.1` — no change needed on our end.
+- `selftest.py` now checks more things — some may flag (audio devices, calibration file). Those are expected WARN/FAIL items we'll address after the llama server is up.
+
+**Next step (proposed):**
+User to build llama.cpp (command above, in tmux), then paste output. I'll verify the binary and move to server start + selftest.
+
