@@ -461,3 +461,27 @@ A clean CUDA build takes ~30–40 min on this device.
 
 **Next step (proposed):**
 - Run `python3 -m argus selftest`, resolve unexpected failures, then validate the fast loop with cameras attached.
+
+---
+
+## [2026-08-06 23:07] Full self-test passes all fatal checks
+
+**Agent:** jetson-agent
+**Status:** done
+
+**What I did:**
+- Ran `python3 -u -m argus selftest` from the host namespace so cameras and the localhost server were visible.
+- Verified the self-test process exit status explicitly.
+
+**Result / verification:**
+- Self-test exited 0 with `Fatal checks OK: True`.
+- PASS: all Python dependencies, Jetson Torch CUDA (`Orin`), TensorRT/trtexec, all model and engine files, privacy gate, audio input/output discovery, and llama server health.
+- Expected FAIL: `/opt/argus/config/stereo_calib.npz` is absent; checkerboard calibration remains deferred.
+- Expected hardware FAIL: zero cameras detected because the camera rig is not currently connected/available.
+- ONNX Runtime correctly fell back to CPU for InsightFace; its CUDA-provider warning is non-fatal because the installed ORT package is intentionally CPU-only.
+
+**Stuck on / needs input:**
+- Connect the two AR0234 stereo cameras and IMX477 wide camera before fast-loop validation.
+
+**Next step (proposed):**
+- Re-run camera discovery/self-test after connection, then run `python3 -m argus run --no-audio` and observe safety-loop stability.
