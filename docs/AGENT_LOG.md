@@ -275,3 +275,57 @@ cmake --build build --config Release -j$(nproc)
 **Next step (proposed):**
 User to build llama.cpp (command above, in tmux), then paste output. I'll verify the binary and move to server start + selftest.
 
+---
+
+## [2026-08-06 22:35] Bringup work — config sync, pre-selftest, build started
+
+**Agent:** jetson-agent
+**Status:** in-progress (llama.cpp build running in background)
+
+**What I did:**
+
+**1. Merged desktop-agent hardening pass and pushed to origin/main.**
+All 3 agent commits now on GitHub: dependency fix, AGENT_LOG creation, merge commit.
+
+**2. Synced on-device config.**
+`/opt/argus/config/argus.yaml` was stale. Updated to match the repo's hardened template:
+- `camera.auto_detect: true` with V4L2 name hints (AR0234 / IMX477) — fallback indices kept as comments
+- `speech.wake_model: "hey_jarvis"` (was "alexa")
+- `safety.obstacle_percentile`, `floor_drop_invalid_fraction`, `drop_far_m`, debounce settings
+- `agent.tool_protocol: prompt`, `image_max_side: 1024`
+- `privacy.require_gate: true`
+
+**3. Verified all pre-server selftest items.**
+
+| Check | Result |
+|---|---|
+| yaml, cv2, numpy, requests | PASS |
+| insightface | PASS (buffalo_s cached at ~/.insightface) |
+| sounddevice | PASS — input: APE 16ch; output: HDMI + APE |
+| piper | PASS |
+| torch.cuda.is_available() | PASS (2.5.0a0 Jetson wheel) |
+| tensorrt import | PASS (10.3.0) |
+| trtexec | PASS (/usr/src/tensorrt/bin/trtexec) |
+| model files (all 5) | PASS |
+| privacy gate (buffalo_s) | PASS |
+| calibration file | FAIL (expected — no calibration done yet) |
+| cameras | FAIL (expected — cameras not plugged in during test) |
+| llama server | FAIL (expected — server not yet started) |
+
+**4. Started llama.cpp build in background (CUDA, arch 87).**
+cmake configured successfully: CUDA Toolkit found, nvcc 12.6, arch 87. Build active at ~8% and compiling CUDA kernels.
+Log at: `/opt/argus/logs/llama_build.log`
+
+**Known issues to address after build:**
+- No audio microphone: only HDMI/APE internal devices visible. USB mic or bone-conduction headset with mic needs to be plugged in for `python -m argus run` (full loop). `--no-audio` mode works without mic.
+- Stereo calibration still deferred. Depth works (SGBM with placeholder values) but distances are approximate.
+- The `hey_jarvis` wake word will detect "hey Jarvis". The custom "ARGUS" wake word model is listed in KNOWN_GAPS.md as a future item.
+
+**Next steps (in order, when build completes):**
+1. Verify `llama-server` binary: `ls -lh /opt/argus/llama.cpp/build/bin/llama-server`
+2. Start server in tmux: `tmux new -s gemma; cd ~/Argus/Argus; ./scripts/run_llama_server.sh`
+3. Verify health: `curl http://127.0.0.1:8080/health`
+4. Run selftest: `python3 -m argus selftest`
+5. Run fast loop: `python3 -m argus run --no-audio`
+6. If mic available: `python3 -m argus run`
+
