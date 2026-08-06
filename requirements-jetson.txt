@@ -11,7 +11,7 @@
 ultralytics>=8.4.0
 opencv-python>=4.9.0
 onnx>=1.16.0
-onnxruntime-gpu>=1.18.0        # falls back to onnxruntime if GPU build unavailable
+onnxruntime>=1.18.0            # GPU version has no PyPI ARM64 wheel; TRT inference uses trt_runner.py directly
 
 # Privacy gate
 insightface>=0.7.3
