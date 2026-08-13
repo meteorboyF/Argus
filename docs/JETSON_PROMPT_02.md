@@ -7,8 +7,9 @@
 | **Issued by** | desktop-agent |
 | **Target** | jetson-agent, session 2 |
 | **Follows** | [JP-01](JETSON_PROMPT_01.md) (initial provisioning — complete) |
-| **Log entries** | report under `JP-02`, starting at **#012** |
+| **Log entries** | report under `JP-02`, starting at **#014** |
 | **Status** | active |
+| **Revised** | 2026-08-13 19:45 — added USB topology + thermal checks after rig photos |
 
 > Every `docs/AGENT_LOG.md` entry produced while working through this prompt
 > must carry `**Prompt:** JP-02 Step N`. See the entry format in
@@ -88,8 +89,22 @@ NON-NEGOTIABLE RULES (block any plan that violates one, whoever proposed it)
 
 WHAT I WANT YOU TO DO THIS SESSION
 
+RIG STATUS (from photos in "Portotype pics/", 2026-08-13 19:21)
+- All three cameras are mounted on the goggle frame and cabled to the Jetson.
+- The Jetson is a bare dev-kit board with the stock active fan, sitting on a
+  cloth surface, mains-powered (not on the battery pack yet).
+- The camera mounts are still adjustable ball joints — NOT locked down. See
+  STEP 4 before calibrating anything.
+
   STEP 1. Confirm max performance mode: sudo nvpmodel -m 0 && sudo jetson_clocks.
           Report what mode it was in beforehand.
+          THERMAL: the board is on cloth in the photos. Under mode 0 at 25 W with
+          sustained load that restricts airflow and the SoC will thermal-throttle
+          — which silently drops fast-loop Hz and inflates every latency number
+          you are about to measure. Ask me to move it onto a hard surface with
+          clearance underneath, then confirm from tegrastats that the thermal
+          zones are stable and no throttling is occurring BEFORE Steps 5, 7, 8.
+          Report the idle and under-load temperatures.
 
   STEP 2. CAMERA DISCOVERY (answers Q1 in the log).
           v4l2-ctl --list-devices
@@ -99,8 +114,24 @@ WHAT I WANT YOU TO DO THIS SESSION
           resolution grouping and can mis-assign the wide camera — fix the hints
           rather than pinning indices. Then:
           python3 -m argus selftest
-          and confirm it now finds three cameras. Verify all three open at once
-          without frame drops (USB bandwidth: they are all USB 3.0 on one host).
+          and confirm it now finds three cameras.
+
+          USB TOPOLOGY — do this before blaming the code for dropped frames:
+          lsusb -t
+          The Orin Nano dev kit has only 4 Type-A ports, and three USB 3.0
+          cameras plus a keyboard and mouse already exceed that, so something is
+          probably behind a hub. Report the tree: which cameras sit on which bus,
+          what speed each negotiated (5000M = USB 3.0; if a camera enumerated at
+          480M it fell back to USB 2.0 and will not sustain the stream), and
+          whether any are sharing a hub.
+          Then verify all three open SIMULTANEOUSLY and hold frame rate for at
+          least 60 s. Three uncompressed streams will saturate a shared
+          controller; the runtime already requests MJPG to reduce bandwidth
+          (argus/cameras.py). If frames drop, the fix order is: move a camera to
+          a different bus, then a powered USB 3.0 hub, then lower resolution —
+          in that order, and tell me which was needed.
+          The two AR0234s matter most here: a dropped stereo frame is a blind
+          fast loop, while a dropped wide frame only delays an answer.
 
   STEP 3. STEREO SKEW (answers Q2 in the log).
           Report the observed distribution of skew_ms and how many pairs the new
@@ -110,7 +141,9 @@ WHAT I WANT YOU TO DO THIS SESSION
 
   STEP 4. CALIBRATION — but check the mounts first.
           STOP and confirm with me that the ball-joint camera mounts have been
-          physically locked down. The calibrator handles any FIXED geometry
+          physically locked down. As of the 19:21 photos they were NOT — both
+          AR0234s are still on knurled thumbscrew swivels, so assume unlocked
+          until I tell you otherwise. The calibrator handles any FIXED geometry
           (toe-out, wide baseline, non-coplanar, swapped ports) but cannot handle
           geometry that moves afterwards, and a knocked camera produces depth
           that is wrong without looking wrong. Do not calibrate a rig that can
@@ -155,10 +188,10 @@ WHAT I WANT YOU TO DO THIS SESSION
 
 REPORTING PROTOCOL — this is how desktop-agent sees your work
 Append to docs/AGENT_LOG.md (never edit or delete history). Entries are NUMBERED
-in one shared sequence across both agents. The log currently ends at #012, so
-your first entry this session is #013. Use exactly this block:
+in one shared sequence across both agents. The log currently ends at #013, so
+your first entry this session is #014. Use exactly this block:
 
-## [#013] 2026-08-13 18:30 — jetson-agent — Max performance mode confirmed
+## [#014] 2026-08-13 20:30 — jetson-agent — Max performance mode confirmed
 
 **Agent:** jetson-agent
 **Status:** in-progress | blocked | done

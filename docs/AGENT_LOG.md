@@ -78,6 +78,7 @@ Prompts: [JP-01](JETSON_PROMPT_01.md) (provisioning, complete) ·
 | #010 | 08-06 23:07 | jetson | Full self-test passes all fatal checks | done |
 | #011 | 08-13 16:40 | desktop | Rig assembled — safety-path fixes landed, calibration warning | in-progress |
 | #012 | 08-13 17:10 | desktop | Entry numbering + prompt IDs introduced | done |
+| #013 | 08-13 19:45 | desktop | JP-02 revised — USB topology + thermal checks from rig photos | done |
 
 Entries #001–#011 pre-date the numbering scheme; their numbers were assigned
 here retroactively and their bodies were left untouched. **Number every entry
@@ -739,3 +740,57 @@ it, and they will matter more once we are both writing entries on the same day.
   row to the index table each time.
 - **[both]** `git pull` before writing an entry, and apply numbering rule 3 if we
   collide.
+
+---
+
+## [#013] 2026-08-13 19:45 — desktop-agent — JP-02 revised: USB topology + thermal checks
+
+**Agent:** desktop-agent
+**Status:** done
+**Prompt:** JP-02 (revision)
+**Re:** #011
+
+**What I did:**
+
+Two more rig photos were added to `Portotype pics/` (19:21 and the bare-board
+shot). They show the assembled rig cabled to the Jetson and surfaced two
+measurement confounds that JP-02 did not cover. Revised JP-02 accordingly.
+
+**Result / verification:**
+
+*1. USB topology check added to Step 2.* The Orin Nano dev kit has four Type-A
+ports; three USB 3.0 cameras plus a keyboard and mouse already exceed that, so
+something is behind a hub. `lsusb -t` is now an explicit deliverable — which
+camera on which bus, negotiated speed per device, and whether any share a hub.
+A camera that quietly enumerates at 480M instead of 5000M will not sustain its
+stream, and that failure looks exactly like a code bug from the Python side.
+Fix order is specified (different bus → powered hub → lower resolution) so we
+find out which was actually needed rather than getting a silent workaround.
+Also noted the asymmetry: a dropped **stereo** frame is a blind fast loop, a
+dropped **wide** frame only delays an answer.
+
+*2. Thermal check added to Step 1.* The board is bare on a cloth surface in the
+photos. Under `nvpmodel -m 0` at 25 W with sustained load, that restricts airflow
+and the SoC throttles — which would silently depress fast-loop Hz and inflate
+every number from Steps 5, 7 and 8. Since those measurements are the basis for
+decisions about `fast_downscale`, `image_max_side` and possibly the whole
+CPU-vs-GPU Gemma question, taking them on a throttling board would send us down
+the wrong path entirely. Step 1 now requires a hard surface with clearance and
+confirmed-stable thermals **before** any of those measurements.
+
+*3. Step 4 hardened.* The 19:21 photo shows both AR0234s still on knurled
+thumbscrew swivels, so JP-02 now tells jetson-agent to assume the mounts are
+unlocked until told otherwise, rather than asking an open question it might
+answer optimistically.
+
+Also added a RIG STATUS block near the top of JP-02 so the device agent knows
+what the hardware physically looks like without seeing the photos, and bumped
+its first entry number to **#014** (I took #013 for this entry, per numbering
+rule 2).
+
+**Next step (proposed):**
+
+- **[jetson-agent]** Unchanged: pull, read this log, start at JP-02 Step 1, first
+  entry **#014**.
+- **[user]** Two physical asks before the measurement steps: move the Jetson off
+  the cloth onto a hard surface, and lock the camera mounts.
