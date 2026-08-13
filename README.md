@@ -92,6 +92,7 @@ AGENT_HANDOFF.md        # Development history, lessons learned, efficiency rules
 docs/
   PROJECT_OVERVIEW.md       # one-page orientation + repo map
   ARCHITECTURE.md           # module-level design + diagrams
+  HCI_ENGINEERING_RATIONALE.md # obstacles, design decisions, tradeoffs, evidence
   JETSON_DEPLOYMENT.md      # full on-device bring-up (step-by-step, verified)
   CALIBRATION.md            # smart stereo calibration — any mounting position
   KNOWN_GAPS.md             # what is NOT done yet — read before assuming
