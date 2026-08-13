@@ -176,13 +176,46 @@ def discover_rig(cfg: CameraConfig) -> tuple[int, int, int]:
 # ---------------------------------------------------------------------------
 # Capture
 # ---------------------------------------------------------------------------
-def _open(index: int, width: int, height: int, fps: int) -> cv2.VideoCapture:
+def transform_frame(frame: np.ndarray, rotation: int = 0,
+                    flip_horizontal: bool = False,
+                    flip_vertical: bool = False) -> np.ndarray:
+    """Normalize a physically mounted camera into an upright BGR frame."""
+    rotation = int(rotation) % 360
+    rotations = {
+        0: None,
+        90: cv2.ROTATE_90_CLOCKWISE,
+        180: cv2.ROTATE_180,
+        270: cv2.ROTATE_90_COUNTERCLOCKWISE,
+    }
+    if rotation not in rotations:
+        raise ValueError(f"camera rotation must be 0/90/180/270, got {rotation}")
+    if rotations[rotation] is not None:
+        frame = cv2.rotate(frame, rotations[rotation])
+    if flip_horizontal and flip_vertical:
+        frame = cv2.flip(frame, -1)
+    elif flip_horizontal:
+        frame = cv2.flip(frame, 1)
+    elif flip_vertical:
+        frame = cv2.flip(frame, 0)
+    return frame
+
+
+def transformed_size(width: int, height: int, rotation: int) -> tuple[int, int]:
+    """Return output (width, height) after the configured rotation."""
+    return (height, width) if int(rotation) % 180 else (width, height)
+
+
+def _open(index: int, width: int, height: int, fps: int,
+          pixel_format: str = "YUYV") -> cv2.VideoCapture:
     # cv2.CAP_V4L2 is the right backend on the Jetson (Linux). On Windows this
     # falls back gracefully; for PC testing use argus_pc_test.ipynb instead.
     cap = cv2.VideoCapture(index, cv2.CAP_V4L2)
     if not cap.isOpened():
         cap = cv2.VideoCapture(index)  # last-resort default backend
-    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+    fourcc = (pixel_format or "YUYV").upper()
+    if len(fourcc) != 4:
+        raise ValueError(f"camera pixel_format must be four characters, got {fourcc!r}")
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*fourcc))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
     cap.set(cv2.CAP_PROP_FPS, fps)
@@ -211,9 +244,12 @@ class CameraRig:
             self.left_index, self.right_index, self.wide_index = (
                 cfg.left_index, cfg.right_index, cfg.wide_index)
 
-        self.left = _open(self.left_index, cfg.stereo_width, cfg.stereo_height, cfg.stereo_fps)
-        self.right = _open(self.right_index, cfg.stereo_width, cfg.stereo_height, cfg.stereo_fps)
-        self.wide = _open(self.wide_index, cfg.wide_width, cfg.wide_height, cfg.wide_fps)
+        self.left = _open(self.left_index, cfg.stereo_width, cfg.stereo_height,
+                          cfg.stereo_fps, cfg.pixel_format)
+        self.right = _open(self.right_index, cfg.stereo_width, cfg.stereo_height,
+                           cfg.stereo_fps, cfg.pixel_format)
+        self.wide = _open(self.wide_index, cfg.wide_width, cfg.wide_height,
+                          cfg.wide_fps, cfg.pixel_format)
 
         for name, cap in [("left", self.left), ("right", self.right), ("wide", self.wide)]:
             if not cap.isOpened():
@@ -235,6 +271,9 @@ class CameraRig:
             ok, frame = self.wide.read()
             if ok:
                 fail_since = None
+                frame = transform_frame(frame, self.cfg.wide_rotation,
+                                        self.cfg.wide_flip_horizontal,
+                                        self.cfg.wide_flip_vertical)
                 with self._wide_lock:
                     self._wide_frame = frame
             else:
@@ -245,7 +284,8 @@ class CameraRig:
                     print("[cameras] wide camera stalled — reopening")
                     self.wide.release()
                     self.wide = _open(self.wide_index, self.cfg.wide_width,
-                                      self.cfg.wide_height, self.cfg.wide_fps)
+                                      self.cfg.wide_height, self.cfg.wide_fps,
+                                      self.cfg.pixel_format)
                     fail_since = None
                 time.sleep(0.05)
 
@@ -271,6 +311,12 @@ class CameraRig:
             self._stereo_failed()
             return None
         self._stereo_fail_since = None
+        fL = transform_frame(fL, self.cfg.left_rotation,
+                             self.cfg.left_flip_horizontal,
+                             self.cfg.left_flip_vertical)
+        fR = transform_frame(fR, self.cfg.right_rotation,
+                             self.cfg.right_flip_horizontal,
+                             self.cfg.right_flip_vertical)
         return StereoFrame(left=fL, right=fR, skew_ms=(t_r - t_l) * 1000.0, ts=t_l)
 
     def _stereo_failed(self):
@@ -284,9 +330,11 @@ class CameraRig:
             self.left.release()
             self.right.release()
             self.left = _open(self.left_index, self.cfg.stereo_width,
-                              self.cfg.stereo_height, self.cfg.stereo_fps)
+                              self.cfg.stereo_height, self.cfg.stereo_fps,
+                              self.cfg.pixel_format)
             self.right = _open(self.right_index, self.cfg.stereo_width,
-                               self.cfg.stereo_height, self.cfg.stereo_fps)
+                               self.cfg.stereo_height, self.cfg.stereo_fps,
+                               self.cfg.pixel_format)
             self._stereo_fail_since = None
 
     # ------------------------------------------------------------------ lifecycle

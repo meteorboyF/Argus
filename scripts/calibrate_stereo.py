@@ -73,12 +73,13 @@ DEFAULT_OUT = os.path.join(os.environ.get("ARGUS_HOME", "/opt/argus"),
 # ---------------------------------------------------------------------------
 # Camera discovery
 # ---------------------------------------------------------------------------
-def _open(idx: int, width: int, height: int, fps: int = 30) -> cv2.VideoCapture | None:
+def _open(idx: int, width: int, height: int, fps: int = 30,
+          pixel_format: str = "YUYV") -> cv2.VideoCapture | None:
     cap = cv2.VideoCapture(idx, cv2.CAP_V4L2) if sys.platform.startswith("linux") \
         else cv2.VideoCapture(idx)
     if not cap.isOpened():
         return None
-    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*pixel_format.upper()))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
     cap.set(cv2.CAP_PROP_FPS, fps)
@@ -216,8 +217,10 @@ def verify_depth(calib_path: str, seconds: float = 20.0, headless: bool = False)
         if usb_port_of(left_idx) == rp and usb_port_of(right_idx) == lp:
             left_idx, right_idx = right_idx, left_idx
 
-    capL = _open(left_idx, cfg.camera.stereo_width, cfg.camera.stereo_height)
-    capR = _open(right_idx, cfg.camera.stereo_width, cfg.camera.stereo_height)
+    capL = _open(left_idx, cfg.camera.stereo_width, cfg.camera.stereo_height,
+                 pixel_format=cfg.camera.pixel_format)
+    capR = _open(right_idx, cfg.camera.stereo_width, cfg.camera.stereo_height,
+                 pixel_format=cfg.camera.pixel_format)
     if capL is None or capR is None:
         raise SystemExit("Could not open the stereo cameras for verification.")
 
@@ -230,6 +233,13 @@ def verify_depth(calib_path: str, seconds: float = 20.0, headless: bool = False)
             okR, fR = capR.read()
             if not (okL and okR):
                 continue
+            from argus.cameras import transform_frame
+            fL = transform_frame(fL, cfg.camera.left_rotation,
+                                 cfg.camera.left_flip_horizontal,
+                                 cfg.camera.left_flip_vertical)
+            fR = transform_frame(fR, cfg.camera.right_rotation,
+                                 cfg.camera.right_flip_horizontal,
+                                 cfg.camera.right_flip_vertical)
             depth = est.depth_map(fL, fR)
             h, w = depth.shape[:2]
             patch = depth[h // 2 - 20:h // 2 + 20, w // 2 - 20:w // 2 + 20]
@@ -296,8 +306,9 @@ def main():
     cw = cam_cfg.stereo_width if cam_cfg else 1280
     ch = cam_cfg.stereo_height if cam_cfg else 720
 
-    capL = _open(left_idx, cw, ch)
-    capR = _open(right_idx, cw, ch)
+    pixel_format = cam_cfg.pixel_format if cam_cfg else "YUYV"
+    capL = _open(left_idx, cw, ch, pixel_format=pixel_format)
+    capR = _open(right_idx, cw, ch, pixel_format=pixel_format)
     if capL is None or capR is None:
         raise SystemExit(f"Could not open cameras {left_idx}/{right_idx}.")
 
@@ -321,6 +332,14 @@ def main():
         okR, fR = capR.read()
         if not (okL and okR):
             continue
+        if cam_cfg:
+            from argus.cameras import transform_frame
+            fL = transform_frame(fL, cam_cfg.left_rotation,
+                                 cam_cfg.left_flip_horizontal,
+                                 cam_cfg.left_flip_vertical)
+            fR = transform_frame(fR, cam_cfg.right_rotation,
+                                 cam_cfg.right_flip_horizontal,
+                                 cam_cfg.right_flip_vertical)
         gL = cv2.cvtColor(fL, cv2.COLOR_BGR2GRAY)
         gR = cv2.cvtColor(fR, cv2.COLOR_BGR2GRAY)
         size = gL.shape[::-1]

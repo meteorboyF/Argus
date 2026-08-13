@@ -41,12 +41,24 @@ class CameraConfig:
     left_index: int = 0           # AR0234 left  (stereo) — fallback / override
     right_index: int = 1          # AR0234 right (stereo) — fallback / override
     wide_index: int = 2           # IMX477P wide (scene / grounding) — fallback
-    stereo_width: int = 1280
-    stereo_height: int = 720
+    # Capture format and sensor-native dimensions. Per-camera transforms below
+    # are applied immediately after capture, before calibration/depth/agent use.
+    pixel_format: str = "YUYV"
+    stereo_width: int = 960
+    stereo_height: int = 600
     stereo_fps: int = 30
     wide_width: int = 1920
     wide_height: int = 1080
     wide_fps: int = 30
+    left_rotation: int = 0       # clockwise degrees: 0, 90, 180, or 270
+    right_rotation: int = 0
+    wide_rotation: int = 0
+    left_flip_horizontal: bool = False
+    right_flip_horizontal: bool = False
+    wide_flip_horizontal: bool = False
+    left_flip_vertical: bool = False
+    right_flip_vertical: bool = False
+    wide_flip_vertical: bool = False
     reconnect: bool = True             # reopen a camera that stops delivering frames
     reconnect_interval_s: float = 2.0
     # Free-running USB cameras have no hardware trigger, so left/right are only
@@ -126,10 +138,10 @@ class AgentConfig:
     model_gguf: str = str(MODELS_DIR / "gemma-4-E2B-it-Q4_K_M.gguf")
     mmproj_gguf: str = str(MODELS_DIR / "mmproj-gemma4-e2b-f16.gguf")
     ctx_size: int = 2048
-    max_tokens: int = 256
+    max_tokens: int = 48
     temperature: float = 0.3
-    request_timeout_s: float = 60.0
-    retries: int = 1                   # extra attempts on transient HTTP failure
+    request_timeout_s: float = 90.0
+    retries: int = 0                   # avoid doubling a slow on-device timeout
     # Tool calling: "prompt" (default — model returns a JSON action in plain text,
     # works with every llama.cpp chat template) or "native" (OpenAI tools param;
     # requires llama-server started with --jinja and a template that supports it).
@@ -137,7 +149,7 @@ class AgentConfig:
     tool_protocol: str = "prompt"
     # Downscale the gated frame to this max side before base64-encoding it for
     # the VLM — keeps prompt processing time and memory sane on the Jetson.
-    image_max_side: int = 1024
+    image_max_side: int = 256
 
 
 @dataclass

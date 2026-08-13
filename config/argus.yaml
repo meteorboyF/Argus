@@ -19,14 +19,20 @@ camera:
   wide_name_hint: "B0459"      # substring of the wide cam's V4L2 name
   # Fallback / manual override (used when auto_detect is false or inconclusive).
   left_index: 0                # confirm with: v4l2-ctl --list-devices
-  right_index: 1
-  wide_index: 2
-  stereo_width: 1280
-  stereo_height: 720
+  right_index: 2
+  wide_index: 4
+  # All three mounted modules advertise YUYV only. The AR0234 boards are
+  # physically rotated in opposite directions on the glasses frame.
+  pixel_format: "YUYV"
+  stereo_width: 960
+  stereo_height: 600
   stereo_fps: 30
   wide_width: 1920
   wide_height: 1080
   wide_fps: 30
+  left_rotation: 90       # /dev/video0: normalize 90° clockwise
+  right_rotation: 270     # /dev/video2: normalize 90° counterclockwise
+  wide_rotation: 0
   reconnect: true              # reopen a camera that stops delivering frames
 
 depth:
@@ -54,12 +60,13 @@ grounding:
 agent:
   server_url: "http://127.0.0.1:8080"
   ctx_size: 2048
-  max_tokens: 256
+  max_tokens: 48        # one concise spoken sentence; avoids 256-token runaway
   temperature: 0.3
-  request_timeout_s: 60.0
+  request_timeout_s: 90.0
+  retries: 0            # do not repeat a long CPU-bound request after timeout
   tool_protocol: prompt  # "prompt" works with every llama.cpp template; "native"
                          # needs --jinja + a tool-capable chat template
-  image_max_side: 1024   # gated frame is downscaled to this before the VLM
+  image_max_side: 256    # warm-cache 6.4 s; cold production path measured 25.6 s
 
 speech:
   wake_model: "hey_jarvis"  # openWakeWord built-in; replace with custom "ARGUS" .onnx later

@@ -22,6 +22,16 @@ LLAMA_NGL="${LLAMA_NGL:-0}"
 LLAMA_PARALLEL="${LLAMA_PARALLEL:-1}"
 LLAMA_FIT="${LLAMA_FIT:-off}"
 LLAMA_FLASH_ATTN="${LLAMA_FLASH_ATTN:-off}"
+# Gemma's chat template runs a hidden "thinking" pass by default (llama.cpp
+# logs "chat template, thinking = 1" at load) and it is NOT free: the model's
+# reasoning trace is billed against max_tokens same as the visible answer.
+# Measured on-device: with thinking on, a 128-token budget was consumed
+# entirely by an unfinished reasoning trace (finish_reason=length, content=""
+# — the actual answer never started). With --reasoning off, the same request
+# answered directly in ~10 completion tokens and ~20-30s wall clock, down from
+# 120+ seconds that frequently never completed. ARGUS needs "one or two short
+# spoken sentences," not a visible chain of thought — disable it.
+LLAMA_REASONING="${LLAMA_REASONING:-off}"
 
 if [ ! -x "$LLAMA_BIN" ]; then
   echo "llama-server not found at $LLAMA_BIN — run scripts/setup_jetson.sh first."
@@ -46,6 +56,7 @@ exec "$LLAMA_BIN" \
   --parallel "$LLAMA_PARALLEL" \
   --fit "$LLAMA_FIT" \
   --flash-attn "$LLAMA_FLASH_ATTN" \
+  --reasoning "$LLAMA_REASONING" \
   --ctx-size 2048 \
   --jinja \
   --no-mmproj-offload \

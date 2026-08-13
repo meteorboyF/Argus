@@ -80,10 +80,14 @@ def run_selftest(cfg: ArgusConfig) -> bool:
             _ok("calibration quality (rms < 1.5, vert < 2.0)",
                 rms < 1.5 and verr < 2.0,
                 "re-run scripts/calibrate_stereo.py" if not (rms < 1.5 and verr < 2.0) else "")
+            from .cameras import transformed_size
+            runtime_size = transformed_size(cfg.camera.stereo_width,
+                                            cfg.camera.stereo_height,
+                                            cfg.camera.left_rotation)
             _ok("calibration matches runtime resolution",
-                size == (cfg.camera.stereo_width, cfg.camera.stereo_height),
+                size == runtime_size,
                 f"calibrated {size}, runtime "
-                f"{(cfg.camera.stereo_width, cfg.camera.stereo_height)} — frames will be "
+                f"{runtime_size} — frames will be "
                 "resized (works, but re-calibrate at the runtime resolution for accuracy)")
             _ok("left/right USB ports recorded", "left_port" in data and str(data["left_port"]),
                 "older calibration — re-run calibrate_stereo.py to bind physical cameras")

@@ -56,6 +56,27 @@ python3 scripts/calibrate_stereo.py --verify
 printing (printers rescale!). All other parameters are auto-detected; `--left/
 --right/--rows/--cols/--out` exist as manual overrides.
 
+### No printer: use the monitor as the target
+
+The Jetson can render a physically scaled board from the monitor's XRandR/EDID
+dimensions. Keep the board full-screen and move the **locked camera rig** through
+the poses instead of moving a paper target:
+
+```bash
+# Terminal 1, on the attached display:
+python3 scripts/display_calibration_board.py --cols 9 --rows 6 --square-mm 30
+
+# Terminal 2 (the board must remain unobstructed):
+python3 scripts/calibrate_stereo.py --headless \
+  --cols 9 --rows 6 --square-mm 30 --min-views 20
+```
+
+This is less ideal than a rigid printed board: EDID physical dimensions can be
+approximate, screen glare can hide corners, and the rig must be moved enough to
+cover the full field at varied angles. Measure one displayed square with a real
+ruler if possible. In every case, `--verify` against tape-measured distances is
+mandatory before metric safety thresholds are trusted.
+
 ### Capture technique (quality depends on this)
 
 - Board **flat and rigid** (glued to card/acrylic). A bowed board poisons everything.

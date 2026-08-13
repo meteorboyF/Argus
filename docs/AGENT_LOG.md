@@ -88,6 +88,7 @@ Prompts: [JP-01](JETSON_PROMPT_01.md) (provisioning, complete) ·
 | #020 | 08-13 21:18 | jetson | Step 8 — memory budget with Gemma resident; swap already in use at idle | done |
 | #021 | 08-13 21:35 | jetson | Step 6 audio — mic/speaker verified, Piper TTS was completely broken (fixed) | done |
 | #022 | 08-13 21:40 | jetson | GPU offload experiment — fails at 4 layers too, looks structural not tunable | done |
+| #023 | 08-13 22:30 | jetson | Camera normalization + usable vision latency + screen calibration target | done |
 
 Entries #001–#011 pre-date the numbering scheme; their numbers were assigned
 here retroactively and their bodies were left untouched. **Number every entry
@@ -1414,3 +1415,80 @@ use of it. This closes off option 1 from #019 for now.
   GNOME/VSCode) at some point, since ~3.4 GB of today's ~6.2 GB peak was
   desktop overhead that won't exist in the final deployment — that changes
   the real available headroom for this whole line of investigation.
+
+---
+
+## [#023] 2026-08-13 22:30 — jetson-agent — Camera normalization, usable vision latency, screen calibration target
+
+**Agent:** jetson-agent
+**Status:** done
+**Prompt:** JP-02 Steps 2, 4, and 7
+**Re:** #016, #018, #019, #022
+
+**What I did:**
+
+- Inspected the physical rig photos and raw frames from all three mounted cameras.
+- Fixed the production camera path to request the modules' actual YUYV format instead of unsupported MJPG.
+- Added configurable per-camera 0/90/180/270 rotation and horizontal/vertical flips, applied immediately after capture and on reconnect.
+- Set this rig's B0495 pair to native 960x600 capture; normalize video0 clockwise and video2 counterclockwise. B0459 remains unrotated.
+- Made stereo calibration/verification use the same format and transforms as runtime.
+- Added `python3 -m argus preview [--seconds N] [--describe]` for an upright, labeled three-camera diagnostic with mandatory privacy gating before ARGUS description.
+- Disabled Gemma hidden reasoning (preserving the prior agent's uncommitted fix), benchmarked smaller inputs, and set the live/template defaults to 256 px, 48 tokens, 90 s timeout, zero automatic retries.
+- Added `scripts/display_calibration_board.py`, which uses XRandR/EDID physical dimensions to render a full-screen, physically scaled checkerboard for printer-free headless calibration.
+
+**Result / verification:**
+
+- Raw mount mapping confirmed: video0 requires 90 degrees clockwise; video2 requires 90 degrees counterclockwise; video4 is upright.
+- Production `CameraRig` output visually verified upright: left/right `(960, 600, 3)` after rotation, wide `(1080, 1920, 3)`.
+- Sustained 60-pair run: 59/60 inside the 12 ms skew limit; median 2.932 ms, p95 3.281 ms. The only rejected pair was the expected first-frame startup outlier (370.432 ms).
+- Warm-cache vision benchmark on the same privacy-gated frame (one face blurred): 384 px = 9.20 s; 256 px = 6.41 s; both answered correctly, "There is a person in front of you." The finalized cold production preview took 25.6 s (server: ~12.7 s prompt/image processing + ~12.8 s for 14 generated tokens), so 6.41 s is a lower bound, not expected first-query latency.
+- Monitor reports 1920x1080 over 479x260 mm, sufficient for an EDID-scaled on-screen board.
+- Installed user-level pytest and ran the complete suite: 34 passed in 6.15 s.
+- Found a llama.cpp Gemma 4 multi-image bug during a temporal demo (`clip_image_batch_encode: output buffer size mismatch`); single-image/contact-sheet requests remain healthy.
+
+**Next step (proposed):**
+
+- Run the on-screen board and headless stereo calibrator while the user moves the locked rig through 15+ poses, then verify recovered distance against a tape measure before enabling metric safety thresholds.
+- After calibration, run the fast loop and complete audio-preemption plus full wake-to-speech latency/memory measurements.
+
+---
+
+## [#024] 2026-08-14 00:25 — jetson-agent — Confirmed R36.4.7 GPU allocator regression
+
+**Agent:** jetson-agent
+**Status:** blocked
+**Re:** #022, #023
+
+**What I did:**
+
+- Checked the device state against NVIDIA's report for the identical
+  `NvMapMemAllocInternalTagged error 12` Gemma/llama.cpp failure.
+- Confirmed this Jetson is running `nvidia-l4t-core 36.4.7` with NVIDIA APT
+  sources pinned to `r36.4`.
+- Verified NVIDIA identifies a known memory issue in R36.4.7, reports it fixed
+  in R36.5, and another Orin Nano user confirmed the upgrade resolved the
+  allocation failure.
+- Verified NVIDIA's supported same-major/minor-release procedure is to change
+  the Jetson APT source release, run `apt update` and `apt dist-upgrade`, then
+  reboot. No BSP packages were changed in this step.
+
+**Result / verification:**
+
+- The GPU-offload blocker is no longer an unexplained layer-count tuning
+  problem. R36.4.7 is the affected BSP and upgrading to R36.5 is the documented
+  fix to test before further llama.cpp tuning.
+- Current pressure is also high: 926 MiB available RAM and 3.7/3.7 GiB swap in
+  use at inspection time. This remains a deployment concern after the BSP fix.
+- Repository verification before the upgrade checkpoint: 29 tests passed and
+  `git diff --check` passed.
+
+**Stuck on / needs input:**
+
+- Changing BSP/kernel/firmware packages and rebooting requires explicit user
+  approval and a recovery-aware backup checkpoint.
+
+**Next step (proposed):**
+
+- Upgrade R36.4.7 to the current R36.5 point release, reboot, verify cameras and
+  CUDA, rebuild llama.cpp cleanly, then test full decoder GPU offload with the
+  vision projector kept on CPU for the first controlled run.
