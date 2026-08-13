@@ -45,7 +45,7 @@ The following requirements guided engineering decisions:
 | Camera drivers expose product IDs, not sensor names | Cameras could be assigned to the wrong role | Discover `B0495` stereo pair and `B0459` wide camera | Implemented and verified with all three cameras |
 | All cameras share a USB hub | Dropped or stalled video could degrade safety | Verify 5 Gbit/s links and simultaneous capture before redesigning wiring | Verified for initial prototype; longer soak test remains |
 | CPU Gemma response took minutes | Interaction was unusably slow | Disable hidden reasoning; use 256 px input and 48-token answers | Improved cold description to 25.6 s; still not acceptable |
-| CUDA offload failed despite reported free memory | GPU acceleration unavailable | Diagnose rather than guess layer counts; upgrade affected R36.4.7 BSP to R36.5 | Root cause confirmed; upgrade staged, not yet verified |
+| CUDA offload failed despite reported free memory | GPU acceleration unavailable | Diagnose rather than guess layer counts; upgrade affected R36.4.7 BSP to R36.5.2 | Implemented; full decoder offload and live vision query verified |
 | Three-image Gemma request crashed projector | Temporal/waving interpretation failed | Use one privacy-gated contact sheet until upstream multi-image path is fixed | Temporary workaround |
 | Raw headset rejected 16 kHz audio | Wake word/STT input could fail | Use PulseAudio default for resampling, not direct ALSA hardware | Verified with real microphone blocks |
 | Piper API had changed | ARGUS produced no spoken output | Consume current Piper `AudioChunk` output directly | Implemented and audibly verified |
@@ -223,9 +223,12 @@ script was added; code was pushed before modifying kernel/firmware packages.
 inspection it also had only 926 MiB available RAM and all 3.7 GiB swap in use,
 so memory pressure remains a separate constraint after the BSP fix.
 
-**State.** The R36.5 upgrade is staged but has not yet been completed and
-validated. Success must be determined by a post-upgrade GPU load test, not by
-the package version alone.
+**Result.** The device was upgraded to R36.5.2 and `llama.cpp` was rebuilt for
+CUDA architecture 87. Full decoder offload (`--device CUDA0 -ngl 99`) loaded
+without the former NVMAP failure. A privacy-gated live frame was described in
+6.90 seconds total, including 5.77 seconds of prompt evaluation and 1.13 seconds
+for 10 output tokens (8.89 tokens/s). The desktop still left limited memory
+headroom, so headless deployment and full-stack memory testing remain required.
 
 ### 10. Multi-camera temporal interpretation exposed a model-runtime bug
 
@@ -273,19 +276,17 @@ the spoken ARGUS test phrase was clear.
 
 ## Next validation sequence
 
-1. Complete the guarded R36.5 terminal upgrade and verify kernel, CUDA, all
-   three cameras, audio, and the Python test suite.
-2. Rebuild `llama.cpp` cleanly and measure full/partial GPU offload with the
-   projector initially kept on CPU.
-3. Lock and mark the camera joints, run monitor-based stereo calibration, and
+1. Reconfirm the verified R36.5.2 GPU profile under headless/full-stack load and
+   measure sustained memory, swap, thermals, and latency.
+2. Lock and mark the camera joints, run monitor-based stereo calibration, and
    verify multiple tape-measured distances.
-4. Perform an obstacle-warning pre-emption test while ordinary speech plays.
-5. Measure fast-loop frequency, stereo rejection rate, thermals, power, memory,
+3. Perform an obstacle-warning pre-emption test while ordinary speech plays.
+4. Measure fast-loop frequency, stereo rejection rate, thermals, power, memory,
    swap, and wake-to-speech latency with the complete system resident.
-6. Run controlled failure tests: unplug one camera, cover a lens, move a mount,
+5. Run controlled failure tests: unplug one camera, cover a lens, move a mount,
    lose the VLM server, and disconnect audio. Confirm the device degrades
    explicitly and never invents precise guidance.
-7. Only then design a supervised HCI evaluation covering comprehension,
+6. Only then design a supervised HCI evaluation covering comprehension,
    workload, trust calibration, warning urgency, privacy expectations, and
    comfort—not just model accuracy.
 

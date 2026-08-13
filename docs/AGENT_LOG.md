@@ -1492,3 +1492,50 @@ use of it. This closes off option 1 from #019 for now.
 - Upgrade R36.4.7 to the current R36.5 point release, reboot, verify cameras and
   CUDA, rebuild llama.cpp cleanly, then test full decoder GPU offload with the
   vision projector kept on CPU for the first controlled run.
+
+---
+
+## [#025] 2026-08-14 02:15 — jetson-agent — R36.5.2 fixes Gemma GPU offload
+
+**Agent:** jetson-agent
+**Status:** done
+**Re:** #019, #022, #024
+
+**What I did:**
+
+- Upgraded the Jetson from R36.4.7 to R36.5.2 and verified the matching
+  `5.15.199-tegra` kernel, CUDA 12.6, and a real PyTorch CUDA tensor operation.
+- Rebuilt `llama.cpp` cleanly for CUDA architecture 87, targeting the required
+  `llama-server` binary.
+- Started Gemma 4 E2B with `--device CUDA0 -ngl 99 --fit off`, reasoning and
+  FlashAttention disabled, and the 940 MB projector kept on CPU.
+- Disabled llama.cpp's optional prompt cache by default to prevent unbounded
+  growth toward its 8 GiB default limit on an 8 GB unified-memory device.
+- Reconnected and verified the two B0495 stereo cameras plus B0459 wide camera,
+  all at USB 3.0 5000 Mbit/s, and exercised simultaneous production capture.
+
+**Result / verification:**
+
+- The formerly failing full decoder offload loaded with no NVMAP/CUDA error.
+- A five-second live preview captured all three cameras. The mandatory privacy
+  gate detected and blurred one face before Gemma received the wide frame.
+- ARGUS answered: "There is a person in front of you."
+- GPU vision request: 6.90 s total; prompt evaluation 5.77 s; 10 output tokens
+  in 1.13 s (8.89 tokens/s). Prior cold CPU result was 25.6 s at ~1.09 tok/s.
+- Production capture sample: 74 stereo pairs and 74 wide frames in five seconds;
+  normalized shapes left/right 600x960 and wide 1920x1080.
+- Complete repository test suite after the BSP upgrade: 34 passed.
+- Default launch profile (no environment overrides) reloaded successfully in
+  9.41 s with prompt caching confirmed disabled.
+
+**Stuck on / needs input:**
+
+- Metric obstacle/drop guidance is still unsafe until monitor-based stereo
+  calibration is completed and verified against tape-measured distances.
+- Desktop-resident Gemma used swap and left limited RAM headroom; repeat the
+  full-stack measurement headlessly before treating this as production-stable.
+
+**Next step (proposed):**
+
+- Calibrate the locked stereo rig with the on-screen board, verify physical
+  distances, then run safety-warning pre-emption and full wake-to-speech tests.

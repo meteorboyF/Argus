@@ -14,11 +14,12 @@ MODELS="$ARGUS_HOME/models"
 MODEL="$MODELS/gemma-4-E2B-it-Q4_K_M.gguf"
 MMPROJ="$MODELS/mmproj-gemma4-e2b-f16.gguf"
 
-# The 8 GB Orin Nano cannot load this model/projector while also reserving CUDA
-# compute buffers. Keep the default profile CPU-resident; larger Jetsons can
-# opt back into GPU offload through these environment variables.
-LLAMA_DEVICE="${LLAMA_DEVICE:-none}"
-LLAMA_NGL="${LLAMA_NGL:-0}"
+# R36.4.7 had an NVIDIA NVMAP allocator regression that made even small CUDA
+# allocations fail. The reference Orin Nano was upgraded to R36.5.2 and the
+# full decoder offload below was verified with a real privacy-gated image query.
+# Keep the large vision projector on CPU (--no-mmproj-offload) for headroom.
+LLAMA_DEVICE="${LLAMA_DEVICE:-CUDA0}"
+LLAMA_NGL="${LLAMA_NGL:-99}"
 LLAMA_PARALLEL="${LLAMA_PARALLEL:-1}"
 LLAMA_FIT="${LLAMA_FIT:-off}"
 LLAMA_FLASH_ATTN="${LLAMA_FLASH_ATTN:-off}"
@@ -32,6 +33,9 @@ LLAMA_FLASH_ATTN="${LLAMA_FLASH_ATTN:-off}"
 # 120+ seconds that frequently never completed. ARGUS needs "one or two short
 # spoken sentences," not a visible chain of thought — disable it.
 LLAMA_REASONING="${LLAMA_REASONING:-off}"
+# Prompt caching can otherwise grow toward an 8 GiB default limit. Repeated
+# wearable observations do not justify that risk on an 8 GB unified-memory SoC.
+LLAMA_CACHE_RAM="${LLAMA_CACHE_RAM:-0}"
 
 if [ ! -x "$LLAMA_BIN" ]; then
   echo "llama-server not found at $LLAMA_BIN — run scripts/setup_jetson.sh first."
@@ -57,6 +61,7 @@ exec "$LLAMA_BIN" \
   --fit "$LLAMA_FIT" \
   --flash-attn "$LLAMA_FLASH_ATTN" \
   --reasoning "$LLAMA_REASONING" \
+  --cache-ram "$LLAMA_CACHE_RAM" \
   --ctx-size 2048 \
   --jinja \
   --no-mmproj-offload \

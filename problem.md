@@ -1,5 +1,14 @@
 # Research Request: Gemma 4 E2B Vision GPU Offload Fails on Jetson Orin Nano 8 GB
 
+> **Resolved on 2026-08-14.** NVIDIA Jetson Linux was upgraded from R36.4.7 to
+> R36.5.2, `llama.cpp` was rebuilt cleanly for CUDA architecture 87, and the
+> previously failing full decoder offload (`--device CUDA0 -ngl 99`) loaded
+> successfully. A live three-camera preview passed one wide-camera frame through
+> the mandatory privacy gate (one face blurred); ARGUS correctly answered,
+> "There is a person in front of you." Gemma took 6.90 s total: 5.77 s prompt
+> evaluation plus 1.13 s for 10 output tokens (8.89 tokens/s). The historical
+> R36.4.7 failure details below are retained as engineering evidence.
+
 ## Goal
 
 Find a safe, reproducible way to run **Gemma 4 E2B multimodal inference with
@@ -32,7 +41,7 @@ Repository: <https://github.com/meteorboyF/Argus>
 - CPU: 6-core ARM64
 - OS: Ubuntu 22.04 ARM64
 - JetPack: 6.2
-- L4T: R36.4.7
+- L4T at failure: R36.4.7; fixed/verified release: R36.5.2
 - CUDA: 12.6
 - TensorRT: 10.3.0
 - Python: 3.10.12
@@ -223,7 +232,7 @@ relevant when selecting a llama.cpp version or patch.
 These reports suggest, but do not prove, that L4T R36.4.7 may have a CUDA/NVMAP
 allocation or fragmentation problem relevant to this device.
 
-## Proposed low-risk experiment not yet completed
+## Superseded low-risk experiment
 
 Research suggests testing mmap-disabled loading after clearing filesystem
 caches:
@@ -242,8 +251,9 @@ If one layer succeeds, increase `-ngl` incrementally while measuring RAM, swap,
 CUDA allocations, correctness, and cold image-query latency. The CPU profile
 must be restored immediately after any failure.
 
-This experiment has not been run yet. It should not be reported as a solution
-without measurements.
+This experiment was not needed after the documented BSP fix. R36.5.2 succeeded
+with full decoder offload, so `--no-mmap -ngl 1` should not be presented as the
+solution to this incident.
 
 ## Constraints and non-solutions
 
