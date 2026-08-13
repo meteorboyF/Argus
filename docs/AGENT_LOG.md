@@ -86,6 +86,7 @@ Prompts: [JP-01](JETSON_PROMPT_01.md) (provisioning, complete) ·
 | #018 | 08-13 21:10 | jetson | Step 4 — STOPPED, need mount-lock confirmation before calibrating | blocked |
 | #019 | 08-13 21:15 | jetson | Step 7 — slow-loop latency measured: CPU decode is the bottleneck, not encode | done |
 | #020 | 08-13 21:18 | jetson | Step 8 — memory budget with Gemma resident; swap already in use at idle | done |
+| #021 | 08-13 21:35 | jetson | Step 6 audio — mic/speaker verified, Piper TTS was completely broken (fixed) | done |
 
 Entries #001–#011 pre-date the numbering scheme; their numbers were assigned
 here retroactively and their bodies were left untouched. **Number every entry
@@ -1246,3 +1247,75 @@ during that specific window. Worth a dedicated follow-up: start `run` (not
   before trying partial GPU offload, worth confirming it doesn't trade a
   latency problem for a swap-thrashing problem — watch `SWAP` in `tegrastats`
   during that experiment, not just CUDA free memory.
+
+---
+
+## [#021] 2026-08-13 21:35 — jetson-agent — Step 6 audio: mic/speaker verified, Piper TTS was completely broken
+
+**Agent:** jetson-agent
+**Status:** done
+**Prompt:** JP-02 Step 6 (partial — device mapping + TTS only; preemption test still needs #018)
+**Re:** #011
+
+**What I did:**
+
+User connected a USB headset (mic + speaker combo) mid-session. Ran
+`python3 -m sounddevice` equivalent to find it, then worked through getting
+it actually functional end-to-end — this took more than device selection.
+
+**Result / verification:**
+
+**Device found:** `USB Audio Device (hw:2,0)` — PulseAudio card
+`alsa-usb-GeneralPlus_USB_Audio_Device-00`, already both the default source
+*and* default sink (`pactl info`). 1 input channel, 2 output.
+
+**Sample-rate trap, avoided:** the raw ALSA hw device only accepts
+44100/48000 Hz (`sd.check_input_settings` fails for 8000/16000/22050/32000).
+`argus/speech.py`'s `record()` and `mic_stream()` both open the stream at
+`cfg.sample_rate` (16000, required by both Whisper and openWakeWord's 80 ms
+frame spec) — opening the raw hw device by name at 16000 would have thrown
+`PortAudioError: Invalid sample rate` the first time anyone spoke to it.
+**Fix needed was zero config changes**, not a resampling layer: PortAudio's
+system default (`device=None` → resolves to PulseAudio's virtual "default"
+device, index 28) already accepts 16000 Hz, because PulseAudio's software
+mixer does the rate conversion the raw hw device can't. `argus.yaml`'s
+`speech.input_device: null` / `output_device: null` already means exactly
+this. **Do not set input_device/output_device to a hw-device name substring
+on this rig** — it'll route past PulseAudio and hit the same wall.
+
+Verified for real, not just parameter-checked:
+- `argus.speech.record(2.0, 16000, device=None)` → 32000 float32 samples,
+  nonzero RMS/peak.
+- `argus.speech.mic_stream(16000, block_ms=80, device=None)` → confirmed 5
+  consecutive blocks, each exactly `(1280,) int16` — matches openWakeWord's
+  required frame shape exactly.
+
+**Piper TTS was completely broken — every single `speak()` call threw.**
+`Speaker._play()` called `self._voice.synthesize(text, wf)`, writing into a
+`wave.Wave_write`. The installed piper-tts version's API is different: `
+synthesize(text) -> Iterable[AudioChunk]`, where each `AudioChunk` already
+carries `.audio_float_array` (float32, [-1,1]) and `.sample_rate` — there is
+no wave-file-writing mode anymore. The old code produced a malformed buffer
+that `soundfile.read()` rejected with `# channels not specified` on every
+call — this is exactly the gap KNOWN_GAPS A8 flagged as unverified, and it
+was in fact broken. Fixed in `argus/speech.py::Speaker._play()`: consume the
+`AudioChunk` iterable directly, concatenate multi-chunk sentences, drop the
+`wave`/`soundfile` roundtrip entirely (removed the now-unused `import wave`
+too). Pushed in `b6c41bd`.
+
+**Confirmed audibly by the user, not just "no exception":** played "Hello.
+This is ARGUS. Can you hear me?" through the headset twice; user confirmed
+both times, second time explicitly "yes I can hear it nicely."
+
+**Next step (proposed):**
+
+- The device-mapping half of Step 6 is done — no `argus.yaml` changes needed,
+  `null`/`null` was already correct once Piper actually worked.
+- **Still open:** the actual preemption test (trigger a long agent answer,
+  place an obstacle mid-speech, confirm DANGER cuts it off). That needs a
+  working end-to-end query, which is currently blocked by #019's latency
+  problem — a query has never yet completed to produce speech to interrupt.
+  Once #019's fix lands (see next entry), this is the next thing to try.
+- Calibration (#018) is unblocked on the mount-lock question (user confirmed
+  locked) but now blocked on a different thing: **no checkerboard has been
+  printed/measured yet.** Waiting on that before Step 4 can start.
