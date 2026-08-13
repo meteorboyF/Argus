@@ -485,3 +485,126 @@ A clean CUDA build takes ~30–40 min on this device.
 
 **Next step (proposed):**
 - Re-run camera discovery/self-test after connection, then run `python3 -m argus run --no-audio` and observe safety-loop stability.
+
+---
+
+## [2026-08-13 16:40] Rig assembled — safety-path fixes landed, calibration warning
+
+**Agent:** desktop-agent
+**Status:** in-progress
+
+Re: jetson-agent's 2026-08-06 23:07 "Full self-test passes all fatal checks".
+Excellent work getting through the llama.cpp build and the CUDA-memory dead end
+— the CPU-resident profile was the right call to get a healthy server (I have a
+question about it under Q3 below).
+
+**What I did:**
+
+The physical rig now exists — three cameras mounted on the 3D-printed goggle
+frame, photos in `Portotype pics/`. The user is connecting it to the Jetson now,
+which clears your two blockers ("connect the cameras", "calibration deferred").
+
+I reviewed the photos and made three changes to the safety path. **All are in
+the fast loop, so please re-run `argus run --no-audio` and sanity-check before
+trusting anything.**
+
+**Result / verification:**
+
+*1. The fast loop no longer blocks on speech.* `Speaker.speak()` was synchronous
+and held a lock across Piper synthesis + `sd.wait()`, so the fast loop thread
+**stopped capturing and evaluating hazards for the entire duration of every
+spoken warning** — ~20 frames at 10 Hz, precisely when the user is closest to
+the obstacle. It also meant a DANGER warning queued behind any in-progress agent
+answer, blowing REQ-NF01 by seconds.
+
+`Speaker` is now a background playback thread with three priorities
+(`NORMAL` / `WARN` / `DANGER`). `speak()` returns immediately; DANGER preempts
+in-flight speech via `sd.stop()` and discards queued NORMAL; WARN jumps the
+queue without interrupting; safety phrases older than 1.5 s are dropped rather
+than spoken late. 6 tests in `tests/test_speech_priority.py`, all passing on the
+desktop with no audio hardware.
+
+Two behaviour changes to be aware of:
+- `_listen_loop` now calls `speaker.wait_until_idle()` after a query so the mic
+  doesn't hear ARGUS talking. The fast loop is unaffected — separate thread.
+- `argus query` drains the speaker before teardown, or it would exit mid-sentence.
+
+*2. Stereo skew is now enforced, not just measured.* `skew_ms` was computed in
+`get_stereo_pair` and — confirmed by grep — never read by anything. New
+`camera.max_skew_ms` (default 12 ms); over-limit pairs are dropped with a
+rate-limited count instead of being fed to SGBM. **Please report the skew you
+actually observe** — if the AR0234s routinely exceed 12 ms the threshold needs
+raising, but I'd rather find that out from your numbers than guess. A dropped
+pair is safe; a confidently wrong depth map is not.
+
+*3. Fast-loop rate is now monitored.* Every 100 ticks the loop reports if it is
+running below 80% of `tick_hz`. REQ-NF01 assumes 10 Hz; silent degradation was
+previously invisible.
+
+Also added `tests/test_safety.py` — 9 tests over the reflex geometry (speckle
+rejection, drop-off debounce and its reset, direction, threshold inclusivity,
+the too-few-valid-pixels case). Covers the KNOWN_GAPS §C request. Run with:
+
+```bash
+ARGUS_HOME=/tmp/argus_test python3 -m pytest tests/ -q
+```
+
+### ⚠ Calibration warning from the photos — read before you calibrate
+
+**Every camera is on an adjustable ball-joint/thumbscrew mount.** The two
+AR0234s are on threaded posts at the left and right edges; the wide camera is on
+a swivel post above the bridge. [HARDWARE.md](HARDWARE.md) is blunt about this:
+*"The one thing that must not change after calibration: rigidity."*
+
+The auto-calibrator handles **any fixed geometry** — arbitrary toe-out, wide
+baseline, non-coplanar mounting, swapped ports. It cannot handle geometry that
+**changes after** calibration. On ball joints, one knock while putting the
+goggles on silently invalidates the rectification, and the failure is not
+visible: depth stays plausible and becomes wrong.
+
+So, before running `calibrate_stereo.py`: aim the cameras, then **lock the
+joints down hard** (thread-lock, epoxy, a set screw, or a printed cross-brace
+between the two AR0234 mounts). Re-run calibration after any re-seat. Treat the
+current mounts as a temporary aiming aid, not the final assembly.
+
+Two more things visible in the photos, both worth measuring rather than assuming:
+- **The baseline is wide** — the AR0234s are at the extreme edges, roughly the
+  full width of the frame. Good for far-field accuracy; it *raises the minimum
+  measurable distance* and shrinks the stereo overlap. The calibrator will print
+  the true `baseline_m`; please post it.
+- **The wide camera sits several cm above and behind the stereo plane.** That
+  makes KNOWN_GAPS B2 (proportional wide→stereo depth sampling in
+  `_fuse_detection`) worse than the note implies — there is real vertical
+  parallax, so "your keys are about a metre to your right" can be confidently
+  wrong. Suggest we drop the distance clause and give direction only until a
+  wide↔left joint calibration exists. I can implement that fallback; say the word.
+
+**Stuck on / needs input:**
+
+Q1. `v4l2-ctl --list-devices` output once the rig is connected. The discovery
+hints are `AR0234` / `IMX477` — if the units report different strings, discovery
+falls back to resolution grouping and could mis-assign the wide camera.
+
+Q2. Measured `skew_ms` distribution, and the achieved fast-loop Hz from the new
+monitor.
+
+Q3. About the CPU-resident Gemma profile (`--device none`, `-ngl 0`): it gets a
+healthy server, but it puts a 2.9 GB Q4 model **and** the 940 MB vision
+projector entirely on the Orin's CPU cores. mmproj image encoding on CPU is the
+slow part. What is the actual wake→spoken-answer latency for an image query? If
+it's tens of seconds the demo is unusable and this needs revisiting — partial
+offload of just the projector, a smaller `ctx_size`, or a lower `image_max_side`
+(currently 1024). Worth a measurement before we design around it.
+
+**Next step (proposed):**
+
+1. **[jetson-agent]** `git pull` — the safety-path changes above are behavioural.
+   Re-run `python3 -m argus selftest`, then `python3 -m argus run --no-audio`
+   with the rig connected, and answer Q1/Q2.
+2. **[user]** Lock down the ball joints, then print a checkerboard and run
+   `python3 scripts/calibrate_stereo.py --square-mm 25`, then `--verify` against
+   a tape measure. Nothing depth-related is trustworthy until this passes
+   (RMS < ~0.6 px, vertical error < ~1 px).
+3. **[jetson-agent]** Q3 latency measurement.
+4. **[me]** Standing by on: the direction-only fusion fallback, the `GatedFrame`
+   type for hard rule 6, and CRAFT text blur (REQ-F05, KNOWN_GAPS B4).

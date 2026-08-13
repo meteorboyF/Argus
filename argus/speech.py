@@ -18,11 +18,20 @@ from __future__ import annotations
 
 import queue
 import threading
+import time
 import wave
+from enum import IntEnum
 
 import numpy as np
 
 from .config import SpeechConfig
+
+
+def _sd():
+    """Lazy sounddevice import — keeps `argus selftest` and headless runs from
+    needing PortAudio until audio is actually used."""
+    import sounddevice as sd
+    return sd
 
 
 def _resolve_device(selector, kind: str):
@@ -92,15 +101,42 @@ class Transcriber:
         return " ".join(s.text for s in segments).strip()
 
 
+class Priority(IntEnum):
+    """Speech urgency. Higher wins the speaker.
+
+    NORMAL — agent answers, acknowledgements. Never interrupts anything.
+    WARN   — advisory hazard. Jumps ahead of queued NORMAL speech but lets an
+             in-flight utterance finish.
+    DANGER — urgent hazard. Preempts whatever is playing, immediately.
+    """
+    NORMAL = 0
+    WARN = 1
+    DANGER = 2
+
+
+# A safety phrase that has waited longer than this is describing a world that
+# has moved on. Speaking it late is worse than not speaking it: the user gets a
+# warning about a hazard they have already walked past.
+SAFETY_MAX_AGE_S = 1.5
+
+
 class Speaker:
-    """Thread-safe: the fast safety loop and the slow agent loop can both call
-    speak(); playback is serialized so warnings don't overlap mid-sentence."""
+    """Non-blocking, priority-aware TTS.
+
+    `speak()` returns immediately — it must, because the fast safety loop calls
+    it. Synthesis and playback happen on a dedicated thread, so the loop keeps
+    capturing frames and evaluating hazards while ARGUS is talking.
+
+    Priority ordering is the point of this class. A DANGER warning preempts an
+    in-flight agent answer (`sd.stop()`) and discards queued NORMAL speech; a
+    hazard warning must never wait behind a sentence about where the user's keys
+    are. Stale safety phrases are dropped rather than spoken late.
+    """
 
     def __init__(self, cfg: SpeechConfig, enabled: bool = True):
         self.cfg = cfg
         self.enabled = enabled
         self._voice = None
-        self._lock = threading.Lock()
         if enabled:
             try:
                 from piper import PiperVoice
@@ -109,23 +145,99 @@ class Speaker:
                 print(f"[speech] Piper load failed: {e}")
                 self.enabled = False
 
-    def speak(self, text: str):
+        self._cv = threading.Condition()
+        self._queue: list[tuple[Priority, float, int, str]] = []
+        self._seq = 0
+        self._playing: Priority | None = None
+        self._stopping = False
+        self._idle = threading.Event()
+        self._idle.set()
+        self._thread = threading.Thread(target=self._run, name="argus-speaker", daemon=True)
+        self._thread.start()
+
+    # ---------------------------------------------------------------- public
+    def speak(self, text: str, priority: Priority = Priority.NORMAL):
+        """Queue `text`. Never blocks. DANGER preempts whatever is playing."""
         if not text:
             return
         if not self.enabled or self._voice is None:
             print(f"[ARGUS says] {text}")
             return
+        with self._cv:
+            if priority >= Priority.DANGER:
+                # Queued chit-chat is worthless next to an imminent collision.
+                self._queue = [it for it in self._queue if it[0] >= Priority.DANGER]
+                if self._playing is not None and self._playing < Priority.DANGER:
+                    self._abort_playback()   # aborts the sd.wait() in _play
+            self._seq += 1
+            # Sort key: highest priority first, then FIFO within a priority.
+            self._queue.append((priority, time.monotonic(), self._seq, text))
+            self._queue.sort(key=lambda it: (-it[0], it[2]))
+            self._idle.clear()
+            self._cv.notify()
+
+    def wait_until_idle(self, timeout: float | None = None) -> bool:
+        """Block until the queue drains. For one-shot `argus query` and tests."""
+        return self._idle.wait(timeout)
+
+    def stop(self):
+        """Stop the playback thread, abandoning anything still queued."""
+        with self._cv:
+            self._stopping = True
+            self._queue.clear()
+            self._cv.notify_all()
+        self._abort_playback()
+        self._thread.join(timeout=2.0)
+
+    def _abort_playback(self):
+        """Best-effort cut-off of in-flight audio.
+
+        Deliberately swallows everything: this runs on the fast safety loop's
+        thread during DANGER preemption, and an audio-backend hiccup must not
+        take the safety loop down with it.
+        """
+        try:
+            _sd().stop()
+        except Exception:  # noqa: BLE001
+            pass
+
+    # ---------------------------------------------------------------- internal
+    def _run(self):
+        while True:
+            with self._cv:
+                while not self._queue and not self._stopping:
+                    self._idle.set()
+                    self._cv.wait(0.2)
+                if self._stopping:
+                    self._idle.set()
+                    return
+                priority, queued_at, _, text = self._queue.pop(0)
+                self._playing = priority
+            try:
+                age = time.monotonic() - queued_at
+                if priority >= Priority.WARN and age > SAFETY_MAX_AGE_S:
+                    print(f"[speech] dropped stale {priority.name} ({age:.1f}s): {text}")
+                else:
+                    self._play(text)
+            except Exception as e:  # noqa: BLE001 — never kill the speaker thread
+                print(f"[speech] playback failed: {e}")
+            finally:
+                with self._cv:
+                    self._playing = None
+                    if not self._queue:
+                        self._idle.set()
+
+    def _play(self, text: str):
         import io
-        import sounddevice as sd
         import soundfile as sf
-        with self._lock:
-            buf = io.BytesIO()
-            with wave.open(buf, "wb") as wf:
-                self._voice.synthesize(text, wf)
-            buf.seek(0)
-            data, sr = sf.read(buf, dtype="float32")
-            sd.play(data, sr, device=_resolve_device(self.cfg.output_device, "output"))
-            sd.wait()
+        buf = io.BytesIO()
+        with wave.open(buf, "wb") as wf:
+            self._voice.synthesize(text, wf)
+        buf.seek(0)
+        data, sr = sf.read(buf, dtype="float32")
+        sd = _sd()
+        sd.play(data, sr, device=_resolve_device(self.cfg.output_device, "output"))
+        sd.wait()   # returns early if another thread calls sd.stop() (preemption)
 
 
 def record(seconds: float, sample_rate: int, device=None) -> np.ndarray:

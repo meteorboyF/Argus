@@ -20,6 +20,12 @@ before doing anything:
   5. docs/CALIBRATION.md
   6. docs/HARDWARE.md
   7. AGENT_HANDOFF.md               (history + hard-won lessons; do not repeat them)
+  8. docs/AGENT_LOG.md              (the cross-agent channel — read it in full,
+                                     and append your status/blockers there so
+                                     desktop-agent can review your work)
+
+NOTE: for a follow-up session on an already-provisioned device, use
+docs/JETSON_NEXT_PROMPT.md instead of this file.
 
 PROJECT IN ONE PARAGRAPH
 ARGUS is a Two-Speed Vision-Language system. A non-ML FAST loop (stereo depth +

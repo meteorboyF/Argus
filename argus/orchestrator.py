@@ -25,7 +25,7 @@ from .depth import DepthEstimator
 from .grounding import Grounder
 from .privacy import PrivacyGate
 from .safety import Level, SafetyReflex
-from .speech import Speaker, Transcriber, WakeWord, record
+from .speech import Priority, Speaker, Transcriber, WakeWord, record
 
 
 def _direction_of(col: int, width: int) -> str:
@@ -59,6 +59,10 @@ class Orchestrator:
         self._stop = threading.Event()
         self._last_danger = 0.0
         self._last_warn = 0.0
+        self._skew_drops = 0
+        self._last_skew_report = 0.0
+        self._tick_count = 0
+        self._tick_time = 0.0
 
         # Wake word + STT are created lazily in _listen_loop so `argus query`
         # and --no-audio runs don't pay their load time (or need a microphone).
@@ -71,22 +75,67 @@ class Orchestrator:
         while not self._stop.is_set():
             t0 = time.perf_counter()
             pair = self.rig.get_stereo_pair()
-            if pair is not None:
+            if pair is not None and self._skew_ok(pair):
                 depth_m = self.depth.depth_map(pair.left, pair.right)
                 with self._depth_lock:
                     self._latest_depth = depth_m
                 state = self.safety.evaluate(depth_m)
                 now = time.perf_counter()
                 # DANGER speaks immediately (rate-limited); WARN speaks on a
-                # longer cadence so the user isn't flooded.
+                # longer cadence so the user isn't flooded. Both hand off to the
+                # speaker thread and return at once — this loop must never block
+                # on audio, or it stops watching for hazards while it talks.
                 if state.level == Level.DANGER and (now - self._last_danger) > self.cfg.safety.danger_repeat_s:
-                    self.speaker.speak(state.message)
+                    self.speaker.speak(state.message, Priority.DANGER)
                     self._last_danger = now
                 elif state.level == Level.WARN and (now - self._last_warn) > self.cfg.safety.warn_repeat_s:
-                    self.speaker.speak(state.message)
+                    self.speaker.speak(state.message, Priority.WARN)
                     self._last_warn = now
             dt = time.perf_counter() - t0
+            self._note_tick(dt)
             time.sleep(max(0.0, period - dt))
+
+    def _skew_ok(self, pair) -> bool:
+        """Reject stereo pairs whose two frames are too far apart in time.
+
+        The AR0234s are free-running USB cameras with no hardware trigger, so
+        left and right are only ever approximately simultaneous. Global shutter
+        removes motion skew *within* a frame but not the offset *between* the
+        two. While the user turns their head, that offset shifts disparity
+        across the whole image and SGBM happily returns a confident, wrong depth
+        map — which becomes a wrong safety decision with no visible symptom.
+        Dropping the pair is safe; trusting it is not.
+        """
+        limit = self.cfg.camera.max_skew_ms
+        if limit <= 0 or pair.skew_ms <= limit:
+            return True
+        self._skew_drops += 1
+        now = time.perf_counter()
+        if now - self._last_skew_report > 5.0:
+            print(f"[cameras] dropped {self._skew_drops} stereo pairs over the "
+                  f"{limit:.0f} ms skew limit (latest {pair.skew_ms:.1f} ms)")
+            self._last_skew_report = now
+            self._skew_drops = 0
+        return False
+
+    def _note_tick(self, dt: float):
+        """Track achieved fast-loop rate and complain if it falls behind.
+
+        REQ-NF01 assumes this loop actually runs at tick_hz. If depth starts
+        taking longer than the period the loop silently slows down, warnings
+        arrive late, and nothing anywhere says so — so say so.
+        """
+        self._tick_count += 1
+        self._tick_time += dt
+        if self._tick_count < 100:
+            return
+        achieved = self._tick_count / self._tick_time if self._tick_time else 0.0
+        target = self.cfg.safety.tick_hz
+        if achieved < target * 0.8:
+            print(f"[safety] fast loop running at {achieved:.1f} Hz, target {target:.1f} Hz "
+                  f"— hazard warnings are late; lower depth cost (fast_downscale) or tick_hz")
+        self._tick_count = 0
+        self._tick_time = 0.0
 
     def latest_depth(self) -> np.ndarray | None:
         with self._depth_lock:
@@ -189,8 +238,14 @@ class Orchestrator:
                 question = self.stt.transcribe(audio)
                 if question:
                     self.handle_query(question)
+                # speak() is non-blocking now, so wait for the answer to finish
+                # before listening again — otherwise the mic hears ARGUS talking
+                # and the user gets answered over. The fast loop is unaffected;
+                # it has its own thread and never waits here.
+                self.speaker.wait_until_idle(timeout=30.0)
                 self.wake.reset()
 
     def stop(self):
         self._stop.set()
+        self.speaker.stop()
         self.rig.release()

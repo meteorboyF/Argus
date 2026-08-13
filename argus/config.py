@@ -49,6 +49,11 @@ class CameraConfig:
     wide_fps: int = 30
     reconnect: bool = True             # reopen a camera that stops delivering frames
     reconnect_interval_s: float = 2.0
+    # Free-running USB cameras have no hardware trigger, so left/right are only
+    # approximately simultaneous. Pairs captured further apart than this are
+    # dropped rather than fed to depth — during head rotation a large skew
+    # produces a confident but wrong depth map. 0 disables the check.
+    max_skew_ms: float = 12.0
     calibration_file: str = str(CONFIG_DIR / "stereo_calib.npz")
 
 

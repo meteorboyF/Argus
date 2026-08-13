@@ -29,6 +29,9 @@ def _cmd_query(args):
     import time
     time.sleep(1.0)  # let the fast loop produce a first depth map
     orch.handle_query(args.text)
+    # speak() is non-blocking — drain the speaker before tearing down, or the
+    # process exits mid-sentence.
+    orch.speaker.wait_until_idle(timeout=60.0)
     orch.stop()
 
 
