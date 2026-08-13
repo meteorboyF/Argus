@@ -87,6 +87,7 @@ Prompts: [JP-01](JETSON_PROMPT_01.md) (provisioning, complete) ·
 | #019 | 08-13 21:15 | jetson | Step 7 — slow-loop latency measured: CPU decode is the bottleneck, not encode | done |
 | #020 | 08-13 21:18 | jetson | Step 8 — memory budget with Gemma resident; swap already in use at idle | done |
 | #021 | 08-13 21:35 | jetson | Step 6 audio — mic/speaker verified, Piper TTS was completely broken (fixed) | done |
+| #022 | 08-13 21:40 | jetson | GPU offload experiment — fails at 4 layers too, looks structural not tunable | done |
 
 Entries #001–#011 pre-date the numbering scheme; their numbers were assigned
 here retroactively and their bodies were left untouched. **Number every entry
@@ -1319,3 +1320,97 @@ both times, second time explicitly "yes I can hear it nicely."
 - Calibration (#018) is unblocked on the mount-lock question (user confirmed
   locked) but now blocked on a different thing: **no checkerboard has been
   printed/measured yet.** Waiting on that before Step 4 can start.
+
+---
+
+## [#022] 2026-08-13 21:40 — jetson-agent — GPU offload experiment: fails at 4 layers too
+
+**Agent:** jetson-agent
+**Status:** done
+**Prompt:** JP-02 Step 7 (follow-up experiment, user approved)
+**Re:** #019
+
+**What I did:**
+
+User approved trying partial GPU offload (option 1 from #019) to attack the
+~1.6 tok/s CPU-decode bottleneck. Stopped the CPU-resident server, checked a
+memory baseline, then started `llama-server` with `--device CUDA0 -ngl 4`
+(everything else unchanged: `--fit off --flash-attn off --no-mmproj-offload`)
+— a deliberately small, cautious layer count, watching the log live.
+
+**Result / verification:**
+
+**Failed immediately, same failure mode as #009's 20-layer attempt:**
+
+```
+CUDA0 : Orin (7619 MiB, 3875 MiB free)          <- reported at process start
+...
+NvMapMemAllocInternalTagged: 1075072515 error 12
+NvMapMemHandleAlloc: error 0
+ggml_backend_cuda_buffer_type_alloc_buffer: allocating 345.72 MiB on device 0: cudaMalloc failed: out of memory
+alloc_tensor_range: failed to allocate CUDA0 buffer of size 362517888
+llama_model_load: error loading model: unable to allocate CUDA0 buffer
+```
+
+3875 MiB "free" reported at t=0, and it still couldn't satisfy a 345.72 MiB
+allocation partway through loading. This is the same shape of failure as
+#009 (which tried 20 layers) — now confirmed at both ends of a wide range
+(4 layers and 20 layers), both under `--fit off`. Two independent failures
+at very different layer counts, both against a number that claimed several
+GB "free," points at something structural rather than "pick a smaller N":
+
+- **Jetson is unified memory — there is no separate VRAM pool.** "CUDA free"
+  from `cudaMemGetInfo` is a view into the same physical RAM the CPU-resident
+  weights are actively being loaded into, in the same process, at the same
+  time. By the time the loader reaches the point of `cudaMalloc`-ing a
+  buffer for an offloaded layer, most of the "free" figure it reported at
+  startup has likely already been claimed by the *other* ~92–96 layers
+  still loading into ordinary host memory — the number goes stale within
+  the same load sequence.
+- **The GPU-tagged allocator may have a lower effective ceiling than plain
+  system-RAM-free implies.** The `NvMapMemAllocInternalTagged`/
+  `NvMapMemHandleAlloc` errors immediately above the `cudaMalloc failed` line
+  are Tegra/NVMAP-specific (not generic CUDA out-of-memory), which suggests
+  GPU-tagged allocations hit some separate constraint below the raw
+  `cudaMemGetInfo` free figure — still not fully understood, flagging rather
+  than claiming to know the mechanism.
+- `--fit off` (needed to avoid the "auto-fit hit a scheduler assertion" bug
+  from #009) means llama.cpp does no dynamic buffer downsizing — it requests
+  fixed-size buffers regardless of what's actually available, so there's no
+  graceful degradation path to fall back on within this flag combination.
+
+Checked memory context around the test: system RAM was at 6.18 GB/7.62 GB
+used with 1.08 GB already in swap just before I stopped the CPU-resident
+server to run this — but that was **desktop-environment overhead**, not
+ARGUS's own footprint: `ps aux --sort=-%mem` shows VSCode (multiple
+renderer/utility processes), a Chromium instance, and gnome-shell as the top
+consumers, several hundred MB each. After the CPU-resident server exited (to
+run this test) RAM dropped to 3.47 GB — so ~3.4 GB idle for the desktop
+session I'm working from, and roughly 2.7 GB for the LLM itself when
+CPU-resident. **On a real (headless) deployment this desktop overhead won't
+exist**, but it means today's numbers have less headroom to work with than a
+final headless deployment will, and I did not control for that.
+
+Restored the working CPU-resident profile immediately after — confirmed
+`{"status":"ok"}` again — so ARGUS is not left in a broken state.
+
+**I'm not going to keep trying more layer counts without direction.** Two
+failures spanning 4→20 layers, both against multi-GB "free" readings, isn't
+a "try N=2" search problem — I don't currently understand why it fails at
+that scale, and burning more session time guessing feels like the wrong
+use of it. This closes off option 1 from #019 for now.
+
+**Next step (proposed):**
+
+- **[desktop-agent]** Any insight on Jetson NVMAP/unified-memory `cudaMalloc`
+  behavior under `--fit off` would help decide whether this is worth another
+  attempt (e.g., with `--fit on` despite the prior scheduler-assertion risk,
+  or with `-ngl` at literally 1) or genuinely a dead end for this hardware.
+- Falling back to #019's options 2 and 3 (smaller `image_max_side`, smaller
+  `max_tokens`) — these don't touch CUDA allocation at all, directly attack
+  the measured decode-time cost, and I can test them without further
+  memory-risk judgment calls. Will try these next unless told otherwise.
+- Worth re-testing the memory baseline from a **headless SSH session** (no
+  GNOME/VSCode) at some point, since ~3.4 GB of today's ~6.2 GB peak was
+  desktop overhead that won't exist in the final deployment — that changes
+  the real available headroom for this whole line of investigation.
