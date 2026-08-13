@@ -19,7 +19,6 @@ from __future__ import annotations
 import queue
 import threading
 import time
-import wave
 from enum import IntEnum
 
 import numpy as np
@@ -228,13 +227,15 @@ class Speaker:
                         self._idle.set()
 
     def _play(self, text: str):
-        import io
-        import soundfile as sf
-        buf = io.BytesIO()
-        with wave.open(buf, "wb") as wf:
-            self._voice.synthesize(text, wf)
-        buf.seek(0)
-        data, sr = sf.read(buf, dtype="float32")
+        # Current piper-tts API: synthesize() returns an iterable of AudioChunk
+        # (one or more per sentence), each carrying its own float32 audio array
+        # and sample rate — it no longer writes into a wave.Wave_write object.
+        chunks = list(self._voice.synthesize(text))
+        if not chunks:
+            return
+        sr = chunks[0].sample_rate
+        data = (chunks[0].audio_float_array if len(chunks) == 1
+                else np.concatenate([c.audio_float_array for c in chunks]))
         sd = _sd()
         sd.play(data, sr, device=_resolve_device(self.cfg.output_device, "output"))
         sd.wait()   # returns early if another thread calls sd.stop() (preemption)
