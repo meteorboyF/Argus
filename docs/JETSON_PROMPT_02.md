@@ -10,6 +10,7 @@
 | **Log entries** | report under `JP-02`, starting at **#014** |
 | **Status** | active |
 | **Revised** | 2026-08-13 19:45 — added USB topology + thermal checks after rig photos |
+| | 2026-08-13 19:55 — rig status refreshed: board off cloth, cameras powered, tmux installed |
 
 > Every `docs/AGENT_LOG.md` entry produced while working through this prompt
 > must carry `**Prompt:** JP-02 Step N`. See the entry format in
@@ -89,22 +90,28 @@ NON-NEGOTIABLE RULES (block any plan that violates one, whoever proposed it)
 
 WHAT I WANT YOU TO DO THIS SESSION
 
-RIG STATUS (from photos in "Portotype pics/", 2026-08-13 19:21)
+RIG STATUS (from photos in "Portotype pics/", latest 2026-08-13 19:51)
 - All three cameras are mounted on the goggle frame and cabled to the Jetson.
-- The Jetson is a bare dev-kit board with the stock active fan, sitting on a
-  cloth surface, mains-powered (not on the battery pack yet).
+  Both AR0234 status LEDs are lit, so they are powered and enumerating.
+- The Jetson is a bare dev-kit board with the stock active fan, now on a hard
+  desk (it was on cloth earlier — that has been fixed). Mains-powered; not on
+  the battery pack yet.
+- tmux was being installed as of the latest photo, which clears the blocker from
+  log entry #008.
 - The camera mounts are still adjustable ball joints — NOT locked down. See
   STEP 4 before calibrating anything.
 
   STEP 1. Confirm max performance mode: sudo nvpmodel -m 0 && sudo jetson_clocks.
           Report what mode it was in beforehand.
-          THERMAL: the board is on cloth in the photos. Under mode 0 at 25 W with
-          sustained load that restricts airflow and the SoC will thermal-throttle
-          — which silently drops fast-loop Hz and inflates every latency number
-          you are about to measure. Ask me to move it onto a hard surface with
-          clearance underneath, then confirm from tegrastats that the thermal
-          zones are stable and no throttling is occurring BEFORE Steps 5, 7, 8.
-          Report the idle and under-load temperatures.
+          THERMAL: the board has been moved off cloth onto a hard desk, so the
+          worst airflow problem is already fixed — but it is still a bare board
+          lying flat with no clearance underneath. Under mode 0 at 25 W with
+          sustained load, throttling silently drops fast-loop Hz and inflates
+          every latency number you are about to measure. Confirm from tegrastats
+          that the thermal zones are stable and no throttling is occurring BEFORE
+          Steps 5, 7 and 8, and report idle and under-load temperatures. If it
+          does throttle, ask me to raise the board on standoffs or feet rather
+          than quietly accepting the degraded numbers.
 
   STEP 2. CAMERA DISCOVERY (answers Q1 in the log).
           v4l2-ctl --list-devices
