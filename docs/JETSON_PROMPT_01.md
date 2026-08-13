@@ -1,4 +1,16 @@
-# Jetson Bring-up — Claude Code Kickoff Prompt
+# JP-01 — Initial Provisioning (Kickoff)
+
+| | |
+|---|---|
+| **Prompt ID** | **JP-01** |
+| **Issued** | 2026-08-06 (pre-dates the numbering scheme) |
+| **Target** | jetson-agent, session 1 |
+| **Followed by** | [JP-02](JETSON_PROMPT_02.md) — camera rig bring-up |
+| **Log entries** | #001–#011 (unnumbered at the time; see the index in AGENT_LOG.md) |
+| **Status** | complete — use JP-02 for a device that is already provisioned |
+
+---
+
 
 Copy everything in the box below into a **new Claude Code chat running on the
 Jetson**, after you've cloned the repo there. It gives Claude the full context to
@@ -25,7 +37,7 @@ before doing anything:
                                      desktop-agent can review your work)
 
 NOTE: for a follow-up session on an already-provisioned device, use
-docs/JETSON_NEXT_PROMPT.md instead of this file.
+docs/JETSON_PROMPT_02.md instead of this file.
 
 PROJECT IN ONE PARAGRAPH
 ARGUS is a Two-Speed Vision-Language system. A non-ML FAST loop (stereo depth +

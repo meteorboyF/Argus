@@ -57,7 +57,7 @@ ARGUS/
     ├── ARCHITECTURE.md
     ├── JETSON_DEPLOYMENT.md
     ├── HARDWARE.md
-    ├── JETSON_CLAUDE_PROMPT.md   # kickoff prompt for Claude Code on the Jetson
+    ├── JETSON_PROMPT_01.md   # kickoff prompt for Claude Code on the Jetson
     ├── ARGUS_Final_Pipeline.pdf  # authoritative design doc
     └── ARGUS_Final_Pipeline.docx
 ```
@@ -74,7 +74,7 @@ ARGUS/
 | Deploy on the Jetson | [JETSON_DEPLOYMENT.md](JETSON_DEPLOYMENT.md) |
 | Calibrate the stereo cameras | [CALIBRATION.md](CALIBRATION.md) |
 | Know what's NOT done yet | [KNOWN_GAPS.md](KNOWN_GAPS.md) |
-| Get Claude to drive Jetson bring-up | [JETSON_CLAUDE_PROMPT.md](JETSON_CLAUDE_PROMPT.md) |
+| Get Claude to drive Jetson bring-up | [JETSON_PROMPT_01.md](JETSON_PROMPT_01.md) |
 | See project history / lessons | [../AGENT_HANDOFF.md](../AGENT_HANDOFF.md) |
 
 ---

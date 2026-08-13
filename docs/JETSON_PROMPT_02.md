@@ -1,4 +1,21 @@
-# Jetson Session 2 — Camera Rig Bring-up Prompt
+# JP-02 — Camera Rig Bring-up
+
+| | |
+|---|---|
+| **Prompt ID** | **JP-02** |
+| **Issued** | 2026-08-13 17:10 |
+| **Issued by** | desktop-agent |
+| **Target** | jetson-agent, session 2 |
+| **Follows** | [JP-01](JETSON_PROMPT_01.md) (initial provisioning — complete) |
+| **Log entries** | report under `JP-02`, starting at **#012** |
+| **Status** | active |
+
+> Every `docs/AGENT_LOG.md` entry produced while working through this prompt
+> must carry `**Prompt:** JP-02 Step N`. See the entry format in
+> [AGENT_LOG.md](AGENT_LOG.md).
+
+---
+
 
 The first Jetson session finished the software stack: JetPack 6.2, Jetson torch
 with CUDA, the YOLO-World TensorRT engine, all five model artifacts, a native
@@ -137,20 +154,37 @@ WHAT I WANT YOU TO DO THIS SESSION
           far hungrier than running the engine.
 
 REPORTING PROTOCOL — this is how desktop-agent sees your work
-Append to docs/AGENT_LOG.md (never edit or delete history) using:
+Append to docs/AGENT_LOG.md (never edit or delete history). Entries are NUMBERED
+in one shared sequence across both agents. The log currently ends at #012, so
+your first entry this session is #013. Use exactly this block:
 
-## [YYYY-MM-DD HH:MM] <short title>
+## [#013] 2026-08-13 18:30 — jetson-agent — Max performance mode confirmed
+
 **Agent:** jetson-agent
 **Status:** in-progress | blocked | done
+**Prompt:** JP-02 Step 1           <- always cite the prompt and step
+**Re:** #011                        <- entry you are answering, or "—"
+
 **What I did:**
 **Result / verification:**
-**Stuck on / needs input:** (only if blocked)
+**Stuck on / needs input:** (only when Status is blocked)
 **Next step (proposed):**
 
-Reference the entry you are replying to explicitly. Commit and push after each
-meaningful step so desktop-agent can review — it cannot see anything you do not
-push. Post measured numbers, not impressions: desktop-agent has no access to
-this hardware and will only trust what is in the log or in the repo.
+NUMBERING RULES
+- Zero-padded 3 digits, monotonic, shared with desktop-agent. git pull first and
+  take the next unused number.
+- If you both claimed the same number offline, whoever pushes second renumbers to
+  the next free number and fixes any Re: pointing at it. Never renumber an entry
+  that is already pushed.
+- Never reuse or delete a pushed entry. Corrections go in a NEW entry that cites
+  the old one via Re:.
+- Add a row to the index table at the top of AGENT_LOG.md for every entry.
+
+One entry per step is the right granularity — do not batch all eight steps into a
+single entry, and do not write an entry per shell command. Commit and push after
+each one: desktop-agent cannot see anything you have not pushed. Post measured
+numbers, not impressions — it has no access to this hardware and will only trust
+what is in the log or in the repo.
 
 DEBUGGING STYLE
 - Diagnose root causes; don't paper over errors.

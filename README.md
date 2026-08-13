@@ -96,13 +96,13 @@ docs/
   CALIBRATION.md            # smart stereo calibration — any mounting position
   KNOWN_GAPS.md             # what is NOT done yet — read before assuming
   HARDWARE.md               # wearable assembly + wiring
-  JETSON_CLAUDE_PROMPT.md   # kickoff prompt for Claude Code on the Jetson
+  JETSON_PROMPT_01.md   # kickoff prompt for Claude Code on the Jetson
   ARGUS_Final_Pipeline.pdf  # authoritative design doc (with diagrams)
   ARGUS_Final_Pipeline.docx # text transcription
 ```
 
 ### Quick start
-- **Jetson (deployment):** clone, then `./scripts/setup_jetson.sh` → follow [docs/JETSON_DEPLOYMENT.md](docs/JETSON_DEPLOYMENT.md). To have Claude Code drive bring-up, use [docs/JETSON_CLAUDE_PROMPT.md](docs/JETSON_CLAUDE_PROMPT.md).
+- **Jetson (deployment):** clone, then `./scripts/setup_jetson.sh` → follow [docs/JETSON_DEPLOYMENT.md](docs/JETSON_DEPLOYMENT.md). To have Claude Code drive bring-up, use [docs/JETSON_PROMPT_01.md](docs/JETSON_PROMPT_01.md).
 - **PC (validation):** `setup_pc.bat` → open `argus_pc_test.ipynb` (see [SETUP_LOCAL.md](SETUP_LOCAL.md)).
 - Runtime CLI: `python -m argus selftest` · `python -m argus run` · `python -m argus query "what is in front of me?"`
 

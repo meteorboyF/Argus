@@ -2,7 +2,7 @@
 
 End-to-end bring-up of the ARGUS runtime on the device. Follow top to bottom.
 Every step says how to **verify** it before moving on. If you are driving this
-with Claude Code, start from [JETSON_CLAUDE_PROMPT.md](JETSON_CLAUDE_PROMPT.md).
+with Claude Code, start from [JETSON_PROMPT_01.md](JETSON_PROMPT_01.md).
 
 > The Jetson runs **Ubuntu 22.04 / ARM64 (JetPack 6)**. All commands are Linux.
 > There is **no Colab and no Windows** here — the `.bat` file is for the PC only.
