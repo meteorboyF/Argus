@@ -7,9 +7,16 @@ camera:
   # Smart discovery (default): cameras are identified by V4L2 device name and
   # left/right are re-bound to the physical cameras recorded at calibration
   # time (USB port paths), so indices surviving a reboot don't matter.
+  #
+  # The name hints must match what YOUR units actually report — always verify
+  # with `v4l2-ctl --list-devices` before trusting these. On the reference rig
+  # (Arducam AR0234 + IMX477P modules) the driver reports the Arducam MODULE
+  # part number, not the sensor name: "AR0234"/"IMX477" never appear.
+  #   Arducam B0495 (USB3 2.3MP)  x2  <- the AR0234 stereo pair
+  #   Arducam B0459 (USB3 12MP)   x1  <- the IMX477P wide camera
   auto_detect: true
-  stereo_name_hint: "AR0234"   # substring of the stereo cams' V4L2 name
-  wide_name_hint: "IMX477"     # substring of the wide cam's V4L2 name
+  stereo_name_hint: "B0495"    # substring of the stereo cams' V4L2 name
+  wide_name_hint: "B0459"      # substring of the wide cam's V4L2 name
   # Fallback / manual override (used when auto_detect is false or inconclusive).
   left_index: 0                # confirm with: v4l2-ctl --list-devices
   right_index: 1

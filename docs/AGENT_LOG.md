@@ -80,6 +80,12 @@ Prompts: [JP-01](JETSON_PROMPT_01.md) (provisioning, complete) ·
 | #012 | 08-13 17:10 | desktop | Entry numbering + prompt IDs introduced | done |
 | #013 | 08-13 19:45 | desktop | JP-02 revised — USB topology + thermal checks from rig photos | done |
 | #014 | 08-13 20:15 | desktop | Calibration drift monitor — detects a knocked camera at runtime | done |
+| #015 | 08-13 21:00 | jetson | Step 1 — power mode was already correct; MAXN_SUPER ≠ mode 0 on Super | done |
+| #016 | 08-13 21:05 | jetson | Step 2 — camera name hints fixed (B0495/B0459), USB topology, 3-cam capture | done |
+| #017 | 08-13 21:07 | jetson | Step 3 — stereo skew measured; preliminary Step 5 fast-loop data (pre-calibration) | done |
+| #018 | 08-13 21:10 | jetson | Step 4 — STOPPED, need mount-lock confirmation before calibrating | blocked |
+| #019 | 08-13 21:15 | jetson | Step 7 — slow-loop latency measured: CPU decode is the bottleneck, not encode | done |
+| #020 | 08-13 21:18 | jetson | Step 8 — memory budget with Gemma resident; swap already in use at idle | done |
 
 Entries #001–#011 pre-date the numbering scheme; their numbers were assigned
 here retroactively and their bodies were left untouched. **Number every entry
@@ -860,3 +866,383 @@ calibration, plus a deliberate nudge test to confirm the monitor fires.
   the result of the nudge test.
 - **[me]** Still queued: direction-only fusion fallback (KNOWN_GAPS B2), the
   `GatedFrame` type for hard rule 6, CRAFT text blur (REQ-F05 / B4).
+
+---
+
+## [#015] 2026-08-13 21:00 — jetson-agent — Step 1: power mode was already correct
+
+**Agent:** jetson-agent
+**Status:** done
+**Prompt:** JP-02 Step 1
+**Re:** #011
+
+**What I did:**
+
+Before touching `nvpmodel`, checked `/etc/nvpmodel.conf` to see what mode 0
+actually configures on this board, since JP-01/JP-02 both assume `-m 0` is
+max performance.
+
+**Result / verification:**
+
+It is not, on this Super variant. From `/etc/nvpmodel.conf`:
+
+```
+< POWER_MODEL ID=0 NAME=15W >
+< POWER_MODEL ID=1 NAME=25W >
+< POWER_MODEL ID=2 NAME=MAXN_SUPER >
+< POWER_MODEL ID=3 NAME=7W >
+```
+
+Mode 0 is **15 W**, not max performance. Mode 2 (**MAXN_SUPER**, uncapped) is
+the highest-performance mode on the Orin Nano Super refresh, and the device
+was already in it (confirmed by `nvpmodel -q` both at the end of the last
+session and at the start of this one — nothing reset it). Running
+`sudo nvpmodel -m 0` as both prompts instructed would have **downgraded**
+performance right before the latency/memory measurements this session needed.
+I did not run it.
+
+This is a stale assumption carried over from an older non-Super Orin Nano
+board profile where mode 0 was MAXN. Worth fixing in JP-01/JP-02 and in
+JETSON_DEPLOYMENT.md wherever `nvpmodel -m 0` is instructed — the correct
+check going forward is "is the device in the highest-numbered/least-capped
+mode `nvpmodel -q` reports", not "is it mode 0".
+
+`jetson_clocks` (clock-locking, separate from the power-mode question) does
+still need `sudo` and I could not run it non-interactively — see the
+sudo-needed list at the end of this entry.
+
+Thermal baseline at idle (before any of today's work started), from
+`tegrastats`:
+```
+RAM 3523/7620MB  SWAP 2/3810MB
+cpu@53.06C soc0@53.03C gpu@52.81C tj@53.41C
+VDD_IN 6488mW
+```
+No throttling indicators, board is on the hard desk now (not cloth). Will
+re-check under load before trusting Step 7/8 numbers below.
+
+**Next step (proposed):**
+
+- **[user]** Run `sudo jetson_clocks` interactively when convenient (locks
+  clocks at their current-mode ceiling instead of letting the governor scale
+  them under load — makes benchmark numbers more repeatable, not strictly
+  required for MAXN_SUPER to already be fast).
+- **[desktop-agent]** Consider updating JP-01/JP-02/JETSON_DEPLOYMENT.md's
+  `nvpmodel -m 0` instruction — it's wrong for the Super board.
+
+---
+
+## [#016] 2026-08-13 21:05 — jetson-agent — Step 2: camera name hints fixed, USB topology, 3-cam capture
+
+**Agent:** jetson-agent
+**Status:** done
+**Prompt:** JP-02 Step 2
+**Re:** #011 (answers Q1)
+
+**What I did:**
+
+Rig is connected. Ran `v4l2-ctl --list-devices` — this answers Q1, and the
+answer is the discovery hints were wrong.
+
+**Result / verification:**
+
+```
+Arducam B0495 (USB3 2.3MP) (usb-3610000.usb-1.1):  /dev/video0, /dev/video1
+Arducam B0495 (USB3 2.3MP) (usb-3610000.usb-1.2):  /dev/video2, /dev/video3
+Arducam B0459 (USB3 12MP)  (usb-3610000.usb-1.4):  /dev/video4, /dev/video5
+```
+
+Neither `AR0234` nor `IMX477` appears anywhere — this driver reports the
+**Arducam module part number**, not the sensor name. `B0495` (2.3MP, x2) is
+the AR0234 stereo pair; `B0459` (12MP, x1) is the IMX477P wide camera. Per
+KNOWN_GAPS A4's own warning, this would have silently fallen through to
+resolution-grouping (which happens to still work here — 960x600 vs 1280x720
+are distinct — but I fixed the hints properly rather than relying on the
+fallback):
+
+- `/opt/argus/config/argus.yaml` (live) and `config/argus.yaml` (repo
+  template): `stereo_name_hint: "B0495"`, `wide_name_hint: "B0459"`.
+- `docs/KNOWN_GAPS.md` A4 marked done with the finding.
+
+`python3 -m argus selftest` now finds and correctly assigns all three:
+```
+[cameras] /dev/video0: 'Arducam B0495 (USB3 2.3MP)' 960x600 usb=2-1.1
+[cameras] /dev/video2: 'Arducam B0495 (USB3 2.3MP)' 960x600 usb=2-1.2
+[cameras] /dev/video4: 'Arducam B0459 (USB3 12MP)' 1280x720 usb=2-1.4
+[cameras] discovered: left=/dev/video0 right=/dev/video2 wide=/dev/video4
+  [PASS] 3 working cameras found — found 3
+  [PASS] rig resolved (left/right/wide) — video0/video2/video4
+```
+Note: left=video0/right=video2 is discovery's index-order fallback — no
+calibration file exists yet to bind ports to physical left/right (see #018).
+
+**USB topology** (`lsusb -t`): all three cameras sit behind a single 4-port
+hub on Bus 02 Port 1, negotiated at **5000M (USB 3.0)** — confirmed via
+`/sys/bus/usb/devices/2-1.{1,2,4}/speed`, all read `5000`. None fell back to
+480M. The hub's upstream link to the root complex (10000M-capable) is shared
+by all three streams — exactly the "behind a hub" situation JP-02 flagged.
+Keyboard/mouse are on the separate 480M (USB 2.0) root port, not contending.
+
+```
+/:  Bus 02.Port 1: Dev 1, root_hub, 10000M
+    |__ Port 1: Dev 2, Hub/4p, 10000M
+        |__ Port 1: Dev 3, Video, 5000M   <- B0495 (video0/1)
+        |__ Port 2: Dev 4, Video, 5000M   <- B0495 (video2/3)
+        |__ Port 4: Dev 5, Video, 5000M   <- B0459 (video4/5)
+```
+
+**Simultaneous capture**, verified two ways: `python3 -m argus selftest`
+opens all three and reads a frame from each; `python3 -u -m argus run
+--no-audio` ran for 75 s with the fast loop pulling stereo pairs at
+`tick_hz=10` and the wide-frame reader thread running concurrently the whole
+time. No camera open failures, no reconnect-loop messages ("stalled —
+reopening"). MJPG is already requested per `argus/cameras.py`, which is
+presumably why three SuperSpeed streams on one hub aren't saturating it —
+did not need to move a camera to a different bus.
+
+**Next step (proposed):**
+
+- No action needed — Step 2 is answered. Camera assignment (which physical
+  unit is video0 vs video2) is still index-order, not yet port-bound; that
+  gets fixed by calibration (#018).
+
+---
+
+## [#017] 2026-08-13 21:07 — jetson-agent — Step 3: stereo skew measured; preliminary fast-loop data
+
+**Agent:** jetson-agent
+**Status:** done
+**Prompt:** JP-02 Step 3 (+ preliminary Step 5 data)
+**Re:** #011 (answers Q2, partially)
+
+**What I did:**
+
+During the same 75 s `run --no-audio` session from #016, watched
+`camera.max_skew_ms` (12 ms default) drop counts and the fast-loop Hz monitor.
+
+**Result / verification:**
+
+Skew: only **one** pair exceeded the 12 ms limit in 75 s (~750 ticks at
+10 Hz), and it was a 392.7 ms outlier — almost certainly camera-open startup
+jitter (`get_stereo_pair`'s grab/grab/retrieve/retrieve happened while both
+`VideoCapture`s were still spinning up), not steady-state skew. No repeated
+drops afterward. **Do not raise the 12 ms limit based on this** — it isn't
+dropping a meaningful fraction of anything; the one drop looks like a
+one-time startup artifact. I'd want a longer run before fully trusting
+"basically never drops," but 75 s of clean pairs after the first tick is a
+good sign.
+
+Fast-loop Hz: **no** `[safety] fast loop running at ... Hz` warning printed
+during the run. That warning only fires when achieved rate falls below 80% of
+`tick_hz` (10 Hz → below 8 Hz), so its absence means the loop held ≥ 8 Hz for
+the full 75 s. I don't have the exact achieved number since the code only
+prints on the bad-path — worth adding a periodic good-path print too if we
+want a hard number instead of "didn't complain."
+
+**Preliminary Step 5 note (pre-calibration, do not over-read this):** the
+fast loop spoke `"Stop. Step down and obstacle ahead."` on nearly every tick
+throughout the run. The rig was lying flat on a desk pointed at whatever it
+happened to face, not being walked toward a wall, and depth is running on
+placeholder `baseline_m=0.06`/`focal_px=700.0` (no calibration file yet) — so
+a persistent close/drop-off reading is plausible and not necessarily a code
+bug. Flagging as data, not a verdict: real Step 5 validation needs a person
+walking the rig after calibration (#018).
+
+One thing this run did confirm working correctly: the fast loop kept
+warning at its normal cadence the entire time, including later in the
+session while a `GemmaAgent.ask()` call was blocked on the LLM server for
+120+ seconds (see #019) — the fast loop's independence from the slow loop
+held under real load, not just in theory.
+
+**No `[calib]` drift-monitor lines** printed (neither "DRIFT DETECTED" nor
+"alignment recovered") — expected, since those only print on a state
+*transition* after 3 consecutive samples, the monitor runs every 5 s
+(so ~15 samples in 75 s), and there's no calibration file yet so it's
+scoring unrectified images. Not enough data yet to say anything about it.
+
+**Next step (proposed):**
+
+- **[user]** Confirm whether the 75 s single-outlier skew result is enough,
+  or whether a longer soak test is wanted before calling Step 3 closed.
+- Real Step 5 (walk toward a wall, trust the DANGER/WARN thresholds) waits on
+  calibration — see #018.
+
+---
+
+## [#018] 2026-08-13 21:10 — jetson-agent — Step 4: STOPPED — need mount-lock confirmation
+
+**Agent:** jetson-agent
+**Status:** blocked
+**Prompt:** JP-02 Step 4
+**Re:** #011
+
+**What I did:**
+
+Per JP-02's explicit instruction, stopping here rather than running
+`scripts/calibrate_stereo.py`. I have no way to visually confirm the ball
+joints from this session (no new photos since the 19:21 set referenced in
+#011/#013, which showed both AR0234s still on unlocked thumbscrew swivels).
+
+**Stuck on / needs input:**
+
+Q: Have the AR0234 ball-joint mounts been physically locked down (thread-lock,
+epoxy, set screw, or cross-brace) since the 19:21 photos? If not yet, or if
+they've been re-aimed since, calibrating now would measure a geometry that
+won't hold.
+
+**Result / verification (what's ready to go the moment mounts are confirmed):**
+
+- Both stereo cameras open cleanly at `/dev/video0` and `/dev/video2`,
+  960x600 default (runtime requests 1280x720 per `argus.yaml`
+  `stereo_width/height` — confirmed the driver supports it, just reports a
+  lower default before `_open()` sets it).
+- Command queued: `python3 scripts/calibrate_stereo.py --square-mm <measured>
+  --headless` (no display attached to this session — will use `--headless`
+  unless told otherwise).
+- Will iterate to RMS < 0.6 px / vertical error < 1 px per CALIBRATION.md,
+  then `--verify` against a tape measure at 0.5/1/2/3 m, then report
+  `baseline_m`/`focal_px` and measured-vs-true error per distance.
+
+**Next step (proposed):**
+
+- **[user]** Confirm mount status (locked / not yet / re-aimed since last
+  photo), and provide the printed checkerboard square size in mm.
+- **[jetson-agent]** Run calibration immediately on confirmation — everything
+  else is staged and ready.
+
+---
+
+## [#019] 2026-08-13 21:15 — jetson-agent — Step 7: slow-loop latency — CPU decode is the bottleneck
+
+**Agent:** jetson-agent
+**Status:** done
+**Prompt:** JP-02 Step 7
+**Re:** #011 (answers Q3 — with hard numbers this time)
+
+**What I did:**
+
+#011 asked for actual wake→spoken-answer latency on the CPU-resident Gemma
+profile (`--device none -ngl 0`, established in #009 after GPU offload OOM'd).
+`argus query` skips wake+STT (it takes text directly), so I instrumented the
+remaining stages directly — privacy gate, `agent.ask()`, tool round-trip —
+with `time.perf_counter()`, using the wide camera's live frame and the
+question "What is in front of me?". Cross-checked against llama-server's own
+`print_timing` log lines for an independent measurement.
+
+**Result / verification — this is worse than "tens of seconds," it's
+minutes, and generation (not image encoding) is the dominant cost:**
+
+| Stage | Time | Source |
+|---|---|---|
+| Orchestrator init (models + cameras) | 6.60 s | my timer |
+| Privacy gate (`apply()`, 0 faces) | 0.19 s | my timer |
+| Prompt processing — text tokens (n=131→142) | 8.36 s cumulative | llama-server `print_timing` |
+| Prompt processing — image/mtmd encode (n=142→396, 254 image tokens) | **37.52 s cumulative** (so ~29.2 s for the image alone) | llama-server `print_timing` |
+| Generation (task 0, cut off by my 60 s client timeout) | 39 tokens in ~22.5 s ≈ **1.7 tok/s** | derived: n_tokens 396→435 at cancel |
+| Generation (task 41, retry, prompt reused from cache) | 95 tokens in ~60 s ≈ **1.6 tok/s** | derived: n_tokens 396→491 at cancel |
+
+My script's own `AgentError`: **both** the first attempt and the configured
+retry (`agent.retries: 1`) hit `request_timeout_s: 60` and were cancelled
+server-side (`cancel task`) — **neither ever produced an answer**. Total
+wall-clock before my script gave up: **>120 s** (two full 60 s timeouts),
+and llama-server's own numbers say it wouldn't have finished even with a much
+longer timeout: at ~1.6–1.7 tok/s, reaching `max_tokens: 256` needs roughly
+**150–160 s of generation alone**, on top of the ~37.5 s prompt-processing
+phase — call it **~190–200 s (3+ minutes) for one full round-trip if it were
+allowed to run to completion**. STT (not exercised by `argus query`, no mic
+input tested this session) would add more on top.
+
+The image encode (~29 s) is real and worth shrinking, but it is **not the
+dominant cost** — decode is roughly 4–5x more expensive than encode here. A
+smaller `image_max_side` mainly attacks the smaller number. The generation
+rate (~1.6 tok/s on 6 ARM cores, fully CPU-resident, no GPU) is the actual
+wall this design is hitting.
+
+Confirmed independently: the fast loop kept running and speaking obstacle
+warnings at its normal cadence the entire time this request was in flight
+(see #017's last paragraph) — the safety-loop/agent isolation held under a
+2-minute-plus stall, exactly as hard rule 5 requires.
+
+**Memory context for why CPU-resident was chosen** (from #009): full `-ngl 99`
+OOM'd, and 20-layer partial offload also OOM'd with a scheduler assertion.
+`llama-server`'s own device_info line at startup reports `CUDA0: Orin (7619
+MiB, 3975 MiB free)` at idle — so there is real headroom, it's a question of
+what fits alongside the KV cache and mmproj.
+
+**This is a blocker for the "wake word → spoken answer" product experience as
+currently configured — 3+ minutes per question is not usable.** Per JP-02's
+instruction I'm reporting numbers rather than unilaterally re-designing the
+server flags again. Candidate directions, ranked by what the numbers above
+suggest will actually help most:
+
+1. **Partial GPU offload of decoder layers** (not `-ngl 99`, something small
+   like 4–8 layers) — attacks the ~1.6 tok/s generation bottleneck directly,
+   which is the majority of the cost. #009 tried 20 layers and hit OOM/a
+   scheduler assertion; worth retrying at a much lower layer count now that
+   we know precisely what we're trying to speed up and can watch
+   `tegrastats`/CUDA free memory live while raising it incrementally.
+2. Smaller `image_max_side` (1024→512 or lower) — shrinks the ~29 s encode
+   phase, secondary but easy and cheap to try.
+3. Smaller `max_tokens` — directly caps worst-case generation time
+   proportionally (256→128 would roughly halve the ~150 s decode estimate),
+   at the cost of shorter answers. The system prompt already asks for
+   "one or two short spoken sentences," so 256 may already be more headroom
+   than needed.
+
+**Next step (proposed):**
+
+- **[desktop-agent / user]** Decide which of the above to try first — this
+  affects the CUDA memory budget question in Step 8 (#020) too, so I'd rather
+  agree on direction than burn more session time on trial and error.
+- I can run the partial-offload experiment (option 1) this session if told to
+  proceed, watching `tegrastats` live and backing off immediately if CUDA
+  memory pressure shows up, same caution as #009.
+
+---
+
+## [#020] 2026-08-13 21:18 — jetson-agent — Step 8: memory budget with Gemma resident
+
+**Agent:** jetson-agent
+**Status:** done
+**Prompt:** JP-02 Step 8
+**Re:** —
+
+**What I did:**
+
+`tegrastats` while `llama-server` (CPU-resident profile) sat idle after
+loading, no fast loop / cameras / YOLO-World active alongside it.
+
+**Result / verification:**
+
+```
+RAM 5528/7620MB (lfb 14x4MB)   SWAP 471/3810MB
+cpu@54.9C  gpu@54.4C  tj@54.9C
+VDD_IN ~7150mW
+```
+
+**5.5 GB resident with only the LLM server loaded**, against the ~5 GB target
+in the hard rules — already over budget with the fast loop, YOLO-World, and
+speech stack not yet added in. **471 MB already swapped at idle** is the
+number I'd flag hardest: swapping under a static, no-load condition means any
+additional concurrent memory pressure (YOLO-World inference, SGBM buffers,
+Whisper) risks swapping actively-used pages, which on the Jetson's shared
+NVMe-backed swap would stall whatever thread touches them — including
+potentially the fast loop.
+
+I did not capture "everything resident" (Gemma + fast loop + YOLO-World +
+speech simultaneously) cleanly — the #019 latency test ran the fast loop
+concurrently with the stuck Gemma request, but I didn't sample `tegrastats`
+during that specific window. Worth a dedicated follow-up: start `run` (not
+`run --no-audio` once mic is mapped) with all subsystems live and read
+`tegrastats` at steady state, separately from a query in flight (peak).
+
+**Next step (proposed):**
+
+- Re-measure with the full stack resident (fast loop + YOLO-World + speech +
+  Gemma) once Step 4/6 are unblocked, to get the real steady-state and peak
+  numbers the hard rule's ~5 GB target should be judged against — today's
+  5.5 GB is Gemma alone and already over.
+- The swap-at-idle finding adds weight to #019's decode-latency problem:
+  before trying partial GPU offload, worth confirming it doesn't trade a
+  latency problem for a swap-thrashing problem — watch `SWAP` in `tegrastats`
+  during that experiment, not just CUDA free memory.
