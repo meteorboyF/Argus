@@ -75,6 +75,17 @@ class DepthConfig:
     # Calibration (rectification maps + Q) from scripts/calibrate_stereo.py.
     # When present, depth is rectified and metric for the actual mounting geometry.
     calibration_file: str = str(CONFIG_DIR / "stereo_calib.npz")
+    # Calibration drift watch. After rectification, matched features must share a
+    # row; a growing vertical residual means a camera has moved and depth has
+    # silently gone wrong. Sampled every health_interval_s, not every frame.
+    # The calibrator targets < ~1 px vertical error, so 2 px is clearly degraded.
+    health_check: bool = True
+    health_interval_s: float = 5.0
+    health_max_vertical_px: float = 2.0
+    health_min_matches: int = 25       # fewer than this = textureless scene, no verdict
+    health_consecutive: int = 3        # debounce, same idea as the drop-off reflex
+    health_downscale: int = 2
+    health_max_features: int = 400
 
 
 @dataclass

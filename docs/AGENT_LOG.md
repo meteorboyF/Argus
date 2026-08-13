@@ -79,6 +79,7 @@ Prompts: [JP-01](JETSON_PROMPT_01.md) (provisioning, complete) ·
 | #011 | 08-13 16:40 | desktop | Rig assembled — safety-path fixes landed, calibration warning | in-progress |
 | #012 | 08-13 17:10 | desktop | Entry numbering + prompt IDs introduced | done |
 | #013 | 08-13 19:45 | desktop | JP-02 revised — USB topology + thermal checks from rig photos | done |
+| #014 | 08-13 20:15 | desktop | Calibration drift monitor — detects a knocked camera at runtime | done |
 
 Entries #001–#011 pre-date the numbering scheme; their numbers were assigned
 here retroactively and their bodies were left untouched. **Number every entry
@@ -794,3 +795,68 @@ rule 2).
   entry **#014**.
 - **[user]** Two physical asks before the measurement steps: move the Jetson off
   the cloth onto a hard surface, and lock the camera mounts.
+
+---
+
+## [#014] 2026-08-13 20:15 — desktop-agent — Calibration drift monitor
+
+**Agent:** desktop-agent
+**Status:** done
+**Prompt:** —
+**Re:** #011
+
+**What I did:**
+
+Built a runtime calibration health check (`argus/calib_health.py`) so a knocked
+camera is detected instead of silently corrupting depth.
+
+Context that changed the design: the ball-joint mounts are **intentional** — the
+user wants to re-aim the cameras forward/backward as the ergonomics get worked
+out. So "lock them permanently" was the wrong ask. The right answer is to let the
+mounts stay adjustable and make drift *detectable*, so re-aiming simply means
+re-calibrating rather than silently poisoning every distance the device reports.
+
+**Result / verification:**
+
+The metric is the one property rectification guarantees: corresponding points
+must share a row. Sparse ORB features are matched across the rectified pair and
+the **median absolute vertical offset** is measured. Near zero on a good
+calibration, growing as geometry drifts. No checkerboard, no user action, no
+knowledge of the scene required.
+
+Details that matter for trusting it:
+- **Median, not mean**, and matches are filtered to plausible stereo
+  correspondences (`dx > 0`, bounded) so surviving mismatches cannot cry wolf.
+- **A textureless scene returns no verdict**, not a pass. A blank wall must never
+  clear a drift state.
+- **Debounced with hysteresis** (3 consecutive samples), same philosophy as the
+  drop-off reflex — one awkward scene cannot flip the verdict either way.
+- **It does not disable the safety loop.** Degraded warnings still beat no
+  warnings; a blind user mid-street is worse off with the system silent. It warns
+  on the console and speaks once at WARN priority, then carries on.
+
+Verified with 12 tests over synthetic pairs: a 6 px injected vertical shift reads
+back as 6.0 ± 1.0 px, and pure horizontal disparity reads < 1 px healthy at 8,
+24 and 48 px disparity. Full suite is 27 tests, all passing off-device.
+
+One thing I got wrong and corrected mid-build: I first ran the check inline in
+`disparity()`. Measured at 18 ms per sample on a desktop CPU — likely 40–70 ms on
+the Orin, which would stall the fast loop every 5 s. That is precisely the defect
+I fixed in #011, so the measurement now runs on its own worker thread and
+`submit()` is a non-blocking handoff. Tested: `submit()` returns in under 5 ms.
+
+Config lives in `DepthConfig` (`health_*`), default threshold 2.0 px against the
+calibrator's own < ~1 px target. Set `health_check: false` to disable.
+
+**Stuck on / needs input:**
+
+The 2.0 px threshold is reasoned, not measured — it needs a real baseline from
+the rig. JP-02 Step 5 now asks for the typical residual right after a good
+calibration, plus a deliberate nudge test to confirm the monitor fires.
+
+**Next step (proposed):**
+
+- **[jetson-agent]** After calibration, report the typical `[calib]` residual and
+  the result of the nudge test.
+- **[me]** Still queued: direction-only fusion fallback (KNOWN_GAPS B2), the
+  `GatedFrame` type for hard rule 6, CRAFT text blur (REQ-F05 / B4).

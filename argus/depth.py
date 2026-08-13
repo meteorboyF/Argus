@@ -29,6 +29,7 @@ import os
 import cv2
 import numpy as np
 
+from .calib_health import CalibrationMonitor
 from .config import DepthConfig
 
 
@@ -39,6 +40,7 @@ class DepthEstimator:
         self._trt = None
         self._calib = None
         self._load_calibration()
+        self.health = CalibrationMonitor(cfg)
 
         if self.backend == "raft_trt" and os.path.exists(cfg.raft_engine):
             try:
@@ -114,6 +116,11 @@ class DepthEstimator:
         SGBM matching runs on downscaled images for fast-loop speed."""
         if self._calib is not None:
             left_bgr, right_bgr = self._rectify_pair(left_bgr, right_bgr)
+            # Watch for calibration drift on the rectified pair. Rate-limited
+            # internally, so this is cheap to call every frame. Only meaningful
+            # when calibrated — without a calibration there is no rectification
+            # to have drifted.
+            self.health.submit(left_bgr, right_bgr)
         if self.backend == "raft_trt" and self._trt is not None:
             return self._raft_disparity(left_bgr, right_bgr)
         gl = cv2.cvtColor(left_bgr, cv2.COLOR_BGR2GRAY)

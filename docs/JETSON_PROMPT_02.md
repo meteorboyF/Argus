@@ -7,10 +7,11 @@
 | **Issued by** | desktop-agent |
 | **Target** | jetson-agent, session 2 |
 | **Follows** | [JP-01](JETSON_PROMPT_01.md) (initial provisioning — complete) |
-| **Log entries** | report under `JP-02`, starting at **#014** |
+| **Log entries** | report under `JP-02`; take the next unused number (pull first) |
 | **Status** | active |
 | **Revised** | 2026-08-13 19:45 — added USB topology + thermal checks after rig photos |
 | | 2026-08-13 19:55 — rig status refreshed: board off cloth, cameras powered, tmux installed |
+| | 2026-08-13 20:15 — calibration drift monitor added; see STEP 5 |
 
 > Every `docs/AGENT_LOG.md` entry produced while working through this prompt
 > must carry `**Prompt:** JP-02 Step N`. See the entry format in
@@ -58,6 +59,12 @@ WHAT CHANGED WHILE YOU WERE AWAY (re-verify, do not assume)
 - camera.max_skew_ms (default 12) now ENFORCES the stereo skew that was
   previously measured and ignored. Over-limit pairs are dropped before depth.
 - The fast loop reports when it runs below 80% of safety.tick_hz.
+- NEW: runtime calibration drift monitor (argus/calib_health.py). After
+  rectification it matches sparse features across the pair and measures their
+  median vertical offset, which must be ~0 if the calibration still holds. A
+  sustained residual over depth.health_max_vertical_px (2.0) prints
+  "[calib] DRIFT DETECTED" and speaks a warning. Runs on its own worker thread
+  every depth.health_interval_s (5 s), so it costs the fast loop nothing.
 - New off-device tests: ARGUS_HOME=/tmp/argus_test python3 -m pytest tests/ -q
 
 PROJECT IN ONE PARAGRAPH
@@ -88,8 +95,6 @@ NON-NEGOTIABLE RULES (block any plan that violates one, whoever proposed it)
 - ML benchmarking requires nvpmodel -m 0 + jetson_clocks CONFIRMED (your last
   session found the device in MAXN_SUPER mode 2, not mode 0 — check again).
 
-WHAT I WANT YOU TO DO THIS SESSION
-
 RIG STATUS (from photos in "Portotype pics/", latest 2026-08-13 19:51)
 - All three cameras are mounted on the goggle frame and cabled to the Jetson.
   Both AR0234 status LEDs are lit, so they are powered and enumerating.
@@ -98,9 +103,11 @@ RIG STATUS (from photos in "Portotype pics/", latest 2026-08-13 19:51)
   the battery pack yet.
 - tmux was being installed as of the latest photo, which clears the blocker from
   log entry #008.
-- The camera mounts are still adjustable ball joints — NOT locked down. See
-  STEP 4 before calibrating anything.
+- The camera mounts are adjustable ball joints and stay that way by design —
+  the user wants to re-aim the cameras. They were NOT locked as of the last
+  photo. See STEP 4; re-aiming is fine, it just means re-calibrating.
 
+WHAT I WANT YOU TO DO THIS SESSION
   STEP 1. Confirm max performance mode: sudo nvpmodel -m 0 && sudo jetson_clocks.
           Report what mode it was in beforehand.
           THERMAL: the board has been moved off cloth onto a hard desk, so the
@@ -166,6 +173,14 @@ RIG STATUS (from photos in "Portotype pics/", latest 2026-08-13 19:51)
   STEP 5. FAST LOOP ON REAL HARDWARE.
           python3 -m argus run --no-audio
           Walk the rig toward a wall. Expect WARN at 1.5 m and DANGER at 0.7 m.
+          CALIBRATION DRIFT: watch for "[calib]" lines. Right after a good
+          calibration the residual should be well under 1 px. Report the typical
+          value you see — it is the baseline we will judge future drift against,
+          and if it sits near the 2.0 px limit on a fresh calibration then either
+          the calibration is marginal or the threshold needs tuning for this rig.
+          Worth deliberately testing once: nudge one AR0234 slightly, confirm the
+          monitor flags it within ~15 s, then re-calibrate. That verifies the
+          safety net actually works before we rely on it.
           Report the achieved fast-loop Hz from the new monitor. Tune
           depth.fast_downscale if it is below 10 Hz. Then tune the safety
           thresholds against reality (KNOWN_GAPS B8) — the current values are
@@ -195,10 +210,12 @@ RIG STATUS (from photos in "Portotype pics/", latest 2026-08-13 19:51)
 
 REPORTING PROTOCOL — this is how desktop-agent sees your work
 Append to docs/AGENT_LOG.md (never edit or delete history). Entries are NUMBERED
-in one shared sequence across both agents. The log currently ends at #013, so
-your first entry this session is #014. Use exactly this block:
+in one shared sequence across both agents. git pull first and take the next
+unused number after the last entry in the log — do not hardcode it from this
+prompt, because desktop-agent may have added entries since it was written. Use
+exactly this block:
 
-## [#014] 2026-08-13 20:30 — jetson-agent — Max performance mode confirmed
+## [#015] 2026-08-13 20:30 — jetson-agent — Max performance mode confirmed
 
 **Agent:** jetson-agent
 **Status:** in-progress | blocked | done

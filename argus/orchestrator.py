@@ -19,6 +19,7 @@ import time
 import numpy as np
 
 from .agent import AgentError, GemmaAgent
+from .calib_health import CalibState
 from .cameras import CameraRig
 from .config import ArgusConfig
 from .depth import DepthEstimator
@@ -63,6 +64,7 @@ class Orchestrator:
         self._last_skew_report = 0.0
         self._tick_count = 0
         self._tick_time = 0.0
+        self._last_calib_state = CalibState.UNKNOWN
 
         # Wake word + STT are created lazily in _listen_loop so `argus query`
         # and --no-audio runs don't pay their load time (or need a microphone).
@@ -91,9 +93,28 @@ class Orchestrator:
                 elif state.level == Level.WARN and (now - self._last_warn) > self.cfg.safety.warn_repeat_s:
                     self.speaker.speak(state.message, Priority.WARN)
                     self._last_warn = now
+            self._check_calibration_health()
             dt = time.perf_counter() - t0
             self._note_tick(dt)
             time.sleep(max(0.0, period - dt))
+
+    def _check_calibration_health(self):
+        """Announce calibration drift once, when it is first detected.
+
+        Deliberately does not stop the safety loop: degraded warnings still beat
+        no warnings, and a blind user mid-street is worse off with the system
+        silent. But they must be told the distances have stopped being reliable,
+        because otherwise the failure is invisible — bad depth reads exactly like
+        good depth.
+        """
+        state = self.depth.health.state
+        if state is self._last_calib_state:
+            return
+        self._last_calib_state = state
+        if state is CalibState.DEGRADED:
+            self.speaker.speak(
+                "Warning. My distance sensing has drifted and may be inaccurate. "
+                "Please re-calibrate.", Priority.WARN)
 
     def _skew_ok(self, pair) -> bool:
         """Reject stereo pairs whose two frames are too far apart in time.
@@ -248,4 +269,5 @@ class Orchestrator:
     def stop(self):
         self._stop.set()
         self.speaker.stop()
+        self.depth.health.stop()
         self.rig.release()
