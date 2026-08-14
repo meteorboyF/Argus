@@ -281,6 +281,12 @@ def main():
     ap.add_argument("--out", default=DEFAULT_OUT)
     ap.add_argument("--no-auto", action="store_true", help="manual capture (SPACE) only")
     ap.add_argument("--headless", action="store_true", help="no preview window (SSH-friendly)")
+    ap.add_argument("--preview-scale", type=float, default=0.45,
+                    help="live stereo preview scale (default fits reserved board panel)")
+    ap.add_argument("--preview-x", type=int, default=10,
+                    help="live preview window screen x position")
+    ap.add_argument("--preview-y", type=int, default=90,
+                    help="live preview window screen y position")
     ap.add_argument("--verify", action="store_true",
                     help="skip calibration; live-check depth against the saved file")
     ap.add_argument("--max-seconds", type=float, default=300.0,
@@ -394,7 +400,11 @@ def main():
             if both:
                 cv2.drawChessboardCorners(disp[:, :fL.shape[1]], pattern, cL, True)
                 cv2.drawChessboardCorners(disp[:, fL.shape[1]:], pattern, cR, True)
-            cv2.imshow("ARGUS stereo calibration", cv2.resize(disp, None, fx=0.6, fy=0.6))
+            window = "ARGUS stereo calibration"
+            preview = cv2.resize(disp, None, fx=args.preview_scale,
+                                 fy=args.preview_scale)
+            cv2.imshow(window, preview)
+            cv2.moveWindow(window, args.preview_x, args.preview_y)
             key = cv2.waitKey(1) & 0xFF
             if key in (27, ord("q")):
                 break

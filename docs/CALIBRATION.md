@@ -59,16 +59,21 @@ printing (printers rescale!). All other parameters are auto-detected; `--left/
 ### No printer: use the monitor as the target
 
 The Jetson can render a physically scaled board from the monitor's XRandR/EDID
-dimensions. Keep the board full-screen and move the **locked camera rig** through
-the poses instead of moving a paper target:
+dimensions. Its single-monitor layout reserves a dark panel on the left for the
+live stereo preview and keeps the complete checkerboard unobstructed on the
+right. Recursive monitor images inside the preview are harmless as long as they
+remain inside that reserved panel. Move the **locked camera rig** through the
+poses instead of moving a paper target:
 
 ```bash
 # Terminal 1, on the attached display:
-python3 scripts/display_calibration_board.py --cols 9 --rows 6 --square-mm 30
+python3 scripts/display_calibration_board.py --cols 9 --rows 6 --square-mm 25 &
 
-# Terminal 2 (the board must remain unobstructed):
-python3 scripts/calibrate_stereo.py --headless \
-  --cols 9 --rows 6 --square-mm 30 --min-views 20
+# Same terminal: use the current two B0495 indices from
+# `v4l2-ctl --list-devices` (never select the B0459 wide camera).
+python3 scripts/calibrate_stereo.py --left <B0495_INDEX> --right <B0495_INDEX> \
+  --cols 9 --rows 6 --square-mm 25 --min-views 20 \
+  --preview-scale 0.45 --preview-x 10 --preview-y 90
 ```
 
 This is less ideal than a rigid printed board: EDID physical dimensions can be
