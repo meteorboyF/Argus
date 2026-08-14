@@ -7,7 +7,8 @@
   "working_resolution": [480, 300],
   "output_resolution": [960, 600],
   "full_resolution_disparity_levels": 128,
-  "source_sha256": "4359435d7c46361c0e2919f40d09100fbcb6f477aaf31f947a3fce08a2149560",
+  "source_sha256": "c4ccd50d1c5d1ae29abb6354571ca93b32e1fe7efbaf49978d96db302656a6c4",
+  "integration_note": "Feature 4 moved PyCUDA to the retained primary context and pushes it on the safety thread; algorithm and measured kernel are unchanged.",
   "latency_ms": {
     "first": 12.2117,
     "median_warm": 12.7430,

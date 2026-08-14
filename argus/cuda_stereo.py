@@ -41,10 +41,11 @@ class CudaStereoMatcher:
 
     def __init__(self, compute_arch: str = "87"):
         try:
-            import pycuda.autoinit  # noqa: F401
+            import pycuda.autoprimaryctx as cuda_context
             import pycuda.driver as cuda
             from pycuda.compiler import SourceModule
             self._cuda = cuda
+            self._context = cuda_context.context
             module = SourceModule(
                 CUDA_SOURCE, options=["-O3", f"-arch=sm_{compute_arch}"],
                 nvcc="/usr/local/cuda/bin/nvcc")
@@ -72,16 +73,24 @@ class CudaStereoMatcher:
             raise ValueError("CUDA stereo requires equal-size grayscale images")
         left = np.ascontiguousarray(left_gray, dtype=np.uint8)
         right = np.ascontiguousarray(right_gray, dtype=np.uint8)
-        self._allocate(left.shape)
-        height, width = left.shape
-        if max_disparity <= 1 or max_disparity + radius >= width:
-            raise ValueError("disparity search range does not fit the input width")
-        self._cuda.memcpy_htod(self._left_dev, left)
-        self._cuda.memcpy_htod(self._right_dev, right)
-        self._kernel(
-            self._left_dev, self._right_dev, self._output_dev,
-            np.int32(width), np.int32(height), np.int32(max_disparity),
-            np.int32(radius), np.int32(uniqueness_percent),
-            block=(16, 16, 1), grid=((width + 15) // 16, (height + 15) // 16, 1))
-        self._cuda.memcpy_dtoh(self._output, self._output_dev)
-        return self._output.copy()
+        # The matcher is constructed on the main thread but used by the safety
+        # thread. Make the retained primary context current on the caller for
+        # every operation; a context current only on the creator thread causes
+        # cuMemAlloc/launch to fail with "invalid device context".
+        self._context.push()
+        try:
+            self._allocate(left.shape)
+            height, width = left.shape
+            if max_disparity <= 1 or max_disparity + radius >= width:
+                raise ValueError("disparity search range does not fit the input width")
+            self._cuda.memcpy_htod(self._left_dev, left)
+            self._cuda.memcpy_htod(self._right_dev, right)
+            self._kernel(
+                self._left_dev, self._right_dev, self._output_dev,
+                np.int32(width), np.int32(height), np.int32(max_disparity),
+                np.int32(radius), np.int32(uniqueness_percent),
+                block=(16, 16, 1), grid=((width + 15) // 16, (height + 15) // 16, 1))
+            self._cuda.memcpy_dtoh(self._output, self._output_dev)
+            return self._output.copy()
+        finally:
+            self._context.pop()

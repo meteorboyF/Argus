@@ -7,8 +7,8 @@ not current guidance.
 ## Baseline at handoff
 
 - Target device: Jetson Orin Nano Super 8 GB, user `argus`.
-- OS: L4T R36.5.2. The refreshed environment baseline has 23 passes and three
-  required failures; the device is currently in 15W, not MAXN_SUPER.
+- OS: L4T R36.5.2. The refreshed environment baseline has 24 passes and two
+  required failures. MAXN_SUPER is active.
 - Repository: `main`; audited-baseline cleanup is the current feature boundary.
 - Native llama.cpp commit: `ef8268feee28ae943958049bf3bbab4bda99c0ea`.
 - Gemma CUDA/multimodal execution was demonstrated historically, but must be
@@ -17,6 +17,8 @@ not current guidance.
   label embedding is supplied at runtime; repeated labels are cached.
 - GPU stereo now uses the deterministic CUDA SAD backend; no stereo calibration
   file exists, so metric warnings remain suppressed.
+- The manual positive demo “Find the monitor” completed through privacy, Gemma,
+  TensorRT grounding, a center-only result, and Piper/Pulse USB playback.
 
 ## Known-good evidence
 
@@ -34,9 +36,9 @@ not current guidance.
 1. The user must run `sudo nvpmodel -m 0 && sudo jetson_clocks`, then rerun the
    baseline so locked clocks can be verified. The agent cannot enter the password.
 2. Capture and physically verify stereo calibration at 0.5, 1, 2, and 3 m.
-3. Validate grounding against positive physical objects; current device evidence
-   proves GPU/runtime-label execution but the captured scene yielded null results.
-4. Repair the hanging speech-priority tests.
+3. Reduce cold grounding latency and 7.4 GB peak RAM / heavy swap under the full
+   stack; cached TRT inference itself is fast.
+4. Validate wake word + STT with the USB microphone; the six priority tests pass.
 5. Implement sensitive-text privacy handling.
 6. Calibrate wide-to-stereo geometry before returning object distance.
 7. Implement temporal approach/incoming-vehicle rules and later SLAM.
@@ -54,8 +56,7 @@ not current guidance.
 
 ## What to do next
 
-Feature 3 delivered CUDA stereo depth. After confirmation, prioritize the early
-honest demo thread requested by the user: cameras -> CUDA depth -> one TensorRT
-grounding query -> privacy-gated Gemma -> spoken reply. It may report direction
-only: calibration and cross-camera geometry are still unverified, so distance
-must remain omitted. Then return to physical calibration/hardening.
+Feature 4 delivered the early honest direction-only demo. After confirmation,
+return to physical stereo calibration and 0.5–3 m validation so the safety loop
+can progress beyond suppressed diagnostic depth. Keep cross-camera object
+distance disabled until its separate calibration exists.

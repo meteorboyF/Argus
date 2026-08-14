@@ -18,7 +18,7 @@ import time
 
 import numpy as np
 
-from .agent import AgentError, GemmaAgent
+from .agent import AgentError, GemmaAgent, requested_object
 from .calib_health import CalibState
 from .cameras import CameraRig
 from .config import ArgusConfig
@@ -69,6 +69,9 @@ class Orchestrator:
         self._tick_time = 0.0
         self._last_calib_state = CalibState.UNKNOWN
         self._reported_uncalibrated = False
+        self._fast_ready = threading.Event()
+        self._fast_error: Exception | None = None
+        self._fast_thread: threading.Thread | None = None
 
         # Wake word + STT are created lazily in _listen_loop so `argus query`
         # and --no-audio runs don't pay their load time (or need a microphone).
@@ -78,32 +81,39 @@ class Orchestrator:
     # ------------------------------------------------------------------ fast loop
     def _fast_loop(self):
         period = 1.0 / self.cfg.safety.tick_hz
-        while not self._stop.is_set():
-            t0 = time.perf_counter()
-            pair = self.rig.get_stereo_pair()
-            if pair is not None and self._skew_ok(pair):
-                depth_m = self.depth.depth_map(pair.left, pair.right)
-                with self._depth_lock:
-                    self._latest_depth = depth_m
+        try:
+            while not self._stop.is_set():
+                t0 = time.perf_counter()
+                pair = self.rig.get_stereo_pair()
+                if pair is not None and self._skew_ok(pair):
+                    depth_m = self.depth.depth_map(pair.left, pair.right)
+                    with self._depth_lock:
+                        self._latest_depth = depth_m
+                    self._fast_ready.set()
                 # Uncalibrated disparity cannot support a metric danger decision.
                 # Keep producing diagnostic depth, but never turn it into wearable
                 # hazard speech until physical calibration has been verified.
-                state = self._evaluate_safety_depth(depth_m)
-                now = time.perf_counter()
+                    state = self._evaluate_safety_depth(depth_m)
+                    now = time.perf_counter()
                 # DANGER speaks immediately (rate-limited); WARN speaks on a
                 # longer cadence so the user isn't flooded. Both hand off to the
                 # speaker thread and return at once — this loop must never block
                 # on audio, or it stops watching for hazards while it talks.
-                if state is not None and state.level == Level.DANGER and (now - self._last_danger) > self.cfg.safety.danger_repeat_s:
-                    self.speaker.speak(state.message, Priority.DANGER)
-                    self._last_danger = now
-                elif state is not None and state.level == Level.WARN and (now - self._last_warn) > self.cfg.safety.warn_repeat_s:
-                    self.speaker.speak(state.message, Priority.WARN)
-                    self._last_warn = now
-            self._check_calibration_health()
-            dt = time.perf_counter() - t0
-            self._note_tick(dt)
-            time.sleep(max(0.0, period - dt))
+                    if state is not None and state.level == Level.DANGER and (now - self._last_danger) > self.cfg.safety.danger_repeat_s:
+                        self.speaker.speak(state.message, Priority.DANGER)
+                        self._last_danger = now
+                    elif state is not None and state.level == Level.WARN and (now - self._last_warn) > self.cfg.safety.warn_repeat_s:
+                        self.speaker.speak(state.message, Priority.WARN)
+                        self._last_warn = now
+                self._check_calibration_health()
+                dt = time.perf_counter() - t0
+                self._note_tick(dt)
+                time.sleep(max(0.0, period - dt))
+        except Exception as exc:  # noqa: BLE001
+            self._fast_error = exc
+            self._fast_ready.set()
+            self._stop.set()
+            print(f"[safety] fast loop failed closed: {exc}")
 
     def _evaluate_safety_depth(self, depth_m: np.ndarray):
         """Only calibrated metric depth may drive wearable hazard speech."""
@@ -181,6 +191,7 @@ class Orchestrator:
     # ------------------------------------------------------------------ slow loop
     def handle_query(self, question: str):
         """Run one full slow-path interaction for an already-transcribed query."""
+        query_started = time.perf_counter()
         frame = self.rig.get_wide_frame()
         if frame is None:
             self.speaker.speak("Camera not ready.")
@@ -190,17 +201,38 @@ class Orchestrator:
         if self.cfg.privacy.require_gate and not self.privacy.ready:
             self.speaker.speak("Privacy filter unavailable. I can't answer right now.")
             return
+        stage_started = time.perf_counter()
         gated = self._apply_privacy(frame)
+        privacy_s = time.perf_counter() - stage_started
         if gated is None:
             return
 
         try:
+            stage_started = time.perf_counter()
             reply = self.agent.ask(gated, question)
+            visual_agent_s = time.perf_counter() - stage_started
+            forced_name = requested_object(question)
+            if forced_name and reply.tool_call != "find_object":
+                print("[agent] explicit locate request bypassed grounding; forcing find_object")
+                reply.tool_call = "find_object"
+                reply.tool_args = {"name": forced_name}
+                reply.text = ""
             if reply.tool_call == "find_object":
                 name = (reply.tool_args or {}).get("name", "")
+                stage_started = time.perf_counter()
                 det = self.grounder.find_object(name, gated) if name else None
+                grounding_s = time.perf_counter() - stage_started
                 tool_result = self._fuse_detection(name, det, gated)
+                stage_started = time.perf_counter()
                 reply = self.agent.with_tool_result(question, tool_result)
+                final_agent_s = time.perf_counter() - stage_started
+                print(
+                    f"[query] privacy={privacy_s:.3f}s visual_agent={visual_agent_s:.3f}s "
+                    f"grounding={grounding_s:.3f}s final_agent={final_agent_s:.3f}s "
+                    f"total={time.perf_counter() - query_started:.3f}s "
+                    f"found={tool_result.get('found')} "
+                    f"direction={tool_result.get('direction')} distance_omitted="
+                    f"{tool_result.get('distance_m') is None}")
         except AgentError as e:
             print(f"[agent] {e}")
             self.speaker.speak("Sorry, my reasoning engine is not responding.")
@@ -238,10 +270,18 @@ class Orchestrator:
         }
 
     # ------------------------------------------------------------------ lifecycle
-    def start_fast_loop(self):
+    def start_fast_loop(self, timeout: float = 8.0):
         """Start the safety fast loop in a background thread (used by `run` and
         by one-shot `argus query` so depth fusion has data)."""
-        threading.Thread(target=self._fast_loop, daemon=True).start()
+        if self._fast_thread is not None:
+            return
+        self._fast_thread = threading.Thread(target=self._fast_loop, daemon=True)
+        self._fast_thread.start()
+        if not self._fast_ready.wait(timeout):
+            self._stop.set()
+            raise RuntimeError("GPU depth fast loop did not produce a valid stereo result")
+        if self._fast_error is not None:
+            raise RuntimeError(f"GPU depth fast loop failed: {self._fast_error}") from self._fast_error
 
     def run(self):
         self.start_fast_loop()
@@ -286,6 +326,9 @@ class Orchestrator:
 
     def stop(self):
         self._stop.set()
-        self.speaker.stop()
-        self.depth.health.stop()
         self.rig.release()
+        if (self._fast_thread is not None and self._fast_thread.is_alive()
+                and self._fast_thread is not threading.current_thread()):
+            self._fast_thread.join(timeout=2.0)
+        self.depth.health.stop()
+        self.speaker.stop()

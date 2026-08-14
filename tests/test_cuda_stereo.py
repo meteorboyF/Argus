@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import pytest
+import threading
 
 from argus.config import DepthConfig
 from argus.depth import DepthEstimator
@@ -48,3 +49,27 @@ def test_cuda_matcher_recovers_synthetic_shift():
         left, right, max_disparity=32, radius=2, uniqueness_percent=5)
     valid = disparity[:, 40:-4]
     assert np.mean(valid == shift) > 0.9
+
+
+def test_cuda_matcher_runs_on_non_creator_thread():
+    pytest.importorskip("pycuda")
+    if not __import__("pathlib").Path("/usr/local/cuda/bin/nvcc").is_file():
+        pytest.skip("Jetson CUDA toolkit unavailable")
+    from argus.cuda_stereo import CudaStereoMatcher
+
+    matcher = CudaStereoMatcher()
+    image = np.arange(96 * 160, dtype=np.uint8).reshape(96, 160)
+    errors = []
+
+    def run():
+        try:
+            matcher.compute(image, image, max_disparity=32, radius=2,
+                            uniqueness_percent=5)
+        except Exception as exc:  # noqa: BLE001
+            errors.append(exc)
+
+    worker = threading.Thread(target=run)
+    worker.start()
+    worker.join(timeout=5)
+    assert not worker.is_alive()
+    assert errors == []

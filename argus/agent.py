@@ -60,6 +60,19 @@ FIND_OBJECT_TOOL = {
 # A JSON object containing a "tool" key anywhere in the reply (models often wrap
 # it in prose or markdown fences despite instructions).
 _TOOL_JSON_RE = re.compile(r"\{[^{}]*\"tool\"[^{}]*\}")
+_LOCATE_RE = re.compile(
+    r"\b(?:find|locate)\s+(?:my|the|a|an)?\s*([^?.!,]+)|"
+    r"\bwhere\s+(?:is|are)\s+(?:my|the|a|an)?\s*([^?.!,]+)", re.IGNORECASE)
+
+
+def requested_object(question: str) -> str | None:
+    """Return the target of an explicit locate request, if it is unambiguous."""
+    match = _LOCATE_RE.search(question.strip())
+    if not match:
+        return None
+    name = next((group for group in match.groups() if group), "").strip()
+    name = re.sub(r"\s+please$", "", name, flags=re.IGNORECASE).strip()
+    return name or None
 
 
 class AgentError(RuntimeError):

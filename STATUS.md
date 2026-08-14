@@ -9,7 +9,7 @@ implementation exists.
 
 | Component | Status | Verified reality / next gate |
 |---|---|---|
-| Jetson environment baseline | partial | Refreshed report: 23 pass/3 fail. Device has regressed to 15W; MAXN_SUPER and `jetson_clocks` require user sudo. Calibration remains absent; GPU depth now passes |
+| Jetson environment baseline | partial | Refreshed report: 24 pass/2 fail. MAXN_SUPER is active; privileged `jetson_clocks --show` remains unverified and calibration is absent |
 | Camera identity/transforms | partial | Stable USB-role code and 9 unit tests pass; delivered FPS/skew/reconnect require device test |
 | Stereo calibration tool | partial | Substantial capture/solve code exists; no deployed calibration or 0.5–3 m validation |
 | Calibration drift monitor | partial | 12 synthetic tests pass; needs real calibrated scenes |
@@ -17,16 +17,16 @@ implementation exists.
 | CPU SGBM | diagnostic only | Implemented; not permitted as production depth |
 | Safety rules | partial | 9 synthetic obstacle/drop tests pass; uncalibrated warnings suppressed; no approach/TTC validation |
 | Incoming vehicle warning | not started | Requires temporal range/approach rules and controlled tests |
-| Speech pipeline | broken | Components exist, but six-test priority suite hangs during shutdown; wake word is `hey_jarvis` and capture is fixed length |
-| YOLO-World TensorRT | partial | Production runner consumes an on-device FP16 engine with runtime single-label CLIP input. Cached queries measured ~30 ms and a new warm label ~0.46 s with GR3D activity. Positive-object physical accuracy remains to be validated |
+| Speech pipeline | partial | Six priority/preemption tests now pass. Piper completed through PulseAudio USB without PortAudio underruns. Wake word/STT microphone loop is not yet accepted; wake phrase remains `hey_jarvis` |
+| YOLO-World TensorRT | partial | Production FP16 runtime-label engine detected the physical monitor at center. Cached queries measured ~30 ms; cold CLIP load reached 15.5 s under the full stack. Broader object accuracy and memory hardening remain |
 | Ultralytics grounding | diagnostic only | `.pt` prototype exists; prohibited production fallback |
 | Face privacy gate | partial | InsightFace blur exists and is required; exception boundary is fail-closed; adversarial tests needed |
 | Sensitive-text privacy | not started | No CRAFT/text flag or blur implementation |
-| Gemma 4 agent | partial | CUDA multimodal inference verified historically; flash attention was off and full-stack latency remains unverified |
-| Agent tool protocol | partial | Prompt/native parsing exists; no focused unit tests or verified TRT tool execution |
+| Gemma 4 agent | partial | Current full-stack visual turn ran through pinned CUDA llama.cpp with `-ngl 99` and flash attention; 4.27 s visual turn and 1.14 s final turn. Repeated/concurrent latency and memory need hardening |
+| Agent tool protocol | partial | Explicit locate intent is deterministically forced through verified TensorRT grounding when Gemma ignores the prompt. Positive monitor query returned center; broader language tests remain |
 | Wide-to-stereo projection | broken | Old proportional mapping disabled; direction only until calibrated projection exists |
 | SLAM | not started | No backend, IMU inventory, calibration, or pose contract |
-| Full two-speed integration | partial | Skeleton plus GPU depth/grounding exist; honest camera-to-speech demo and concurrency/resource validation remain |
+| Full two-speed integration | partial | Manual “Find the monitor” completed cameras -> concurrent CUDA depth -> CPU privacy -> CUDA Gemma -> TRT grounder -> Gemma -> Piper/Pulse USB. Direction center, distance omitted. Wake/STT and hardening remain |
 | Headless service/soak/fault tests | not started | No service definition or sustained validation |
 
 ## Reproducibility pins
@@ -70,30 +70,28 @@ transitive packages are pinned too. Do not substitute a generic PyPI Torch build
 Command: `python3 -m argus --config config/argus.yaml baseline --output
 reports/environment-baseline-2026-08-14.json`.
 
-- 23 required checks passed; production readiness remains false.
-- A real CUDA matrix workload completed in 0.198 s and drove `tegrastats` GR3D
+- 24 required checks passed; production readiness remains false.
+- A real CUDA matrix workload completed in 0.208 s and drove `tegrastats` GR3D
   to 99%, proving Jetson GPU execution rather than inferring it from imports.
 - Both B0495 stereo cameras, the B0459 wide camera, and USB capture/playback
   audio enumerate. All cameras are attached at 5 Gbit/s behind the same USB 3
   hub/controller; sustained bandwidth is deferred to the camera feature.
 - Shared memory: 7,976,845,312 bytes; six zram swap devices active.
 - All audited model and engine hashes matched.
-- Required failures: current power mode is 15W rather than MAXN_SUPER,
-  `jetson_clocks --show` requires interactive sudo, and stereo calibration is
-  absent. CUDA stereo and GPU grounding now pass.
-- `sudo nvpmodel -m 0 && sudo jetson_clocks` was attempted but correctly stopped
-  at the password prompt. An agent must not request, store, or bypass that password.
+- Required failures: `jetson_clocks --show` requires interactive sudo and stereo
+  calibration is absent. MAXN_SUPER, CUDA stereo, and GPU grounding pass.
+- The agent cannot verify privileged locked-clock state without the user's sudo;
+  it must not request, store, or bypass that password.
 
 ## Test evidence
 
 - `tests/test_cameras.py`: 9 passed.
 - `tests/test_safety.py`: 9 passed.
 - `tests/test_calib_health.py`: 12 passed.
-- `tests/test_fail_closed.py`: 9 passed.
+- `tests/test_fail_closed.py`: 14 passed.
 - `tests/test_diagnostics.py`: 4 passed.
-- `tests/test_cuda_stereo.py`: 2 passed on the Jetson, including real CUDA.
-- `tests/test_speech_priority.py`: hangs during execution/teardown; do not count
-  its printed dots as a passing suite.
+- `tests/test_cuda_stereo.py`: 3 passed on the Jetson, including worker-thread CUDA.
+- `tests/test_speech_priority.py`: 6 passed, including DANGER preemption.
 
 ## Latest GPU depth report — 2026-08-14
 
@@ -102,3 +100,13 @@ latency was 12.7 ms median and 14.1 ms p95 in 15W mode; sampled GR3D peaked at 9
 between 3,985 and 4,114 MB. Pair skew was 1.03 ms median but the initial pair was
 369 ms and therefore outside the production 12 ms gate. No calibration exists,
 so the report is GPU/performance evidence, not metric-distance acceptance.
+
+## Early end-to-end demo — 2026-08-14
+
+`reports/early-e2e-demo-2026-08-14.json` records the positive manual query
+“Find the monitor.” The fast CUDA depth loop stayed alive, the 368 ms initial
+pair was rejected, privacy ran first on CPU, TensorRT found the monitor at center,
+Gemma produced the final answer, and Piper/Pulse playback completed. Slow-path
+stages were 0.118 s privacy, 4.269 s visual Gemma, 15.545 s cold grounding, and
+1.141 s final Gemma. Peak RAM was 7,376 MB with substantial swap, so co-residency
+and cold-start latency remain explicit blockers to wearable acceptance.

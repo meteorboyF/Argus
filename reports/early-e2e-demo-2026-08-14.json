@@ -1,0 +1,49 @@
+{
+  "date": "2026-08-14",
+  "command": "python3 -m argus --config config/argus.yaml query 'Find the monitor'",
+  "power_mode": "MAXN_SUPER",
+  "result": {
+    "object": "monitor",
+    "found": true,
+    "direction": "center",
+    "distance_m": null,
+    "distance_omitted_by_design": true,
+    "spoken_via": "Piper CPU TTS -> paplay -> default PulseAudio USB sink"
+  },
+  "privacy": {
+    "backend": "InsightFace SCRFD detection-only on CPU",
+    "seconds": 0.118,
+    "ordering": "wide frame was gated before Gemma and grounding"
+  },
+  "latency_seconds": {
+    "visual_gemma": 4.269,
+    "cold_grounding_including_clip_load": 15.545,
+    "final_gemma": 1.141,
+    "slow_path_to_speech_queue": 21.076,
+    "whole_cold_process_including_startup_and_playback": 33.646
+  },
+  "gpu": {
+    "gemma": "llama.cpp b9639-ef8268fee, CUDA device, -ngl 99, flash attention on",
+    "grounding": "TensorRT FP16 runtime-text engine",
+    "depth": "CUDA SAD fast loop remained alive concurrently",
+    "tegrastats_samples": 465,
+    "gr3d_max_percent": 99,
+    "gr3d_median_percent": 57
+  },
+  "memory": {
+    "ram_min_mb": 5460,
+    "ram_max_mb": 7376,
+    "swap_min_mb": 1710,
+    "swap_max_mb": 3535,
+    "assessment": "working but not hardened; peak RAM is too close to the 8 GB ceiling and swap use is high"
+  },
+  "fail_closed_evidence": {
+    "initial_pair_skew_ms": 368.4,
+    "skew_limit_ms": 12.0,
+    "high_skew_pair_rejected": true,
+    "calibrated": false,
+    "metric_safety_speech_suppressed": true,
+    "cross_camera_distance_suppressed": true
+  },
+  "acceptance_limit": "Minimum supervisor demo thread passed. Wake word/STT, physical acoustic confirmation, calibrated safety distance, sensitive-text privacy, repeated-query latency, and memory hardening remain."
+}

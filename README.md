@@ -19,6 +19,9 @@ Read [STATUS.md](STATUS.md) first. It is the authority on what works today.
   runtime single-label embedding; physical positive-object validation is pending
 - Stereo disparity runs through an auditable CUDA SAD matcher at about 13 ms;
   calibration is absent, so metric hazard speech remains disabled
+- A manual positive demo now runs `Find the monitor` through CPU privacy,
+  CUDA Gemma, TensorRT grounding, and Piper/Pulse USB speech; wake/STT and
+  memory hardening are not complete
   and its vocabulary contract is unverified.
 - GPU stereo depth is not deployed. No stereo calibration file or RAFT engine is
   present. Production startup therefore intentionally fails closed.

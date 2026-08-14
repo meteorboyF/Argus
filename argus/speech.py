@@ -17,6 +17,8 @@ pass each mic block exactly once.
 from __future__ import annotations
 
 import queue
+import shutil
+import subprocess
 import threading
 import time
 from enum import IntEnum
@@ -148,6 +150,7 @@ class Speaker:
         self._queue: list[tuple[Priority, float, int, str]] = []
         self._seq = 0
         self._playing: Priority | None = None
+        self._play_proc: subprocess.Popen | None = None
         self._stopping = False
         self._idle = threading.Event()
         self._idle.set()
@@ -196,6 +199,11 @@ class Speaker:
         take the safety loop down with it.
         """
         try:
+            if self._play_proc is not None:
+                self._play_proc.terminate()
+        except Exception:  # noqa: BLE001
+            pass
+        try:
             _sd().stop()
         except Exception:  # noqa: BLE001
             pass
@@ -236,8 +244,31 @@ class Speaker:
         sr = chunks[0].sample_rate
         data = (chunks[0].audio_float_array if len(chunks) == 1
                 else np.concatenate([c.audio_float_array for c in chunks]))
+        # The device default is a PulseAudio USB sink on the Jetson. PortAudio's
+        # Pulse bridge repeatedly underruns it, while paplay is clean. Raw float
+        # stdin avoids temporary files and the child remains terminable for a
+        # DANGER preemption. Explicit PortAudio device selections keep the
+        # fallback below because they do not map reliably to Pulse sink names.
+        if self.cfg.output_device is None and shutil.which("paplay"):
+            self._play_proc = subprocess.Popen(
+                ["paplay", "--raw", f"--rate={sr}", "--channels=1",
+                 "--format=float32le"], stdin=subprocess.PIPE,
+                stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+            try:
+                _, stderr = self._play_proc.communicate(
+                    np.asarray(data, dtype=np.float32).tobytes())
+                if self._play_proc.returncode not in (0, -15):
+                    raise RuntimeError(stderr.decode(errors="replace").strip())
+            finally:
+                self._play_proc = None
+            return
         sd = _sd()
-        sd.play(data, sr, device=_resolve_device(self.cfg.output_device, "output"))
+        # PulseAudio's USB sink underruns with PortAudio's low-latency default
+        # on this Jetson. TTS is already synthesized before playback, so a high
+        # device buffer improves reliability without delaying hazard preemption
+        # (sd.stop still aborts the stream immediately).
+        sd.play(data, sr, device=_resolve_device(self.cfg.output_device, "output"),
+                latency="high")
         sd.wait()   # returns early if another thread calls sd.stop() (preemption)
 
 

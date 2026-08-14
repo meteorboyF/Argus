@@ -4,7 +4,8 @@ Every frame that reaches the reasoning agent MUST pass through this gate first.
 It blurs all detected faces (and optionally text regions) so the VLM never sees
 identifiable people or private documents.
 
-Face detection: InsightFace SCRFD (buffalo_s pack), CUDA if available.
+Face detection: InsightFace SCRFD (buffalo_s pack), deliberately on CPU so the
+shared Jetson GPU remains available for depth, grounding, and Gemma.
 Text detection: CRAFT (optional; enable once weights are present).
 """
 from __future__ import annotations
@@ -26,7 +27,8 @@ class PrivacyGate:
             from insightface.app import FaceAnalysis
             self._face = FaceAnalysis(
                 name=self.cfg.face_model,
-                providers=["CUDAExecutionProvider", "CPUExecutionProvider"],
+                allowed_modules=["detection"],
+                providers=["CPUExecutionProvider"],
             )
             self._face.prepare(ctx_id=0, det_size=(self.cfg.det_size, self.cfg.det_size))
         except Exception as e:  # noqa: BLE001

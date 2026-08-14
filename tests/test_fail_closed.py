@@ -1,10 +1,12 @@
 from types import SimpleNamespace
+import threading
 
 import numpy as np
 import pytest
 
 from argus.config import DepthConfig, GroundingConfig
 from argus.depth import DepthEstimator
+from argus.agent import requested_object
 from argus.grounding import Detection, Grounder
 from argus.orchestrator import Orchestrator
 
@@ -97,3 +99,29 @@ def test_unverified_cross_camera_projection_omits_distance():
     assert result["distance_m"] is None
     assert result["distance_verified"] is False
     assert result["direction"] == "right"
+
+
+@pytest.mark.parametrize(("question", "expected"), [
+    ("Find my keys", "keys"),
+    ("locate the red chair please", "red chair"),
+    ("Where is my backpack?", "backpack"),
+    ("What is in front of me?", None),
+])
+def test_explicit_locator_questions_are_routed_to_grounding(question, expected):
+    assert requested_object(question) == expected
+
+
+def test_fast_loop_failure_propagates_to_startup():
+    orch = Orchestrator.__new__(Orchestrator)
+    orch._fast_thread = None
+    orch._fast_ready = threading.Event()
+    orch._stop = threading.Event()
+    failure = RuntimeError("invalid device context")
+
+    def fail():
+        orch._fast_error = failure
+        orch._fast_ready.set()
+
+    orch._fast_loop = fail
+    with pytest.raises(RuntimeError, match="GPU depth fast loop failed"):
+        orch.start_fast_loop(timeout=0.5)

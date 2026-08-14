@@ -13,7 +13,7 @@ import numpy as np
 
 try:
     import tensorrt as trt
-    import pycuda.autoinit  # noqa: F401  (initialises CUDA context)
+    import pycuda.autoprimaryctx  # noqa: F401  (retained primary CUDA context)
     import pycuda.driver as cuda
     _TRT_AVAILABLE = True
 except Exception:  # noqa: BLE001

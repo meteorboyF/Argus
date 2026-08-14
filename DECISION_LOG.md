@@ -334,3 +334,89 @@ depth benchmark must then be rerun. No credential was requested or bypassed.
 **Lesson / consequence.** Power mode is mutable runtime state, not a platform
 constant. Every performance acceptance report must capture it at measurement
 time.
+
+## 2026-08-14 Feature 4 — CUDA context failed across the safety thread
+
+**Hurdle / problem.** The CUDA matcher initialized successfully on the main
+thread, then failed with `cuMemAlloc failed: invalid device context` when the
+safety thread performed its first allocation. The thread died while the slow
+query continued and spoke an answer.
+
+**Impact.** A demo could appear successful after silently losing its independent
+safety loop—the exact failure the Two-Speed architecture is meant to prevent.
+
+**Options considered.** Construct depth inside the worker; create a context per
+frame; ignore the thread exception; or share CUDA's retained primary context and
+make startup wait for the first real depth result.
+
+**Resolution.** Both PyCUDA users now retain the primary context. CUDA depth
+pushes/pops it on the calling thread. The fast loop catches fatal errors, signals
+startup, and `start_fast_loop` refuses to proceed until a valid GPU result exists.
+The spoken rerun kept the fast loop alive concurrently.
+
+**Lesson / consequence.** Successful GPU initialization is not runtime proof
+when work crosses threads. Readiness must include the first inference on the
+actual production thread, and worker failure must propagate.
+
+## 2026-08-14 Feature 4 — explicit locate intent bypassed the tool
+
+**Hurdle / problem.** Gemma answered “I cannot locate the chair” directly rather
+than emitting the requested tool JSON, despite a system instruction not to guess.
+
+**Impact.** Natural-language compliance alone could bypass verified grounding
+and give an unsupported location answer to a blind user.
+
+**Options considered.** Prompt harder; switch chat templates; accept the answer;
+or route unambiguous find/locate/where requests through grounding in deterministic
+orchestration code.
+
+**Resolution.** Add a tested locate-intent parser. If Gemma omits `find_object`
+for an explicit request, the orchestrator forces that tool and discards the
+ungrounded text. “Find the monitor” then produced a positive center result with
+distance omitted.
+
+**Lesson / consequence.** Safety-relevant tool policy belongs in code, not only
+in a probabilistic prompt. Gemma may decide how to explain evidence, but it may
+not decide to skip required evidence.
+
+## 2026-08-14 Feature 4 — PortAudio underruns on the USB Pulse sink
+
+**Hurdle / problem.** Piper synthesis succeeded, but sounddevice playback emitted
+repeated ALSA underruns through the default PulseAudio USB sink. High-latency
+PortAudio buffering did not resolve them; direct `paplay` was clean.
+
+**Impact.** A generated warning or answer is useless if playback stutters, and
+enumerating a device is not evidence that the user receives intelligible audio.
+
+**Options considered.** Keep PortAudio; target raw ALSA while fighting Pulse for
+the device; add larger PortAudio buffering; or send raw Piper audio to Pulse and
+retain a preemptible child process.
+
+**Resolution.** Default-output TTS now streams float32 audio to `paplay`; explicit
+device selections retain the PortAudio fallback. DANGER preemption terminates the
+active Pulse process. The clean path completed without underrun messages, and all
+six priority/preemption tests pass.
+
+**Lesson / consequence.** Capture/playback enumeration is only a baseline.
+End-to-end audio needs backend-specific playback evidence and preemption tests.
+
+## 2026-08-14 Feature 4 — honest demo passed but memory remains over target
+
+**Hurdle / problem.** The complete positive query reached 7,376 MB RAM and used
+1,710–3,535 MB swap. Cold grounding took 15.545 s because loading the CPU CLIP
+encoder dominates its otherwise ~30 ms cached TensorRT inference.
+
+**Impact.** The supervisor thread is visible and truthful, but peak memory is too
+close to the 8 GB ceiling and cold latency is not wearable-quality.
+
+**Options considered.** Hide cold start in the demo; remove arbitrary vocabulary;
+move CLIP to GPU; or accept this milestone while scheduling text-encoder and
+co-residency hardening.
+
+**Resolution.** Keep arbitrary runtime vocabulary and CPU CLIP for now, record
+stage-level latency and memory, and mark integration partial. The current demo
+uses MAXN_SUPER, GR3D peaked at 99%, and all false distances remained suppressed.
+
+**Lesson / consequence.** An early end-to-end thread is a diagnostic milestone,
+not completion. Cold and cached latency, RAM, swap, and safety degradation must
+be reported separately.
