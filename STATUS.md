@@ -9,11 +9,11 @@ implementation exists.
 
 | Component | Status | Verified reality / next gate |
 |---|---|---|
-| Jetson environment baseline | partial | Read-only report implemented and captured 2026-08-14: 22 pass, 3 required fail. L4T R36.5.2, MAXN_SUPER, CUDA/Torch, TensorRT, PyCUDA, cameras, USB audio, memory/zram, llama build and hashes verified. `jetson_clocks` needs interactive sudo; calibration and GPU depth remain absent |
+| Jetson environment baseline | partial | Refreshed report: 23 pass/3 fail. Device has regressed to 15W; MAXN_SUPER and `jetson_clocks` require user sudo. Calibration remains absent; GPU depth now passes |
 | Camera identity/transforms | partial | Stable USB-role code and 9 unit tests pass; delivered FPS/skew/reconnect require device test |
 | Stereo calibration tool | partial | Substantial capture/solve code exists; no deployed calibration or 0.5–3 m validation |
 | Calibration drift monitor | partial | 12 synthetic tests pass; needs real calibrated scenes |
-| GPU stereo depth | broken | No RAFT ONNX/engine found; production refuses CPU fallback |
+| GPU stereo depth | partial | Deterministic CUDA SAD backend is production default and never falls back to CPU. Live median 12.7 ms, p95 14.1 ms, GR3D peak 95%. Synthetic shift passed; physical metric accuracy is blocked on calibration |
 | CPU SGBM | diagnostic only | Implemented; not permitted as production depth |
 | Safety rules | partial | 9 synthetic obstacle/drop tests pass; uncalibrated warnings suppressed; no approach/TTC validation |
 | Incoming vehicle warning | not started | Requires temporal range/approach rules and controlled tests |
@@ -26,7 +26,7 @@ implementation exists.
 | Agent tool protocol | partial | Prompt/native parsing exists; no focused unit tests or verified TRT tool execution |
 | Wide-to-stereo projection | broken | Old proportional mapping disabled; direction only until calibrated projection exists |
 | SLAM | not started | No backend, IMU inventory, calibration, or pose contract |
-| Full two-speed integration | broken | Skeleton exists; production startup intentionally fails until GPU paths are ready |
+| Full two-speed integration | partial | Skeleton plus GPU depth/grounding exist; honest camera-to-speech demo and concurrency/resource validation remain |
 | Headless service/soak/fault tests | not started | No service definition or sustained validation |
 
 ## Reproducibility pins
@@ -70,7 +70,7 @@ transitive packages are pinned too. Do not substitute a generic PyPI Torch build
 Command: `python3 -m argus --config config/argus.yaml baseline --output
 reports/environment-baseline-2026-08-14.json`.
 
-- 22 required checks passed; production readiness remains false.
+- 23 required checks passed; production readiness remains false.
 - A real CUDA matrix workload completed in 0.198 s and drove `tegrastats` GR3D
   to 99%, proving Jetson GPU execution rather than inferring it from imports.
 - Both B0495 stereo cameras, the B0459 wide camera, and USB capture/playback
@@ -78,8 +78,9 @@ reports/environment-baseline-2026-08-14.json`.
   hub/controller; sustained bandwidth is deferred to the camera feature.
 - Shared memory: 7,976,845,312 bytes; six zram swap devices active.
 - All audited model and engine hashes matched.
-- Required failures: `jetson_clocks --show` requires interactive sudo, stereo
-  calibration is absent, and the GPU depth engine is absent.
+- Required failures: current power mode is 15W rather than MAXN_SUPER,
+  `jetson_clocks --show` requires interactive sudo, and stereo calibration is
+  absent. CUDA stereo and GPU grounding now pass.
 - `sudo nvpmodel -m 0 && sudo jetson_clocks` was attempted but correctly stopped
   at the password prompt. An agent must not request, store, or bypass that password.
 
@@ -90,5 +91,14 @@ reports/environment-baseline-2026-08-14.json`.
 - `tests/test_calib_health.py`: 12 passed.
 - `tests/test_fail_closed.py`: 9 passed.
 - `tests/test_diagnostics.py`: 4 passed.
+- `tests/test_cuda_stereo.py`: 2 passed on the Jetson, including real CUDA.
 - `tests/test_speech_priority.py`: hangs during execution/teardown; do not count
   its printed dots as a passing suite.
+
+## Latest GPU depth report — 2026-08-14
+
+`reports/cuda-stereo-depth-2026-08-14.json` records 60 live-frame runs. Warm
+latency was 12.7 ms median and 14.1 ms p95 in 15W mode; sampled GR3D peaked at 95%, with RAM
+between 3,985 and 4,114 MB. Pair skew was 1.03 ms median but the initial pair was
+369 ms and therefore outside the production 12 ms gate. No calibration exists,
+so the report is GPU/performance evidence, not metric-distance acceptance.

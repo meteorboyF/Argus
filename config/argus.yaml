@@ -41,7 +41,7 @@ camera:
   reconnect: true              # reopen a camera that stops delivering frames
 
 depth:
-  backend: raft_trt      # production requires TensorRT/CUDA depth
+  backend: cuda_sad      # deterministic CUDA matcher; never falls back to CPU
   allow_cpu_fallback: false
   num_disparities: 128
   block_size: 5

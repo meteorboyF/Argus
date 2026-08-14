@@ -249,8 +249,14 @@ def collect_baseline(cfg: ArgusConfig, argus_home: Path = Path("/opt/argus")) ->
     calibration = Path(cfg.depth.calibration_file)
     checks.append(Check("stereo calibration present", calibration.is_file(), True,
                         str(calibration)))
-    checks.append(Check("GPU depth engine present", Path(cfg.depth.raft_engine).is_file(), True,
-                        cfg.depth.raft_engine))
+    if cfg.depth.backend == "cuda_sad":
+        cuda_stereo_ok = (Path("/usr/local/cuda/bin/nvcc").is_file()
+                          and packages["pycuda"] != "missing")
+        checks.append(Check("CUDA stereo backend available", cuda_stereo_ok, True,
+                            f"backend=cuda_sad nvcc={'yes' if Path('/usr/local/cuda/bin/nvcc').is_file() else 'no'} pycuda={packages['pycuda']}"))
+    else:
+        checks.append(Check("GPU depth engine present", Path(cfg.depth.raft_engine).is_file(), True,
+                            cfg.depth.raft_engine))
     checks.append(Check("GPU grounding engine present", Path(cfg.grounding.engine).is_file(), True,
                         cfg.grounding.engine))
     checks.append(Check("production fallbacks disabled",

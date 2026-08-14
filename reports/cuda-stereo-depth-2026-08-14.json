@@ -1,0 +1,35 @@
+{
+  "date": "2026-08-14",
+  "device": "Jetson Orin Nano Super, CUDA SM 8.7",
+  "power_mode": "15W; user must enable MAXN_SUPER and jetson_clocks, then remeasure",
+  "backend": "cuda_sad",
+  "algorithm": "deterministic 5x5 sum-of-absolute-differences block matching",
+  "working_resolution": [480, 300],
+  "output_resolution": [960, 600],
+  "full_resolution_disparity_levels": 128,
+  "source_sha256": "4359435d7c46361c0e2919f40d09100fbcb6f477aaf31f947a3fce08a2149560",
+  "latency_ms": {
+    "first": 12.2117,
+    "median_warm": 12.7430,
+    "p95_warm": 14.1420,
+    "max_warm": 16.3418
+  },
+  "tegrastats": {
+    "samples": 714,
+    "gr3d_max_percent": 95,
+    "gr3d_median_percent": 49,
+    "ram_min_mb": 3985,
+    "ram_max_mb": 4114
+  },
+  "capture_skew_ms": {
+    "minimum": 0.2611,
+    "median": 1.0265,
+    "maximum": 369.0227,
+    "production_limit": 12.0,
+    "note": "The first high-skew pair is rejected by the orchestrator."
+  },
+  "valid_disparity_fraction_median": 0.06525,
+  "synthetic_validation": "Recovered a known 12-pixel shift in over 90 percent of the accepted interior pixels.",
+  "calibrated": false,
+  "acceptance_limit": "GPU execution and synthetic disparity verified. No metric accuracy or spoken safety acceptance until physical stereo calibration and 0.5-3 m validation."
+}

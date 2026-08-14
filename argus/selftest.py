@@ -65,16 +65,17 @@ def run_selftest(cfg: ArgusConfig) -> bool:
         "YOLO-World weights (provenance)": cfg.grounding.weights_pt,
         "YOLO-World ONNX (provenance)": cfg.grounding.onnx,
         "YOLO-World TRT engine (required)": cfg.grounding.engine,
-        "RAFT-Stereo TRT engine (required)": cfg.depth.raft_engine,
         "Gemma GGUF (required)": cfg.agent.model_gguf,
         "Gemma mmproj (required)": cfg.agent.mmproj_gguf,
         "Piper voice (required for TTS)": cfg.speech.piper_voice,
     }
+    if cfg.depth.backend == "raft_trt":
+        files["RAFT-Stereo TRT engine (required)"] = cfg.depth.raft_engine
     for label, path in files.items():
         all_ok &= _ok(label, os.path.exists(path), path)
 
     all_ok &= _ok("production depth backend selected",
-                  cfg.depth.backend == "raft_trt" and not cfg.depth.allow_cpu_fallback,
+                  cfg.depth.backend in ("cuda_sad", "raft_trt") and not cfg.depth.allow_cpu_fallback,
                   f"backend={cfg.depth.backend}, cpu_fallback={cfg.depth.allow_cpu_fallback}")
     all_ok &= _ok("production grounding backend selected",
                   cfg.grounding.backend == "trt" and not cfg.grounding.allow_torch_fallback,

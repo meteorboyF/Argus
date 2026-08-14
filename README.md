@@ -17,6 +17,8 @@ Read [STATUS.md](STATUS.md) first. It is the authority on what works today.
   on this Jetson after upgrading to L4T R36.5.2.
 - YOLO-World grounding runs through a device-built FP16 TensorRT engine with a
   runtime single-label embedding; physical positive-object validation is pending
+- Stereo disparity runs through an auditable CUDA SAD matcher at about 13 ms;
+  calibration is absent, so metric hazard speech remains disabled
   and its vocabulary contract is unverified.
 - GPU stereo depth is not deployed. No stereo calibration file or RAFT engine is
   present. Production startup therefore intentionally fails closed.

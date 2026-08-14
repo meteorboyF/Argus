@@ -7,16 +7,16 @@ not current guidance.
 ## Baseline at handoff
 
 - Target device: Jetson Orin Nano Super 8 GB, user `argus`.
-- OS: L4T R36.5.2; power query reported MAXN_SUPER. The environment baseline
-  has 22 passes and three required failures; see `STATUS.md` and the JSON report.
+- OS: L4T R36.5.2. The refreshed environment baseline has 23 passes and three
+  required failures; the device is currently in 15W, not MAXN_SUPER.
 - Repository: `main`; audited-baseline cleanup is the current feature boundary.
 - Native llama.cpp commit: `ef8268feee28ae943958049bf3bbab4bda99c0ea`.
 - Gemma CUDA/multimodal execution was demonstrated historically, but must be
   remeasured with the full stack and flash attention enabled.
 - Production grounding now uses a two-input FP16 TensorRT engine. One arbitrary
   label embedding is supplied at runtime; repeated labels are cached.
-- No GPU stereo engine and no stereo calibration file exist.
-- Production execution is intentionally fail-closed until those GPU paths work.
+- GPU stereo now uses the deterministic CUDA SAD backend; no stereo calibration
+  file exists, so metric warnings remain suppressed.
 
 ## Known-good evidence
 
@@ -33,14 +33,13 @@ not current guidance.
 
 1. The user must run `sudo nvpmodel -m 0 && sudo jetson_clocks`, then rerun the
    baseline so locked clocks can be verified. The agent cannot enter the password.
-2. Implement and verify TensorRT/CUDA stereo depth; CPU SGBM is diagnostic only.
+2. Capture and physically verify stereo calibration at 0.5, 1, 2, and 3 m.
 3. Validate grounding against positive physical objects; current device evidence
    proves GPU/runtime-label execution but the captured scene yielded null results.
 4. Repair the hanging speech-priority tests.
-5. Capture and physically verify stereo calibration at 0.5, 1, 2, and 3 m.
-6. Implement sensitive-text privacy handling.
-7. Calibrate wide-to-stereo geometry before returning object distance.
-8. Implement temporal approach/incoming-vehicle rules and later SLAM.
+5. Implement sensitive-text privacy handling.
+6. Calibrate wide-to-stereo geometry before returning object distance.
+7. Implement temporal approach/incoming-vehicle rules and later SLAM.
 
 ## Working discipline
 
@@ -55,6 +54,8 @@ not current guidance.
 
 ## What to do next
 
-Feature 2 delivered runtime-text GPU grounding. After confirmation, implement
-TensorRT/CUDA stereo depth, then validate calibration and positive grounding for
-the early honest end-to-end demo. Keep fail-closed behavior intact.
+Feature 3 delivered CUDA stereo depth. After confirmation, prioritize the early
+honest demo thread requested by the user: cameras -> CUDA depth -> one TensorRT
+grounding query -> privacy-gated Gemma -> spoken reply. It may report direction
+only: calibration and cross-camera geometry are still unverified, so distance
+must remain omitted. Then return to physical calibration/hardening.

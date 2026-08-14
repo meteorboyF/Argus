@@ -77,8 +77,9 @@ class CameraConfig:
 
 @dataclass
 class DepthConfig:
-    # backend: "sgbm" (CPU/OpenCV, always available) or "raft_trt" (TensorRT engine)
-    backend: str = "raft_trt"
+    # Production: auditable CUDA SAD matcher. RAFT TensorRT remains supported
+    # when a proven engine exists; CPU SGBM is diagnostic only.
+    backend: str = "cuda_sad"
     # CPU SGBM is useful for bench diagnosis, but production must never silently
     # substitute it for the required GPU depth path.
     allow_cpu_fallback: bool = False
@@ -86,6 +87,7 @@ class DepthConfig:
     min_disparity: int = 0
     num_disparities: int = 128    # must be divisible by 16
     block_size: int = 5
+    sad_uniqueness_percent: int = 5
     # SGBM at full stereo resolution is too slow for the 10 Hz fast loop on the
     # Orin Nano CPU. Rectified frames are downscaled by this factor before
     # matching; the disparity is scaled back so metric depth stays correct.

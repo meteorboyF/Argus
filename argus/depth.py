@@ -7,6 +7,8 @@ Two backends:
                 rescaled to full-resolution pixel units so Q stays valid.
   - "raft_trt": RAFT-Stereo TensorRT engine (built on-device). Higher quality.
                 Production fails closed if the engine is missing or cannot load.
+  - "cuda_sad": deterministic CUDA block matching, compiled for Orin SM 8.7.
+                This is the default production backend.
 
 CALIBRATION-AWARE. The ARGUS cameras are mounted on the curved sides of the
 goggles, toed outward and non-coplanar — so raw disparity is meaningless until
@@ -17,10 +19,8 @@ scripts/calibrate_stereo.py) is present we:
   3. reproject to 3D with the Q matrix -> true metric depth that accounts for
      however the cameras were physically mounted.
 
-Without a calibration file we fall back to the naive
-depth = focal_px * baseline_m / disparity, which is only a rough relative scale
-(fine for "something is close" warnings, not for accurate distances). The
-runtime prints a clear warning in that case.
+Without a calibration file we expose a naive focal/baseline map for diagnostics
+only. The orchestrator will not turn it into metric speech or danger decisions.
 """
 from __future__ import annotations
 
@@ -38,11 +38,24 @@ class DepthEstimator:
         self.cfg = cfg
         self.backend = cfg.backend
         self._trt = None
+        self._cuda_matcher = None
         self._calib = None
         self._load_calibration()
         self.health = CalibrationMonitor(cfg)
 
-        if self.backend == "raft_trt":
+        if self.backend == "cuda_sad":
+            try:
+                from .cuda_stereo import CudaStereoMatcher
+                self._cuda_matcher = CudaStereoMatcher()
+            except Exception as e:  # noqa: BLE001
+                if not cfg.allow_cpu_fallback:
+                    self.health.stop()
+                    raise RuntimeError(
+                        "Production GPU depth failed to initialise; CPU fallback "
+                        f"is disabled: {e}") from e
+                print(f"[depth] diagnostic fallback after CUDA failure ({e})")
+                self.backend = "sgbm"
+        elif self.backend == "raft_trt":
             if not os.path.exists(cfg.raft_engine):
                 if not cfg.allow_cpu_fallback:
                     self.health.stop()
@@ -90,9 +103,9 @@ class DepthEstimator:
     def _load_calibration(self):
         path = self.cfg.calibration_file
         if not path or not os.path.exists(path):
-            print(f"[depth] No calibration at {path!r} — using uncalibrated "
-                  "baseline/focal scale. Run scripts/calibrate_stereo.py for "
-                  "accurate, mounting-aware depth.")
+            print(f"[depth] No calibration at {path!r} — diagnostic disparity "
+                  "only; metric safety speech is disabled. Run "
+                  "scripts/calibrate_stereo.py for mounting-aware depth.")
             return
         try:
             data = np.load(path, allow_pickle=True)
@@ -144,6 +157,8 @@ class DepthEstimator:
             self.health.submit(left_bgr, right_bgr)
         if self.backend == "raft_trt" and self._trt is not None:
             return self._raft_disparity(left_bgr, right_bgr)
+        if self.backend == "cuda_sad" and self._cuda_matcher is not None:
+            return self._cuda_disparity(left_bgr, right_bgr)
         gl = cv2.cvtColor(left_bgr, cv2.COLOR_BGR2GRAY)
         gr = cv2.cvtColor(right_bgr, cv2.COLOR_BGR2GRAY)
         s = max(1, int(self.cfg.fast_downscale))
@@ -157,6 +172,26 @@ class DepthEstimator:
             # Invalid pixels (disp < 0) must not be blended into neighbours.
             disp = cv2.resize(disp, (w, h), interpolation=cv2.INTER_NEAREST) * s
         return disp
+
+    def _cuda_disparity(self, left_bgr, right_bgr) -> np.ndarray:
+        gl = cv2.cvtColor(left_bgr, cv2.COLOR_BGR2GRAY)
+        gr = cv2.cvtColor(right_bgr, cv2.COLOR_BGR2GRAY)
+        scale = max(1, int(self.cfg.fast_downscale))
+        full_h, full_w = gl.shape
+        if scale > 1:
+            size = (full_w // scale, full_h // scale)
+            gl = cv2.resize(gl, size, interpolation=cv2.INTER_AREA)
+            gr = cv2.resize(gr, size, interpolation=cv2.INTER_AREA)
+        disparity = self._cuda_matcher.compute(
+            gl, gr,
+            max_disparity=max(2, int(self.cfg.num_disparities) // scale),
+            radius=max(1, int(self.cfg.block_size) // 2),
+            uniqueness_percent=int(self.cfg.sad_uniqueness_percent),
+        )
+        if scale > 1:
+            disparity = cv2.resize(
+                disparity, (full_w, full_h), interpolation=cv2.INTER_NEAREST) * scale
+        return disparity.astype(np.float32, copy=False)
 
     def _raft_disparity(self, left_bgr, right_bgr) -> np.ndarray:
         h, w = 480, 640

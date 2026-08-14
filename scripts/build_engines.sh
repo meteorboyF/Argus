@@ -42,7 +42,7 @@ else
   exit 1
 fi
 
-# ---- RAFT-Stereo (required for production) ----
+# ---- RAFT-Stereo (optional alternative; production defaults to CUDA SAD) ----
 RAFT_ONNX="$EXPORTS/raft_stereo_640x480.onnx"
 if [ -f "$RAFT_ONNX" ]; then
   echo "Building RAFT-Stereo FP16 engine..."
@@ -52,9 +52,7 @@ if [ -f "$RAFT_ONNX" ]; then
     --fp16 \
     --memPoolSize=workspace:2048
 else
-  echo "Missing required production depth export: $RAFT_ONNX" >&2
-  echo "CPU SGBM is diagnostic-only; no production engine was built." >&2
-  exit 1
+  echo "No optional RAFT-Stereo export; CUDA SAD remains the production depth backend."
 fi
 
 echo "Engines in $ENGINES:"

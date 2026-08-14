@@ -266,3 +266,71 @@ audited ViT-B/32 file under `/opt/argus/models/clip`, verify SHA-256
 **Lesson / consequence.** Prompt encoding belongs outside the GPU-heavy path,
 but it needs warm-up before a demo. Cache behavior and cold-start latency are
 part of the user experience and must be reported separately.
+
+## 2026-08-14 Feature 3 — GPU depth used deterministic CUDA, not imaginary RAFT
+
+**Hurdle / problem.** The configuration named a RAFT-Stereo TensorRT backend,
+but no RAFT model, ONNX, engine, provenance, or export path existed. The installed
+OpenCV Python package also reported no CUDA stereo implementation.
+
+**Impact.** Production correctly refused to start, leaving the always-on safety
+loop without depth. Pulling a large unverified network would also threaten the
+8 GB co-residency target and weaken the fast loop's auditability.
+
+**Options considered.** Acquire/export RAFT-Stereo; rebuild OpenCV with CUDA
+StereoBM; keep CPU SGBM; or implement a small deterministic CUDA block matcher.
+
+**Resolution.** Add a PyCUDA 5x5 SAD matcher compiled on-device for SM 8.7. It
+runs at half resolution, searches 64 working-resolution disparities, restores
+full-resolution pixel units, applies a uniqueness check, reuses GPU buffers, and
+never falls back to CPU in production. A synthetic 12-pixel shift test passed.
+On 60 live runs it measured 12.7 ms median, 14.1 ms p95, GR3D peak 95%, and
+3,985–4,114 MB total RAM during sampling.
+
+**Lesson / consequence.** GPU acceleration does not require a learned model.
+For the safety loop, a small inspectable kernel better matches the architecture
+and memory budget. RAFT remains optional until it has pinned provenance and
+demonstrates a material accuracy benefit within the same latency/memory budget.
+
+## 2026-08-14 Feature 3 — performance did not imply safe distance
+
+**Hurdle / problem.** Live stereo pairs had 1.03 ms median skew but the initial
+pair reached 369 ms, and no physical stereo calibration file exists. Only 6.5%
+of pixels passed matching on the unrectified static scene.
+
+**Impact.** Fast GPU disparity could still become confidently false metric depth,
+especially during head motion or with the cameras' non-coplanar mounting.
+
+**Options considered.** Loosen the skew gate; speak rough focal/baseline distance;
+disable all depth work; or keep diagnostic disparity while rejecting high-skew
+pairs and suppressing metric safety speech.
+
+**Resolution.** Preserve the 12 ms pair gate and existing calibration precondition.
+The CUDA backend may run and share diagnostic disparity, but the safety evaluator
+receives nothing until calibration is present. The feature is marked partial,
+not complete, pending 0.5–3 m physical validation.
+
+**Lesson / consequence.** Backend, synchronization, and calibration are separate
+acceptance gates. Passing the GPU mandate satisfies only one of them.
+
+## 2026-08-14 Feature 3 — power mode had regressed to 15W
+
+**Hurdle / problem.** The refreshed structured baseline reported current power
+mode `15W`, contradicting the earlier MAXN_SUPER observation. `jetson_clocks`
+also refuses non-root execution and sudo requires the user's interactive password.
+
+**Impact.** The measured CUDA depth latency is valid GPU evidence but not the
+final maximum-performance result required for the wearable. Other model latency
+and co-residency measurements would also be misleading if labeled MAXN.
+
+**Options considered.** Reuse the historical MAXN claim; attempt to bypass sudo;
+pause all work; or retain the conservative 15W measurement and require the user
+to apply power settings before final performance acceptance.
+
+**Resolution.** Record 15W in the depth report and keep baseline readiness red.
+The user must run `sudo nvpmodel -m 0 && sudo jetson_clocks`; the baseline and
+depth benchmark must then be rerun. No credential was requested or bypassed.
+
+**Lesson / consequence.** Power mode is mutable runtime state, not a platform
+constant. Every performance acceptance report must capture it at measurement
+time.

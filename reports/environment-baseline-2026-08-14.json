@@ -1,5 +1,11 @@
 {
   "artifacts": {
+    "clip_text": {
+      "bytes": 353976522,
+      "expected_sha256": "40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af",
+      "path": "/opt/argus/models/clip/ViT-B-32.pt",
+      "sha256": "40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af"
+    },
     "gemma": {
       "bytes": 3106736256,
       "expected_sha256": "9378bc471710229ef165709b62e34bfb62231420ddaf6d729e727305b5b8672d",
@@ -19,16 +25,16 @@
       "sha256": "5efe09e69902187827af646e1a6e9d269dee769f9877d17b16b1b46eeaaf019f"
     },
     "yolo_engine": {
-      "bytes": 28760852,
-      "expected_sha256": "8d6b7649ef87f6e280b3e84f492b7b8d910e4d5318f6e31e64aa0659c9fa1912",
-      "path": "/opt/argus/engines/yoloworld_640_fp16.engine",
-      "sha256": "8d6b7649ef87f6e280b3e84f492b7b8d910e4d5318f6e31e64aa0659c9fa1912"
+      "bytes": 29143108,
+      "expected_sha256": "7f0cf0a82c0bc5ee713eb91b7085219263160ef806282a3617748abc13b94bfd",
+      "path": "/opt/argus/engines/yoloworld_runtime_text_640_fp16.engine",
+      "sha256": "7f0cf0a82c0bc5ee713eb91b7085219263160ef806282a3617748abc13b94bfd"
     },
     "yolo_onnx": {
-      "bytes": 50739702,
-      "expected_sha256": "8b407bb9f5a206d8290fb20d1a6a7d11bc8788da269ec9a583b786290dba4545",
-      "path": "/opt/argus/exports/yoloworld_640.onnx",
-      "sha256": "8b407bb9f5a206d8290fb20d1a6a7d11bc8788da269ec9a583b786290dba4545"
+      "bytes": 51227475,
+      "expected_sha256": "7f69826f578b66cc057b4eb81659456145ff3962e295981a51682b318f3123fb",
+      "path": "/opt/argus/exports/yoloworld_runtime_text_640.onnx",
+      "sha256": "7f69826f578b66cc057b4eb81659456145ff3962e295981a51682b318f3123fb"
     },
     "yolo_pt": {
       "bytes": 25923032,
@@ -53,9 +59,9 @@
       "required": true
     },
     {
-      "detail": "MAXN_SUPER",
+      "detail": "15W",
       "name": "MAXN_SUPER power mode",
-      "ok": true,
+      "ok": false,
       "required": true
     },
     {
@@ -65,7 +71,7 @@
       "required": true
     },
     {
-      "detail": "Orin; max GR3D 99%; workload 0.1981882170002791 s",
+      "detail": "Orin; max GR3D 99%; workload 0.2696488369983854 s",
       "name": "CUDA workload + tegrastats GR3D",
       "ok": true,
       "required": true
@@ -113,13 +119,19 @@
       "required": true
     },
     {
-      "detail": "/opt/argus/exports/yoloworld_640.onnx: 8b407bb9f5a206d8290fb20d1a6a7d11bc8788da269ec9a583b786290dba4545",
+      "detail": "/opt/argus/models/clip/ViT-B-32.pt: 40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af",
+      "name": "artifact clip_text",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "/opt/argus/exports/yoloworld_runtime_text_640.onnx: 7f69826f578b66cc057b4eb81659456145ff3962e295981a51682b318f3123fb",
       "name": "artifact yolo_onnx",
       "ok": true,
       "required": true
     },
     {
-      "detail": "/opt/argus/engines/yoloworld_640_fp16.engine: 8d6b7649ef87f6e280b3e84f492b7b8d910e4d5318f6e31e64aa0659c9fa1912",
+      "detail": "/opt/argus/engines/yoloworld_runtime_text_640_fp16.engine: 7f0cf0a82c0bc5ee713eb91b7085219263160ef806282a3617748abc13b94bfd",
       "name": "artifact yolo_engine",
       "ok": true,
       "required": true
@@ -149,7 +161,7 @@
       "required": true
     },
     {
-      "detail": "NAME       TYPE           SIZE      USED PRIO; /dev/zram0 partition 664735744 300920832    5; /dev/zram1 partition 664735744 302260224    5; /dev/zram2 partition 664735744 302260224    5; /dev/zram3 partition 664735744 303292416    5; /dev/zram4 partition 664735744 302288896    5; /dev/zram5 partition 664735744 302751744    5",
+      "detail": "NAME       TYPE           SIZE      USED PRIO; /dev/zram0 partition 664735744 334893056    5; /dev/zram1 partition 664735744 338153472    5; /dev/zram2 partition 664735744 336044032    5; /dev/zram3 partition 664735744 336715776    5; /dev/zram4 partition 664735744 334913536    5; /dev/zram5 partition 664735744 338837504    5",
       "name": "swap/zram active",
       "ok": true,
       "required": true
@@ -173,13 +185,13 @@
       "required": true
     },
     {
-      "detail": "/opt/argus/engines/raft_stereo_fp16.engine",
-      "name": "GPU depth engine present",
-      "ok": false,
+      "detail": "backend=cuda_sad nvcc=yes pycuda=2024.1.2",
+      "name": "CUDA stereo backend available",
+      "ok": true,
       "required": true
     },
     {
-      "detail": "/opt/argus/engines/yoloworld_640_fp16.engine",
+      "detail": "/opt/argus/engines/yoloworld_runtime_text_640_fp16.engine",
       "name": "GPU grounding engine present",
       "ok": true,
       "required": true
@@ -191,62 +203,61 @@
       "required": true
     }
   ],
-  "generated_utc": "2026-08-14T12:53:10.132096+00:00",
+  "generated_utc": "2026-08-14T13:29:26.558772+00:00",
   "gpu_probe": {
     "device": "Orin",
     "max_gr3d_percent": 99,
-    "seconds": 0.1981882170002791,
+    "seconds": 0.2696488369983854,
     "tegrastats_gr3d_samples": [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      33,
-      0,
+      50,
+      42,
+      4,
+      52,
+      14,
+      48,
+      46,
+      45,
+      47,
+      45,
+      43,
+      48,
+      42,
+      47,
+      46,
+      43,
+      45,
+      44,
+      42,
+      39,
+      38,
+      44,
+      46,
+      46,
+      39,
+      42,
+      49,
       99,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
+      98,
+      48,
+      44,
+      46,
+      46,
+      47,
+      46,
+      39,
+      45
     ],
     "torch": "2.5.0a0+872d972e41.nv24.08"
   },
   "hostname": "argus-desktop",
   "jetson_clocks_show": "SOC family:tegra234  Machine:NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\nError: Run this script(/usr/bin/jetson_clocks) as a root user",
   "llama_commit": "ef8268feee28ae943958049bf3bbab4bda99c0ea",
-  "memory": "total        used        free      shared  buff/cache   available\nMem:      7976845312  3850899456   105627648    94294016  4020318208  3786981376\nSwap:     3988414464  1813774336  2174640128",
+  "memory": "total        used        free      shared  buff/cache   available\nMem:      7976845312  3672375296   108007424    77918208  4196462592  3981717504\nSwap:     3988414464  2019557376  1968857088",
   "nv_tegra_release": "# R36 (release), REVISION: 5.2, GCID: 46426093, BOARD: generic, EABI: aarch64, DATE: Thu Jul 16 18:56:22 UTC 2026\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia",
   "packages": {
+    "clip": "1.0",
     "faster-whisper": "1.2.1",
+    "ftfy": "6.3.1",
     "insightface": "1.0.1",
     "numpy": "1.26.4",
     "onnx": "1.21.0",
@@ -262,19 +273,19 @@
     "ultralytics": "8.4.67"
   },
   "platform": "Linux-5.15.199-tegra-aarch64-with-glibc2.35",
-  "power_mode": "MAXN_SUPER",
+  "power_mode": "15W",
   "production_ready": false,
   "python": "3.10.12",
   "summary": {
     "failed": 3,
-    "passed": 22,
+    "passed": 23,
     "required_failed": [
+      "MAXN_SUPER power mode",
       "jetson_clocks query",
-      "stereo calibration present",
-      "GPU depth engine present"
+      "stereo calibration present"
     ]
   },
-  "swap": "NAME       TYPE           SIZE      USED PRIO\n/dev/zram0 partition 664735744 300920832    5\n/dev/zram1 partition 664735744 302260224    5\n/dev/zram2 partition 664735744 302260224    5\n/dev/zram3 partition 664735744 303292416    5\n/dev/zram4 partition 664735744 302288896    5\n/dev/zram5 partition 664735744 302751744    5",
+  "swap": "NAME       TYPE           SIZE      USED PRIO\n/dev/zram0 partition 664735744 334893056    5\n/dev/zram1 partition 664735744 338153472    5\n/dev/zram2 partition 664735744 336044032    5\n/dev/zram3 partition 664735744 336715776    5\n/dev/zram4 partition 664735744 334913536    5\n/dev/zram5 partition 664735744 338837504    5",
   "uid": 1000,
   "usb_topology": "/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=tegra-xusb/4p, 10000M\n    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 10000M\n        |__ Port 1: Dev 8, If 1, Class=Video, Driver=uvcvideo, 5000M\n        |__ Port 1: Dev 8, If 0, Class=Video, Driver=uvcvideo, 5000M\n        |__ Port 2: Dev 6, If 0, Class=Video, Driver=uvcvideo, 5000M\n        |__ Port 2: Dev 6, If 1, Class=Video, Driver=uvcvideo, 5000M\n        |__ Port 4: Dev 7, If 1, Class=Video, Driver=uvcvideo, 5000M\n        |__ Port 4: Dev 7, If 0, Class=Video, Driver=uvcvideo, 5000M\n    |__ Port 2: Dev 4, If 0, Class=Hub, Driver=hub/4p, 5000M\n        |__ Port 4: Dev 5, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M\n/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=tegra-xusb/4p, 480M\n    |__ Port 1: Dev 4, If 0, Class=Hub, Driver=hub/4p, 480M\n        |__ Port 3: Dev 7, If 1, Class=Human Interface Device, Driver=usbhid, 12M\n        |__ Port 3: Dev 7, If 0, Class=Human Interface Device, Driver=usbhid, 12M\n        |__ Port 1: Dev 5, If 0, Class=Vendor Specific Class, Driver=, 480M\n        |__ Port 2: Dev 6, If 1, Class=Human Interface Device, Driver=usbhid, 12M\n        |__ Port 2: Dev 6, If 0, Class=Human Interface Device, Driver=usbhid, 12M\n    |__ Port 2: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M\n        |__ Port 3: Dev 8, If 2, Class=Audio, Driver=snd-usb-audio, 12M\n        |__ Port 3: Dev 8, If 0, Class=Audio, Driver=snd-usb-audio, 12M\n        |__ Port 3: Dev 8, If 3, Class=Human Interface Device, Driver=usbhid, 12M\n        |__ Port 3: Dev 8, If 1, Class=Audio, Driver=snd-usb-audio, 12M\n    |__ Port 3: Dev 3, If 0, Class=Wireless, Driver=rtk_btusb, 12M\n    |__ Port 3: Dev 3, If 1, Class=Wireless, Driver=rtk_btusb, 12M",
   "user": "argus",
