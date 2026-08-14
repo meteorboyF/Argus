@@ -45,6 +45,17 @@ def _cmd_preview(args):
     run_preview(load_config(args.config), seconds=args.seconds, describe=args.describe)
 
 
+def _cmd_baseline(args):
+    from .diagnostics import collect_baseline, print_report, write_report
+    cfg = load_config(args.config)
+    report = collect_baseline(cfg)
+    print_report(report)
+    if args.output:
+        write_report(report, args.output)
+        print(f"JSON report: {args.output}")
+    sys.exit(0 if report["production_ready"] else 1)
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(prog="argus", description="ARGUS smart-glasses runtime")
     p.add_argument("--config", default=None, help="path to argus.yaml")
@@ -68,6 +79,10 @@ def main(argv=None):
     pp.add_argument("--describe", action="store_true",
                     help="ask ARGUS to describe one privacy-gated center frame")
     pp.set_defaults(func=_cmd_preview)
+
+    pb = sub.add_parser("baseline", help="read-only Jetson environment baseline")
+    pb.add_argument("--output", default=None, help="optional JSON report path")
+    pb.set_defaults(func=_cmd_baseline)
 
     args = p.parse_args(argv)
     args.func(args)

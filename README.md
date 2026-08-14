@@ -33,6 +33,7 @@ From the repository root:
 
 ```bash
 python3 -m argus selftest
+python3 -m argus --config config/argus.yaml baseline --output /tmp/argus-baseline.json
 python3 -m argus preview
 python3 scripts/calibrate_stereo.py --help
 pytest -q tests/test_cameras.py tests/test_safety.py tests/test_calib_health.py

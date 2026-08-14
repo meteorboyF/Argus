@@ -7,7 +7,8 @@ not current guidance.
 ## Baseline at handoff
 
 - Target device: Jetson Orin Nano Super 8 GB, user `argus`.
-- OS: L4T R36.5.2; power query reported MAXN_SUPER.
+- OS: L4T R36.5.2; power query reported MAXN_SUPER. The environment baseline
+  has 22 passes and three required failures; see `STATUS.md` and the JSON report.
 - Repository: `main`; audited-baseline cleanup is the current feature boundary.
 - Native llama.cpp commit: `ef8268feee28ae943958049bf3bbab4bda99c0ea`.
 - Gemma CUDA/multimodal execution was demonstrated historically, but must be
@@ -25,17 +26,21 @@ not current guidance.
   image inference after the R36.5.2 upgrade.
 - Models, ONNX, engine, Piper voice, and their SHA-256 hashes are listed in
   `STATUS.md`.
+- A real CUDA workload drove GR3D to 99%; PyCUDA 2024.1.2 initializes the Orin.
+- Both B0495 cameras, the B0459 camera, and USB input/output audio enumerate.
 
 ## Known blockers
 
-1. Implement and verify TensorRT/CUDA stereo depth; CPU SGBM is diagnostic only.
-2. Determine the YOLO-World engine's true vocabulary contract, then implement
+1. The user must run `sudo nvpmodel -m 0 && sudo jetson_clocks`, then rerun the
+   baseline so locked clocks can be verified. The agent cannot enter the password.
+2. Implement and verify TensorRT/CUDA stereo depth; CPU SGBM is diagnostic only.
+3. Determine the YOLO-World engine's true vocabulary contract, then implement
    TensorRT grounding without a PyTorch fallback.
-3. Repair the hanging speech-priority tests.
-4. Capture and physically verify stereo calibration at 0.5, 1, 2, and 3 m.
-5. Implement sensitive-text privacy handling.
-6. Calibrate wide-to-stereo geometry before returning object distance.
-7. Implement temporal approach/incoming-vehicle rules and later SLAM.
+4. Repair the hanging speech-priority tests.
+5. Capture and physically verify stereo calibration at 0.5, 1, 2, and 3 m.
+6. Implement sensitive-text privacy handling.
+7. Calibrate wide-to-stereo geometry before returning object distance.
+8. Implement temporal approach/incoming-vehicle rules and later SLAM.
 
 ## Working discipline
 
@@ -50,9 +55,8 @@ not current guidance.
 
 ## What to do next
 
-Feature 1 is the environment baseline diagnostic. It must inventory camera and
-audio devices outside the restricted development sandbox, prove JetPack-matched
-CUDA/PyTorch, verify MAXN_SUPER plus `jetson_clocks`, record USB topology and
-artifact hashes, and clearly fail any production requirement that is absent.
-After its commit and confirmation, address GPU depth and the open-vocabulary
-TensorRT grounding contract before building the early honest end-to-end demo.
+Feature 1 delivered the environment diagnostic and report. After confirmation,
+follow the user's performance priority: inspect the existing YOLO ONNX/engine
+bindings to resolve whether its vocabulary is fixed, and build the verified GPU
+grounding/depth path needed for the early honest end-to-end demo. Keep the three
+remaining baseline failures visible; calibration follows the camera/depth work.

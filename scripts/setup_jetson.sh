@@ -20,6 +20,12 @@ LLAMA_CPP_COMMIT="ef8268feee28ae943958049bf3bbab4bda99c0ea"
 
 ARGUS_HOME="${ARGUS_HOME:-/opt/argus}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# PyCUDA is compiled on ARM64 and does not reliably discover Jetson CUDA from
+# default distro paths. Make the pinned toolkit explicit before pip builds it.
+export PATH="/usr/local/cuda/bin:$PATH"
+export CUDA_ROOT="/usr/local/cuda"
+export CUDA_INC_DIR="/usr/local/cuda/include"
+export LIBRARY_PATH="/usr/local/cuda/lib64${LIBRARY_PATH:+:$LIBRARY_PATH}"
 
 echo "================================================================"
 echo " ARGUS Jetson setup"

@@ -26,3 +26,6 @@ soundfile==0.14.0
 # Required by the current TensorRT runner. It was missing at the audit and must
 # be built/installed on-device, then verified before marking the baseline green.
 pycuda==2024.1.2
+platformdirs==4.11.3
+pytools==2026.1.1
+siphash24==1.8

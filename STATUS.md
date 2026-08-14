@@ -9,7 +9,7 @@ implementation exists.
 
 | Component | Status | Verified reality / next gate |
 |---|---|---|
-| Jetson OS/power | partial | L4T R36.5.2 and MAXN_SUPER observed; `jetson_clocks` and full baseline report still required |
+| Jetson environment baseline | partial | Read-only report implemented and captured 2026-08-14: 22 pass, 3 required fail. L4T R36.5.2, MAXN_SUPER, CUDA/Torch, TensorRT, PyCUDA, cameras, USB audio, memory/zram, llama build and hashes verified. `jetson_clocks` needs interactive sudo; calibration and GPU depth remain absent |
 | Camera identity/transforms | partial | Stable USB-role code and 9 unit tests pass; delivered FPS/skew/reconnect require device test |
 | Stereo calibration tool | partial | Substantial capture/solve code exists; no deployed calibration or 0.5–3 m validation |
 | Calibration drift monitor | partial | 12 synthetic tests pass; needs real calibrated scenes |
@@ -59,8 +59,26 @@ runtime correctness are unverified, so the hash proves identity, not fitness.
 ### Python dependencies
 
 `requirements-jetson.txt` contains exact pins for the audited environment.
-`pycuda` is currently missing and is a blocker for the existing TensorRT runner.
-Do not substitute a generic PyPI Torch build.
+PyCUDA `2024.1.2` was compiled on-device and initialized one Orin device. Its
+transitive packages are pinned too. Do not substitute a generic PyPI Torch build.
+
+## Latest environment report — 2026-08-14
+
+Command: `python3 -m argus --config config/argus.yaml baseline --output
+reports/environment-baseline-2026-08-14.json`.
+
+- 22 required checks passed; production readiness remains false.
+- A real CUDA matrix workload completed in 0.198 s and drove `tegrastats` GR3D
+  to 99%, proving Jetson GPU execution rather than inferring it from imports.
+- Both B0495 stereo cameras, the B0459 wide camera, and USB capture/playback
+  audio enumerate. All cameras are attached at 5 Gbit/s behind the same USB 3
+  hub/controller; sustained bandwidth is deferred to the camera feature.
+- Shared memory: 7,976,845,312 bytes; six zram swap devices active.
+- All audited model and engine hashes matched.
+- Required failures: `jetson_clocks --show` requires interactive sudo, stereo
+  calibration is absent, and the GPU depth engine is absent.
+- `sudo nvpmodel -m 0 && sudo jetson_clocks` was attempted but correctly stopped
+  at the password prompt. An agent must not request, store, or bypass that password.
 
 ## Test evidence
 
@@ -68,5 +86,6 @@ Do not substitute a generic PyPI Torch build.
 - `tests/test_safety.py`: 9 passed.
 - `tests/test_calib_health.py`: 12 passed.
 - `tests/test_fail_closed.py`: 7 passed.
+- `tests/test_diagnostics.py`: 4 passed.
 - `tests/test_speech_priority.py`: hangs during execution/teardown; do not count
   its printed dots as a passing suite.

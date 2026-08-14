@@ -168,3 +168,50 @@ query; and object distance is omitted without calibrated projection.
 but must never manufacture confidence. Availability is secondary to truthful
 degradation.
 
+## 2026-08-14 Feature 1 — measured environment baseline replaced assumption
+
+**Hurdle / problem.** Prior notes mixed observed platform facts with inferred
+readiness. CUDA imports, model files, ALSA's internal devices, and a serialized
+engine could each produce a reassuring check without proving GPU activity,
+correct USB hardware, artifact identity, or an executable production path.
+
+**Impact.** A fresh agent could start integration on the wrong backend or report
+the device ready while clocks, calibration, or GPU depth were missing.
+
+**Options considered.** Continue extending the old print-only self-test; use a
+shell checklist; or create a structured, non-mutating diagnostic with required
+versus advisory checks and a JSON evidence record.
+
+**Resolution.** Add `python3 -m argus baseline`. It verifies user/platform/power,
+runs CUDA matrix work while sampling `tegrastats`, checks exact packages and
+hashes, inspects the pinned llama.cpp build, enumerates the three named cameras,
+USB topology and USB audio, records memory/zram, and checks calibration/engines.
+The 2026-08-14 run passed 22 checks and failed three: locked clocks could not be
+queried without interactive sudo, stereo calibration was absent, and no GPU
+depth engine existed. CUDA reached 99% GR3D and PyCUDA initialized one Orin GPU.
+
+**Lesson / consequence.** Readiness is now machine-readable and fail-closed.
+Existence and imports remain evidence, not completion; GPU claims require a real
+workload and GR3D measurement.
+
+## 2026-08-14 Feature 1 — PyCUDA source build needed explicit Jetson paths
+
+**Hurdle / problem.** Installing pinned PyCUDA 2024.1.2 initially failed with
+`cuda.h: No such file or directory` and warned that `nvcc` was not on PATH, even
+though JetPack had both under `/usr/local/cuda`.
+
+**Impact.** The existing TensorRT runner could not allocate CUDA buffers, blocking
+both GPU grounding and depth integration.
+
+**Options considered.** Change PyCUDA versions; use an unpinned third-party wheel;
+rewrite immediately around another CUDA binding; or compile the pinned source
+with explicit Jetson toolkit paths.
+
+**Resolution.** Keep version 2024.1.2 and build on-device with `/usr/local/cuda/bin`
+on PATH plus explicit `CUDA_ROOT`, `CUDA_INC_DIR`, and `LIBRARY_PATH`. The wheel
+built successfully and reported one device named Orin. Those exports and the
+resolved transitive versions are now pinned in setup.
+
+**Lesson / consequence.** JetPack installation does not guarantee Python build
+systems discover CUDA. Reproducibility includes compiler/include/library paths,
+not only package versions.

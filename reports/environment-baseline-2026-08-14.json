@@ -1,0 +1,282 @@
+{
+  "artifacts": {
+    "gemma": {
+      "bytes": 3106736256,
+      "expected_sha256": "9378bc471710229ef165709b62e34bfb62231420ddaf6d729e727305b5b8672d",
+      "path": "/opt/argus/models/gemma-4-E2B-it-Q4_K_M.gguf",
+      "sha256": "9378bc471710229ef165709b62e34bfb62231420ddaf6d729e727305b5b8672d"
+    },
+    "mmproj": {
+      "bytes": 985654080,
+      "expected_sha256": "140be8d7849741f88c50757d529b84373ee8e27052cc2236855b537f4a8215fa",
+      "path": "/opt/argus/models/mmproj-gemma4-e2b-f16.gguf",
+      "sha256": "140be8d7849741f88c50757d529b84373ee8e27052cc2236855b537f4a8215fa"
+    },
+    "piper": {
+      "bytes": 63201294,
+      "expected_sha256": "5efe09e69902187827af646e1a6e9d269dee769f9877d17b16b1b46eeaaf019f",
+      "path": "/opt/argus/models/piper/en_US-lessac-medium.onnx",
+      "sha256": "5efe09e69902187827af646e1a6e9d269dee769f9877d17b16b1b46eeaaf019f"
+    },
+    "yolo_engine": {
+      "bytes": 28760852,
+      "expected_sha256": "8d6b7649ef87f6e280b3e84f492b7b8d910e4d5318f6e31e64aa0659c9fa1912",
+      "path": "/opt/argus/engines/yoloworld_640_fp16.engine",
+      "sha256": "8d6b7649ef87f6e280b3e84f492b7b8d910e4d5318f6e31e64aa0659c9fa1912"
+    },
+    "yolo_onnx": {
+      "bytes": 50739702,
+      "expected_sha256": "8b407bb9f5a206d8290fb20d1a6a7d11bc8788da269ec9a583b786290dba4545",
+      "path": "/opt/argus/exports/yoloworld_640.onnx",
+      "sha256": "8b407bb9f5a206d8290fb20d1a6a7d11bc8788da269ec9a583b786290dba4545"
+    },
+    "yolo_pt": {
+      "bytes": 25923032,
+      "expected_sha256": "9b2c17ab6124a913e9b3a5c170617920d91b0f01111a8479da69f00e2cf27792",
+      "path": "/opt/argus/models/yolov8s-worldv2.pt",
+      "sha256": "9b2c17ab6124a913e9b3a5c170617920d91b0f01111a8479da69f00e2cf27792"
+    }
+  },
+  "audio_input": "**** List of CAPTURE Hardware Devices ****\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 0: tegra-dlink-0 XBAR-ADMAIF1-0 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 1: tegra-dlink-1 XBAR-ADMAIF2-1 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 2: tegra-dlink-2 XBAR-ADMAIF3-2 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 3: tegra-dlink-3 XBAR-ADMAIF4-3 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 4: tegra-dlink-4 XBAR-ADMAIF5-4 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 5: tegra-dlink-5 XBAR-ADMAIF6-5 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 6: tegra-dlink-6 XBAR-ADMAIF7-6 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 7: tegra-dlink-7 XBAR-ADMAIF8-7 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 8: tegra-dlink-8 XBAR-ADMAIF9-8 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 9: tegra-dlink-9 XBAR-ADMAIF10-9 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 10: tegra-dlink-10 XBAR-ADMAIF11-10 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 11: tegra-dlink-11 XBAR-ADMAIF12-11 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 12: tegra-dlink-12 XBAR-ADMAIF13-12 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 13: tegra-dlink-13 XBAR-ADMAIF14-13 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 14: tegra-dlink-14 XBAR-ADMAIF15-14 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 15: tegra-dlink-15 XBAR-ADMAIF16-15 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 16: tegra-dlink-16 XBAR-ADMAIF17-16 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 17: tegra-dlink-17 XBAR-ADMAIF18-17 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 18: tegra-dlink-18 XBAR-ADMAIF19-18 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 19: tegra-dlink-19 XBAR-ADMAIF20-19 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 2: Device [USB Audio Device], device 0: USB Audio [USB Audio]\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0",
+  "audio_output": "**** List of PLAYBACK Hardware Devices ****\ncard 0: HDA [NVIDIA Jetson Orin Nano HDA], device 3: HDMI 0 [HDMI 0]\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 0: HDA [NVIDIA Jetson Orin Nano HDA], device 7: HDMI 1 [HDMI 1]\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 0: HDA [NVIDIA Jetson Orin Nano HDA], device 8: HDMI 2 [HDMI 2]\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 0: HDA [NVIDIA Jetson Orin Nano HDA], device 9: HDMI 3 [HDMI 3]\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 0: tegra-dlink-0 XBAR-ADMAIF1-0 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 1: tegra-dlink-1 XBAR-ADMAIF2-1 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 2: tegra-dlink-2 XBAR-ADMAIF3-2 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 3: tegra-dlink-3 XBAR-ADMAIF4-3 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 4: tegra-dlink-4 XBAR-ADMAIF5-4 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 5: tegra-dlink-5 XBAR-ADMAIF6-5 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 6: tegra-dlink-6 XBAR-ADMAIF7-6 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 7: tegra-dlink-7 XBAR-ADMAIF8-7 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 8: tegra-dlink-8 XBAR-ADMAIF9-8 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 9: tegra-dlink-9 XBAR-ADMAIF10-9 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 10: tegra-dlink-10 XBAR-ADMAIF11-10 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 11: tegra-dlink-11 XBAR-ADMAIF12-11 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 12: tegra-dlink-12 XBAR-ADMAIF13-12 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 13: tegra-dlink-13 XBAR-ADMAIF14-13 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 14: tegra-dlink-14 XBAR-ADMAIF15-14 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 15: tegra-dlink-15 XBAR-ADMAIF16-15 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 16: tegra-dlink-16 XBAR-ADMAIF17-16 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 17: tegra-dlink-17 XBAR-ADMAIF18-17 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 18: tegra-dlink-18 XBAR-ADMAIF19-18 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 1: APE [NVIDIA Jetson Orin Nano APE], device 19: tegra-dlink-19 XBAR-ADMAIF20-19 []\n  Subdevices: 1/1\n  Subdevice #0: subdevice #0\ncard 2: Device [USB Audio Device], device 0: USB Audio [USB Audio]\n  Subdevices: 0/1\n  Subdevice #0: subdevice #0",
+  "checks": [
+    {
+      "detail": "user=argus uid=1000",
+      "name": "run as user argus",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "# R36 (release), REVISION: 5.2, GCID: 46426093, BOARD: generic, EABI: aarch64, DATE: Thu Jul 16 18:56:22 UTC 2026",
+      "name": "Jetson Linux R36.5.2",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "MAXN_SUPER",
+      "name": "MAXN_SUPER power mode",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "SOC family:tegra234  Machine:NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super; Error: Run this script(/usr/bin/jetson_clocks) as a root user",
+      "name": "jetson_clocks query",
+      "ok": false,
+      "required": true
+    },
+    {
+      "detail": "Orin; max GR3D 99%; workload 0.1981882170002791 s",
+      "name": "CUDA workload + tegrastats GR3D",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "2.5.0a0+872d972e41.nv24.8",
+      "name": "NVIDIA Jetson Torch build",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "10.3.0",
+      "name": "TensorRT 10.3",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "2024.1.2",
+      "name": "pycuda available",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "commit=ef8268feee28ae943958049bf3bbab4bda99c0ea cuda=ON arch87=yes",
+      "name": "pinned CUDA llama.cpp build",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "/opt/argus/models/gemma-4-E2B-it-Q4_K_M.gguf: 9378bc471710229ef165709b62e34bfb62231420ddaf6d729e727305b5b8672d",
+      "name": "artifact gemma",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "/opt/argus/models/mmproj-gemma4-e2b-f16.gguf: 140be8d7849741f88c50757d529b84373ee8e27052cc2236855b537f4a8215fa",
+      "name": "artifact mmproj",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "/opt/argus/models/yolov8s-worldv2.pt: 9b2c17ab6124a913e9b3a5c170617920d91b0f01111a8479da69f00e2cf27792",
+      "name": "artifact yolo_pt",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "/opt/argus/exports/yoloworld_640.onnx: 8b407bb9f5a206d8290fb20d1a6a7d11bc8788da269ec9a583b786290dba4545",
+      "name": "artifact yolo_onnx",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "/opt/argus/engines/yoloworld_640_fp16.engine: 8d6b7649ef87f6e280b3e84f492b7b8d910e4d5318f6e31e64aa0659c9fa1912",
+      "name": "artifact yolo_engine",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "/opt/argus/models/piper/en_US-lessac-medium.onnx: 5efe09e69902187827af646e1a6e9d269dee769f9877d17b16b1b46eeaaf019f",
+      "name": "artifact piper",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "B0495=2, B0459=1; ['NVIDIA Tegra Video Input Device (platform:tegra-camrtc-ca)', 'Arducam B0495 (USB3 2.3MP) (usb-3610000.usb-1.1)', 'Arducam B0495 (USB3 2.3MP) (usb-3610000.usb-1.2)', 'Arducam B0459 (USB3 12MP) (usb-3610000.usb-1.4)']",
+      "name": "three expected cameras enumerate",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "uvcvideo present",
+      "name": "USB topology readable",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "7976845312 bytes",
+      "name": "8 GB-class shared memory visible",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "NAME       TYPE           SIZE      USED PRIO; /dev/zram0 partition 664735744 300920832    5; /dev/zram1 partition 664735744 302260224    5; /dev/zram2 partition 664735744 302260224    5; /dev/zram3 partition 664735744 303292416    5; /dev/zram4 partition 664735744 302288896    5; /dev/zram5 partition 664735744 302751744    5",
+      "name": "swap/zram active",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "USB Audio capture present",
+      "name": "USB microphone enumerates",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "USB Audio playback present",
+      "name": "USB headset/output enumerates",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "/opt/argus/config/stereo_calib.npz",
+      "name": "stereo calibration present",
+      "ok": false,
+      "required": true
+    },
+    {
+      "detail": "/opt/argus/engines/raft_stereo_fp16.engine",
+      "name": "GPU depth engine present",
+      "ok": false,
+      "required": true
+    },
+    {
+      "detail": "/opt/argus/engines/yoloworld_640_fp16.engine",
+      "name": "GPU grounding engine present",
+      "ok": true,
+      "required": true
+    },
+    {
+      "detail": "cpu_depth=False, torch_grounding=False",
+      "name": "production fallbacks disabled",
+      "ok": true,
+      "required": true
+    }
+  ],
+  "generated_utc": "2026-08-14T12:53:10.132096+00:00",
+  "gpu_probe": {
+    "device": "Orin",
+    "max_gr3d_percent": 99,
+    "seconds": 0.1981882170002791,
+    "tegrastats_gr3d_samples": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      33,
+      0,
+      99,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "torch": "2.5.0a0+872d972e41.nv24.08"
+  },
+  "hostname": "argus-desktop",
+  "jetson_clocks_show": "SOC family:tegra234  Machine:NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\nError: Run this script(/usr/bin/jetson_clocks) as a root user",
+  "llama_commit": "ef8268feee28ae943958049bf3bbab4bda99c0ea",
+  "memory": "total        used        free      shared  buff/cache   available\nMem:      7976845312  3850899456   105627648    94294016  4020318208  3786981376\nSwap:     3988414464  1813774336  2174640128",
+  "nv_tegra_release": "# R36 (release), REVISION: 5.2, GCID: 46426093, BOARD: generic, EABI: aarch64, DATE: Thu Jul 16 18:56:22 UTC 2026\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia",
+  "packages": {
+    "faster-whisper": "1.2.1",
+    "insightface": "1.0.1",
+    "numpy": "1.26.4",
+    "onnx": "1.21.0",
+    "onnxruntime": "1.23.2",
+    "opencv-python": "4.13.0.92",
+    "openwakeword": "0.6.0",
+    "piper-tts": "1.4.2",
+    "pycuda": "2024.1.2",
+    "sounddevice": "0.5.5",
+    "tensorrt": "10.3.0",
+    "torch": "2.5.0a0+872d972e41.nv24.8",
+    "torchvision": "0.20.0a0+afc54f7",
+    "ultralytics": "8.4.67"
+  },
+  "platform": "Linux-5.15.199-tegra-aarch64-with-glibc2.35",
+  "power_mode": "MAXN_SUPER",
+  "production_ready": false,
+  "python": "3.10.12",
+  "summary": {
+    "failed": 3,
+    "passed": 22,
+    "required_failed": [
+      "jetson_clocks query",
+      "stereo calibration present",
+      "GPU depth engine present"
+    ]
+  },
+  "swap": "NAME       TYPE           SIZE      USED PRIO\n/dev/zram0 partition 664735744 300920832    5\n/dev/zram1 partition 664735744 302260224    5\n/dev/zram2 partition 664735744 302260224    5\n/dev/zram3 partition 664735744 303292416    5\n/dev/zram4 partition 664735744 302288896    5\n/dev/zram5 partition 664735744 302751744    5",
+  "uid": 1000,
+  "usb_topology": "/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=tegra-xusb/4p, 10000M\n    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 10000M\n        |__ Port 1: Dev 8, If 1, Class=Video, Driver=uvcvideo, 5000M\n        |__ Port 1: Dev 8, If 0, Class=Video, Driver=uvcvideo, 5000M\n        |__ Port 2: Dev 6, If 0, Class=Video, Driver=uvcvideo, 5000M\n        |__ Port 2: Dev 6, If 1, Class=Video, Driver=uvcvideo, 5000M\n        |__ Port 4: Dev 7, If 1, Class=Video, Driver=uvcvideo, 5000M\n        |__ Port 4: Dev 7, If 0, Class=Video, Driver=uvcvideo, 5000M\n    |__ Port 2: Dev 4, If 0, Class=Hub, Driver=hub/4p, 5000M\n        |__ Port 4: Dev 5, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M\n/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=tegra-xusb/4p, 480M\n    |__ Port 1: Dev 4, If 0, Class=Hub, Driver=hub/4p, 480M\n        |__ Port 3: Dev 7, If 1, Class=Human Interface Device, Driver=usbhid, 12M\n        |__ Port 3: Dev 7, If 0, Class=Human Interface Device, Driver=usbhid, 12M\n        |__ Port 1: Dev 5, If 0, Class=Vendor Specific Class, Driver=, 480M\n        |__ Port 2: Dev 6, If 1, Class=Human Interface Device, Driver=usbhid, 12M\n        |__ Port 2: Dev 6, If 0, Class=Human Interface Device, Driver=usbhid, 12M\n    |__ Port 2: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M\n        |__ Port 3: Dev 8, If 2, Class=Audio, Driver=snd-usb-audio, 12M\n        |__ Port 3: Dev 8, If 0, Class=Audio, Driver=snd-usb-audio, 12M\n        |__ Port 3: Dev 8, If 3, Class=Human Interface Device, Driver=usbhid, 12M\n        |__ Port 3: Dev 8, If 1, Class=Audio, Driver=snd-usb-audio, 12M\n    |__ Port 3: Dev 3, If 0, Class=Wireless, Driver=rtk_btusb, 12M\n    |__ Port 3: Dev 3, If 1, Class=Wireless, Driver=rtk_btusb, 12M",
+  "user": "argus",
+  "v4l2": "NVIDIA Tegra Video Input Device (platform:tegra-camrtc-ca):\n\t/dev/media0\n\nArducam B0495 (USB3 2.3MP) (usb-3610000.usb-1.1):\n\t/dev/video4\n\t/dev/video5\n\t/dev/media3\n\nArducam B0495 (USB3 2.3MP) (usb-3610000.usb-1.2):\n\t/dev/video0\n\t/dev/video1\n\t/dev/media1\n\nArducam B0459 (USB3 12MP) (usb-3610000.usb-1.4):\n\t/dev/video2\n\t/dev/video3\n\t/dev/media2"
+}
