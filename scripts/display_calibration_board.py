@@ -92,7 +92,12 @@ def main() -> None:
     cv2.setWindowProperty(window, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     while True:
         cv2.imshow(window, board)
-        if cv2.waitKey(50) & 0xFF in (27, ord("q"), ord("Q")):
+        key = cv2.waitKey(50) & 0xFF
+        # Without the visibility check, closing the title-bar button destroys
+        # the window but the next imshow() recreates it indefinitely.
+        if key in (27, ord("q"), ord("Q")):
+            break
+        if cv2.getWindowProperty(window, cv2.WND_PROP_VISIBLE) < 1:
             break
     cv2.destroyAllWindows()
 

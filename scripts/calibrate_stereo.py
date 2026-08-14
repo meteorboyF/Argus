@@ -408,6 +408,8 @@ def main():
             key = cv2.waitKey(1) & 0xFF
             if key in (27, ord("q")):
                 break
+            if cv2.getWindowProperty(window, cv2.WND_PROP_VISIBLE) < 1:
+                break
             if key == ord("c") and both:
                 do_capture = True
 
