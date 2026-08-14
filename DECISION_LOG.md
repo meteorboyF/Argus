@@ -215,3 +215,54 @@ resolved transitive versions are now pinned in setup.
 **Lesson / consequence.** JetPack installation does not guarantee Python build
 systems discover CUDA. Reproducibility includes compiler/include/library paths,
 not only package versions.
+
+## 2026-08-14 Feature 2 — restored open vocabulary with a runtime embedding
+
+**Hurdle / problem.** The inherited ONNX exposed only `images` and produced
+`[1,84,8400]` with COCO-80 metadata. Its TensorRT engine therefore had a fixed
+COCO vocabulary; the earlier claim that six notebook labels were baked in was
+also inaccurate. Calling the artifact YOLO-World did not make it open-vocabulary.
+
+**Impact.** `find_object("keys")` could not honor an arbitrary spoken name, and
+building agent behavior on the legacy engine would silently break the product's
+central interaction promise.
+
+**Options considered.** Admit a COCO-only product; rebuild an engine for every
+query; keep PyTorch YOLO-World in production; or expose CLIP text features as a
+TensorRT input while fixing the class count to one.
+
+**Resolution.** Export a two-input graph on the Jetson: image
+`[1,3,640,640]`, normalized text embedding `[1,1,512]`, output `[1,5,8400]`.
+TensorRT 10.3 built the FP16 engine on-device in 604 seconds. A pinned CPU
+ViT-B/32 encoder supplies and caches requested-label vectors. Cached queries
+measured about 30 ms; a new label with warm encoder measured 0.46 s. `tegrastats`
+showed GR3D activity, and TensorRT/PyTorch score mean absolute error was
+3.36e-7. The test scene had no positive detection, so physical accuracy remains
+explicitly partial.
+
+**Lesson / consequence.** Engine bindings are the vocabulary contract. Runtime
+embeddings preserve the interactive promise without PyTorch detection fallback,
+but numerical agreement and latency do not replace positive physical-object
+validation.
+
+## 2026-08-14 Feature 2 — text encoding was pinned and kept on CPU
+
+**Hurdle / problem.** Ultralytics would auto-install a moving CLIP Git branch and
+download weights into a working-directory-dependent cache.
+
+**Impact.** The same spoken label could not be reproduced from a clean device,
+and an implicit GPU text encoder would contend with depth, grounding, and Gemma.
+
+**Options considered.** Accept auto-install; precompute a fixed vocabulary;
+move CLIP to GPU; or pin source, dependencies, weight bytes, and run it lazily on
+CPU.
+
+**Resolution.** Pin the Ultralytics CLIP fork at commit
+`488e81a6711eea7346872b46ea928b367da8889d`, pin its dependencies, store the
+audited ViT-B/32 file under `/opt/argus/models/clip`, verify SHA-256
+`40d365...50af`, and cache up to 64 label vectors. Cold initialization measured
+11.08 s in the integrated query; subsequent new labels were sub-second.
+
+**Lesson / consequence.** Prompt encoding belongs outside the GPU-heavy path,
+but it needs warm-up before a demo. Cache behavior and cold-start latency are
+part of the user experience and must be reported separately.

@@ -1,0 +1,33 @@
+{
+  "date": "2026-08-14",
+  "device": "Jetson Orin Nano Super, compute capability 8.7",
+  "contract": {
+    "inputs": {"images": [1, 3, 640, 640], "text_embeddings": [1, 1, 512]},
+    "output": {"output0": [1, 5, 8400]},
+    "vocabulary": "one arbitrary runtime label per inference"
+  },
+  "artifacts": {
+    "onnx_sha256": "7f69826f578b66cc057b4eb81659456145ff3962e295981a51682b318f3123fb",
+    "engine_sha256": "7f0cf0a82c0bc5ee713eb91b7085219263160ef806282a3617748abc13b94bfd",
+    "clip_sha256": "40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af",
+    "tensorrt": "10.3.0",
+    "precision": "FP16",
+    "engine_build_seconds": 604.235
+  },
+  "wide_frame": [1080, 1920, 3],
+  "latency_seconds": {
+    "engine_load": 0.4695,
+    "first_label_cold_encoder": 11.0801,
+    "new_label_warm_encoder": 0.4587,
+    "cached_label": [0.0301, 0.0305]
+  },
+  "gpu_evidence": "tegrastats reported GR3D activity during TensorRT inference; cached query latency was 30 ms",
+  "reference_check": {
+    "pytorch_cpu_seconds": 1.6497,
+    "score_mean_absolute_error": 0.0000003357,
+    "trt_score_max": 0.0017615,
+    "pytorch_score_max": 0.0016765,
+    "scene_result": "no person or keys above 0.25; null result is not a positive detection acceptance test"
+  },
+  "acceptance_limit": "GPU execution and runtime vocabulary contract verified. Physical positive-object accuracy remains pending."
+}

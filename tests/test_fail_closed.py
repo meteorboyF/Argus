@@ -42,6 +42,34 @@ def test_torch_grounding_requires_explicit_diagnostic_override():
         Grounder(cfg)
 
 
+def test_trt_grounding_postprocesses_runtime_label(monkeypatch):
+    grounder = Grounder.__new__(Grounder)
+    grounder.cfg = GroundingConfig(conf_threshold=0.25, imgsz=640)
+    output = np.zeros((1, 5, 8400), dtype=np.float32)
+    output[0, :, 10] = [320, 320, 160, 80, 0.9]
+    grounder._runner = SimpleNamespace(
+        infer=lambda feeds: {"output0": output})
+    grounder._embed = lambda name: np.ones((1, 1, 512), dtype=np.float32)
+    frame = np.zeros((480, 640, 3), dtype=np.uint8)
+
+    detection = grounder._find_object_trt("keys", frame)
+
+    assert detection is not None
+    assert detection.name == "keys"
+    assert detection.confidence == pytest.approx(0.9)
+    assert detection.bbox == (240, 200, 400, 280)
+
+
+def test_trt_grounding_does_not_guess_below_threshold():
+    grounder = Grounder.__new__(Grounder)
+    grounder.cfg = GroundingConfig(conf_threshold=0.25, imgsz=640)
+    grounder._runner = SimpleNamespace(
+        infer=lambda feeds: {"output0": np.zeros((1, 5, 8400), dtype=np.float32)})
+    grounder._embed = lambda name: np.ones((1, 1, 512), dtype=np.float32)
+    assert grounder._find_object_trt(
+        "keys", np.zeros((480, 640, 3), dtype=np.uint8)) is None
+
+
 def test_uncalibrated_depth_cannot_reach_safety_rules():
     orch = Orchestrator.__new__(Orchestrator)
     orch.depth = SimpleNamespace(calibrated=False)

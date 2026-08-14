@@ -15,7 +15,8 @@ Read [STATUS.md](STATUS.md) first. It is the authority on what works today.
   speech components exist as prototype code.
 - Gemma 4 E2B has run multimodal inference through a native CUDA llama.cpp build
   on this Jetson after upgrading to L4T R36.5.2.
-- A YOLO-World FP16 TensorRT engine exists, but the runtime does not consume it
+- YOLO-World grounding runs through a device-built FP16 TensorRT engine with a
+  runtime single-label embedding; physical positive-object validation is pending
   and its vocabulary contract is unverified.
 - GPU stereo depth is not deployed. No stereo calibration file or RAFT engine is
   present. Production startup therefore intentionally fails closed.

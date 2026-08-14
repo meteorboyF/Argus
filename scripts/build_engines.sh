@@ -28,15 +28,15 @@ echo "Using trtexec: $TRTEXEC"
 }
 
 # ---- YOLO-World ----
-YOLO_ONNX="$EXPORTS/yoloworld_640.onnx"
+YOLO_ONNX="$EXPORTS/yoloworld_runtime_text_640.onnx"
 if [ -f "$YOLO_ONNX" ]; then
-  echo "Building YOLO-World FP16 engine..."
+  echo "Building runtime-text YOLO-World FP16 engine..."
   "$TRTEXEC" \
     --onnx="$YOLO_ONNX" \
-    --saveEngine="$ENGINES/yoloworld_640_fp16.engine" \
+    --saveEngine="$ENGINES/yoloworld_runtime_text_640_fp16.engine" \
     --fp16 \
     --memPoolSize=workspace:2048
-  sha256sum "$YOLO_ONNX" "$ENGINES/yoloworld_640_fp16.engine"
+  sha256sum "$YOLO_ONNX" "$ENGINES/yoloworld_runtime_text_640_fp16.engine"
 else
   echo "Missing required grounding export: $YOLO_ONNX" >&2
   exit 1

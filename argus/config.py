@@ -132,10 +132,12 @@ class SafetyConfig:
 
 @dataclass
 class GroundingConfig:
-    # YOLO-World via TensorRT (built on-device from yoloworld_640.onnx).
-    engine: str = str(ENGINES_DIR / "yoloworld_640_fp16.engine")
-    onnx: str = str(EXPORTS_DIR / "yoloworld_640.onnx")
+    # One-label-at-a-time YOLO-World TensorRT graph. The label's CLIP embedding
+    # is a runtime input, so arbitrary requested names are not baked in.
+    engine: str = str(ENGINES_DIR / "yoloworld_runtime_text_640_fp16.engine")
+    onnx: str = str(EXPORTS_DIR / "yoloworld_runtime_text_640.onnx")
     weights_pt: str = str(MODELS_DIR / "yolov8s-worldv2.pt")  # ultralytics fallback
+    text_encoder: str = str(MODELS_DIR / "clip" / "ViT-B-32.pt")
     conf_threshold: float = 0.25
     imgsz: int = 640
     backend: str = "trt"

@@ -13,6 +13,13 @@ PyYAML==6.0.3
 requests==2.34.2
 
 ultralytics==8.4.67
+# Runtime prompt encoder for YOLO-World. Install the fork at this immutable
+# commit; version 1.0 alone is not sufficient provenance.
+clip @ git+https://github.com/ultralytics/CLIP.git@488e81a6711eea7346872b46ea928b367da8889d
+ftfy==6.3.1
+regex==2026.7.19
+tqdm==4.67.1
+wcwidth==0.8.2
 onnx==1.21.0
 onnxruntime==1.23.2
 insightface==1.0.1

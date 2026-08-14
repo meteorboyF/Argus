@@ -9,6 +9,7 @@ set -euo pipefail
 # supplied files must match these exact bytes unless STATUS.md is deliberately
 # updated in the same verified feature commit.
 YOLO_PT_SHA256="9b2c17ab6124a913e9b3a5c170617920d91b0f01111a8479da69f00e2cf27792"
+CLIP_SHA256="40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af"
 PIPER_ONNX_SHA256="5efe09e69902187827af646e1a6e9d269dee769f9877d17b16b1b46eeaaf019f"
 PIPER_JSON_SHA256="efe19c417bed055f2d69908248c6ba650fa135bc868b0e6abb3da181dab690a0"
 GEMMA_SHA256="9378bc471710229ef165709b62e34bfb62231420ddaf6d729e727305b5b8672d"
@@ -29,6 +30,17 @@ else
 fi
 echo "$YOLO_PT_SHA256  $YOLO_PT" | sha256sum --check --status || {
   echo "YOLO-World checksum mismatch: $YOLO_PT" >&2; exit 1;
+}
+
+# ---- Pinned CPU text encoder for runtime YOLO-World labels ----
+mkdir -p "$MODELS/clip"
+CLIP_PT="$MODELS/clip/ViT-B-32.pt"
+if [ ! -f "$CLIP_PT" ]; then
+  wget -q --show-progress -O "$CLIP_PT" \
+    "https://openaipublic.azureedge.net/clip/models/$CLIP_SHA256/ViT-B-32.pt"
+fi
+echo "$CLIP_SHA256  $CLIP_PT" | sha256sum --check --status || {
+  echo "CLIP checksum mismatch: $CLIP_PT" >&2; exit 1;
 }
 
 # ---- Piper voice (en_US-lessac-medium) ----

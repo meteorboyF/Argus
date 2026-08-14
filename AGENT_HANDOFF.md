@@ -13,8 +13,8 @@ not current guidance.
 - Native llama.cpp commit: `ef8268feee28ae943958049bf3bbab4bda99c0ea`.
 - Gemma CUDA/multimodal execution was demonstrated historically, but must be
   remeasured with the full stack and flash attention enabled.
-- A fixed FP16 YOLO-World engine exists but is not wired into runtime and may
-  contain a baked vocabulary.
+- Production grounding now uses a two-input FP16 TensorRT engine. One arbitrary
+  label embedding is supplied at runtime; repeated labels are cached.
 - No GPU stereo engine and no stereo calibration file exist.
 - Production execution is intentionally fail-closed until those GPU paths work.
 
@@ -34,8 +34,8 @@ not current guidance.
 1. The user must run `sudo nvpmodel -m 0 && sudo jetson_clocks`, then rerun the
    baseline so locked clocks can be verified. The agent cannot enter the password.
 2. Implement and verify TensorRT/CUDA stereo depth; CPU SGBM is diagnostic only.
-3. Determine the YOLO-World engine's true vocabulary contract, then implement
-   TensorRT grounding without a PyTorch fallback.
+3. Validate grounding against positive physical objects; current device evidence
+   proves GPU/runtime-label execution but the captured scene yielded null results.
 4. Repair the hanging speech-priority tests.
 5. Capture and physically verify stereo calibration at 0.5, 1, 2, and 3 m.
 6. Implement sensitive-text privacy handling.
@@ -55,8 +55,6 @@ not current guidance.
 
 ## What to do next
 
-Feature 1 delivered the environment diagnostic and report. After confirmation,
-follow the user's performance priority: inspect the existing YOLO ONNX/engine
-bindings to resolve whether its vocabulary is fixed, and build the verified GPU
-grounding/depth path needed for the early honest end-to-end demo. Keep the three
-remaining baseline failures visible; calibration follows the camera/depth work.
+Feature 2 delivered runtime-text GPU grounding. After confirmation, implement
+TensorRT/CUDA stereo depth, then validate calibration and positive grounding for
+the early honest end-to-end demo. Keep fail-closed behavior intact.

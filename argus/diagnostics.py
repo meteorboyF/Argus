@@ -33,10 +33,12 @@ EXPECTED_HASHES = {
                "140be8d7849741f88c50757d529b84373ee8e27052cc2236855b537f4a8215fa"),
     "yolo_pt": ("models/yolov8s-worldv2.pt",
                 "9b2c17ab6124a913e9b3a5c170617920d91b0f01111a8479da69f00e2cf27792"),
-    "yolo_onnx": ("exports/yoloworld_640.onnx",
-                  "8b407bb9f5a206d8290fb20d1a6a7d11bc8788da269ec9a583b786290dba4545"),
-    "yolo_engine": ("engines/yoloworld_640_fp16.engine",
-                    "8d6b7649ef87f6e280b3e84f492b7b8d910e4d5318f6e31e64aa0659c9fa1912"),
+    "clip_text": ("models/clip/ViT-B-32.pt",
+                  "40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af"),
+    "yolo_onnx": ("exports/yoloworld_runtime_text_640.onnx",
+                  "7f69826f578b66cc057b4eb81659456145ff3962e295981a51682b318f3123fb"),
+    "yolo_engine": ("engines/yoloworld_runtime_text_640_fp16.engine",
+                    "7f0cf0a82c0bc5ee713eb91b7085219263160ef806282a3617748abc13b94bfd"),
     "piper": ("models/piper/en_US-lessac-medium.onnx",
               "5efe09e69902187827af646e1a6e9d269dee769f9877d17b16b1b46eeaaf019f"),
 }
@@ -177,7 +179,7 @@ def collect_baseline(cfg: ArgusConfig, argus_home: Path = Path("/opt/argus")) ->
     packages = {name: _package_version(name) for name in (
         "torch", "torchvision", "tensorrt", "pycuda", "numpy", "opencv-python",
         "ultralytics", "onnx", "onnxruntime", "insightface", "faster-whisper",
-        "openwakeword", "piper-tts", "sounddevice")}
+        "openwakeword", "piper-tts", "sounddevice", "clip", "ftfy")}
     evidence["packages"] = packages
     checks.append(Check("NVIDIA Jetson Torch build",
                         packages["torch"] == "2.5.0a0+872d972e41.nv24.8", True,
