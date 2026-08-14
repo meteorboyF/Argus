@@ -108,11 +108,15 @@ def autodetect_pair(cfg) -> tuple[int, int]:
                 f"{[(n.index, n.name, (n.width, n.height)) for n in nodes]}\n"
                 "Pass --left and --right explicitly.")
         stereo = sorted(max(groups, key=len), key=lambda n: n.index)[:2]
-    stereo = sorted(stereo, key=lambda n: n.index)
-    print(f"Auto-detected stereo pair: /dev/video{stereo[0].index} and "
-          f"/dev/video{stereo[1].index} ('{stereo[0].name}'). Left/right order "
-          "will be verified geometrically after calibration.")
-    return stereo[0].index, stereo[1].index
+    from argus.cameras import order_stereo_nodes
+    if cfg:
+        left, right = order_stereo_nodes(stereo, cfg)
+    else:
+        left, right = tuple(sorted(stereo, key=lambda n: n.index))
+    print(f"Auto-detected stereo pair: /dev/video{left.index} and "
+          f"/dev/video{right.index} ('{left.name}'). Resolved roles: "
+          f"left=/dev/video{left.index}, right=/dev/video{right.index}.")
+    return left.index, right.index
 
 
 def usb_port_of(index: int) -> str:

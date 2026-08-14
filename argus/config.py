@@ -38,6 +38,12 @@ class CameraConfig:
     stereo_name_hint: str = "AR0234"   # substring of the V4L2 name of the stereo cams
     wide_name_hint: str = "IMX477"     # substring of the V4L2 name of the wide cam
     max_probe_index: int = 10          # probe /dev/video0..N during discovery
+    # Stable physical USB paths for the assembled rig. These bind roles before
+    # the first calibration exists; the calibration file supersedes them after
+    # a successful solve. Leave blank for portable/default installations.
+    left_usb_port: str = ""
+    right_usb_port: str = ""
+    wide_usb_port: str = ""
     left_index: int = 0           # AR0234 left  (stereo) — fallback / override
     right_index: int = 1          # AR0234 right (stereo) — fallback / override
     wide_index: int = 2           # IMX477P wide (scene / grounding) — fallback

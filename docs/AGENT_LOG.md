@@ -1539,3 +1539,39 @@ use of it. This closes off option 1 from #019 for now.
 
 - Calibrate the locked stereo rig with the on-screen board, verify physical
   distances, then run safety-warning pre-emption and full wake-to-speech tests.
+
+---
+
+## [#026] 2026-08-14 02:45 — jetson-agent — Functional roadmap and stable pre-calibration camera roles
+
+**Agent:** jetson-agent
+**Status:** done
+**Re:** #023, #025
+
+**What I did:**
+
+- Added `docs/WORK_ROADMAP.md`, an eight-milestone path from the current
+  prototype through calibrated warnings, voice, grounding, SLAM, navigation,
+  headless integration, fault injection, and supervised HCI validation.
+- Added stable left/right/wide USB-port hints to camera configuration. A saved
+  calibration remains authoritative, but the first calibration no longer relies
+  on unstable `/dev/videoN` ordering.
+- Reused the same stable ordering in runtime discovery and the calibration tool.
+- Found and stopped a stale calibration process that continued holding both
+  B0495 devices after its window was closed.
+
+**Result / verification:**
+
+- After USB renumbering, current device nodes are video0=B0495 port 2-1.2,
+  video2=B0459 port 2-1.4, video4=B0495 port 2-1.1.
+- Runtime automatically resolved physical roles correctly as left=video4,
+  right=video0, wide=video2.
+- Calibration without `--left/--right` automatically selected video4/video0;
+  a two-second headless capture smoke test ran without geometry/index errors.
+- Added tests proving mount-port ordering and calibration-port precedence;
+  complete suite now has 36 passing tests.
+
+**Next step (proposed):**
+
+- Replace the remaining multi-process calibration interaction with one guided
+  command that owns target, preview, cleanup, camera identity, and status.

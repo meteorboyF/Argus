@@ -2,7 +2,8 @@ import cv2
 import numpy as np
 import pytest
 
-from argus.cameras import transform_frame, transformed_size
+from argus.cameras import VideoNode, order_stereo_nodes, transform_frame, transformed_size
+from argus.config import CameraConfig
 
 
 def test_opposite_mount_rotations_produce_matching_upright_frames():
@@ -32,3 +33,23 @@ def test_transformed_size(rotation, size):
 def test_invalid_rotation_rejected():
     with pytest.raises(ValueError, match="0/90/180/270"):
         transform_frame(np.zeros((2, 2, 3), dtype=np.uint8), 45)
+
+
+def test_stereo_order_uses_mount_ports_before_calibration():
+    cfg = CameraConfig(left_usb_port="2-1.1", right_usb_port="2-1.2")
+    nodes = [
+        VideoNode(index=0, name="B0495", usb_port="2-1.2"),
+        VideoNode(index=4, name="B0495", usb_port="2-1.1"),
+    ]
+    left, right = order_stereo_nodes(nodes, cfg)
+    assert (left.index, right.index) == (4, 0)
+
+
+def test_calibration_ports_override_mount_hints():
+    cfg = CameraConfig(left_usb_port="2-1.1", right_usb_port="2-1.2")
+    nodes = [
+        VideoNode(index=0, name="B0495", usb_port="2-1.2"),
+        VideoNode(index=4, name="B0495", usb_port="2-1.1"),
+    ]
+    left, right = order_stereo_nodes(nodes, cfg, ("2-1.2", "2-1.1"))
+    assert (left.index, right.index) == (0, 4)

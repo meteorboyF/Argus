@@ -113,6 +113,31 @@ def _calib_ports(calibration_file: str) -> tuple[str, str] | None:
     return None
 
 
+def order_stereo_nodes(stereo: list[VideoNode], cfg: CameraConfig,
+                       calibration_ports: tuple[str, str] | None = None
+                       ) -> tuple[VideoNode, VideoNode]:
+    """Order two stereo nodes by stable physical identity.
+
+    A completed calibration is authoritative. Before the first calibration,
+    configured USB-port hints bind the mount-specific rotation and left/right
+    role. `/dev/videoN` order is only the final fallback.
+    """
+    ports = calibration_ports
+    if not ports and cfg.left_usb_port and cfg.right_usb_port:
+        ports = (cfg.left_usb_port, cfg.right_usb_port)
+    if ports:
+        by_port = {node.usb_port: node for node in stereo}
+        left = by_port.get(ports[0])
+        right = by_port.get(ports[1])
+        if left is not None and right is not None:
+            return left, right
+        print("[cameras] WARNING: configured/calibrated stereo USB ports do not "
+              "match the connected B0495 cameras; falling back to index order. "
+              "Check cables and re-run calibration.")
+    ordered = sorted(stereo, key=lambda node: node.index)
+    return ordered[0], ordered[1]
+
+
 def discover_rig(cfg: CameraConfig) -> tuple[int, int, int]:
     """Resolve (left_index, right_index, wide_index) from what is plugged in.
 
@@ -149,25 +174,15 @@ def discover_rig(cfg: CameraConfig) -> tuple[int, int, int]:
                   "left/right/wide_index in argus.yaml.")
             return cfg.left_index, cfg.right_index, cfg.wide_index
 
-    # Left vs right: match USB ports recorded at calibration time.
+    # Left vs right: calibration ports are authoritative; mount port hints make
+    # the very first calibration stable before that file exists.
     ports = _calib_ports(cfg.calibration_file)
-    left = right = None
-    if ports:
-        lp, rp = ports
-        for n in stereo:
-            if n.usb_port == lp:
-                left = n
-            elif n.usb_port == rp:
-                right = n
-    if left is None or right is None:
-        if ports:
-            print("[cameras] WARNING: calibration USB ports don't match the connected "
-                  "cameras (cables moved?). Assuming index order for left/right — "
-                  "re-run scripts/calibrate_stereo.py to re-bind and re-verify depth.")
-        stereo_sorted = sorted(stereo, key=lambda n: n.index)
-        left, right = stereo_sorted[0], stereo_sorted[1]
+    left, right = order_stereo_nodes(stereo, cfg, ports)
 
-    wide_node = sorted(wide, key=lambda n: n.index)[0]
+    wide_node = next((n for n in wide if cfg.wide_usb_port and
+                      n.usb_port == cfg.wide_usb_port), None)
+    if wide_node is None:
+        wide_node = sorted(wide, key=lambda n: n.index)[0]
     print(f"[cameras] discovered: left=/dev/video{left.index} "
           f"right=/dev/video{right.index} wide=/dev/video{wide_node.index}")
     return left.index, right.index, wide_node.index

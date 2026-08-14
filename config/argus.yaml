@@ -17,6 +17,11 @@ camera:
   auto_detect: true
   stereo_name_hint: "B0495"    # substring of the stereo cams' V4L2 name
   wide_name_hint: "B0459"      # substring of the wide cam's V4L2 name
+  # Stable physical mount binding for this prototype. Device numbers can change
+  # after every reconnect; USB port paths do not unless cables are moved.
+  left_usb_port: "2-1.1"
+  right_usb_port: "2-1.2"
+  wide_usb_port: "2-1.4"
   # Fallback / manual override (used when auto_detect is false or inconclusive).
   left_index: 0                # confirm with: v4l2-ctl --list-devices
   right_index: 2
