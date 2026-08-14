@@ -319,6 +319,7 @@ def main():
     objpoints, ptsL, ptsR = [], [], []
     covered: set[int] = set()
     size = None
+    validated_frame_geometry = False
     last_capture = 0.0
     prev_center = None
     t_start = time.time()
@@ -340,6 +341,18 @@ def main():
             fR = transform_frame(fR, cam_cfg.right_rotation,
                                  cam_cfg.right_flip_horizontal,
                                  cam_cfg.right_flip_vertical)
+        if not validated_frame_geometry:
+            if fL.shape[:2] != fR.shape[:2]:
+                capL.release(); capR.release()
+                raise SystemExit(
+                    "Selected cameras do not produce the same transformed frame size: "
+                    f"/dev/video{left_idx} -> {fL.shape[1]}x{fL.shape[0]}, "
+                    f"/dev/video{right_idx} -> {fR.shape[1]}x{fR.shape[0]}.\n"
+                    "A USB reconnect probably renumbered the cameras and one selected "
+                    "device may be the wide B0459. Run `v4l2-ctl --list-devices`, "
+                    "select the two B0495 devices, or omit --left/--right to auto-detect."
+                )
+            validated_frame_geometry = True
         gL = cv2.cvtColor(fL, cv2.COLOR_BGR2GRAY)
         gR = cv2.cvtColor(fR, cv2.COLOR_BGR2GRAY)
         size = gL.shape[::-1]
