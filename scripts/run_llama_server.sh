@@ -22,7 +22,7 @@ LLAMA_DEVICE="${LLAMA_DEVICE:-CUDA0}"
 LLAMA_NGL="${LLAMA_NGL:-99}"
 LLAMA_PARALLEL="${LLAMA_PARALLEL:-1}"
 LLAMA_FIT="${LLAMA_FIT:-off}"
-LLAMA_FLASH_ATTN="${LLAMA_FLASH_ATTN:-off}"
+LLAMA_FLASH_ATTN="${LLAMA_FLASH_ATTN:-on}"
 # Gemma's chat template runs a hidden "thinking" pass by default (llama.cpp
 # logs "chat template, thinking = 1" at load) and it is NOT free: the model's
 # reasoning trace is billed against max_tokens same as the visible answer.

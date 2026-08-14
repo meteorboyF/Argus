@@ -11,9 +11,12 @@
 #   ./scripts/setup_jetson.sh
 #
 # NOTE: This is a Linux/ARM64 shell script — the Jetson runs Ubuntu, not Windows.
-# A Windows .bat cannot run here. For PC-side setup use SETUP_LOCAL.md instead.
+# Archived PC material under historical/ is not current setup guidance.
 # =============================================================================
 set -euo pipefail
+
+# Reproducible native inference build. Change only with a documented benchmark.
+LLAMA_CPP_COMMIT="ef8268feee28ae943958049bf3bbab4bda99c0ea"
 
 ARGUS_HOME="${ARGUS_HOME:-/opt/argus}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -57,16 +60,14 @@ sudo apt-get install -y \
 
 # ----------------------------------------------------------------- 3. pip deps
 echo "[3/7] Installing Python dependencies..."
-python3 -m pip install --upgrade pip
+python3 -m pip install "pip==26.1.2"
 # NOTE: torch/torchvision for Jetson come from NVIDIA's index, NOT pip's default.
 # If torch is already provided by your JetPack/L4T image, this is skipped.
 if ! python3 -c "import torch" 2>/dev/null; then
   echo "      torch not found — install the NVIDIA Jetson wheel matching your"
-  echo "      JetPack (see docs/JETSON_DEPLOYMENT.md section 2). Continuing with the rest."
+  echo "      exact audited versions are recorded in STATUS.md. Continuing with the rest."
 fi
 python3 -m pip install -r "$REPO_DIR/requirements-jetson.txt"
-# pycuda for the TensorRT runner
-python3 -m pip install pycuda || echo "      pycuda install failed — TRT runner unavailable until fixed"
 
 # ----------------------------------------------------------------- 4. llama.cpp
 echo "[4/7] Building llama.cpp with CUDA (for Gemma vision)..."
@@ -75,10 +76,11 @@ if [ ! -d "$LLAMA_DIR" ]; then
   git clone https://github.com/ggml-org/llama.cpp "$LLAMA_DIR"
 fi
 pushd "$LLAMA_DIR" >/dev/null
-  git pull --ff-only || true
+  git fetch origin "$LLAMA_CPP_COMMIT"
+  git checkout --detach "$LLAMA_CPP_COMMIT"
   # CUDA arch 87 = Orin. -j4 (not nproc) — a -j6 CUDA build can OOM 8 GB.
   cmake -B build -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=87 -DCMAKE_BUILD_TYPE=Release
-  cmake --build build --config Release -j 4
+  cmake --build build --config Release -j 2
 popd >/dev/null
 echo "      llama.cpp built at $LLAMA_DIR/build/bin"
 
@@ -96,7 +98,7 @@ python3 -m pip install -e "$REPO_DIR"
 # ----------------------------------------------------------------- 7. summary
 echo "[7/7] Done."
 echo "================================================================"
-echo " Next steps (details: docs/JETSON_DEPLOYMENT.md):"
+echo " Next steps (read STATUS.md and AGENT_HANDOFF.md first):"
 echo "  1. Verify torch CUDA:  python3 -c 'import torch; print(torch.cuda.is_available())'"
 echo "  2. Fetch models:       ./scripts/download_models.sh   (+ Gemma GGUF manually)"
 echo "  3. Build TRT engines:  ./scripts/build_engines.sh     (optional at first)"

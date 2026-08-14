@@ -7,6 +7,8 @@
 # Outputs: $ARGUS_HOME/engines/*.engine
 set -euo pipefail
 
+EXPECTED_TRT_VERSION="10.3.0"
+
 ARGUS_HOME="${ARGUS_HOME:-/opt/argus}"
 EXPORTS="$ARGUS_HOME/exports"
 ENGINES="$ARGUS_HOME/engines"
@@ -20,6 +22,10 @@ if [ -z "$TRTEXEC" ]; then
   exit 1
 fi
 echo "Using trtexec: $TRTEXEC"
+"$TRTEXEC" --version 2>&1 | grep -q "TensorRT v100300" || {
+  echo "Refusing unpinned TensorRT: ARGUS baseline requires $EXPECTED_TRT_VERSION" >&2
+  exit 1
+}
 
 # ---- YOLO-World ----
 YOLO_ONNX="$EXPORTS/yoloworld_640.onnx"
@@ -30,11 +36,13 @@ if [ -f "$YOLO_ONNX" ]; then
     --saveEngine="$ENGINES/yoloworld_640_fp16.engine" \
     --fp16 \
     --memPoolSize=workspace:2048
+  sha256sum "$YOLO_ONNX" "$ENGINES/yoloworld_640_fp16.engine"
 else
-  echo "Skip YOLO-World: $YOLO_ONNX not found."
+  echo "Missing required grounding export: $YOLO_ONNX" >&2
+  exit 1
 fi
 
-# ---- RAFT-Stereo (optional) ----
+# ---- RAFT-Stereo (required for production) ----
 RAFT_ONNX="$EXPORTS/raft_stereo_640x480.onnx"
 if [ -f "$RAFT_ONNX" ]; then
   echo "Building RAFT-Stereo FP16 engine..."
@@ -44,7 +52,9 @@ if [ -f "$RAFT_ONNX" ]; then
     --fp16 \
     --memPoolSize=workspace:2048
 else
-  echo "Skip RAFT-Stereo: $RAFT_ONNX not found (SGBM depth backend will be used)."
+  echo "Missing required production depth export: $RAFT_ONNX" >&2
+  echo "CPU SGBM is diagnostic-only; no production engine was built." >&2
+  exit 1
 fi
 
 echo "Engines in $ENGINES:"

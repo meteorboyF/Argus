@@ -6,7 +6,7 @@ Two backends:
                 10 Hz fast loop holds rate on the Orin Nano CPU; disparity is
                 rescaled to full-resolution pixel units so Q stays valid.
   - "raft_trt": RAFT-Stereo TensorRT engine (built on-device). Higher quality.
-                Falls back to SGBM if the engine is missing.
+                Production fails closed if the engine is missing or cannot load.
 
 CALIBRATION-AWARE. The ARGUS cameras are mounted on the curved sides of the
 goggles, toed outward and non-coplanar — so raw disparity is meaningless until
@@ -42,15 +42,36 @@ class DepthEstimator:
         self._load_calibration()
         self.health = CalibrationMonitor(cfg)
 
-        if self.backend == "raft_trt" and os.path.exists(cfg.raft_engine):
-            try:
-                from .trt_runner import TRTRunner
-                self._trt = TRTRunner(cfg.raft_engine)
-            except Exception as e:  # noqa: BLE001 — never let depth crash the rig
-                print(f"[depth] RAFT TensorRT load failed ({e}); falling back to SGBM")
+        if self.backend == "raft_trt":
+            if not os.path.exists(cfg.raft_engine):
+                if not cfg.allow_cpu_fallback:
+                    self.health.stop()
+                    raise RuntimeError(
+                        f"Production GPU depth engine is missing: {cfg.raft_engine}. "
+                        "CPU SGBM fallback is disabled.")
+                print(f"[depth] diagnostic fallback: missing {cfg.raft_engine}; using CPU SGBM")
                 self.backend = "sgbm"
+            else:
+                try:
+                    from .trt_runner import TRTRunner
+                    self._trt = TRTRunner(cfg.raft_engine)
+                except Exception as e:  # noqa: BLE001
+                    if not cfg.allow_cpu_fallback:
+                        self.health.stop()
+                        raise RuntimeError(
+                            "Production GPU depth failed to initialise; CPU fallback "
+                            f"is disabled: {e}") from e
+                    print(f"[depth] diagnostic fallback after TensorRT failure ({e})")
+                    self.backend = "sgbm"
+        elif self.backend == "sgbm":
+            if not cfg.allow_cpu_fallback:
+                self.health.stop()
+                raise RuntimeError(
+                    "CPU SGBM is diagnostic-only. Set depth.backend=raft_trt for "
+                    "production, or explicitly enable allow_cpu_fallback on the bench.")
         else:
-            self.backend = "sgbm"
+            self.health.stop()
+            raise ValueError(f"Unknown depth backend: {self.backend!r}")
 
         if self.backend == "sgbm":
             self._sgbm = cv2.StereoSGBM_create(

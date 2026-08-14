@@ -78,7 +78,10 @@ class CameraConfig:
 @dataclass
 class DepthConfig:
     # backend: "sgbm" (CPU/OpenCV, always available) or "raft_trt" (TensorRT engine)
-    backend: str = "sgbm"
+    backend: str = "raft_trt"
+    # CPU SGBM is useful for bench diagnosis, but production must never silently
+    # substitute it for the required GPU depth path.
+    allow_cpu_fallback: bool = False
     raft_engine: str = str(ENGINES_DIR / "raft_stereo_fp16.engine")
     min_disparity: int = 0
     num_disparities: int = 128    # must be divisible by 16
@@ -135,6 +138,9 @@ class GroundingConfig:
     weights_pt: str = str(MODELS_DIR / "yolov8s-worldv2.pt")  # ultralytics fallback
     conf_threshold: float = 0.25
     imgsz: int = 640
+    backend: str = "trt"
+    # Explicit bench escape hatch only. It must remain false for wearable use.
+    allow_torch_fallback: bool = False
 
 
 @dataclass

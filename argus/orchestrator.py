@@ -40,20 +40,23 @@ def _direction_of(col: int, width: int) -> str:
 class Orchestrator:
     def __init__(self, cfg: ArgusConfig, enable_audio: bool = True):
         self.cfg = cfg
-        self.rig = CameraRig(cfg.camera)
-        self.depth = DepthEstimator(cfg.depth)
-        self.safety = SafetyReflex(cfg.safety)
-        self.privacy = PrivacyGate(cfg.privacy)
+        # Validate required production inference backends before opening cameras
+        # or starting worker threads. A fail-closed startup must not leak devices.
         self.grounder = Grounder(cfg.grounding)
-        self.agent = GemmaAgent(cfg.agent)
-        self.speaker = Speaker(cfg.speech, enabled=enable_audio)
-        self.enable_audio = enable_audio
-
+        self.depth = DepthEstimator(cfg.depth)
+        self.privacy = PrivacyGate(cfg.privacy)
         if cfg.privacy.require_gate and not self.privacy.ready:
+            self.depth.health.stop()
             raise RuntimeError(
                 "Privacy gate failed to initialise and privacy.require_gate is true. "
                 "The agent must never see unblurred frames — fix insightface/onnxruntime "
                 "(see selftest), or set privacy.require_gate: false for bench debugging only.")
+
+        self.rig = CameraRig(cfg.camera)
+        self.safety = SafetyReflex(cfg.safety)
+        self.agent = GemmaAgent(cfg.agent)
+        self.speaker = Speaker(cfg.speech, enabled=enable_audio)
+        self.enable_audio = enable_audio
 
         self._latest_depth: np.ndarray | None = None
         self._depth_lock = threading.Lock()
@@ -65,6 +68,7 @@ class Orchestrator:
         self._tick_count = 0
         self._tick_time = 0.0
         self._last_calib_state = CalibState.UNKNOWN
+        self._reported_uncalibrated = False
 
         # Wake word + STT are created lazily in _listen_loop so `argus query`
         # and --no-audio runs don't pay their load time (or need a microphone).
@@ -81,22 +85,34 @@ class Orchestrator:
                 depth_m = self.depth.depth_map(pair.left, pair.right)
                 with self._depth_lock:
                     self._latest_depth = depth_m
-                state = self.safety.evaluate(depth_m)
+                # Uncalibrated disparity cannot support a metric danger decision.
+                # Keep producing diagnostic depth, but never turn it into wearable
+                # hazard speech until physical calibration has been verified.
+                state = self._evaluate_safety_depth(depth_m)
                 now = time.perf_counter()
                 # DANGER speaks immediately (rate-limited); WARN speaks on a
                 # longer cadence so the user isn't flooded. Both hand off to the
                 # speaker thread and return at once — this loop must never block
                 # on audio, or it stops watching for hazards while it talks.
-                if state.level == Level.DANGER and (now - self._last_danger) > self.cfg.safety.danger_repeat_s:
+                if state is not None and state.level == Level.DANGER and (now - self._last_danger) > self.cfg.safety.danger_repeat_s:
                     self.speaker.speak(state.message, Priority.DANGER)
                     self._last_danger = now
-                elif state.level == Level.WARN and (now - self._last_warn) > self.cfg.safety.warn_repeat_s:
+                elif state is not None and state.level == Level.WARN and (now - self._last_warn) > self.cfg.safety.warn_repeat_s:
                     self.speaker.speak(state.message, Priority.WARN)
                     self._last_warn = now
             self._check_calibration_health()
             dt = time.perf_counter() - t0
             self._note_tick(dt)
             time.sleep(max(0.0, period - dt))
+
+    def _evaluate_safety_depth(self, depth_m: np.ndarray):
+        """Only calibrated metric depth may drive wearable hazard speech."""
+        if not self.depth.calibrated:
+            if not self._reported_uncalibrated:
+                print("[safety] stereo is uncalibrated; metric/danger speech suppressed")
+                self._reported_uncalibrated = True
+            return None
+        return self.safety.evaluate(depth_m)
 
     def _check_calibration_health(self):
         """Announce calibration drift once, when it is first detected.
@@ -174,7 +190,9 @@ class Orchestrator:
         if self.cfg.privacy.require_gate and not self.privacy.ready:
             self.speaker.speak("Privacy filter unavailable. I can't answer right now.")
             return
-        gated, n_faces = self.privacy.apply(frame)
+        gated = self._apply_privacy(frame)
+        if gated is None:
+            return
 
         try:
             reply = self.agent.ask(gated, question)
@@ -190,33 +208,33 @@ class Orchestrator:
 
         self.speaker.speak(reply.text or "I'm not sure.")
 
-    def _fuse_detection(self, name: str, det, frame) -> dict:
-        """Combine a YOLO-World box with the latest depth map -> 3D-ish position.
+    def _apply_privacy(self, frame: np.ndarray) -> np.ndarray | None:
+        """Fail closed: a privacy exception cancels the image query."""
+        try:
+            gated, _ = self.privacy.apply(frame)
+            return gated
+        except Exception as e:  # noqa: BLE001 — privacy failure is a safe refusal
+            print(f"[privacy] gate failed; image query cancelled: {e}")
+            self.speaker.speak("Privacy filter failed. I can't answer that image question.")
+            return None
 
-        NOTE: the box comes from the wide camera and depth from the stereo pair;
-        proportional sampling assumes their views roughly overlap. It is an
-        approximation — good for "about a metre to your right", not centimetres.
+    def _fuse_detection(self, name: str, det, frame) -> dict:
+        """Return a grounded direction without inventing cross-camera distance.
+
+        Wide-to-stereo intrinsics/extrinsics are not calibrated. Proportional
+        pixel scaling was geometrically invalid, so distance remains absent until
+        a verified projection is implemented.
         """
         if det is None:
             return {"found": False, "name": name}
         cx, cy = det.center
-        depth_m = self.latest_depth()
-        dist = None
-        if depth_m is not None:
-            # depth map is at stereo resolution; sample proportionally.
-            dh, dw = depth_m.shape[:2]
-            fh, fw = frame.shape[:2]
-            sx, sy = int(cx * dw / fw), int(cy * dh / fh)
-            patch = depth_m[max(0, sy - 5):sy + 5, max(0, sx - 5):sx + 5]
-            finite = patch[np.isfinite(patch)]
-            if finite.size:
-                dist = round(float(np.median(finite)), 2)
         return {
             "found": True,
             "name": name,
             "confidence": round(det.confidence, 2),
             "direction": _direction_of(cx, frame.shape[1]),
-            "distance_m": dist,
+            "distance_m": None,
+            "distance_verified": False,
         }
 
     # ------------------------------------------------------------------ lifecycle

@@ -1,0 +1,38 @@
+NAME         FSTYPE   FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
+loop0                                                                        0   100% /snap/bare/5
+loop1                                                                        0   100% /snap/core22/2340
+loop2                                                                        0   100% /snap/core22/2412
+loop3                                                                        0   100% /snap/core24/1500
+loop4                                                                        0   100% /snap/core24/1644
+loop5                                                                        0   100% /snap/cups/1147
+loop6                                                                        0   100% /snap/cups/1208
+loop7                                                                        0   100% /snap/gnome-46-2404/154
+loop8        squashfs 4.0                                                    0   100% /snap/gtk-common-themes/1535
+loop9        squashfs 4.0                                                    0   100% /snap/mesa-2404/1166
+loop10       squashfs 4.0                                                    0   100% /snap/snapd/26383
+loop11       squashfs 4.0                                                    0   100% /snap/snapd/26869
+loop12                                                                                
+mmcblk0                                                                               
+└─mmcblk0p1  ext4     1.0         c5a2396a-e1ba-4940-b723-3b7b4f8759a0  108.3G     0% /media/argus/c5a2396a-e1ba-4940-b723-3b7b4f8759a0
+zram0                                                                                 [SWAP]
+zram1                                                                                 [SWAP]
+zram2                                                                                 [SWAP]
+zram3                                                                                 [SWAP]
+zram4                                                                                 [SWAP]
+zram5                                                                                 [SWAP]
+nvme0n1                                                                               
+├─nvme0n1p1  ext4     1.0         752d27c0-5370-43a2-9666-6f6c7e937dce  405.4G     9% /
+├─nvme0n1p2                                                                           
+├─nvme0n1p3                                                                           
+├─nvme0n1p4                                                                           
+├─nvme0n1p5                                                                           
+├─nvme0n1p6                                                                           
+├─nvme0n1p7                                                                           
+├─nvme0n1p8                                                                           
+├─nvme0n1p9                                                                           
+├─nvme0n1p10 vfat     FAT32       4EA2-9257                              62.9M     0% /boot/efi
+├─nvme0n1p11                                                                          
+├─nvme0n1p12                                                                          
+├─nvme0n1p13                                                                          
+├─nvme0n1p14                                                                          
+└─nvme0n1p15                                                                          

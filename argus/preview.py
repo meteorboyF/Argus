@@ -53,9 +53,9 @@ def run_preview(cfg: ArgusConfig, seconds: float = 0, describe: bool = False) ->
         raise RuntimeError("Privacy gate is required but unavailable")
 
     def describe_frame(frame: np.ndarray) -> None:
-        gated, faces = gate.apply(frame)
-        started = time.monotonic()
         try:
+            gated, faces = gate.apply(frame)
+            started = time.monotonic()
             reply = GemmaAgent(cfg.agent).ask(
                 gated, "What is in front of me? Answer in one short sentence.")
             answer = reply.text or "I could not describe the scene."

@@ -1,10 +1,9 @@
 """YOLO-World open-vocabulary grounding — the agent's find_object tool.
 
 The agent asks for an object by name (e.g. "keys"); this returns its bounding
-box. We use the Ultralytics YOLOWorld model (which can run the .pt directly on
-the Jetson GPU). A TensorRT engine path is the production target for ~160 ms
-latency; until that's wired through ultralytics, the .pt runs via torch and is
-still interactive on the Orin Nano.
+box. Production requires a verified TensorRT implementation. The existing engine
+may contain a baked vocabulary and is deliberately refused until Feature 2
+establishes its real binding/text-prompt contract.
 
 set_classes() is the open-vocabulary mechanism: classes are provided at call
 time, no retraining.
@@ -35,6 +34,20 @@ class Grounder:
         self._load()
 
     def _load(self):
+        if self.cfg.backend == "trt":
+            if not os.path.exists(self.cfg.engine):
+                raise RuntimeError(
+                    f"Production YOLO-World TensorRT engine is missing: {self.cfg.engine}")
+            raise RuntimeError(
+                "YOLO-World TensorRT engine exists but its open-vocabulary contract "
+                "is not verified and the runtime path is not implemented. Production "
+                "startup is refused instead of silently using PyTorch.")
+        if self.cfg.backend != "torch":
+            raise ValueError(f"Unknown grounding backend: {self.cfg.backend!r}")
+        if not self.cfg.allow_torch_fallback:
+            raise RuntimeError(
+                "Ultralytics PyTorch grounding is diagnostic-only and is disabled "
+                "for production.")
         from ultralytics import YOLOWorld
         weights = self.cfg.weights_pt if os.path.exists(self.cfg.weights_pt) else "yolov8s-worldv2.pt"
         self._model = YOLOWorld(weights)

@@ -5,6 +5,15 @@
 #   ./scripts/download_models.sh
 set -euo pipefail
 
+# SHA-256 identities of the audited device artifacts. Downloads or manually
+# supplied files must match these exact bytes unless STATUS.md is deliberately
+# updated in the same verified feature commit.
+YOLO_PT_SHA256="9b2c17ab6124a913e9b3a5c170617920d91b0f01111a8479da69f00e2cf27792"
+PIPER_ONNX_SHA256="5efe09e69902187827af646e1a6e9d269dee769f9877d17b16b1b46eeaaf019f"
+PIPER_JSON_SHA256="efe19c417bed055f2d69908248c6ba650fa135bc868b0e6abb3da181dab690a0"
+GEMMA_SHA256="9378bc471710229ef165709b62e34bfb62231420ddaf6d729e727305b5b8672d"
+MMPROJ_SHA256="140be8d7849741f88c50757d529b84373ee8e27052cc2236855b537f4a8215fa"
+
 ARGUS_HOME="${ARGUS_HOME:-/opt/argus}"
 MODELS="$ARGUS_HOME/models"
 mkdir -p "$MODELS/piper"
@@ -18,6 +27,9 @@ if [ ! -f "$YOLO_PT" ]; then
 else
   echo "YOLO-World weights already present."
 fi
+echo "$YOLO_PT_SHA256  $YOLO_PT" | sha256sum --check --status || {
+  echo "YOLO-World checksum mismatch: $YOLO_PT" >&2; exit 1;
+}
 
 # ---- Piper voice (en_US-lessac-medium) ----
 PIPER_BASE="https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium"
@@ -27,6 +39,12 @@ for f in en_US-lessac-medium.onnx en_US-lessac-medium.onnx.json; do
     wget -q --show-progress -O "$MODELS/piper/$f" "$PIPER_BASE/$f"
   fi
 done
+echo "$PIPER_ONNX_SHA256  $MODELS/piper/en_US-lessac-medium.onnx" | sha256sum --check --status || {
+  echo "Piper ONNX checksum mismatch" >&2; exit 1;
+}
+echo "$PIPER_JSON_SHA256  $MODELS/piper/en_US-lessac-medium.onnx.json" | sha256sum --check --status || {
+  echo "Piper JSON checksum mismatch" >&2; exit 1;
+}
 
 # ---- openWakeWord pretrained models (cached by the library) ----
 python3 - <<'EOF' || echo "openWakeWord pre-download skipped (will download on first run)"
@@ -45,21 +63,25 @@ else
 
 --------------------------------------------------------------------
 MANUAL STEP — Gemma reasoning model (vision GGUF, ~2-3 GB):
-Download an INT4 (Q4_K_M) multimodal Gemma GGUF *and its mmproj vision
-projector* from Hugging Face into $MODELS, e.g. with:
-
-  pip install -U "huggingface_hub[cli]"
-  huggingface-cli download <REPO> <MODEL>.gguf  --local-dir $MODELS
-  huggingface-cli download <REPO> mmproj-*.gguf --local-dir $MODELS
-
-Then either rename the files to match the config defaults:
+Copy the audited Gemma Q4_K_M GGUF and matching projector into $MODELS.
+The source repository was not recorded by the previous agent, so this baseline
+refuses to invent one. The exact accepted filenames and SHA-256 identities are:
   $GGUF
+  $GEMMA_SHA256
   $MMPROJ
-or point agent.model_gguf / agent.mmproj_gguf in
-$ARGUS_HOME/config/argus.yaml (and scripts/run_llama_server.sh) at the
-actual filenames. Verify it loads with scripts/run_llama_server.sh.
+  $MMPROJ_SHA256
 --------------------------------------------------------------------
 EOF
+fi
+if [ -f "$GGUF" ]; then
+  echo "$GEMMA_SHA256  $GGUF" | sha256sum --check --status || {
+    echo "Gemma GGUF checksum mismatch" >&2; exit 1;
+  }
+fi
+if [ -f "$MMPROJ" ]; then
+  echo "$MMPROJ_SHA256  $MMPROJ" | sha256sum --check --status || {
+    echo "Gemma projector checksum mismatch" >&2; exit 1;
+  }
 fi
 
 echo

@@ -41,7 +41,8 @@ camera:
   reconnect: true              # reopen a camera that stops delivering frames
 
 depth:
-  backend: sgbm          # "sgbm" (CPU, always works) or "raft_trt" (TensorRT engine)
+  backend: raft_trt      # production requires TensorRT/CUDA depth
+  allow_cpu_fallback: false
   num_disparities: 128
   block_size: 5
   fast_downscale: 2      # SGBM matches at 1/N resolution so the 10 Hz loop holds rate
@@ -59,6 +60,8 @@ safety:
   warn_repeat_s: 6.0
 
 grounding:
+  backend: trt
+  allow_torch_fallback: false
   conf_threshold: 0.25
   imgsz: 640
 

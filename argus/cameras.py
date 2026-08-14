@@ -223,7 +223,7 @@ def transformed_size(width: int, height: int, rotation: int) -> tuple[int, int]:
 def _open(index: int, width: int, height: int, fps: int,
           pixel_format: str = "YUYV") -> cv2.VideoCapture:
     # cv2.CAP_V4L2 is the right backend on the Jetson (Linux). On Windows this
-    # falls back gracefully; for PC testing use argus_pc_test.ipynb instead.
+    # falls back gracefully; archived PC experiments are not current guidance.
     cap = cv2.VideoCapture(index, cv2.CAP_V4L2)
     if not cap.isOpened():
         cap = cv2.VideoCapture(index)  # last-resort default backend

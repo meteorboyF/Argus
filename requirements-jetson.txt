@@ -1,33 +1,28 @@
-# ARGUS Jetson runtime dependencies (JetPack 6 / Python 3.10, ARM64).
+# Audited Jetson Python environment: L4T R36.5.2, Python 3.10, ARM64.
+# Exact pins are deliberate. Update only in a feature commit with device tests.
 #
-# NOT listed here (install separately — see docs/JETSON_DEPLOYMENT.md):
-#   - torch / torchvision : use the NVIDIA Jetson wheels matching your JetPack,
-#                            NOT the pip default (which has no CUDA for ARM).
-#   - onnxruntime-gpu     : NO aarch64 wheel exists on PyPI — pip would fail.
-#                            The CPU `onnxruntime` below is enough for the
-#                            privacy gate; for GPU, install NVIDIA's Jetson
-#                            onnxruntime-gpu wheel (see JETSON_DEPLOYMENT.md §2).
-#   - tensorrt            : ships with JetPack.
-#   - pycuda              : installed by setup_jetson.sh (needs CUDA on PATH).
-#   - llama.cpp           : built from source by setup_jetson.sh (Gemma vision).
+# Install NVIDIA Torch/Torchvision separately from the Jetson-compatible source:
+#   torch==2.5.0a0+872d972e41.nv24.8
+#   torchvision==0.20.0a0+afc54f7
+# Never install generic PyPI Torch on Jetson.
+# TensorRT 10.3.0.30 is supplied by JetPack, not pip.
 
-# Perception / grounding
-ultralytics>=8.4.0
-opencv-python>=4.9.0
-onnx>=1.16.0
-onnxruntime>=1.18.0            # CPU; replace with NVIDIA's Jetson onnxruntime-gpu for CUDA
+numpy==1.26.4
+opencv-python==4.13.0.92
+PyYAML==6.0.3
+requests==2.34.2
 
-# Privacy gate
-insightface>=0.7.3
+ultralytics==8.4.67
+onnx==1.21.0
+onnxruntime==1.23.2
+insightface==1.0.1
 
-# Speech (CPU)
-faster-whisper>=1.0.0
-openwakeword>=0.6.0
-piper-tts>=1.2.0
-sounddevice>=0.4.6
-soundfile>=0.12.1
+faster-whisper==1.2.1
+openwakeword==0.6.0
+piper-tts==1.4.2
+sounddevice==0.5.5
+soundfile==0.14.0
 
-# Agent client + utils
-requests>=2.31.0
-numpy>=1.24.0
-PyYAML>=6.0
+# Required by the current TensorRT runner. It was missing at the audit and must
+# be built/installed on-device, then verified before marking the baseline green.
+pycuda==2024.1.2

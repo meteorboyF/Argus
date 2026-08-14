@@ -5,7 +5,7 @@ Two-Speed Vision-Language architecture for the NVIDIA Jetson Orin Nano Super:
   - Slow path (event-driven): wake word -> STT -> privacy gate -> Gemma 4 E2B
     agent -> YOLO-World grounding tool -> depth fusion -> Piper TTS
 
-See docs/ARCHITECTURE.md for the full design.
+See repository-root ARCHITECTURE.md for the target and STATUS.md for reality.
 """
 
 __version__ = "0.1.0"
