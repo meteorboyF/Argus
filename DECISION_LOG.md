@@ -420,3 +420,63 @@ uses MAXN_SUPER, GR3D peaked at 99%, and all false distances remained suppressed
 **Lesson / consequence.** An early end-to-end thread is a diagnostic milestone,
 not completion. Cold and cached latency, RAM, swap, and safety degradation must
 be reported separately.
+
+## 2026-09-29 Dashboard build — Laya was evaluated and rejected for hazards
+
+**Hurdle / problem.** The user asked whether Laya (a 421M ModernBERT decision
+model answering typed questions over text/JSON) could make the "car is coming"
+warning faster.
+
+**Impact.** Putting a probabilistic text model in the hazard path would break
+the deterministic fast-loop rule and cost about 1 GB of unified memory the
+stack cannot spare.
+
+**Options considered.** Laya as hazard gate; Laya as slow-loop intent router;
+pure geometry.
+
+**Resolution.** Time-to-collision is geometry: per-zone range history from the
+depth map, a linear fit for closing speed, TTC = range / speed. Implemented in
+`safety.py` with WARN at 3 s and DANGER at 1.5 s. Laya is parked as a possible
+later intent-router experiment; a regex already routes locate requests.
+
+**Lesson / consequence.** A model is not a shortcut for a physics problem the
+fast loop already has the numbers for.
+
+## 2026-09-29 Dashboard build — cameras fell back to USB 2 on the same hub port
+
+**Hurdle / problem.** After the user re-plugged the cameras, two of them
+enumerated on the High-Speed companion bus (`1-2.2`, `1-2.4`) instead of the
+SuperSpeed bus (`2-1.2`, `2-1.4`), delivered 10 fps and stalled for seconds.
+Exact USB-path binding then failed to find them.
+
+**Impact.** The runtime refused to start, and a 10 fps stereo camera makes
+almost every pair fail the 12 ms skew gate.
+
+**Options considered.** Bind by the physical hub port; bind by serial (the
+Arducams expose none); ignore link speed.
+
+**Resolution.** Roles bind to the hub port number and the runtime prints a
+warning with the negotiated link speed. Per-camera capture threads record real
+arrival times, and a camera whose read blocks now reports 0 fps after 2 s.
+The physical fix is still a reseat; the software only makes the fault visible.
+
+**Lesson / consequence.** A USB 3 hub is two buses. Bind roles to what does
+not change, and surface link speed instead of letting it hide as skew drops.
+
+## 2026-09-29 Dashboard build — single-plane synthetic scene cannot test odometry
+
+**Hurdle / problem.** The first stereo-odometry test rendered one
+fronto-parallel wall and expected a 0.12 m sideways translation; PnP returned
+0.08 m with 100% inliers.
+
+**Impact.** A test that passes or fails on a degenerate scene says nothing
+about the estimator.
+
+**Resolution.** On a single plane at one depth a sideways translation and a
+small yaw produce the same image shift, so the split between them is
+arbitrary. The fixture now has two textured layers at 2 m and 3 m, which makes
+the motion unique; the test also asserts near-zero yaw. Fixed the fixture's
+disparity sign at the same time.
+
+**Lesson / consequence.** Synthetic geometry tests must be well-posed before
+their tolerances mean anything.

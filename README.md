@@ -26,8 +26,12 @@ Read [STATUS.md](STATUS.md) first. It is the authority on what works today.
 - GPU stereo depth is not deployed. No stereo calibration file or RAFT engine is
   present. Production startup therefore intentionally fails closed.
 - Face blur exists; sensitive-text handling does not.
-- SLAM, incoming-vehicle time-to-collision logic, and calibrated wide-to-stereo
-  projection do not exist.
+- A monitor dashboard (`run --dashboard`) shows all three feeds, depth, the
+  top-down corridor/SLAM map, status and the spoken conversation; questions
+  can be typed there or appended to a file, so the demo works without a mic.
+- Incoming-vehicle time-to-collision rules, stereo visual odometry and corridor
+  guidance are implemented with synthetic tests but stay off until the stereo
+  pair is calibrated. Calibrated wide-to-stereo projection does not exist.
 - Object distance is deliberately omitted until cross-camera calibration is
   implemented. The old proportional pixel mapping was unsafe.
 - The full test suite is not green: camera, safety, and calibration-health tests
@@ -42,12 +46,19 @@ python3 -m argus selftest
 python3 -m argus --config config/argus.yaml baseline --output /tmp/argus-baseline.json
 python3 -m argus preview
 python3 scripts/calibrate_stereo.py --help
-pytest -q tests/test_cameras.py tests/test_safety.py tests/test_calib_health.py
+pytest -q tests/ --ignore=tests/test_speech_priority.py
 ```
 
-`python3 -m argus run` is a production command and is expected to refuse startup
-until the required GPU depth and grounding paths are implemented and verified.
-Do not disable the fail-closed settings for a wearable demonstration.
+Live demo on the attached monitor (needs `scripts/run_llama_server.sh` running):
+
+```bash
+DISPLAY=:0 python3 -m argus --config config/argus.yaml run --dashboard --no-mic --ask-file /tmp/ask.txt
+echo "find the monitor" >> /tmp/ask.txt      # or type in the dashboard and press Enter
+```
+
+`python3 -m argus run` is a production command and refuses to start when the
+GPU depth, grounding or privacy path is missing. Do not disable the fail-closed
+settings for a wearable demonstration.
 
 ## Hardware and deployed artifacts
 

@@ -19,6 +19,13 @@ not current guidance.
   file exists, so metric warnings remain suppressed.
 - The manual positive demo “Find the monitor” completed through privacy, Gemma,
   TensorRT grounding, a center-only result, and Piper/Pulse USB playback.
+- 2026-09-29: `run --dashboard --no-mic --ask-file PATH` puts the whole runtime
+  on the monitor and takes typed questions; a question round-trips in 1.8 s.
+  Approach/TTC rules, stereo visual odometry and corridor guidance exist with
+  synthetic tests (77 passing) and activate automatically once
+  `/opt/argus/config/stereo_calib.npz` exists.
+- Both AR0234s are now mounted upright on brackets; the physical calibration
+  target is an 8x8 folding chess board (7x7 inner corners).
 
 ## Known-good evidence
 
@@ -41,7 +48,10 @@ not current guidance.
 4. Validate wake word + STT with the USB microphone; the six priority tests pass.
 5. Implement sensitive-text privacy handling.
 6. Calibrate wide-to-stereo geometry before returning object distance.
-7. Implement temporal approach/incoming-vehicle rules and later SLAM.
+7. Reseat the stereo camera on hub port 2 and the wide camera on hub port 4 so
+   they link at 5 Gbit/s; at 480 Mbit/s they deliver 10 fps with multi-second
+   stalls, which the dashboard shows as skew drops and 0 fps.
+8. Validate approach/TTC, SLAM and corridor guidance on real calibrated scenes.
 
 ## Working discipline
 
@@ -56,7 +66,8 @@ not current guidance.
 
 ## What to do next
 
-Feature 4 delivered the early honest direction-only demo. After confirmation,
-return to physical stereo calibration and 0.5–3 m validation so the safety loop
-can progress beyond suppressed diagnostic depth. Keep cross-camera object
-distance disabled until its separate calibration exists.
+The dashboard build of 2026-09-29 is the current boundary. Next: fix the two
+USB 2 links, run `scripts/calibrate_stereo.py` with the 7x7 board, validate at
+0.5–3 m, then watch the approach rule, SLAM trail and corridor guidance come
+alive on the dashboard. Keep cross-camera object distance disabled until its
+separate calibration exists.

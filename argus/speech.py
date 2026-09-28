@@ -26,6 +26,7 @@ from enum import IntEnum
 import numpy as np
 
 from .config import SpeechConfig
+from .telemetry import bus
 
 
 def _sd():
@@ -162,8 +163,8 @@ class Speaker:
         """Queue `text`. Never blocks. DANGER preempts whatever is playing."""
         if not text:
             return
+        bus.log("safety" if priority >= Priority.WARN else "argus", text)
         if not self.enabled or self._voice is None:
-            print(f"[ARGUS says] {text}")
             return
         with self._cv:
             if priority >= Priority.DANGER:
@@ -272,13 +273,42 @@ class Speaker:
         sd.wait()   # returns early if another thread calls sd.stop() (preemption)
 
 
-def record(seconds: float, sample_rate: int, device=None) -> np.ndarray:
-    """Blocking mic capture -> float32 mono in [-1, 1]."""
+def record(seconds: float, sample_rate: int, device=None,
+           stop_on_silence: bool = True, silence_s: float = 0.8,
+           min_s: float = 1.0, threshold: float = 0.01) -> np.ndarray:
+    """Blocking mic capture -> float32 mono in [-1, 1].
+
+    With `stop_on_silence` the recording ends `silence_s` after the user stops
+    talking instead of always waiting the full `seconds`, which was the single
+    largest fixed cost in the question loop.
+    """
     import sounddevice as sd
-    audio = sd.rec(int(seconds * sample_rate), samplerate=sample_rate, channels=1,
-                   dtype="float32", device=_resolve_device(device, "input"))
-    sd.wait()
-    return audio.flatten()
+    if not stop_on_silence:
+        audio = sd.rec(int(seconds * sample_rate), samplerate=sample_rate, channels=1,
+                       dtype="float32", device=_resolve_device(device, "input"))
+        sd.wait()
+        return audio.flatten()
+    block = int(sample_rate * 0.05)
+    chunks: list[np.ndarray] = []
+    heard_speech = False
+    quiet_for = 0.0
+    with sd.InputStream(samplerate=sample_rate, channels=1, dtype="float32",
+                        blocksize=block, device=_resolve_device(device, "input")) as stream:
+        elapsed = 0.0
+        while elapsed < seconds:
+            data, _ = stream.read(block)
+            chunk = data[:, 0].copy()
+            chunks.append(chunk)
+            elapsed += len(chunk) / sample_rate
+            rms = float(np.sqrt(np.mean(chunk ** 2)))
+            if rms >= threshold:
+                heard_speech = True
+                quiet_for = 0.0
+            else:
+                quiet_for += len(chunk) / sample_rate
+            if heard_speech and elapsed >= min_s and quiet_for >= silence_s:
+                break
+    return np.concatenate(chunks) if chunks else np.zeros(0, dtype=np.float32)
 
 
 def mic_stream(sample_rate: int, block_ms: int = 80, device=None):

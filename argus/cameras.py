@@ -45,6 +45,40 @@ class VideoNode:
     width: int = 0     # probed default capture resolution
     height: int = 0
     works: bool = False  # opened AND delivered a frame
+    link_mbps: int = 0   # negotiated USB link speed (5000 = USB 3, 480 = USB 2)
+
+
+def usb_link_mbps(usb_port: str) -> int:
+    """Negotiated link speed for a USB port path, 0 when unknown."""
+    try:
+        return int(float(Path(f"/sys/bus/usb/devices/{usb_port}/speed").read_text().strip()))
+    except (OSError, ValueError):
+        return 0
+
+
+def hub_port_of(usb_port: str) -> str:
+    """The physical hub port number, the part after the last dot.
+
+    A USB 3 hub appears twice to Linux: once on the SuperSpeed bus and once on
+    its High-Speed companion bus. The same physical port therefore shows up as
+    "2-1.2" when the camera links at 5 Gbit/s and "1-2.2" when it only reaches
+    USB 2. Binding on the hub port keeps the role stable across both.
+    """
+    return usb_port.rsplit(".", 1)[-1] if usb_port else ""
+
+
+def find_port(nodes, wanted: str):
+    """Exact USB path first, then the same hub port on the companion bus."""
+    for node in nodes:
+        if node.usb_port == wanted:
+            return node
+    hub = hub_port_of(wanted)
+    same_hub = [n for n in nodes if hub and hub_port_of(n.usb_port) == hub]
+    if len(same_hub) == 1:
+        print(f"[cameras] {wanted} not present; using {same_hub[0].usb_port} "
+              f"(same hub port {hub}, link {same_hub[0].link_mbps} Mbit/s)")
+        return same_hub[0]
+    return None
 
 
 def _sysfs_nodes(max_index: int) -> list[VideoNode]:
@@ -71,7 +105,8 @@ def _sysfs_nodes(max_index: int) -> list[VideoNode]:
             usb_port = dev.name.split(":")[0]
         except OSError:
             pass
-        nodes.append(VideoNode(index=idx, name=name, usb_port=usb_port))
+        nodes.append(VideoNode(index=idx, name=name, usb_port=usb_port,
+                               link_mbps=usb_link_mbps(usb_port)))
     return nodes
 
 
@@ -97,7 +132,11 @@ def probe_cameras(max_index: int = 10, verbose: bool = True) -> list[VideoNode]:
     if verbose:
         for n in working:
             print(f"[cameras] /dev/video{n.index}: '{n.name}' "
-                  f"{n.width}x{n.height} usb={n.usb_port or '?'}")
+                  f"{n.width}x{n.height} usb={n.usb_port or '?'} "
+                  f"link={n.link_mbps or '?'} Mbit/s")
+            if 0 < n.link_mbps < 5000:
+                print(f"[cameras] WARNING: /dev/video{n.index} negotiated USB 2 "
+                      "only; reseat the cable at both ends for full frame rate")
     return working
 
 
@@ -126,10 +165,9 @@ def order_stereo_nodes(stereo: list[VideoNode], cfg: CameraConfig,
     if not ports and cfg.left_usb_port and cfg.right_usb_port:
         ports = (cfg.left_usb_port, cfg.right_usb_port)
     if ports:
-        by_port = {node.usb_port: node for node in stereo}
-        left = by_port.get(ports[0])
-        right = by_port.get(ports[1])
-        if left is not None and right is not None:
+        left = find_port(stereo, ports[0])
+        right = find_port(stereo, ports[1])
+        if left is not None and right is not None and left is not right:
             return left, right
         print("[cameras] WARNING: configured/calibrated stereo USB ports do not "
               "match the connected B0495 cameras; falling back to index order. "
@@ -179,8 +217,7 @@ def discover_rig(cfg: CameraConfig) -> tuple[int, int, int]:
     ports = _calib_ports(cfg.calibration_file)
     left, right = order_stereo_nodes(stereo, cfg, ports)
 
-    wide_node = next((n for n in wide if cfg.wide_usb_port and
-                      n.usb_port == cfg.wide_usb_port), None)
+    wide_node = find_port(wide, cfg.wide_usb_port) if cfg.wide_usb_port else None
     if wide_node is None:
         wide_node = sorted(wide, key=lambda n: n.index)[0]
     print(f"[cameras] discovered: left=/dev/video{left.index} "
@@ -246,10 +283,85 @@ class StereoFrame:
     ts: float
 
 
+class _Reader:
+    """Free-running capture thread for one camera with arrival timestamps.
+
+    Serial grab()/grab() on two UVC cameras blocks the fast loop for up to a
+    full frame period per camera and hides the true inter-camera skew. Each
+    camera is read by its own thread; consumers take the newest frame and an
+    honest arrival time, so the skew gate measures reality.
+    """
+
+    def __init__(self, name: str, index: int, width: int, height: int, fps: int,
+                 pixel_format: str, rotation: int, flip_h: bool, flip_v: bool,
+                 reconnect: bool, reconnect_interval_s: float):
+        self.name, self.index = name, index
+        self._open_args = (index, width, height, fps, pixel_format)
+        self._xform = (rotation, flip_h, flip_v)
+        self._reconnect = reconnect
+        self._reconnect_interval_s = reconnect_interval_s
+        self.cap = _open(*self._open_args)
+        if not self.cap.isOpened():
+            raise RuntimeError(
+                f"Failed to open {name} camera (/dev/video{index}). Check connections "
+                "and v4l2-ctl --list-devices; override indices in argus.yaml if needed.")
+        self._lock = threading.Lock()
+        self._frame: np.ndarray | None = None
+        self._ts = 0.0
+        self._seq = 0
+        self._fps = 0.0
+        self._stop = threading.Event()
+        self._thread = threading.Thread(target=self._run, name=f"cam-{name}", daemon=True)
+        self._thread.start()
+
+    def _run(self):
+        fail_since = None
+        rate_t, rate_n = time.perf_counter(), 0
+        while not self._stop.is_set():
+            ok, frame = self.cap.read()
+            now = time.perf_counter()
+            if ok and frame is not None:
+                fail_since = None
+                frame = transform_frame(frame, *self._xform)
+                with self._lock:
+                    self._frame, self._ts, self._seq = frame, now, self._seq + 1
+                rate_n += 1
+                if now - rate_t >= 1.0:
+                    self._fps = rate_n / (now - rate_t)
+                    rate_t, rate_n = now, 0
+                continue
+            if fail_since is None:
+                fail_since = time.monotonic()
+            elif self._reconnect and time.monotonic() - fail_since > self._reconnect_interval_s:
+                print(f"[cameras] {self.name} camera stalled — reopening")
+                self.cap.release()
+                self.cap = _open(*self._open_args)
+                fail_since = None
+            time.sleep(0.02)
+
+    @property
+    def fps(self) -> float:
+        """Delivered rate; reports 0 once no frame has arrived for 2 s so a
+        camera whose read() is blocked (USB 2 starvation) shows as stalled
+        instead of keeping its last healthy number."""
+        with self._lock:
+            ts = self._ts
+        return 0.0 if time.perf_counter() - ts > 2.0 else self._fps
+
+    def latest(self) -> tuple[np.ndarray | None, float, int]:
+        with self._lock:
+            return self._frame, self._ts, self._seq
+
+    def release(self):
+        self._stop.set()
+        self._thread.join(timeout=1.0)
+        self.cap.release()
+
+
 class CameraRig:
-    """Owns all three cameras. Thread-safe wide-frame snapshot via a background
-    reader so the slow loop always gets a recent frame without contention.
-    Stereo cameras that stop delivering frames are reopened automatically."""
+    """Owns all three cameras. Every camera has its own reader thread, so the
+    fast loop and the slow loop always take the newest frame without blocking
+    on USB, and stereo skew is measured from real arrival times."""
 
     def __init__(self, cfg: CameraConfig):
         self.cfg = cfg
@@ -259,106 +371,45 @@ class CameraRig:
             self.left_index, self.right_index, self.wide_index = (
                 cfg.left_index, cfg.right_index, cfg.wide_index)
 
-        self.left = _open(self.left_index, cfg.stereo_width, cfg.stereo_height,
-                          cfg.stereo_fps, cfg.pixel_format)
-        self.right = _open(self.right_index, cfg.stereo_width, cfg.stereo_height,
-                           cfg.stereo_fps, cfg.pixel_format)
-        self.wide = _open(self.wide_index, cfg.wide_width, cfg.wide_height,
-                          cfg.wide_fps, cfg.pixel_format)
-
-        for name, cap in [("left", self.left), ("right", self.right), ("wide", self.wide)]:
-            if not cap.isOpened():
-                raise RuntimeError(
-                    f"Failed to open {name} camera. Check connections and "
-                    "v4l2-ctl --list-devices; override indices in argus.yaml if needed.")
-
-        self._stereo_fail_since: float | None = None
-        self._wide_lock = threading.Lock()
-        self._wide_frame: np.ndarray | None = None
-        self._stop = threading.Event()
-        self._wide_thread = threading.Thread(target=self._wide_loop, daemon=True)
-        self._wide_thread.start()
+        common = (cfg.reconnect, cfg.reconnect_interval_s)
+        self.left = _Reader("left", self.left_index, cfg.stereo_width, cfg.stereo_height,
+                            cfg.stereo_fps, cfg.pixel_format, cfg.left_rotation,
+                            cfg.left_flip_horizontal, cfg.left_flip_vertical, *common)
+        self.right = _Reader("right", self.right_index, cfg.stereo_width, cfg.stereo_height,
+                             cfg.stereo_fps, cfg.pixel_format, cfg.right_rotation,
+                             cfg.right_flip_horizontal, cfg.right_flip_vertical, *common)
+        self.wide = _Reader("wide", self.wide_index, cfg.wide_width, cfg.wide_height,
+                            cfg.wide_fps, cfg.pixel_format, cfg.wide_rotation,
+                            cfg.wide_flip_horizontal, cfg.wide_flip_vertical, *common)
+        self._last_pair = (-1, -1)
 
     # ------------------------------------------------------------------ wide
-    def _wide_loop(self):
-        fail_since = None
-        while not self._stop.is_set():
-            ok, frame = self.wide.read()
-            if ok:
-                fail_since = None
-                frame = transform_frame(frame, self.cfg.wide_rotation,
-                                        self.cfg.wide_flip_horizontal,
-                                        self.cfg.wide_flip_vertical)
-                with self._wide_lock:
-                    self._wide_frame = frame
-            else:
-                if fail_since is None:
-                    fail_since = time.monotonic()
-                elif (self.cfg.reconnect
-                      and time.monotonic() - fail_since > self.cfg.reconnect_interval_s):
-                    print("[cameras] wide camera stalled — reopening")
-                    self.wide.release()
-                    self.wide = _open(self.wide_index, self.cfg.wide_width,
-                                      self.cfg.wide_height, self.cfg.wide_fps,
-                                      self.cfg.pixel_format)
-                    fail_since = None
-                time.sleep(0.05)
-
     def get_wide_frame(self) -> np.ndarray | None:
         """Latest scene-camera frame (BGR), or None if not ready yet."""
-        with self._wide_lock:
-            return None if self._wide_frame is None else self._wide_frame.copy()
+        frame, _, _ = self.wide.latest()
+        return None if frame is None else frame.copy()
 
     # ------------------------------------------------------------------ stereo
     def get_stereo_pair(self) -> StereoFrame | None:
-        """Synchronized-ish left/right capture with measured skew."""
-        if not self.left.grab():
-            self._stereo_failed()
-            return None
-        t_l = time.perf_counter()
-        if not self.right.grab():
-            self._stereo_failed()
-            return None
-        t_r = time.perf_counter()
-        okL, fL = self.left.retrieve()
-        okR, fR = self.right.retrieve()
-        if not (okL and okR):
-            self._stereo_failed()
-            return None
-        self._stereo_fail_since = None
-        fL = transform_frame(fL, self.cfg.left_rotation,
-                             self.cfg.left_flip_horizontal,
-                             self.cfg.left_flip_vertical)
-        fR = transform_frame(fR, self.cfg.right_rotation,
-                             self.cfg.right_flip_horizontal,
-                             self.cfg.right_flip_vertical)
-        return StereoFrame(left=fL, right=fR, skew_ms=(t_r - t_l) * 1000.0, ts=t_l)
+        """Newest left/right frames with their real arrival skew.
 
-    def _stereo_failed(self):
-        """Track sustained stereo failure and reopen both cameras if configured."""
-        now = time.monotonic()
-        if self._stereo_fail_since is None:
-            self._stereo_fail_since = now
-            return
-        if self.cfg.reconnect and now - self._stereo_fail_since > self.cfg.reconnect_interval_s:
-            print("[cameras] stereo pair stalled — reopening both")
-            self.left.release()
-            self.right.release()
-            self.left = _open(self.left_index, self.cfg.stereo_width,
-                              self.cfg.stereo_height, self.cfg.stereo_fps,
-                              self.cfg.pixel_format)
-            self.right = _open(self.right_index, self.cfg.stereo_width,
-                               self.cfg.stereo_height, self.cfg.stereo_fps,
-                               self.cfg.pixel_format)
-            self._stereo_fail_since = None
+        Returns None until both cameras have delivered, and None again when
+        neither camera has produced a new frame since the last call, so a
+        stalled pair is never re-evaluated as fresh."""
+        fL, tL, sL = self.left.latest()
+        fR, tR, sR = self.right.latest()
+        if fL is None or fR is None or (sL, sR) == self._last_pair:
+            return None
+        self._last_pair = (sL, sR)
+        return StereoFrame(left=fL, right=fR, skew_ms=abs(tR - tL) * 1000.0, ts=min(tL, tR))
+
+    def rates(self) -> dict[str, float]:
+        return {"left": self.left.fps, "right": self.right.fps, "wide": self.wide.fps}
 
     # ------------------------------------------------------------------ lifecycle
     def release(self):
-        self._stop.set()
-        if self._wide_thread.is_alive():
-            self._wide_thread.join(timeout=1.0)
-        for cap in (self.left, self.right, self.wide):
-            cap.release()
+        for reader in (self.left, self.right, self.wide):
+            reader.release()
 
     def __enter__(self):
         return self

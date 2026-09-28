@@ -60,7 +60,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 # Common inner-corner layouts to try when --rows/--cols are not given.
 # (cols, rows) = (inner corners along x, inner corners along y).
-COMMON_BOARDS = [(9, 6), (7, 6), (8, 6), (9, 7), (7, 5), (6, 5), (10, 7), (11, 8)]
+COMMON_BOARDS = [(9, 6), (7, 6), (8, 6), (9, 7), (7, 5), (6, 5), (10, 7), (11, 8),
+                 (7, 7)]   # a standard 8x8 chess board has 7x7 inner corners
 
 CHESS_FLAGS = (cv2.CALIB_CB_ADAPTIVE_THRESH
                | cv2.CALIB_CB_NORMALIZE_IMAGE
@@ -189,6 +190,7 @@ def detect_board(gray, pattern):
     ok, corners = cv2.findChessboardCorners(gray, pattern, CHESS_FLAGS)
     if ok:
         corners = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), SUBPIX_CRIT)
+        corners = normalize_corners(corners, pattern)
     return ok, corners
 
 
@@ -206,6 +208,31 @@ def make_object_points(pattern: tuple[int, int], square_m: float) -> np.ndarray:
     obj = np.zeros((pattern[0] * pattern[1], 3), np.float32)
     obj[:, :2] = np.mgrid[0:pattern[0], 0:pattern[1]].T.reshape(-1, 2) * square_m
     return obj
+
+
+def normalize_corners(corners: np.ndarray, pattern: tuple[int, int]) -> np.ndarray:
+    """Order detected corners consistently for symmetric boards.
+
+    OpenCV returns a 7x7 (chess board) or any rows == cols grid in one of four
+    orientations, and a 180-degree-symmetric grid in one of two. Left and right
+    may then disagree, which silently corrupts the stereo solve. Re-order so
+    the first row runs along +x and the first column along +y in image
+    coordinates; both cameras on a rigid rig see the board the same way up, so
+    corner k is the same physical corner in both views.
+    """
+    cols, rows = pattern
+    grid = corners.reshape(rows, cols, 2).astype(np.float32)
+    row_vec = grid[0, -1] - grid[0, 0]
+    col_vec = grid[-1, 0] - grid[0, 0]
+    if rows == cols and abs(row_vec[0]) < abs(row_vec[1]):
+        grid = grid.transpose(1, 0, 2)
+        row_vec = grid[0, -1] - grid[0, 0]
+        col_vec = grid[-1, 0] - grid[0, 0]
+    if row_vec[0] < 0:
+        grid = grid[:, ::-1]
+    if col_vec[1] < 0:
+        grid = grid[::-1]
+    return np.ascontiguousarray(grid.reshape(-1, 1, 2))
 
 
 def _coverage_cell(corners, w, h, grid=3):
@@ -362,7 +389,8 @@ def main():
     ap.add_argument("--right", type=int, default=None, help="right cam index (auto if omitted)")
     ap.add_argument("--rows", type=int, default=None, help="inner corners per column (auto if omitted)")
     ap.add_argument("--cols", type=int, default=None, help="inner corners per row (auto if omitted)")
-    ap.add_argument("--square-mm", type=float, default=25.0, help="checkerboard square size (mm)")
+    ap.add_argument("--square-mm", type=float, default=None,
+                    help="measured checkerboard square size in mm (required unless --verify)")
     ap.add_argument("--min-views", type=int, default=15, help="views required before solving")
     ap.add_argument("--out", default=DEFAULT_OUT)
     ap.add_argument("--no-auto", action="store_true", help="manual capture (SPACE) only")
@@ -380,6 +408,10 @@ def main():
     ap.add_argument("--max-seconds", type=float, default=300.0,
                     help="headless capture time limit")
     args = ap.parse_args()
+    if args.square_mm is None and not args.verify:
+        ap.error("--square-mm is required: measure one square of the physical board with a ruler")
+    if args.square_mm is None:
+        args.square_mm = 25.0
 
     screen_canvas = None
     if args.screen_target:

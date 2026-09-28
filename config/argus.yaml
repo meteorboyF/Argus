@@ -26,8 +26,7 @@ camera:
   left_index: 0                # confirm with: v4l2-ctl --list-devices
   right_index: 2
   wide_index: 4
-  # All three mounted modules advertise YUYV only. The AR0234 boards are
-  # physically rotated in opposite directions on the glasses frame.
+  # All three mounted modules advertise YUYV only.
   pixel_format: "YUYV"
   stereo_width: 960
   stereo_height: 600
@@ -35,8 +34,11 @@ camera:
   wide_width: 1920
   wide_height: 1080
   wide_fps: 30
-  left_rotation: 90       # /dev/video0: normalize 90° clockwise
-  right_rotation: 270     # /dev/video2: normalize 90° counterclockwise
+  # 2026-09-29 bracket mount: both AR0234 boards sit upright beside the frame,
+  # confirmed from live frames, so no rotation is applied. Re-verify with
+  # `python3 -m argus preview` whenever a camera is re-seated.
+  left_rotation: 0
+  right_rotation: 0
   wide_rotation: 0
   reconnect: true              # reopen a camera that stops delivering frames
 
@@ -77,13 +79,15 @@ agent:
   tool_protocol: prompt  # "prompt" works with every llama.cpp template; "native"
                          # needs --jinja + a tool-capable chat template
   image_max_side: 256    # warm-cache 6.4 s; cold production path measured 25.6 s
+  fast_locate: true      # explicit "find X" skips the first Gemma turn (deterministic tool policy)
 
 speech:
   wake_model: "hey_jarvis"  # openWakeWord built-in; replace with custom "ARGUS" .onnx later
   wake_threshold: 0.5
   whisper_model: "tiny"
   whisper_compute: "int8"
-  record_seconds: 5.0
+  record_seconds: 5.0    # upper bound; recording stops ~0.8 s after the user goes quiet
+  stop_on_silence: true
   input_device: null     # mic: index or name substring (e.g. "USB"); null = default
   output_device: null    # speaker/bone-conduction: index or name substring
 
@@ -93,3 +97,16 @@ privacy:
   blur_kernel: 51
   enable_text_blur: false
   require_gate: true     # HARD RULE: never call the agent if face blur is unavailable
+
+slam:
+  enabled: true          # stereo visual odometry; inactive until calibration exists
+  max_features: 800
+  min_inliers: 15
+  submit_every: 2        # every second fast-loop tick (CPU budget)
+
+navigation:
+  enabled: true          # corridor guidance from calibrated depth
+  clear_distance_m: 2.0
+  bins: 24
+  speak: true
+  repeat_s: 6.0

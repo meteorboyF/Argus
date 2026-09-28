@@ -135,6 +135,17 @@ class SafetyConfig:
     tick_hz: float = 10.0             # fast-loop frequency
     danger_repeat_s: float = 2.0      # min seconds between spoken DANGER warnings
     warn_repeat_s: float = 6.0        # min seconds between spoken WARN notices
+    # Approach / time-to-collision. Each of the three path zones keeps a short
+    # history of its robust range; a linear fit gives the closing speed and
+    # TTC = range / closing speed. A car at 5 m/s that is 12 m away has a TTC
+    # of 2.4 s and is caught long before it crosses the static warn distance.
+    approach_band: tuple[float, float] = (0.3, 0.7)   # eye-level rows, above the floor
+    approach_window_s: float = 0.8    # history length used for the speed fit
+    approach_min_samples: int = 4
+    approach_min_speed_mps: float = 0.6   # slower closings are handled by distance rules
+    approach_max_range_m: float = 15.0    # ignore noise from very far surfaces
+    ttc_warn_s: float = 3.0
+    ttc_danger_s: float = 1.5
 
 
 @dataclass
@@ -171,6 +182,9 @@ class AgentConfig:
     # Downscale the gated frame to this max side before base64-encoding it for
     # the VLM — keeps prompt processing time and memory sane on the Jetson.
     image_max_side: int = 256
+    # Explicit "find/locate/where is X" requests skip the first Gemma turn and
+    # go straight to TensorRT grounding; the tool policy is deterministic code.
+    fast_locate: bool = True
 
 
 @dataclass
@@ -182,7 +196,8 @@ class SpeechConfig:
     whisper_model: str = "tiny"        # faster-whisper
     whisper_compute: str = "int8"
     piper_voice: str = str(MODELS_DIR / "piper" / "en_US-lessac-medium.onnx")
-    record_seconds: float = 5.0
+    record_seconds: float = 5.0        # upper bound; recording ends early on silence
+    stop_on_silence: bool = True
     # sounddevice selectors: None = system default. Accepts an integer index or
     # a name substring (e.g. "USB"). List devices with: python -m sounddevice
     input_device: int | str | None = None
@@ -202,8 +217,40 @@ class PrivacyConfig:
 
 
 @dataclass
+class SlamConfig:
+    # Stereo visual odometry (argus/slam.py). Needs stereo calibration.
+    enabled: bool = True
+    max_features: int = 800
+    min_inliers: int = 15
+    min_disparity_px: float = 1.0
+    max_row_error_px: float = 2.0
+    max_depth_m: float = 20.0
+    reprojection_px: float = 3.0
+    max_step_m: float = 0.5        # larger per-frame motion is a tracking failure
+    trail_points: int = 400
+    submit_every: int = 2          # feed every Nth fast-loop tick (CPU budget)
+
+
+@dataclass
+class NavigationConfig:
+    # Corridor guidance (argus/navigation.py). Needs stereo calibration.
+    enabled: bool = True
+    bins: int = 24
+    band: tuple[float, float] = (0.35, 0.85)   # walking band: eye level to near floor
+    percentile: float = 10.0
+    min_pixels_per_bin: int = 40
+    clear_distance_m: float = 2.0
+    min_corridor_deg: float = 8.0
+    straight_deg: float = 6.0
+    speak: bool = True
+    repeat_s: float = 6.0
+
+
+@dataclass
 class ArgusConfig:
     camera: CameraConfig = field(default_factory=CameraConfig)
+    slam: SlamConfig = field(default_factory=SlamConfig)
+    navigation: NavigationConfig = field(default_factory=NavigationConfig)
     depth: DepthConfig = field(default_factory=DepthConfig)
     safety: SafetyConfig = field(default_factory=SafetyConfig)
     grounding: GroundingConfig = field(default_factory=GroundingConfig)
@@ -233,4 +280,6 @@ def load_config(path: str | os.PathLike | None = None) -> ArgusConfig:
         _merge(cfg.agent, data.get("agent"))
         _merge(cfg.speech, data.get("speech"))
         _merge(cfg.privacy, data.get("privacy"))
+        _merge(cfg.slam, data.get("slam"))
+        _merge(cfg.navigation, data.get("navigation"))
     return cfg

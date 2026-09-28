@@ -1,6 +1,6 @@
 # ARGUS implementation status
 
-Last audited: 2026-08-14. This file is the implementation source of truth.
+Last audited: 2026-09-29. This file is the implementation source of truth.
 
 Status meanings: **done** means implemented and verified for its stated scope;
 **partial** means useful code/evidence exists but acceptance is incomplete;
@@ -10,23 +10,25 @@ implementation exists.
 | Component | Status | Verified reality / next gate |
 |---|---|---|
 | Jetson environment baseline | partial | Refreshed report: 24 pass/2 fail. MAXN_SUPER is active; privileged `jetson_clocks --show` remains unverified and calibration is absent |
-| Camera identity/transforms | partial | Stable USB-role code and 9 unit tests pass; delivered FPS/skew/reconnect require device test |
-| Stereo calibration tool | partial | Substantial capture/solve code exists; no deployed calibration or 0.5–3 m validation |
+| Camera identity/transforms | partial | Each camera has its own capture thread with real arrival timestamps; roles bind to the hub port so a camera that falls back to USB 2 (`1-2.x` instead of `2-1.x`) keeps its role and is flagged. Brackets now mount both AR0234s upright, rotations set to 0. On 2026-09-29 hub ports 2 and 4 linked at 480 Mbit/s (10 fps, multi-second stalls); reseat needed before calibration |
+| Stereo calibration tool | partial | Threaded capture, pose diversity and hard RMS/vertical gates; accepts the physical 8x8 folding board (7x7 inner corners). No deployed calibration yet; 0.5–3 m validation pending |
 | Calibration drift monitor | partial | 12 synthetic tests pass; needs real calibrated scenes |
 | GPU stereo depth | partial | Deterministic CUDA SAD backend is production default and never falls back to CPU. Live median 12.7 ms, p95 14.1 ms, GR3D peak 95%. Synthetic shift passed; physical metric accuracy is blocked on calibration |
 | CPU SGBM | diagnostic only | Implemented; not permitted as production depth |
-| Safety rules | partial | 9 synthetic obstacle/drop tests pass; uncalibrated warnings suppressed; no approach/TTC validation |
-| Incoming vehicle warning | not started | Requires temporal range/approach rules and controlled tests |
+| Safety rules | partial | Static obstacle/drop rules plus the temporal approach rule (per-zone closing speed and time-to-collision); 77 unit tests pass. Uncalibrated warnings stay suppressed |
+| Incoming vehicle warning | partial | Eye-level band split into left/center/right zones; closing speed from a 0.8 s linear fit, WARN at 3 s TTC, DANGER at 1.5 s. Synthetic 5 m/s approach test passes; real-scene validation blocked on calibration |
 | Speech pipeline | partial | Six priority/preemption tests now pass. Piper completed through PulseAudio USB without PortAudio underruns. Wake word/STT microphone loop is not yet accepted; wake phrase remains `hey_jarvis` |
 | YOLO-World TensorRT | partial | Production FP16 runtime-label engine detected the physical monitor at center. Cached queries measured ~30 ms; cold CLIP load reached 15.5 s under the full stack. Broader object accuracy and memory hardening remain |
 | Ultralytics grounding | diagnostic only | `.pt` prototype exists; prohibited production fallback |
 | Face privacy gate | partial | InsightFace blur exists and is required; exception boundary is fail-closed; adversarial tests needed |
 | Sensitive-text privacy | not started | No CRAFT/text flag or blur implementation |
-| Gemma 4 agent | partial | Current full-stack visual turn ran through pinned CUDA llama.cpp with `-ngl 99` and flash attention; 4.27 s visual turn and 1.14 s final turn. Repeated/concurrent latency and memory need hardening |
+| Gemma 4 agent | partial | llama-server runs on CUDA0 with `-ngl 99` and flash attention. Typed "find the monitor" round-trip on 2026-09-29: privacy 0.17 s, grounding 0.72 s, final turn 0.91 s, total 1.8 s. CLIP text encoder now warms at startup |
 | Agent tool protocol | partial | Explicit locate intent is deterministically forced through verified TensorRT grounding when Gemma ignores the prompt. Positive monitor query returned center; broader language tests remain |
 | Wide-to-stereo projection | broken | Old proportional mapping disabled; direction only until calibrated projection exists |
-| SLAM | not started | No backend, IMU inventory, calibration, or pose contract |
-| Full two-speed integration | partial | Manual “Find the monitor” completed cameras -> concurrent CUDA depth -> CPU privacy -> CUDA Gemma -> TRT grounder -> Gemma -> Piper/Pulse USB. Direction center, distance omitted. Wake/STT and hardening remain |
+| SLAM | partial | Stereo visual odometry in `argus/slam.py` (ORB stereo triangulation, LK tracking, PnP RANSAC) on its own thread; two synthetic tests pass with metric scale. Off until stereo calibration exists |
+| Full two-speed integration | partial | `run --dashboard` shows cameras, depth, top-down map, status and the conversation on the monitor; questions can be typed or appended to a file. Verified live 2026-09-29. Wake/STT and memory hardening remain |
+| Monitor dashboard | done | `argus/dashboard.py` + `argus/telemetry.py`: OpenCV window with three feeds, depth, corridor/SLAM map, status and speech log; verified at 1920x1080 on 2026-09-29 |
+| Corridor navigation | partial | `argus/navigation.py` picks the widest free bearing from calibrated depth; three synthetic tests pass. Off until calibration exists |
 | Headless service/soak/fault tests | not started | No service definition or sustained validation |
 
 ## Reproducibility pins

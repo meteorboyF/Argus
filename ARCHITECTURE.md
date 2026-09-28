@@ -71,6 +71,9 @@ Existing modules may be replaced internally while retaining clear boundaries:
 - `grounding`: TensorRT open-vocabulary contract and detections.
 - `agent`: gated-image reasoning and bounded tool protocol.
 - `speech`: CPU wake/STT/TTS with priority and cancellation.
-- `slam`: future pose/tracking-quality backend.
+- `slam`: stereo visual odometry (pose, trail, tracking quality, ego speed).
+- `navigation`: deterministic corridor guidance over calibrated depth.
+- `telemetry`: lock-free snapshot bus every module publishes state into.
+- `dashboard`: on-monitor rendering of the telemetry bus and typed questions.
 - `orchestrator`: lifecycle and explicit data contracts between loops.
 

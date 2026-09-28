@@ -17,8 +17,10 @@ from .config import load_config
 def _cmd_run(args):
     from .orchestrator import Orchestrator
     cfg = load_config(args.config)
-    orch = Orchestrator(cfg, enable_audio=not args.no_audio)
-    orch.run()
+    orch = Orchestrator(cfg, enable_audio=not args.no_audio,
+                        enable_mic=not (args.no_audio or args.no_mic))
+    orch.run(dashboard=args.dashboard, fullscreen=not args.windowed,
+             ask_file=args.ask_file)
 
 
 def _cmd_query(args):
@@ -65,6 +67,14 @@ def main(argv=None):
 
     pr = sub.add_parser("run", help="run the full two-speed runtime")
     pr.add_argument("--no-audio", action="store_true", help="fast loop only, no speech")
+    pr.add_argument("--no-mic", action="store_true",
+                    help="speak answers but do not listen; ask by typing in the dashboard")
+    pr.add_argument("--dashboard", action="store_true",
+                    help="show the live monitor view (cameras, depth, detections, speech)")
+    pr.add_argument("--windowed", action="store_true", help="dashboard in a window, not fullscreen")
+    pr.add_argument("--ask-file", default=None, metavar="PATH",
+                    help="also accept questions appended as lines to this file "
+                         "(e.g. echo 'find the monitor' >> PATH)")
     pr.set_defaults(func=_cmd_run)
 
     pq = sub.add_parser("query", help="run one slow-path interaction")

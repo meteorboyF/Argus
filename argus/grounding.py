@@ -123,6 +123,16 @@ class Grounder:
         return Detection(name, float(scores[best_i]), (x1, y1, x2, y2),
                          ((x1 + x2) // 2, (y1 + y2) // 2))
 
+    def warm(self, names: tuple[str, ...] = ("object", "door", "chair", "person",
+                                              "car", "stairs", "table", "phone")):
+        """Load the text encoder and pre-embed common labels off the query path."""
+        if self.cfg.backend != "trt":
+            return
+        for name in names:
+            self._embed(name)
+        # One TensorRT pass so the CUDA context and kernels are hot too.
+        self._find_object_trt("object", np.zeros((self.cfg.imgsz, self.cfg.imgsz, 3), np.uint8))
+
     def find_object(self, name: str, frame_bgr: np.ndarray) -> Detection | None:
         """Detect the single best instance of `name` in the frame, or None."""
         if self.cfg.backend == "trt":

@@ -40,6 +40,7 @@ class DepthEstimator:
         self._trt = None
         self._cuda_matcher = None
         self._calib = None
+        self.last_rectified: tuple | None = None   # (left_bgr, right_bgr) after remap
         self._load_calibration()
         self.health = CalibrationMonitor(cfg)
 
@@ -149,6 +150,16 @@ class DepthEstimator:
     def calibrated(self) -> bool:
         return self._calib is not None
 
+    def intrinsics(self) -> dict | None:
+        """Rectified pinhole parameters (fx, fy, cx, cy, baseline) from Q."""
+        if self._calib is None:
+            return None
+        Q = np.asarray(self._calib["Q"], dtype=np.float64)
+        fx = float(Q[2, 3])
+        baseline = float(1.0 / abs(Q[3, 2])) if Q[3, 2] != 0 else self.cfg.baseline_m
+        return {"fx": fx, "fy": fx, "cx": float(-Q[0, 3]), "cy": float(-Q[1, 3]),
+                "baseline_m": baseline}
+
     def _rectify_pair(self, left_bgr, right_bgr):
         """Undistort + rectify so the cameras behave as a parallel pair."""
         c = self._calib
@@ -167,6 +178,7 @@ class DepthEstimator:
         SGBM matching runs on downscaled images for fast-loop speed."""
         if self._calib is not None:
             left_bgr, right_bgr = self._rectify_pair(left_bgr, right_bgr)
+            self.last_rectified = (left_bgr, right_bgr)
             # Watch for calibration drift on the rectified pair. Rate-limited
             # internally, so this is cheap to call every frame. Only meaningful
             # when calibrated — without a calibration there is no rectification
