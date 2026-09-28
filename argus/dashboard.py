@@ -134,6 +134,23 @@ def _draw_topdown(w: int, h: int, values: dict) -> np.ndarray:
     return tile
 
 
+def _camera_line(values: dict) -> tuple[str, tuple]:
+    """'L 30 USB3 / R 0 USB2! / W 10 USB2!' in amber while any camera is on a
+    USB 2 link (a plug not pushed home, or a USB 2 cable)."""
+    parts, degraded = [], False
+    for tag, key in (("L", "left"), ("R", "right"), ("W", "wide")):
+        fps = values.get(f"fps_{key}", 0.0)
+        link = int(values.get(f"link_{key}", 0) or 0)
+        if link >= 5000:
+            usb = "USB3"
+        elif link > 0:
+            usb, degraded = "USB2!", True
+        else:
+            usb = "?"
+        parts.append(f"{tag} {fps:.0f} {usb}")
+    return " / ".join(parts) + (" fps" if not degraded else " fps  reseat!"), (AMBER if degraded else FG)
+
+
 def _status_tile(w: int, h: int, values: dict) -> np.ndarray:
     tile = np.full((h, w, 3), PANEL, dtype=np.uint8)
     level = str(values.get("safety_level", "UNKNOWN"))
@@ -145,8 +162,7 @@ def _status_tile(w: int, h: int, values: dict) -> np.ndarray:
         ("stereo depth", f"{values.get('depth_ms', 0):.1f} ms  {values.get('fast_hz', 0):.1f} Hz  "
                          f"{values.get('depth_backend', '?')}"),
         ("stereo skew", f"{values.get('skew_ms', 0):.1f} ms  drops {values.get('skew_drops', 0)}"),
-        ("cameras", "L {left:.0f} / R {right:.0f} / W {wide:.0f} fps".format(
-            **{k: values.get(f"fps_{k}", 0.0) for k in ("left", "right", "wide")})),
+        ("cameras", _camera_line(values)),
         ("nearest", f"{values.get('nearest_m', float('inf')):.2f} m {values.get('nearest_dir', '')}"),
         ("approach", values.get("approach", "none")),
         ("slam", values.get("slam", "off")),
@@ -160,8 +176,9 @@ def _status_tile(w: int, h: int, values: dict) -> np.ndarray:
     ]
     y = 112
     for label, value in rows:
+        text, color = value if isinstance(value, tuple) else (value, FG)
         cv2.putText(tile, label, (14, y), FONT, 0.5, DIM, 1, cv2.LINE_AA)
-        cv2.putText(tile, str(value), (150, y), FONT, 0.52, FG, 1, cv2.LINE_AA)
+        cv2.putText(tile, str(text), (150, y), FONT, 0.52, color, 1, cv2.LINE_AA)
         y += 26
     return tile
 

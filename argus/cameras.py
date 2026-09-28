@@ -348,6 +348,18 @@ class _Reader:
             ts = self._ts
         return 0.0 if time.perf_counter() - ts > 2.0 else self._fps
 
+    @property
+    def link_mbps(self) -> int:
+        """Current negotiated USB link speed of this camera (0 when unknown).
+
+        Read live from sysfs so a reseat shows on the dashboard without a
+        restart: 5000 means USB 3, 480 means the plug only made USB 2 contact."""
+        try:
+            dev = Path(f"/sys/class/video4linux/video{self.index}/device").resolve()
+            return int(float((dev.parent / "speed").read_text().strip()))
+        except (OSError, ValueError):
+            return 0
+
     def latest(self) -> tuple[np.ndarray | None, float, int]:
         with self._lock:
             return self._frame, self._ts, self._seq

@@ -192,7 +192,9 @@ class Orchestrator:
             disp[~np.isfinite(small)] = 0
             bus.frame("depth_color", disparity_to_color(disp))
         bus.set(fps_left=self.rig.left.fps, fps_right=self.rig.right.fps,
-                fps_wide=self.rig.wide.fps)
+                fps_wide=self.rig.wide.fps,
+                link_left=self.rig.left.link_mbps, link_right=self.rig.right.link_mbps,
+                link_wide=self.rig.wide.link_mbps)
         wide, _, _ = self.rig.wide.latest()
         bus.frame("wide", wide)
 
