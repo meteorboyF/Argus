@@ -259,6 +259,115 @@ def is_diverse_pose(signature, accepted, threshold=0.055):
     return not accepted or min(np.linalg.norm(signature - old) for old in accepted) >= threshold
 
 
+class Coach:
+    """Big on-screen instructions for the person holding the board.
+
+    Directions are given from the HOLDER's point of view. With `mirror` (the
+    holder faces the cameras) image-left is the holder's right.
+    """
+
+    def __init__(self, min_views: int, mirror: bool = True):
+        self.min_views = min_views
+        self.mirror = mirror
+        self._captured_at = 0.0
+        self._captured_n = 0
+        self._last = ("", "")
+        self._since = time.time()
+
+    def _side(self, image_left: bool) -> str:
+        return ("RIGHT" if image_left else "LEFT") if self.mirror else ("LEFT" if image_left else "RIGHT")
+
+    def _target(self, corners, w, h, covered):
+        """Direction to the nearest uncovered coverage cell, in holder terms."""
+        c = corners.reshape(-1, 2).mean(axis=0)
+        cx, cy = c[0] / w, c[1] / h
+        best, best_d = None, 9.0
+        for cell in range(9):
+            if cell in covered:
+                continue
+            tx, ty = (cell % 3 + 0.5) / 3, (cell // 3 + 0.5) / 3
+            d = (tx - cx) ** 2 + (ty - cy) ** 2
+            if d < best_d:
+                best, best_d = (tx, ty), d
+        if best is None:
+            return None
+        words = []
+        if best[1] < cy - 0.15:
+            words.append("UP")
+        elif best[1] > cy + 0.15:
+            words.append("DOWN")
+        if best[0] < cx - 0.15:
+            words.append("to your " + self._side(True))
+        elif best[0] > cx + 0.15:
+            words.append("to your " + self._side(False))
+        return " and ".join(words) if words else None
+
+    def captured(self, n: int):
+        self._captured_at = time.time()
+        self._captured_n = n
+
+    def advise(self, *, pattern, okcL, okcR, steady, diverse, corners, size, n_views,
+               covered, span_frac) -> tuple[str, str]:
+        now = time.time()
+        if now - self._captured_at < 1.5:
+            head = f"CAPTURED {self._captured_n} of {self.min_views}"
+            nxt = self._target(corners, size[0], size[1], covered) if corners is not None else None
+            return head, f"Now move the board {nxt}" if nxt else "Now tilt the board a little"
+        if pattern is None:
+            return ("SHOW THE WHOLE BOARD TO BOTH CAMERAS",
+                    "Hold it flat and unfolded, facing the cameras, about 1 metre away")
+        if not (okcL or okcR):
+            return ("BOARD NOT SEEN",
+                    "Hold it flat, facing the cameras, about 1 metre away. Avoid glare.")
+        if not (okcL and okcR):
+            only_left = okcL and not okcR
+            return (f"ONLY ONE CAMERA SEES THE BOARD",
+                    f"Move the board a little to your {self._side(not only_left)}")
+        if span_frac < 0.22:
+            return "BRING THE BOARD CLOSER", "It looks too small; come to about 1 metre"
+        if span_frac > 0.85:
+            return "MOVE THE BOARD FARTHER AWAY", "The whole board must stay inside both views"
+        if not steady:
+            return "HOLD STILL", "Keep the board exactly where it is for a second"
+        if not diverse:
+            nxt = self._target(corners, size[0], size[1], covered)
+            if nxt:
+                return "SAME POSE AS BEFORE", f"Move the board {nxt}, then hold still"
+            if n_views < 9:
+                return "SAME POSE AS BEFORE", "Move it closer or farther, then hold still"
+            return "SAME POSE AS BEFORE", "Tilt the board toward you, away, or rotate it, then hold still"
+        return "GOOD, HOLD STILL", "Capturing..."
+
+
+def render_coach(fL, fR, head, detail, n_views, min_views, covered, done=False):
+    """1920x1080 canvas: both feeds on top, big instructions below."""
+    canvas = np.zeros((1080, 1920, 3), dtype=np.uint8)
+    top = np.hstack([fL, fR])
+    th, tw = top.shape[:2]
+    scale = min(1920 / tw, 600 / th)
+    top = cv2.resize(top, (int(tw * scale), int(th * scale)))
+    canvas[:top.shape[0], :top.shape[1]] = top
+    cv2.putText(canvas, "LEFT", (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(canvas, "RIGHT", (top.shape[1] // 2 + 20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.0,
+                (0, 255, 255), 2, cv2.LINE_AA)
+    color = (80, 220, 80) if (done or head.startswith(("GOOD", "CAPTURED"))) else \
+            (0, 190, 255) if head.startswith(("HOLD", "SAME")) else (60, 60, 255)
+    cv2.putText(canvas, head, (40, 720), cv2.FONT_HERSHEY_SIMPLEX, 2.2, color, 5, cv2.LINE_AA)
+    cv2.putText(canvas, detail, (40, 800), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (235, 235, 235), 2, cv2.LINE_AA)
+    cv2.putText(canvas, f"views {n_views} / {min_views}     coverage {len(covered)} / 9",
+                (40, 900), cv2.FONT_HERSHEY_SIMPLEX, 1.1, (200, 200, 200), 2, cv2.LINE_AA)
+    cv2.putText(canvas, "Move the BOARD, never the cameras.   q = finish early",
+                (40, 1000), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (140, 140, 140), 2, cv2.LINE_AA)
+    # 3x3 coverage grid: where the board has already been seen.
+    gx, gy, cell = 1560, 660, 100
+    for i in range(9):
+        x, y = gx + (i % 3) * cell, gy + (i // 3) * cell
+        cv2.rectangle(canvas, (x, y), (x + cell - 4, y + cell - 4),
+                      (80, 220, 80) if i in covered else (70, 70, 70), -1)
+    cv2.putText(canvas, "covered", (gx, gy - 12), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (200, 200, 200), 2, cv2.LINE_AA)
+    return canvas
+
+
 def movement_instruction(view_count):
     """Operator prompt for collecting useful rigid-rig pose diversity."""
     if view_count < 3:
@@ -405,6 +514,11 @@ def main():
                     help="show a measured checkerboard and live preview in one fullscreen window")
     ap.add_argument("--verify", action="store_true",
                     help="skip calibration; live-check depth against the saved file")
+    ap.add_argument("--coach", action="store_true",
+                    help="fullscreen on-screen instructions for a hand-held board; finishes "
+                         "automatically once enough diverse views are captured")
+    ap.add_argument("--behind", action="store_true",
+                    help="with --coach: the holder stands behind the rig (no mirroring)")
     ap.add_argument("--max-seconds", type=float, default=300.0,
                     help="headless capture time limit")
     args = ap.parse_args()
@@ -455,6 +569,7 @@ def main():
     square_m = args.square_mm / 1000.0
     obj = make_object_points(pattern, square_m) if pattern else None
 
+    coach = Coach(args.min_views, mirror=not args.behind) if args.coach else None
     objpoints, ptsL, ptsR = [], [], []
     accepted_poses = []
     covered: set[int] = set()
@@ -549,7 +664,31 @@ def main():
                     and diverse):
                 do_capture = True
 
-        if not args.headless:
+        if coach is not None:
+            span_frac = 0.0
+            if both:
+                pts = cL.reshape(-1, 2)
+                span_frac = float((pts[:, 0].max() - pts[:, 0].min()) / size[0])
+            head, detail = coach.advise(
+                pattern=pattern, okcL=okcL, okcR=okcR, steady=steady, diverse=diverse,
+                corners=cL if both else None, size=size, n_views=len(objpoints),
+                covered=covered, span_frac=span_frac)
+            vL, vR = fL.copy(), fR.copy()
+            if okcL:
+                cv2.drawChessboardCorners(vL, pattern, cL, True)
+            if okcR:
+                cv2.drawChessboardCorners(vR, pattern, cR, True)
+            window = "ARGUS stereo calibration"
+            cv2.namedWindow(window, cv2.WINDOW_NORMAL)
+            cv2.setWindowProperty(window, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+            cv2.imshow(window, render_coach(vL, vR, head, detail, len(objpoints),
+                                            args.min_views, covered))
+            key = cv2.waitKey(1) & 0xFF
+            if key in (27, ord("q")):
+                break
+            if key == ord("c") and both:
+                do_capture = True
+        elif not args.headless:
             disp = np.hstack([fL, fR])
             color = (0, 200, 0) if both else (0, 0, 200)
             cv2.putText(disp, f"views: {len(objpoints)}/{args.min_views}  "
@@ -610,7 +749,16 @@ def main():
             last_capture = time.time()
             print(f"  captured view {len(objpoints)}/{args.min_views} "
                   f"(coverage {len(covered)}/9)")
-            if args.headless and len(objpoints) >= args.min_views and len(covered) >= 6:
+            if coach is not None:
+                coach.captured(len(objpoints))
+            if (args.headless or coach is not None) and len(objpoints) >= args.min_views \
+                    and len(covered) >= 6:
+                if coach is not None:
+                    cv2.imshow("ARGUS stereo calibration",
+                               render_coach(fL, fR, "DONE. COMPUTING...",
+                                            "You can put the board down", len(objpoints),
+                                            args.min_views, covered, done=True))
+                    cv2.waitKey(1500)
                 break
         if args.headless and (time.time() - t_start) > args.max_seconds:
             print("Headless time limit reached.")
@@ -688,6 +836,17 @@ def main():
         # across reboots however V4L2 renumbers the devices
         left_port=usb_port_of(left_idx), right_port=usb_port_of(right_idx),
     )
+    if coach is not None:
+        ok = save_path == args.out
+        head = "CALIBRATION ACCEPTED" if ok else "CALIBRATION REJECTED - TRY AGAIN"
+        detail = (f"error {rms:.2f} px   vertical {v_err:.2f} px   baseline {baseline_m*100:.1f} cm"
+                  f"   toe {angle:.1f} deg")
+        blank = np.zeros_like(fL)
+        cv2.imshow("ARGUS stereo calibration",
+                   render_coach(blank, blank, head, detail, len(objpoints), args.min_views,
+                                covered, done=ok))
+        cv2.waitKey(6000)
+        cv2.destroyAllWindows()
     if save_path != args.out:
         print(f"\nSaved rejected candidate for diagnosis -> {save_path}")
         raise SystemExit(2)
