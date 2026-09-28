@@ -48,6 +48,8 @@ depth:
   fast_downscale: 2      # SGBM matches at 1/N resolution so the 10 Hz loop holds rate
   baseline_m: 0.06       # fallback only — the calibration file overrides these
   focal_px: 700.0
+  calibration_max_rms_px: 1.5
+  calibration_max_vertical_px: 2.0
 
 safety:
   warn_distance_m: 1.5

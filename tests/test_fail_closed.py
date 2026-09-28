@@ -81,6 +81,20 @@ def test_uncalibrated_depth_cannot_reach_safety_rules():
     assert orch._evaluate_safety_depth(np.ones((8, 8), dtype=np.float32)) is None
 
 
+@pytest.mark.parametrize(("rms", "vertical"), [(1.51, 0.5), (0.5, 2.01),
+                                                 (float("nan"), 0.5)])
+def test_runtime_rejects_low_quality_calibration(tmp_path, rms, vertical):
+    path = tmp_path / "bad_calibration.npz"
+    z = np.zeros((2, 2), dtype=np.float32)
+    np.savez(path, map1x=z, map1y=z, map2x=z, map2y=z,
+             Q=np.eye(4), image_size=np.array([2, 2]),
+             rms=rms, vertical_error=vertical)
+    cfg = DepthConfig(backend="sgbm", allow_cpu_fallback=True,
+                      health_check=False, calibration_file=str(path))
+    estimator = DepthEstimator(cfg)
+    assert estimator.calibrated is False
+
+
 def test_privacy_exception_cancels_image_query():
     spoken = []
     orch = Orchestrator.__new__(Orchestrator)

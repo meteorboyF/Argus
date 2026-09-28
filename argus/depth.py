@@ -109,6 +109,22 @@ class DepthEstimator:
             return
         try:
             data = np.load(path, allow_pickle=True)
+            required = {"map1x", "map1y", "map2x", "map2y", "Q",
+                        "image_size", "rms", "vertical_error"}
+            missing = sorted(required.difference(data.files))
+            if missing:
+                raise ValueError(f"missing required fields: {', '.join(missing)}")
+            rms = float(data["rms"])
+            vertical = float(data["vertical_error"])
+            if not np.isfinite(rms) or rms > self.cfg.calibration_max_rms_px:
+                raise ValueError(
+                    f"RMS {rms:.3f}px exceeds hard limit "
+                    f"{self.cfg.calibration_max_rms_px:.3f}px")
+            if (not np.isfinite(vertical)
+                    or vertical > self.cfg.calibration_max_vertical_px):
+                raise ValueError(
+                    f"vertical error {vertical:.3f}px exceeds hard limit "
+                    f"{self.cfg.calibration_max_vertical_px:.3f}px")
             self._calib = {
                 "map1x": data["map1x"], "map1y": data["map1y"],
                 "map2x": data["map2x"], "map2y": data["map2y"],
@@ -122,7 +138,8 @@ class DepthEstimator:
                 self.cfg.focal_px = float(data["focal_px"])
             toe = float(data["toe_angle_deg"]) if "toe_angle_deg" in data else float("nan")
             print(f"[depth] Loaded calibration {path} "
-                  f"(baseline {self.cfg.baseline_m*100:.1f} cm, toe {toe:.1f} deg). "
+                  f"(RMS {rms:.3f}px, vertical {vertical:.3f}px, "
+                  f"baseline {self.cfg.baseline_m*100:.1f} cm, toe {toe:.1f} deg). "
                   "Rectification active.")
         except Exception as e:  # noqa: BLE001
             print(f"[depth] Failed to read calibration ({e}); uncalibrated fallback.")

@@ -48,6 +48,7 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -85,6 +86,59 @@ def _open(idx: int, width: int, height: int, fps: int = 30,
     cap.set(cv2.CAP_PROP_FPS, fps)
     cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
     return cap
+
+
+class ThreadedStereoCapture:
+    """Read each free-running USB camera independently without blocking its peer.
+
+    Some UVC driver/host-controller combinations can block indefinitely when
+    two VideoCapture.grab() calls are issued serially. Per-camera readers also
+    give us honest arrival timestamps for the calibration skew gate.
+    """
+
+    def __init__(self, left, right):
+        self.caps = (left, right)
+        self._lock = threading.Lock()
+        self._frames = [None, None]
+        self._timestamps = [0.0, 0.0]
+        self._versions = [0, 0]
+        self._last_returned = (-1, -1)
+        self._stop = threading.Event()
+        self._threads = [
+            threading.Thread(target=self._reader, args=(i,), daemon=True)
+            for i in range(2)
+        ]
+        for thread in self._threads:
+            thread.start()
+
+    def _reader(self, index):
+        cap = self.caps[index]
+        while not self._stop.is_set():
+            ok, frame = cap.read()
+            if not ok:
+                time.sleep(0.01)
+                continue
+            with self._lock:
+                self._frames[index] = frame
+                self._timestamps[index] = time.monotonic()
+                self._versions[index] += 1
+
+    def pair(self):
+        with self._lock:
+            versions = tuple(self._versions)
+            if (any(frame is None for frame in self._frames)
+                    or versions == self._last_returned):
+                return None
+            self._last_returned = versions
+            return (self._frames[0].copy(), self._frames[1].copy(),
+                    abs(self._timestamps[1] - self._timestamps[0]) * 1000.0)
+
+    def close(self):
+        self._stop.set()
+        for cap in self.caps:
+            cap.release()
+        for thread in self._threads:
+            thread.join(timeout=1.0)
 
 
 def autodetect_pair(cfg) -> tuple[int, int]:
@@ -161,6 +215,34 @@ def _coverage_cell(corners, w, h, grid=3):
     cx = min(grid - 1, int(c[0] / w * grid))
     cy = min(grid - 1, int(c[1] / h * grid))
     return cy * grid + cx
+
+
+def pose_signature(corners, w, h):
+    """Compact translation/scale/rotation signature for diversity checks."""
+    pts = corners.reshape(-1, 2)
+    center = pts.mean(axis=0) / np.array([w, h], dtype=np.float32)
+    span = (pts.max(axis=0) - pts.min(axis=0)) / np.array([w, h], dtype=np.float32)
+    edge = pts[-1] - pts[0]
+    angle = np.arctan2(edge[1], edge[0]) / np.pi
+    return np.array([center[0], center[1], span[0], span[1], angle], dtype=np.float32)
+
+
+def is_diverse_pose(signature, accepted, threshold=0.055):
+    """Reject near-identical frames that make calibration look well sampled."""
+    return not accepted or min(np.linalg.norm(signature - old) for old in accepted) >= threshold
+
+
+def movement_instruction(view_count):
+    """Operator prompt for collecting useful rigid-rig pose diversity."""
+    if view_count < 3:
+        return "LEVEL: shift the WHOLE rig left / centre / right; hold each pose"
+    if view_count < 6:
+        return "HEIGHT: move the WHOLE rig higher / lower; hold each pose"
+    if view_count < 9:
+        return "DISTANCE: move the WHOLE rig closer / farther; hold each pose"
+    if view_count < 12:
+        return "TILT: tilt the WHOLE rig up / down; do not touch camera hinges"
+    return "ROLL: tilt the WHOLE rig sideways; keep both camera hinges locked"
 
 
 # ---------------------------------------------------------------------------
@@ -291,11 +373,25 @@ def main():
                     help="live preview window screen x position")
     ap.add_argument("--preview-y", type=int, default=90,
                     help="live preview window screen y position")
+    ap.add_argument("--screen-target", action="store_true",
+                    help="show a measured checkerboard and live preview in one fullscreen window")
     ap.add_argument("--verify", action="store_true",
                     help="skip calibration; live-check depth against the saved file")
     ap.add_argument("--max-seconds", type=float, default=300.0,
                     help="headless capture time limit")
     args = ap.parse_args()
+
+    screen_canvas = None
+    if args.screen_target:
+        if args.headless:
+            raise SystemExit("--screen-target cannot be combined with --headless")
+        from display_calibration_board import active_display, make_board
+        screen_w, screen_h, width_mm, height_mm = active_display()
+        screen_canvas, px_x, px_y = make_board(
+            screen_w, screen_h, width_mm, height_mm,
+            args.cols or 9, args.rows or 6, args.square_mm, reserve_left=640)
+        print(f"Integrated target: {screen_w}x{screen_h}, measured squares "
+              f"{px_x}x{px_y}px = {args.square_mm:g}mm")
 
     try:
         from argus.config import load_config
@@ -321,12 +417,14 @@ def main():
     capR = _open(right_idx, cw, ch, pixel_format=pixel_format)
     if capL is None or capR is None:
         raise SystemExit(f"Could not open cameras {left_idx}/{right_idx}.")
+    capture = ThreadedStereoCapture(capL, capR)
 
     pattern = (args.cols, args.rows) if (args.cols and args.rows) else None
     square_m = args.square_mm / 1000.0
     obj = make_object_points(pattern, square_m) if pattern else None
 
     objpoints, ptsL, ptsR = [], [], []
+    accepted_poses = []
     covered: set[int] = set()
     size = None
     validated_frame_geometry = False
@@ -335,13 +433,22 @@ def main():
     t_start = time.time()
 
     print("\nMove the checkerboard slowly around the whole view (corners, center,")
-    print("tilted, near, far). Auto-capture fires when it's seen in BOTH cameras")
+    print("tilted, near, far) by moving the ENTIRE RIG AS ONE RIGID OBJECT.")
+    print("NEVER adjust either camera hinge: that invalidates all captured views.")
+    print("Auto-capture fires when the board is seen in BOTH cameras")
     print("and held steady. Press 'c' to force-capture, 'q'/ESC to finish.\n")
 
     while True:
-        okL, fL = capL.read()
-        okR, fR = capR.read()
-        if not (okL and okR):
+        pair = capture.pair()
+        if pair is None:
+            if args.headless and (time.time() - t_start) > args.max_seconds:
+                print("Headless time limit reached while waiting for camera frames.")
+                break
+            time.sleep(0.005)
+            continue
+        fL, fR, skew_ms = pair
+        max_skew_ms = cam_cfg.max_skew_ms if cam_cfg else 12.0
+        if max_skew_ms > 0 and skew_ms > max_skew_ms:
             continue
         if cam_cfg:
             from argus.cameras import transform_frame
@@ -389,17 +496,33 @@ def main():
             prev_center = center
 
         do_capture = False
+        capture_status = "ALIGN BOTH"
+        signature = None
+        diverse = False
+        if both:
+            signature = pose_signature(cL, size[0], size[1])
+            diverse = is_diverse_pose(signature, accepted_poses)
+            if not steady:
+                capture_status = "HOLD STILL"
+            elif not diverse:
+                capture_status = "MOVE/TILT"
+            elif (time.time() - last_capture) <= 1.0:
+                capture_status = "WAIT"
+            else:
+                capture_status = "READY"
         if both and not args.no_auto and steady and (time.time() - last_capture) > 1.0:
             cell = _coverage_cell(cL, size[0], size[1])
             # Prefer new coverage cells, but still allow repeats once spread out.
-            if cell not in covered or len(objpoints) >= 9:
+            if ((cell not in covered or len(objpoints) >= 9)
+                    and diverse):
                 do_capture = True
 
         if not args.headless:
             disp = np.hstack([fL, fR])
             color = (0, 200, 0) if both else (0, 0, 200)
             cv2.putText(disp, f"views: {len(objpoints)}/{args.min_views}  "
-                              f"both:{both} steady:{steady} cells:{len(covered)}/9",
+                              f"L:{okcL} R:{okcR} both:{both} skew:{skew_ms:.1f}ms "
+                              f"cells:{len(covered)}/9  {capture_status}",
                         (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
             if both:
                 cv2.drawChessboardCorners(disp[:, :fL.shape[1]], pattern, cL, True)
@@ -407,20 +530,50 @@ def main():
             window = "ARGUS stereo calibration"
             preview = cv2.resize(disp, None, fx=args.preview_scale,
                                  fy=args.preview_scale)
-            cv2.imshow(window, preview)
-            cv2.moveWindow(window, args.preview_x, args.preview_y)
+            if screen_canvas is not None:
+                rendered = screen_canvas.copy()
+                ph, pw = preview.shape[:2]
+                x, y = args.preview_x, args.preview_y
+                rendered[y:min(y + ph, rendered.shape[0]),
+                         x:min(x + pw, rendered.shape[1])] = preview[
+                             :min(ph, rendered.shape[0] - y),
+                             :min(pw, rendered.shape[1] - x)]
+                cv2.putText(rendered, "LOCK BOTH CAMERA HINGES - DO NOT ADJUST THEM",
+                            (22, 620), cv2.FONT_HERSHEY_SIMPLEX, 0.72,
+                            (0, 0, 255), 2, cv2.LINE_AA)
+                cv2.putText(rendered, "Move the ENTIRE pink rig as one rigid object.",
+                            (22, 665), cv2.FONT_HERSHEY_SIMPLEX, 0.68,
+                            (255, 255, 255), 2, cv2.LINE_AA)
+                cv2.putText(rendered, movement_instruction(len(objpoints)),
+                            (22, 710), cv2.FONT_HERSHEY_SIMPLEX, 0.55,
+                            (0, 255, 255), 2, cv2.LINE_AA)
+                cv2.putText(rendered,
+                            "ALIGN BOTH = aim | HOLD STILL = pause | MOVE/TILT = new whole-rig pose",
+                            (22, 755), cv2.FONT_HERSHEY_SIMPLEX, 0.46,
+                            (220, 220, 220), 1, cv2.LINE_AA)
+                cv2.namedWindow(window, cv2.WINDOW_NORMAL)
+                cv2.setWindowProperty(
+                    window, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+                cv2.imshow(window, rendered)
+            else:
+                cv2.imshow(window, preview)
+                cv2.moveWindow(window, args.preview_x, args.preview_y)
             key = cv2.waitKey(1) & 0xFF
             if key in (27, ord("q")):
-                break
-            if cv2.getWindowProperty(window, cv2.WND_PROP_VISIBLE) < 1:
                 break
             if key == ord("c") and both:
                 do_capture = True
 
         if do_capture:
+            signature = pose_signature(cL, size[0], size[1])
+            if not is_diverse_pose(signature, accepted_poses):
+                print("  rejected near-duplicate pose; move/tilt/resize the board")
+                do_capture = False
+        if do_capture:
             objpoints.append(obj)
             ptsL.append(cL)
             ptsR.append(cR)
+            accepted_poses.append(signature)
             covered.add(_coverage_cell(cL, size[0], size[1]))
             last_capture = time.time()
             print(f"  captured view {len(objpoints)}/{args.min_views} "
@@ -431,7 +584,7 @@ def main():
             print("Headless time limit reached.")
             break
 
-    capL.release(); capR.release()
+    capture.close()
     if not args.headless:
         cv2.destroyAllWindows()
 
@@ -474,13 +627,22 @@ def main():
     print(f"  rectified focal length        : {focal_px:.1f} px")
     print(f"  inter-camera angle (toe)      : {angle:.2f} deg")
 
-    if rms > 1.5 or v_err > 2.0:
-        print("\n  WARNING: calibration quality is poor. Re-run with more, better-spread,")
-        print("  well-lit views of a rigid (flat!) checkerboard before trusting depth.")
+    max_rms = 1.5
+    max_vertical = 2.0
+    if (not np.isfinite(rms) or not np.isfinite(v_err)
+            or rms > max_rms or v_err > max_vertical):
+        rejected = f"{args.out}.rejected.npz"
+        print("\n  REJECTED: calibration exceeds the hard safety quality limits")
+        print(f"  (RMS <= {max_rms:.1f}px and vertical <= {max_vertical:.1f}px required).")
+        print("  The active calibration path was not changed; collect more diverse,")
+        print("  well-lit views of a rigid flat checkerboard and try again.")
+        save_path = rejected
+    else:
+        save_path = args.out
 
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     np.savez(
-        args.out,
+        save_path,
         # intrinsics / extrinsics
         mtxL=mtxL, distL=distL, mtxR=mtxR, distR=distR, R=R, T=T,
         # rectification (this is what makes your toed-out mounting work)
@@ -494,7 +656,10 @@ def main():
         # across reboots however V4L2 renumbers the devices
         left_port=usb_port_of(left_idx), right_port=usb_port_of(right_idx),
     )
-    print(f"\nSaved calibration -> {args.out}")
+    if save_path != args.out:
+        print(f"\nSaved rejected candidate for diagnosis -> {save_path}")
+        raise SystemExit(2)
+    print(f"\nSaved accepted calibration -> {args.out}")
     print("depth.py auto-loads this (rectification maps + Q) and produces metric depth")
     print("for your exact mounting; cameras.py re-binds left/right by USB port.")
     print("\nNow sanity-check it against a tape measure:")

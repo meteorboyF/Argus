@@ -98,6 +98,11 @@ class DepthConfig:
     # Calibration (rectification maps + Q) from scripts/calibrate_stereo.py.
     # When present, depth is rectified and metric for the actual mounting geometry.
     calibration_file: str = str(CONFIG_DIR / "stereo_calib.npz")
+    # A calibration outside either bound is treated as absent. These are hard
+    # safety limits, not aspirational quality targets: metric warnings remain
+    # disabled until a newly captured calibration passes both.
+    calibration_max_rms_px: float = 1.5
+    calibration_max_vertical_px: float = 2.0
     # Calibration drift watch. After rectification, matched features must share a
     # row; a growing vertical residual means a camera has moved and depth has
     # silently gone wrong. Sampled every health_interval_s, not every frame.
