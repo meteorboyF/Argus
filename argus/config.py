@@ -182,9 +182,14 @@ class AgentConfig:
     # requires llama-server started with --jinja and a template that supports it).
     # Native tool_calls in the response are honoured in both modes.
     tool_protocol: str = "prompt"
-    # Downscale the gated frame to this max side before base64-encoding it for
-    # the VLM — keeps prompt processing time and memory sane on the Jetson.
-    image_max_side: int = 256
+    # Visual-token budget per image. One Gemma 4 vision token covers 48x48 px
+    # (16 px patches merged 3x3), so the gated frame is scaled to about this
+    # many tokens. The old 256 px cap gave ~15 tokens' worth of pixels and
+    # Gemma answered "I cannot see"; 280 describes correctly in ~2.2 s
+    # (reports/vlm-m3-qat-2026-10-02.json). llama-server must run with
+    # --image-max-tokens >= read_image_tokens and -ub/-b above it.
+    image_tokens: int = 280
+    read_image_tokens: int = 560
     # Explicit "find/locate/where is X" requests skip the first Gemma turn and
     # go straight to TensorRT grounding; the tool policy is deterministic code.
     fast_locate: bool = True
@@ -272,6 +277,8 @@ def _merge(dc, overrides: dict):
     for key, val in (overrides or {}).items():
         if hasattr(dc, key):
             setattr(dc, key, val)
+        else:
+            print(f"[config] WARNING: unknown key {type(dc).__name__}.{key} ignored")
 
 
 def load_config(path: str | os.PathLike | None = None) -> ArgusConfig:

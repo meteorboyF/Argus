@@ -505,3 +505,78 @@ reports include it.
 
 **Lesson / consequence.** Two config files with one silent default is one too
 many. Reports must say which configuration produced them.
+
+## 2026-10-02 M3 — the 256 px image cap made Gemma refuse to look
+
+**Hurdle / problem.** With `image_max_side: 256`, Gemma answered "I cannot see
+what is in front of you as I am a text-based AI" to a describe request on a
+clear room frame. A 256 px image is only ~15 vision tokens (one token = 48x48
+px), and llama.cpp upscales it to its 40-token minimum.
+
+**Impact.** The headline slow-loop question returned a refusal. The earlier
+fast describe latency came from starving the model of pixels.
+
+**Options considered.** Raise the pixel cap; set a token budget per task;
+change the prompt.
+
+**Resolution.** The client now scales each frame to a token budget: 280 for
+describe/find, 560 reserved for reading. The server runs
+`--image-max-tokens 560 -ub 1024 -b 1024`. Describe then answers correctly.
+The measured cost is 2.2 s warm instead of 1.3 s.
+
+**Lesson / consequence.** A latency number means nothing without the answer
+it produced. Benchmarks now store every answer next to its timing.
+
+## 2026-10-02 M3 — Gemma memory: QAT weights and an audio-free projector
+
+**Hurdle / problem.** The resident stack sat near 6.7 GB of 7.6 GB. The Gemma
+projector was 985.7 MB, of which 612 MB was an audio encoder ARGUS never uses
+(Whisper does speech). It also ran on the CPU (`--no-mmproj-offload`).
+
+**Impact.** Little headroom for depth, detector and OCR, plus swap under load.
+
+**Options considered.** Gemma E4B (rejected by research: ~6 GB);
+Q4_K_M with the full projector; QAT UD-Q4_K_XL; a stripped projector, on CPU
+or GPU.
+
+**Resolution.** Each change was measured separately
+(`reports/vlm-m3-steps-2026-10-02.json`, `reports/vlm-m3-qat-2026-10-02.json`,
+prompt cache disabled so every run encodes the image).
+- Vision-only projector: 373.4 MB.
+- GPU projector: halves image encode time.
+- QAT UD-Q4_K_XL (SHA matches the Hugging Face etag): 0.5 GB smaller and faster
+  on all three tasks with the same answers.
+
+Production now uses all three. `--cache-ram 0`, one slot and flash attention
+are unchanged.
+
+**Lesson / consequence.** Inspect model files before budgeting memory for them.
+Half of the vision projector was a different modality.
+
+## 2026-10-02 M3 — grounding no longer needs torch at runtime
+
+**Hurdle / problem.** Every label embedding went through CPU CLIP. That loaded
+torch: 1.67 GB RSS and 11.6 s of warm-up.
+
+**Resolution.** A 401-label household and Dhaka-street vocabulary is embedded
+offline with the same CLIP call; the build checks parity to 0.0. The runtime
+looks labels up (with plural fallback) and loads CLIP only for unknown words.
+Grounding warm-up: 353 MB RSS, 1.6 s, torch never imported. The warm label
+"object" was initially missing and silently pulled CLIP back in; a test now
+asserts torch stays unloaded.
+
+## 2026-10-02 M3 — benchmarks run under over-current throttling
+
+**Hurdle / problem.** The user saw "system throttled due to over current"
+pop-ups. `soctherm` channel oc3 recorded 700–965 events during each Gemma
+benchmark at MAXN_SUPER with GR3D at 99%. Idle draw is ~6 W and the counter
+does not move at idle.
+
+**Impact.** This protects the hardware and does not damage it. But clocks drop,
+so the GPU latencies above are pessimistic and noisy, and a busy VLM can slow
+the safety loop that shares the GPU.
+
+**Resolution.** Doctor and benchmark reports now record the OC counter delta.
+A 25 W vs MAXN_SUPER comparison is planned for M4 depth benchmarking and needs
+the user's sudo. The user was asked to confirm the board runs on the original
+19 V barrel supply.

@@ -1,9 +1,24 @@
 # ARGUS progress
 
-Updated: 2026-10-02. Short, current, and honest. `STATUS.md` holds the
+Updated: 2026-10-02 (evening, JETSON_PROMPT_03 session). Short, current, and honest. `STATUS.md` holds the
 per-component table; this file says what happened last and what is blocking.
 
-## What was done last (night of 2026-09-29, commits a4b6eb5..806b8ba)
+## What was done last (2026-10-02 evening)
+
+- **M0 rig doctor** (`python3 -m argus doctor`): presence, USB link speed,
+  delivered fps, stereo arrival skew, RAM, llama-server, Piper, over-current
+  counter; spoken summary; snapshots in `/tmp/argus_snap/`. Also `--snap`,
+  `--skew-test` (on-screen Gray-coded timecode) and `--bandwidth`. Verified
+  with the one B0495 currently connected: 79.5 fps at 960x600@80 on USB3.
+- `/opt/argus/config/argus.yaml` had drifted to August values (90/270
+  rotations, CPU SGBM); resynced from the repo template and backed up.
+- **M3 memory/VLM**: QAT Gemma + vision-only projector on GPU + token-budget
+  images. Describe answers correctly now (it used to refuse) in ~2.2 s.
+  Grounding uses a precomputed 401-label vocabulary: no torch at runtime.
+  Projected resident stack ~4.6 GB (not yet soak-measured).
+- Privacy: a face scoring 0.27 slipped past the 0.5 threshold; now 0.25.
+
+## Earlier (night of 2026-09-29, commits a4b6eb5..806b8ba)
 
 - **Monitor dashboard.** `python3 -m argus run --dashboard --no-mic --ask-file PATH`
   shows all three camera feeds, the depth map, a top-down corridor/SLAM map, a

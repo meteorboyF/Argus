@@ -86,12 +86,22 @@ class AgentReply:
     tool_args: dict | None = None
 
 
-def _encode_image(frame_bgr: np.ndarray, max_side: int) -> str:
+VISION_TOKEN_PX = 48  # Gemma 4: 16 px patches, 3x3 pooled
+
+
+def resize_to_tokens(frame_bgr: np.ndarray, tokens: int,
+                     cell: int = VISION_TOKEN_PX) -> np.ndarray:
+    """Scale so (w/cell)*(h/cell) ~= tokens; never upscale."""
     h, w = frame_bgr.shape[:2]
-    scale = max_side / max(h, w)
-    if scale < 1.0:
-        frame_bgr = cv2.resize(frame_bgr, (int(w * scale), int(h * scale)),
-                               interpolation=cv2.INTER_AREA)
+    scale = (tokens * cell * cell / (w * h)) ** 0.5
+    if scale >= 1.0:
+        return frame_bgr
+    return cv2.resize(frame_bgr, (max(cell, int(w * scale)), max(cell, int(h * scale))),
+                      interpolation=cv2.INTER_AREA)
+
+
+def _encode_image(frame_bgr: np.ndarray, tokens: int) -> str:
+    frame_bgr = resize_to_tokens(frame_bgr, tokens)
     ok, buf = cv2.imencode(".jpg", frame_bgr, [cv2.IMWRITE_JPEG_QUALITY, 85])
     if not ok:
         raise AgentError("Failed to JPEG-encode the camera frame")
@@ -139,7 +149,7 @@ class GemmaAgent:
             {"role": "user", "content": [
                 {"type": "text", "text": question},
                 {"type": "image_url", "image_url": {
-                    "url": _encode_image(frame_gated_bgr, self.cfg.image_max_side)}},
+                    "url": _encode_image(frame_gated_bgr, self.cfg.image_tokens)}},
             ]},
         ]
         return self._parse(self._post(messages, [FIND_OBJECT_TOOL]))

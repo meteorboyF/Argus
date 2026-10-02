@@ -11,13 +11,18 @@ ARGUS_HOME="${ARGUS_HOME:-/opt/argus}"
 LLAMA_BIN="$ARGUS_HOME/llama.cpp/build/bin/llama-server"
 MODELS="$ARGUS_HOME/models"
 
-MODEL="$MODELS/gemma-4-E2B-it-Q4_K_M.gguf"
-MMPROJ="$MODELS/mmproj-gemma4-e2b-f16.gguf"
+# 2026-10-02 (reports/vlm-m3-qat-2026-10-02.json): the QAT UD-Q4_K_XL build is
+# 0.5 GB smaller than Q4_K_M and was faster on every task with the same answers.
+# The vision-only projector drops the unused 612 MB audio tower
+# (scripts/strip_mmproj_audio.py). Override with LLAMA_MODEL / LLAMA_MMPROJ.
+MODEL="${LLAMA_MODEL:-$MODELS/gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf}"
+MMPROJ="${LLAMA_MMPROJ:-$MODELS/mmproj-gemma4-e2b-vision-f16.gguf}"
 
 # R36.4.7 had an NVIDIA NVMAP allocator regression that made even small CUDA
 # allocations fail. The reference Orin Nano was upgraded to R36.5.2 and the
 # full decoder offload below was verified with a real privacy-gated image query.
-# Keep the large vision projector on CPU (--no-mmproj-offload) for headroom.
+# The vision projector now runs on the GPU: with the audio tower stripped it
+# is 373 MB, and GPU encoding halved describe latency (2.67 -> 1.28 s at 256 px).
 LLAMA_DEVICE="${LLAMA_DEVICE:-CUDA0}"
 LLAMA_NGL="${LLAMA_NGL:-99}"
 LLAMA_PARALLEL="${LLAMA_PARALLEL:-1}"
@@ -64,6 +69,7 @@ exec "$LLAMA_BIN" \
   --cache-ram "$LLAMA_CACHE_RAM" \
   --ctx-size 2048 \
   --jinja \
-  --no-mmproj-offload \
+  --image-max-tokens "${LLAMA_IMAGE_MAX_TOKENS:-560}" \
+  -ub 1024 -b 1024 \
   --host 127.0.0.1 \
   --port 8080

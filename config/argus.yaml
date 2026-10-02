@@ -78,7 +78,8 @@ agent:
   retries: 0            # do not repeat a long CPU-bound request after timeout
   tool_protocol: prompt  # "prompt" works with every llama.cpp template; "native"
                          # needs --jinja + a tool-capable chat template
-  image_max_side: 256    # warm-cache 6.4 s; cold production path measured 25.6 s
+  image_tokens: 280      # ~48x48 px per token; 256 px cap made Gemma answer "I cannot see"
+  read_image_tokens: 560
   fast_locate: true      # explicit "find X" skips the first Gemma turn (deterministic tool policy)
 
 speech:

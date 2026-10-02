@@ -1,6 +1,6 @@
 # ARGUS implementation status
 
-Last audited: 2026-09-29. This file is the implementation source of truth.
+Last audited: 2026-10-02. This file is the implementation source of truth.
 
 Status meanings: **done** means implemented and verified for its stated scope;
 **partial** means useful code/evidence exists but acceptance is incomplete;
@@ -18,17 +18,18 @@ implementation exists.
 | Safety rules | partial | Static obstacle/drop rules plus the temporal approach rule (per-zone closing speed and time-to-collision); 77 unit tests pass. Uncalibrated warnings stay suppressed |
 | Incoming vehicle warning | partial | Eye-level band split into left/center/right zones; closing speed from a 0.8 s linear fit, WARN at 3 s TTC, DANGER at 1.5 s. Synthetic 5 m/s approach test passes; real-scene validation blocked on calibration |
 | Speech pipeline | partial | Six priority/preemption tests now pass. Piper completed through PulseAudio USB without PortAudio underruns. Wake word/STT microphone loop is not yet accepted; wake phrase remains `hey_jarvis` |
-| YOLO-World TensorRT | partial | Production FP16 runtime-label engine detected the physical monitor at center. Cached queries measured ~30 ms; cold CLIP load reached 15.5 s under the full stack. Broader object accuracy and memory hardening remain |
+| YOLO-World TensorRT | partial | Production FP16 runtime-label engine. 401-label vocabulary embedded offline (parity 0.0); warm-up no longer loads torch/CLIP: RSS 1672 -> 353 MB, load 11.6 -> 1.6 s (`reports/mem-budget-2026-10-02.json`). Out-of-vocabulary labels still load CLIP lazily |
 | Ultralytics grounding | diagnostic only | `.pt` prototype exists; prohibited production fallback |
-| Face privacy gate | partial | InsightFace blur exists and is required; exception boundary is fail-closed; adversarial tests needed |
+| Face privacy gate | partial | InsightFace blur is required and fail-closed. 2026-10-02: a dark, side-on, edge-cropped face scored 0.27 and passed the 0.5 default unblurred; threshold now 0.25. Adversarial set still needed |
 | Sensitive-text privacy | not started | No CRAFT/text flag or blur implementation |
-| Gemma 4 agent | partial | llama-server runs on CUDA0 with `-ngl 99` and flash attention. Typed "find the monitor" round-trip on 2026-09-29: privacy 0.17 s, grounding 0.72 s, final turn 0.91 s, total 1.8 s. CLIP text encoder now warms at startup |
+| Gemma 4 agent | partial | 2026-10-02: QAT UD-Q4_K_XL + vision-only mmproj on GPU, `--image-max-tokens 560`, client sends ~280 tokens. Live `GemmaAgent.ask` 2.23 s / 1.91 s; QAT bench describe 2.18 s, find 1.66 s, read (556 tok) 3.54 s warm, all under over-current throttling (`reports/vlm-m3-qat-2026-10-02.json`). One live answer missed a visible blurred fan: accuracy needs the 30-frame bake-off |
 | Agent tool protocol | partial | Explicit locate intent is deterministically forced through verified TensorRT grounding when Gemma ignores the prompt. Positive monitor query returned center; broader language tests remain |
 | Wide-to-stereo projection | broken | Old proportional mapping disabled; direction only until calibrated projection exists |
 | SLAM | partial | Stereo visual odometry in `argus/slam.py` (ORB stereo triangulation, LK tracking, PnP RANSAC) on its own thread; two synthetic tests pass with metric scale. Off until stereo calibration exists |
 | Full two-speed integration | partial | `run --dashboard` shows cameras, depth, top-down map, status and the conversation on the monitor; questions can be typed or appended to a file. Verified live 2026-09-29. Wake/STT and memory hardening remain |
 | Monitor dashboard | done | `argus/dashboard.py` + `argus/telemetry.py`: OpenCV window with three feeds, depth, corridor/SLAM map, status and speech log; verified at 1920x1080 on 2026-09-29 |
 | Corridor navigation | partial | `argus/navigation.py` picks the widest free bearing from calibrated depth; three synthetic tests pass. Off until calibration exists |
+| Rig doctor | partial | `python3 -m argus doctor` (+ `--snap`, `--skew-test`, `--bandwidth`) verified with one B0495: 29.9/59.8/79.5 fps at 30/60/80 on USB3. Full three-camera run pending reconnection |
 | Headless service/soak/fault tests | not started | No service definition or sustained validation |
 
 ## Reproducibility pins
@@ -46,7 +47,10 @@ implementation exists.
 
 | Artifact | SHA-256 |
 |---|---|
-| `gemma-4-E2B-it-Q4_K_M.gguf` | `9378bc471710229ef165709b62e34bfb62231420ddaf6d729e727305b5b8672d` |
+| `gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf` (production) | `e531007218dfab990486a5de7676a6932d6ea8dea233d1f698d7c21cf8a16889` |
+| `mmproj-gemma4-e2b-vision-f16.gguf` (production, derived by `scripts/strip_mmproj_audio.py`) | `366316f696d52b65e33d69cdc55d8a1b3918164708b18df14949b6556b5559c9` |
+| `clip/vocab_embeddings.npy` (401 labels, `scripts/build_vocab_embeddings.py`) | `b2db59b8ee6b20e36b5196558a0f57007f24d4ce3eb5fd1955b9eaa2bd0b7da6` |
+| `gemma-4-E2B-it-Q4_K_M.gguf` (previous) | `9378bc471710229ef165709b62e34bfb62231420ddaf6d729e727305b5b8672d` |
 | `mmproj-gemma4-e2b-f16.gguf` | `140be8d7849741f88c50757d529b84373ee8e27052cc2236855b537f4a8215fa` |
 | `yolov8s-worldv2.pt` | `9b2c17ab6124a913e9b3a5c170617920d91b0f01111a8479da69f00e2cf27792` |
 | `yoloworld_640.onnx` | `8b407bb9f5a206d8290fb20d1a6a7d11bc8788da269ec9a583b786290dba4545` |

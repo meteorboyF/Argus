@@ -1,0 +1,528 @@
+{
+  "kind": "argus-vlm-bench",
+  "time": "2026-10-02T20:48:03",
+  "llama_cpp": "ef8268feee28ae943958049bf3bbab4bda99c0ea",
+  "reps": 3,
+  "results": [
+    {
+      "variant": "vision_gpu_tokens",
+      "model": "gemma-4-E2B-it-Q4_K_M.gguf",
+      "mmproj": "mmproj-gemma4-e2b-vision-f16.gguf",
+      "args": [
+        "--image-max-tokens",
+        "560",
+        "-ub",
+        "1024",
+        "-b",
+        "1024"
+      ],
+      "load_s": 10.1,
+      "tasks": [
+        {
+          "id": "describe",
+          "image": "scene_ceiling_b0495.jpg",
+          "sent_px": [
+            819,
+            786
+          ],
+          "faces_blurred": 0,
+          "cold_s": 3.12,
+          "warm_median_s": 2.215,
+          "warm_p95_s": 2.247,
+          "prompt_tokens": 299,
+          "answer": "You are in a room with a window covered by patterned curtains and a ceiling with light fixtures.",
+          "expect": null,
+          "runs": [
+            {
+              "wall_s": 3.12,
+              "text": "You are in a room with a window covered by patterned curtains and a ceiling with light fixtures.",
+              "timings": {
+                "prompt_n": 299,
+                "prompt_ms": 2212.647,
+                "predicted_n": 20,
+                "predicted_ms": 804.511,
+                "predicted_per_second": 24.859821680499085
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 78.1,
+              "ram_peak_mb": 5548,
+              "cold": true
+            },
+            {
+              "wall_s": 2.215,
+              "text": "You are in a room with a window covered by patterned curtains and a ceiling with light fixtures.",
+              "timings": {
+                "prompt_n": 299,
+                "prompt_ms": 1375.279,
+                "predicted_n": 20,
+                "predicted_ms": 782.756,
+                "predicted_per_second": 25.550746337300513
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 97.8,
+              "ram_peak_mb": 5598,
+              "cold": false
+            },
+            {
+              "wall_s": 2.18,
+              "text": "You are in a room with a window covered by patterned curtains and a ceiling with light fixtures.",
+              "timings": {
+                "prompt_n": 299,
+                "prompt_ms": 1351.231,
+                "predicted_n": 20,
+                "predicted_ms": 755.985,
+                "predicted_per_second": 26.45555136675992
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 88.8,
+              "ram_peak_mb": 5647,
+              "cold": false
+            },
+            {
+              "wall_s": 2.25,
+              "text": "You are in a room with a window covered by patterned curtains and a ceiling with light fixtures.",
+              "timings": {
+                "prompt_n": 299,
+                "prompt_ms": 1412.453,
+                "predicted_n": 20,
+                "predicted_ms": 759.821,
+                "predicted_per_second": 26.3219889947764
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 72.3,
+              "ram_peak_mb": 5685,
+              "cold": false
+            }
+          ]
+        },
+        {
+          "id": "find",
+          "image": "scene_ceiling_b0495.jpg",
+          "sent_px": [
+            819,
+            786
+          ],
+          "faces_blurred": 0,
+          "cold_s": 2.058,
+          "warm_median_s": 2.057,
+          "warm_p95_s": 2.085,
+          "prompt_tokens": 311,
+          "answer": "Yes, there is a ceiling fan on the right side of the picture.",
+          "expect": "fan, right or centre",
+          "runs": [
+            {
+              "wall_s": 2.058,
+              "text": "Yes, there is a ceiling fan on the right side of the picture.",
+              "timings": {
+                "prompt_n": 311,
+                "prompt_ms": 1359.977,
+                "predicted_n": 16,
+                "predicted_ms": 603.348,
+                "predicted_per_second": 26.51869236327957
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 70.5,
+              "ram_peak_mb": 5739,
+              "cold": true
+            },
+            {
+              "wall_s": 2.088,
+              "text": "Yes, there is a ceiling fan on the right side of the picture.",
+              "timings": {
+                "prompt_n": 311,
+                "prompt_ms": 1379.361,
+                "predicted_n": 16,
+                "predicted_ms": 635.602,
+                "predicted_per_second": 25.172985610492102
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 81.5,
+              "ram_peak_mb": 5746,
+              "cold": false
+            },
+            {
+              "wall_s": 2.038,
+              "text": "Yes, there is a ceiling fan on the right side of the picture.",
+              "timings": {
+                "prompt_n": 311,
+                "prompt_ms": 1336.89,
+                "predicted_n": 16,
+                "predicted_ms": 620.905,
+                "predicted_per_second": 25.76883742279415
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 81.7,
+              "ram_peak_mb": 5776,
+              "cold": false
+            },
+            {
+              "wall_s": 2.057,
+              "text": "Yes, there is a ceiling fan on the right side of the picture.",
+              "timings": {
+                "prompt_n": 311,
+                "prompt_ms": 1346.109,
+                "predicted_n": 16,
+                "predicted_ms": 642.091,
+                "predicted_per_second": 24.918586306302377
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 67.5,
+              "ram_peak_mb": 5776,
+              "cold": false
+            }
+          ]
+        },
+        {
+          "id": "read",
+          "image": "sign_synth_01.jpg",
+          "sent_px": [
+            1514,
+            851
+          ],
+          "faces_blurred": 0,
+          "cold_s": 3.948,
+          "warm_median_s": 3.873,
+          "warm_p95_s": 3.89,
+          "prompt_tokens": 556,
+          "answer": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM",
+          "expect": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM",
+          "runs": [
+            {
+              "wall_s": 3.948,
+              "text": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM",
+              "timings": {
+                "prompt_n": 556,
+                "prompt_ms": 2566.338,
+                "predicted_n": 32,
+                "predicted_ms": 1237.424,
+                "predicted_per_second": 25.860174038971284
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 86.2,
+              "ram_peak_mb": 5916,
+              "cold": true
+            },
+            {
+              "wall_s": 3.892,
+              "text": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM",
+              "timings": {
+                "prompt_n": 556,
+                "prompt_ms": 2537.049,
+                "predicted_n": 32,
+                "predicted_ms": 1237.996,
+                "predicted_per_second": 25.848225680858416
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 91.6,
+              "ram_peak_mb": 5955,
+              "cold": false
+            },
+            {
+              "wall_s": 3.789,
+              "text": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM",
+              "timings": {
+                "prompt_n": 556,
+                "prompt_ms": 2451.401,
+                "predicted_n": 32,
+                "predicted_ms": 1237.072,
+                "predicted_per_second": 25.867532366749877
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 91.9,
+              "ram_peak_mb": 5962,
+              "cold": false
+            },
+            {
+              "wall_s": 3.873,
+              "text": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM",
+              "timings": {
+                "prompt_n": 556,
+                "prompt_ms": 2413.109,
+                "predicted_n": 32,
+                "predicted_ms": 1320.976,
+                "predicted_per_second": 24.22451278448662
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 87.8,
+              "ram_peak_mb": 5949,
+              "cold": false
+            }
+          ]
+        }
+      ],
+      "idle_rss_mb": 2906,
+      "idle_mem_drop_mb": 2439,
+      "peak_rss_mb": 4116,
+      "rss_mb": 3499,
+      "peak_mem_drop_mb": 3289,
+      "gr3d_peak": 99,
+      "gr3d_mean": 70.8,
+      "ram_peak_mb": 5962,
+      "oc_throttle_events": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 965
+      }
+    },
+    {
+      "variant": "qat_vision_gpu_tokens",
+      "model": "gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf",
+      "mmproj": "mmproj-gemma4-e2b-vision-f16.gguf",
+      "args": [
+        "--image-max-tokens",
+        "560",
+        "-ub",
+        "1024",
+        "-b",
+        "1024"
+      ],
+      "load_s": 7.1,
+      "tasks": [
+        {
+          "id": "describe",
+          "image": "scene_ceiling_b0495.jpg",
+          "sent_px": [
+            819,
+            786
+          ],
+          "faces_blurred": 0,
+          "cold_s": 2.532,
+          "warm_median_s": 2.175,
+          "warm_p95_s": 2.208,
+          "prompt_tokens": 299,
+          "answer": "You are looking at an interior space with a patterned curtain on the left and a white ceiling with light fixtures on the right.",
+          "expect": null,
+          "runs": [
+            {
+              "wall_s": 2.532,
+              "text": "You are looking at an interior space with a patterned curtain on the left and a white ceiling with light fixtures on the right.",
+              "timings": {
+                "prompt_n": 299,
+                "prompt_ms": 1641.313,
+                "predicted_n": 26,
+                "predicted_ms": 797.133,
+                "predicted_per_second": 32.616890782341216
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 78.2,
+              "ram_peak_mb": 5047,
+              "cold": true
+            },
+            {
+              "wall_s": 2.175,
+              "text": "You are looking at an interior space with a patterned curtain on the left and a white ceiling with light fixtures on the right.",
+              "timings": {
+                "prompt_n": 299,
+                "prompt_ms": 1311.163,
+                "predicted_n": 26,
+                "predicted_ms": 781.097,
+                "predicted_per_second": 33.28651883184803
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 96.2,
+              "ram_peak_mb": 5081,
+              "cold": false
+            },
+            {
+              "wall_s": 2.141,
+              "text": "You are looking at an interior space with a patterned curtain on the left and a white ceiling with light fixtures on the right.",
+              "timings": {
+                "prompt_n": 299,
+                "prompt_ms": 1252.872,
+                "predicted_n": 26,
+                "predicted_ms": 787.927,
+                "predicted_per_second": 32.997980777407044
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 76.5,
+              "ram_peak_mb": 5112,
+              "cold": false
+            },
+            {
+              "wall_s": 2.212,
+              "text": "You are looking at an interior space with a patterned curtain on the left and a white ceiling with light fixtures on the right.",
+              "timings": {
+                "prompt_n": 299,
+                "prompt_ms": 1273.847,
+                "predicted_n": 26,
+                "predicted_ms": 846.292,
+                "predicted_per_second": 30.722256620646302
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 93.7,
+              "ram_peak_mb": 5140,
+              "cold": false
+            }
+          ]
+        },
+        {
+          "id": "find",
+          "image": "scene_ceiling_b0495.jpg",
+          "sent_px": [
+            819,
+            786
+          ],
+          "faces_blurred": 0,
+          "cold_s": 1.675,
+          "warm_median_s": 1.659,
+          "warm_p95_s": 1.678,
+          "prompt_tokens": 311,
+          "answer": "There is a ceiling fan on the right.",
+          "expect": "fan, right or centre",
+          "runs": [
+            {
+              "wall_s": 1.675,
+              "text": "There is a ceiling fan on the right.",
+              "timings": {
+                "prompt_n": 311,
+                "prompt_ms": 1277.347,
+                "predicted_n": 10,
+                "predicted_ms": 307.271,
+                "predicted_per_second": 32.544561641026974
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 75.6,
+              "ram_peak_mb": 5173,
+              "cold": true
+            },
+            {
+              "wall_s": 1.659,
+              "text": "There is a ceiling fan on the right.",
+              "timings": {
+                "prompt_n": 311,
+                "prompt_ms": 1273.353,
+                "predicted_n": 10,
+                "predicted_ms": 297.837,
+                "predicted_per_second": 33.57541205424444
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 81.4,
+              "ram_peak_mb": 5184,
+              "cold": false
+            },
+            {
+              "wall_s": 1.68,
+              "text": "There is a ceiling fan on the right.",
+              "timings": {
+                "prompt_n": 311,
+                "prompt_ms": 1319.286,
+                "predicted_n": 10,
+                "predicted_ms": 295.531,
+                "predicted_per_second": 33.83739776876199
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 86.5,
+              "ram_peak_mb": 5191,
+              "cold": false
+            },
+            {
+              "wall_s": 1.632,
+              "text": "There is a ceiling fan on the right.",
+              "timings": {
+                "prompt_n": 311,
+                "prompt_ms": 1276.117,
+                "predicted_n": 10,
+                "predicted_ms": 290.955,
+                "predicted_per_second": 34.36957605127941
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 98.6,
+              "ram_peak_mb": 5196,
+              "cold": false
+            }
+          ]
+        },
+        {
+          "id": "read",
+          "image": "sign_synth_01.jpg",
+          "sent_px": [
+            1514,
+            851
+          ],
+          "faces_blurred": 0,
+          "cold_s": 3.662,
+          "warm_median_s": 3.542,
+          "warm_p95_s": 3.548,
+          "prompt_tokens": 556,
+          "answer": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM",
+          "expect": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM",
+          "runs": [
+            {
+              "wall_s": 3.662,
+              "text": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM",
+              "timings": {
+                "prompt_n": 556,
+                "prompt_ms": 2514.352,
+                "predicted_n": 32,
+                "predicted_ms": 1027.688,
+                "predicted_per_second": 31.13785506885358
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 87.5,
+              "ram_peak_mb": 5377,
+              "cold": true
+            },
+            {
+              "wall_s": 3.435,
+              "text": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM",
+              "timings": {
+                "prompt_n": 556,
+                "prompt_ms": 2351.291,
+                "predicted_n": 32,
+                "predicted_ms": 967.023,
+                "predicted_per_second": 33.09125015640786
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 96.9,
+              "ram_peak_mb": 5410,
+              "cold": false
+            },
+            {
+              "wall_s": 3.549,
+              "text": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM",
+              "timings": {
+                "prompt_n": 556,
+                "prompt_ms": 2441.82,
+                "predicted_n": 32,
+                "predicted_ms": 977.186,
+                "predicted_per_second": 32.74709216055081
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 91.6,
+              "ram_peak_mb": 5393,
+              "cold": false
+            },
+            {
+              "wall_s": 3.542,
+              "text": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM",
+              "timings": {
+                "prompt_n": 556,
+                "prompt_ms": 2437.106,
+                "predicted_n": 32,
+                "predicted_ms": 969.288,
+                "predicted_per_second": 33.0139236222877
+              },
+              "gr3d_peak": 99,
+              "gr3d_mean": 88.8,
+              "ram_peak_mb": 5413,
+              "cold": false
+            }
+          ]
+        }
+      ],
+      "idle_rss_mb": 3160,
+      "idle_mem_drop_mb": 1320,
+      "peak_rss_mb": 3829,
+      "rss_mb": 3584,
+      "peak_mem_drop_mb": 1857,
+      "gr3d_peak": 99,
+      "gr3d_mean": 76.6,
+      "ram_peak_mb": 5413,
+      "oc_throttle_events": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 710
+      }
+    }
+  ]
+}
