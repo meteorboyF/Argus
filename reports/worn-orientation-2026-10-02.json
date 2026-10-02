@@ -1,0 +1,11 @@
+{
+  "kind": "argus-worn-orientation",
+  "time": "2026-10-02T21:20",
+  "method": "argus doctor --snap while worn facing the monitor; frames inspected by eye, ORB+RANSAC homography inliers between left/right",
+  "orientation": {"left": "upright", "right": "upright", "wide": "upright", "rotations_set": [0, 0, 0]},
+  "left_right_binding": "confirmed: scene appears further right in the left image (positive disparity)",
+  "alignment": {"orb_inliers": 905, "orb_matches": 1306,
+                "horizontal_disparity_px": {"median": 328, "p10": 311, "p90": 340},
+                "vertical_offset_px": -13.6, "roll_deg": -0.96,
+                "interpretation": "~25 deg toe-in at f~550 px; exceeds 128-disparity search; mount must be made parallel before calibration"}
+}
