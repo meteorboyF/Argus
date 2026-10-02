@@ -1,0 +1,79 @@
+{
+  "kind": "argus-mem-budget",
+  "time": "2026-10-02T20:36:12",
+  "rows": [
+    {
+      "base_rss_mb": 8,
+      "rss_mb": 53,
+      "hwm_mb": 53,
+      "mem_drop_mb": 16,
+      "load_s": 1.39,
+      "component": "python+numpy+cv2"
+    },
+    {
+      "base_rss_mb": 8,
+      "rss_mb": 173,
+      "hwm_mb": 533,
+      "mem_drop_mb": 117,
+      "load_s": 2.45,
+      "component": "privacy (InsightFace SCRFD, CPU)"
+    },
+    {
+      "base_rss_mb": 8,
+      "rss_mb": 309,
+      "hwm_mb": 309,
+      "mem_drop_mb": 78,
+      "load_s": 1.78,
+      "component": "grounding TRT engine only"
+    },
+    {
+      "base_rss_mb": 8,
+      "rss_mb": 1672,
+      "hwm_mb": 2175,
+      "mem_drop_mb": 494,
+      "load_s": 11.63,
+      "component": "grounding TRT + CLIP text (torch CPU)"
+    },
+    {
+      "base_rss_mb": 8,
+      "rss_mb": 120,
+      "hwm_mb": 120,
+      "mem_drop_mb": 35,
+      "load_s": 1.34,
+      "component": "CUDA SAD stereo"
+    },
+    {
+      "base_rss_mb": 8,
+      "rss_mb": 157,
+      "hwm_mb": 157,
+      "mem_drop_mb": 130,
+      "load_s": 3.22,
+      "component": "Piper TTS"
+    },
+    {
+      "base_rss_mb": 8,
+      "rss_mb": 555,
+      "hwm_mb": 692,
+      "mem_drop_mb": 377,
+      "load_s": 7.7,
+      "component": "faster-whisper tiny int8"
+    },
+    {
+      "base_rss_mb": 8,
+      "rss_mb": 200,
+      "hwm_mb": 203,
+      "mem_drop_mb": 128,
+      "load_s": 3.52,
+      "component": "openWakeWord"
+    },
+    {
+      "base_rss_mb": 8,
+      "rss_mb": 353,
+      "hwm_mb": 353,
+      "mem_drop_mb": 130,
+      "load_s": 1.61,
+      "component": "grounding TRT + vocab table (warm, no torch)"
+    }
+  ],
+  "note": "Each component measured alone in a fresh process. rss_mb includes shared file-backed pages; mem_drop_mb is the fall in system MemAvailable and also captures CUDA/NvMap allocations."
+}

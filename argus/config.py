@@ -156,6 +156,9 @@ class GroundingConfig:
     onnx: str = str(EXPORTS_DIR / "yoloworld_runtime_text_640.onnx")
     weights_pt: str = str(MODELS_DIR / "yolov8s-worldv2.pt")  # ultralytics fallback
     text_encoder: str = str(MODELS_DIR / "clip" / "ViT-B-32.pt")
+    # Precomputed embeddings for the common vocabulary (built by
+    # scripts/build_vocab_embeddings.py); CLIP+torch load only for other words.
+    vocab_embeddings: str = str(MODELS_DIR / "clip" / "vocab_embeddings.npy")
     conf_threshold: float = 0.25
     imgsz: int = 640
     backend: str = "trt"
@@ -209,6 +212,10 @@ class PrivacyConfig:
     # Mandatory gate: faces (and optionally text) blurred before the agent sees a frame.
     face_model: str = "buffalo_s"      # insightface SCRFD pack
     det_size: int = 640
+    # Missing a face is the privacy failure; blurring a false positive only
+    # costs a little scene detail. 2026-10-02: a dark, side-on, edge-cropped
+    # face scored 0.27 and passed the InsightFace default of 0.5 unblurred.
+    det_thresh: float = 0.25
     blur_kernel: int = 51
     enable_text_blur: bool = False     # CRAFT — enable once weights are present
     # Hard enforcement: when true (production), the agent is NEVER called if the

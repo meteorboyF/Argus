@@ -1,0 +1,404 @@
+# ARGUS grounding vocabulary: precomputed CLIP text embeddings (one label per line).
+# Household, personal items, Dhaka street and transit, documents, food, safety.
+# Words not listed here still work: they fall back to the CLIP text encoder.
+object
+thing
+obstacle
+person
+man
+woman
+child
+baby
+dog
+cat
+bird
+cow
+goat
+chicken
+door
+open door
+closed door
+doorway
+door handle
+doorknob
+window
+wall
+floor
+ceiling
+stairs
+staircase
+step
+steps
+escalator
+elevator
+lift button
+ramp
+railing
+handrail
+pillar
+column
+corridor
+hallway
+exit
+exit sign
+entrance
+gate
+fence
+chair
+plastic chair
+office chair
+stool
+bench
+sofa
+couch
+bed
+pillow
+blanket
+mattress
+table
+desk
+dining table
+coffee table
+shelf
+bookshelf
+cupboard
+wardrobe
+almirah
+cabinet
+drawer
+mirror
+curtain
+carpet
+mat
+ceiling fan
+fan
+table fan
+light switch
+switch board
+power socket
+plug
+extension cord
+lamp
+light bulb
+tube light
+air conditioner
+remote control
+television
+tv remote
+monitor
+computer
+laptop
+keyboard
+mouse
+printer
+phone
+mobile phone
+smartphone
+charger
+charging cable
+earphones
+headphones
+power bank
+speaker
+radio
+clock
+wall clock
+watch
+wristwatch
+calendar
+keys
+key
+keychain
+wallet
+purse
+handbag
+bag
+backpack
+school bag
+suitcase
+umbrella
+glasses
+eyeglasses
+sunglasses
+spectacles case
+hat
+cap
+shoes
+sandals
+slippers
+socks
+shirt
+t-shirt
+pants
+trousers
+saree
+lungi
+dress
+jacket
+scarf
+towel
+hanger
+clothes
+bucket
+mug
+cup
+tea cup
+glass
+water bottle
+bottle
+jug
+plate
+bowl
+spoon
+fork
+knife
+chopping board
+pan
+frying pan
+pot
+pressure cooker
+rice cooker
+kettle
+stove
+gas stove
+gas cylinder
+oven
+microwave
+refrigerator
+fridge
+sink
+tap
+water tap
+water filter
+dustbin
+trash can
+broom
+mop
+toilet
+commode
+wash basin
+shower
+soap
+shampoo
+toothbrush
+toothpaste
+comb
+tissue
+toilet paper
+medicine
+medicine strip
+tablet strip
+pill bottle
+syrup bottle
+inhaler
+thermometer
+blood pressure monitor
+glucose meter
+syringe
+bandage
+first aid box
+walking stick
+white cane
+wheelchair
+crutch
+spectacles
+hearing aid
+book
+notebook
+newspaper
+magazine
+letter
+envelope
+paper
+document
+form
+receipt
+bill
+invoice
+id card
+national id card
+passport
+bank card
+credit card
+debit card
+money
+banknote
+taka note
+coin
+cash
+pen
+pencil
+marker
+scissors
+stapler
+tape
+file folder
+calculator
+label
+price tag
+sign
+signboard
+notice board
+poster
+menu
+packet
+box
+carton
+can
+jar
+rice
+lentils
+flour
+sugar
+salt
+oil bottle
+egg
+bread
+biscuit
+banana
+apple
+mango
+orange
+tomato
+potato
+onion
+garlic
+chili
+fish
+meat
+milk
+tea
+coffee
+water
+plant
+flower
+flower pot
+tree
+grass
+car
+taxi
+bus
+minibus
+truck
+van
+ambulance
+motorcycle
+motorbike
+bicycle
+rickshaw
+cycle rickshaw
+auto rickshaw
+cng
+cng auto rickshaw
+easy bike
+leguna
+human hauler
+pickup truck
+train
+train platform
+boat
+launch
+road
+street
+footpath
+sidewalk
+pavement
+crosswalk
+zebra crossing
+road divider
+traffic light
+traffic signal
+traffic sign
+street light
+lamp post
+electric pole
+utility pole
+hanging wires
+manhole
+open manhole
+drain
+open drain
+pothole
+puddle
+mud
+construction site
+brick pile
+sand pile
+scaffolding
+barrier
+traffic cone
+speed breaker
+curb
+gutter
+roadside stall
+tea stall
+shop
+shop counter
+vendor cart
+fruit cart
+parked car
+parked motorcycle
+bus stop
+bus stand
+ticket counter
+overbridge
+foot overbridge
+underpass
+building
+house
+mosque
+temple
+church
+school
+hospital
+pharmacy
+bank
+atm
+atm machine
+market
+shopping mall
+restaurant
+hotel
+office
+police
+security guard
+crowd
+queue
+stall
+low branch
+hanging sign
+awning
+shop shutter
+open shutter
+glass door
+glass wall
+step down
+step up
+hole
+edge
+platform edge
+wet floor
+wet floor sign
+fire extinguisher
+fire exit
+emergency exit
+smoke
+fire
+knife on table
+broken glass
+cable on floor
+toy
+ball
+shoe rack
+laundry basket
+iron
+ironing board
+sewing machine
+mosquito net
+mosquito coil
+prayer mat
+quran
+water pump
+generator
+ips battery
+solar panel

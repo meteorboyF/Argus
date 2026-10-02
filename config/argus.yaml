@@ -94,6 +94,7 @@ speech:
 privacy:
   face_model: "buffalo_s"
   det_size: 640
+  det_thresh: 0.25       # asymmetric cost: over-blur rather than leak a face
   blur_kernel: 51
   enable_text_blur: false
   require_gate: true     # HARD RULE: never call the agent if face blur is unavailable

@@ -25,6 +25,7 @@ class Grounder:
         self._runner = None
         self._text_model = None
         self._classes: list[str] | None = None
+        self.vocab = None
         self._load()
 
     def _load(self):
@@ -35,6 +36,9 @@ class Grounder:
             if not os.path.exists(self.cfg.text_encoder):
                 raise RuntimeError(
                     f"Pinned CLIP text encoder is missing: {self.cfg.text_encoder}")
+            if os.path.exists(self.cfg.vocab_embeddings):
+                from .vocab import VocabTable
+                self.vocab = VocabTable.load(self.cfg.vocab_embeddings)
             from .trt_runner import TRTRunner
             self._runner = TRTRunner(self.cfg.engine)
             inputs = {item["name"]: tuple(item["shape"]) for item in self._runner.inputs}
@@ -62,9 +66,21 @@ class Grounder:
             self._model.set_classes(names)
             self._classes = names
 
-    @lru_cache(maxsize=64)
     def _embed(self, name: str) -> np.ndarray:
-        """Encode one requested label on CPU and cache the normalized vector."""
+        """Normalised CLIP embedding: precomputed table first, live CLIP after."""
+        if self.vocab is not None:
+            vec = self.vocab.get(name)
+            if vec is not None:
+                return vec
+        return self._embed_live(name)
+
+    @property
+    def live_encoder_loaded(self) -> bool:
+        return self._text_model is not None
+
+    @lru_cache(maxsize=64)
+    def _embed_live(self, name: str) -> np.ndarray:
+        """Encode one out-of-vocabulary label on CPU and cache the vector."""
         if self._text_model is None:
             import clip
             self._text_model, _ = clip.load(
@@ -125,7 +141,10 @@ class Grounder:
 
     def warm(self, names: tuple[str, ...] = ("object", "door", "chair", "person",
                                               "car", "stairs", "table", "phone")):
-        """Load the text encoder and pre-embed common labels off the query path."""
+        """Pre-embed common labels and run one TensorRT pass off the query path.
+
+        With the vocabulary table present this never loads torch/CLIP: every
+        warm label is in the table."""
         if self.cfg.backend != "trt":
             return
         for name in names:

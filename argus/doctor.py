@@ -189,6 +189,19 @@ def meminfo() -> dict:
             "swap_used_mb": vals["SwapTotal"] - vals["SwapFree"]}
 
 
+def oc_events() -> dict[str, int]:
+    """Cumulative over-current throttle events per soctherm channel. The board
+    drops clocks when total input current crosses ~5 A at 5 V; measurements
+    taken while this counter rises are throttled and must say so."""
+    out = {}
+    for f in sorted(Path("/sys/class/hwmon").glob("hwmon*/oc*_event_cnt")):
+        try:
+            out[f.name.split("_")[0]] = int(f.read_text())
+        except (OSError, ValueError):
+            pass
+    return out
+
+
 def llama_health(url: str, timeout: float = 2.0) -> tuple[bool, str]:
     try:
         with urllib.request.urlopen(url.rstrip("/") + "/health", timeout=timeout) as r:
@@ -306,6 +319,9 @@ def run_doctor(cfg: ArgusConfig, seconds: float = 10.0, speak: bool = True,
         rows.append(Row("free RAM", mem["available_mb"] >= 1500,
                         f"{mem['available_mb']} MB available of {mem['total_mb']} MB, "
                         f"swap {mem['swap_used_mb']}/{mem['swap_total_mb']} MB", mem))
+        oc = oc_events()
+        rows.append(Row("over-current throttle events", None,
+                        ", ".join(f"{k}={v}" for k, v in oc.items()) or "unavailable", oc))
         ok, body = llama_health(cfg.agent.server_url)
         rows.append(Row("llama-server", ok, body))
         if check_audio and guide.speaker is not None and guide.speaker.enabled:

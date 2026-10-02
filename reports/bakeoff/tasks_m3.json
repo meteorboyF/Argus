@@ -1,0 +1,25 @@
+[
+ {
+  "id": "describe",
+  "image": "scene_ceiling_b0495.jpg",
+  "tokens": 280,
+  "max_tokens": 64,
+  "prompt": "I am blind. Describe what is in front of me in one short sentence."
+ },
+ {
+  "id": "find",
+  "image": "scene_ceiling_b0495.jpg",
+  "tokens": 280,
+  "max_tokens": 48,
+  "prompt": "Is there a ceiling fan in this picture? If yes, say whether it is on the left, centre or right. One short sentence.",
+  "expect": "fan, right or centre"
+ },
+ {
+  "id": "read",
+  "image": "sign_synth_01.jpg",
+  "tokens": 560,
+  "max_tokens": 64,
+  "prompt": "Read all the text on the sign exactly, line by line. Output only the text.",
+  "expect": "FIRE EXIT\nRoom 204 - Physics Lab\nKeep this door closed\nOpen 9:00 AM - 5:30 PM"
+ }
+]

@@ -30,7 +30,8 @@ class PrivacyGate:
                 allowed_modules=["detection"],
                 providers=["CPUExecutionProvider"],
             )
-            self._face.prepare(ctx_id=0, det_size=(self.cfg.det_size, self.cfg.det_size))
+            self._face.prepare(ctx_id=0, det_size=(self.cfg.det_size, self.cfg.det_size),
+                               det_thresh=self.cfg.det_thresh)
         except Exception as e:  # noqa: BLE001
             # Fail loud but keep a safe fallback: if face detection can't load,
             # the gate blurs nothing — so log clearly. The orchestrator should
