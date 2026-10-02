@@ -1,0 +1,153 @@
+{
+  "kind": "argus-usb-bandwidth",
+  "time": "2026-10-02T21:13:18",
+  "roles": {
+    "left": {
+      "port": "2-1.4",
+      "link_mbps": 5000
+    },
+    "right": {
+      "port": "2-1.3",
+      "link_mbps": 5000
+    },
+    "wide": {
+      "port": "2-1.2",
+      "link_mbps": 5000
+    }
+  },
+  "matrix": [
+    {
+      "stereo_fps_requested": 30,
+      "wide_streaming": false,
+      "fps": {
+        "left": 29.94,
+        "right": 29.94
+      },
+      "max_gap_ms": {
+        "left": 34.7,
+        "right": 35.0
+      },
+      "skew": {
+        "n": 240,
+        "median_ms": 7.23,
+        "p95_ms": 7.74,
+        "max_ms": 9.23,
+        "over_gate_pct": 0.0,
+        "gate_ms": 12.0
+      }
+    },
+    {
+      "stereo_fps_requested": 30,
+      "wide_streaming": true,
+      "fps": {
+        "left": 29.95,
+        "right": 29.94,
+        "wide": 30.01
+      },
+      "max_gap_ms": {
+        "left": 39.0,
+        "right": 36.4,
+        "wide": 39.9
+      },
+      "skew": {
+        "n": 240,
+        "median_ms": 0.66,
+        "p95_ms": 1.96,
+        "max_ms": 6.65,
+        "over_gate_pct": 0.0,
+        "gate_ms": 12.0
+      }
+    },
+    {
+      "stereo_fps_requested": 60,
+      "wide_streaming": false,
+      "fps": {
+        "left": 59.76,
+        "right": 59.75
+      },
+      "max_gap_ms": {
+        "left": 20.7,
+        "right": 19.7
+      },
+      "skew": {
+        "n": 479,
+        "median_ms": 1.87,
+        "p95_ms": 2.31,
+        "max_ms": 14.63,
+        "over_gate_pct": 0.2,
+        "gate_ms": 12.0
+      }
+    },
+    {
+      "stereo_fps_requested": 60,
+      "wide_streaming": true,
+      "fps": {
+        "left": 59.77,
+        "right": 59.79,
+        "wide": 30.01
+      },
+      "max_gap_ms": {
+        "left": 20.6,
+        "right": 20.1,
+        "wide": 40.8
+      },
+      "skew": {
+        "n": 479,
+        "median_ms": 0.94,
+        "p95_ms": 2.1,
+        "max_ms": 18.48,
+        "over_gate_pct": 0.2,
+        "gate_ms": 12.0
+      }
+    },
+    {
+      "stereo_fps_requested": 80,
+      "wide_streaming": false,
+      "fps": {
+        "left": 79.49,
+        "right": 79.43
+      },
+      "max_gap_ms": {
+        "left": 19.4,
+        "right": 21.9
+      },
+      "skew": {
+        "n": 637,
+        "median_ms": 2.13,
+        "p95_ms": 2.59,
+        "max_ms": 10.92,
+        "over_gate_pct": 0.0,
+        "gate_ms": 12.0
+      }
+    },
+    {
+      "stereo_fps_requested": 80,
+      "wide_streaming": true,
+      "fps": {
+        "left": 79.19,
+        "right": 78.82,
+        "wide": 30.01
+      },
+      "max_gap_ms": {
+        "left": 21.8,
+        "right": 21.3,
+        "wide": 40.8
+      },
+      "skew": {
+        "n": 635,
+        "median_ms": 3.12,
+        "p95_ms": 4.62,
+        "max_ms": 16.82,
+        "over_gate_pct": 0.2,
+        "gate_ms": 12.0
+      }
+    }
+  ],
+  "wide_open_to_first_frame_s": [
+    0.4700623029993949,
+    0.46956718399997044,
+    0.4702752379998856,
+    0.4662016059992311,
+    0.4728169499994692
+  ]
+}

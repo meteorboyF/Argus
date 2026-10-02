@@ -580,3 +580,37 @@ the safety loop that shares the GPU.
 A 25 W vs MAXN_SUPER comparison is planned for M4 depth benchmarking and needs
 the user's sudo. The user was asked to confirm the board runs on the original
 19 V barrel supply.
+
+## 2026-10-02 M0 — three cameras up; ports, left/right and frame rate chosen by measurement
+
+**Hurdle / problem.** The user reported "all 3 cameras connected", but the
+kernel had enumerated only one; the other two showed no USB events at all, so
+they had no electrical contact. Once reseated, they landed on different hub
+ports than the config expected (B0495s on 3 and 4, B0459 on 2). Snapshot
+parallax then showed left/right inverted: the near person shifted ~380 px
+between images and the far fan only ~180 px, in the direction that means the
+port-4 camera is physically left. The far fan's ~180 px offset also reveals
+roughly 15 degrees of relative yaw between the two stereo cameras.
+
+**Impact.** A calibration with swapped roles produces negative disparities.
+A 15 degree yaw mismatch costs most of the stereo overlap and is far outside
+the ~0.1 degree/px budget.
+
+**Resolution.**
+- A spoken hot-plug watcher announced each camera and its link speed in the
+  headset as it was plugged in.
+- Roles were rebound to the measured ports (left 2-1.4, right 2-1.3,
+  wide 2-1.2).
+- `argus doctor` is all green.
+- Bandwidth matrix (`reports/usb-bandwidth-2026-10-02-2112.json`): the stereo
+  pair holds 79 fps even while the wide camera streams 1080p30. The wide
+  camera reopens in 0.47 s, so it stays streaming rather than adding half a
+  second to every query.
+- Capture CPU: 73 / 111 / 152 % of one core at 30 / 60 / 80 fps.
+- Stereo set to 60 fps: worst-case pair skew 8.3 ms, so ~2.5 px disparity
+  error at 30°/s head rotation instead of ~5 px.
+- The mount must be made parallel (M1/M2) before calibration.
+
+**Lesson / consequence.** "Connected" is a claim about cables. Enumeration is
+the evidence, and the kernel log distinguishes "no contact" from "USB 2
+fallback".

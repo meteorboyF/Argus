@@ -1,0 +1,142 @@
+{
+  "kind": "argus-doctor",
+  "time": "2026-10-02T21:10:11",
+  "config_file": "/opt/argus/config/argus.yaml",
+  "config": {
+    "stereo": [
+      960,
+      600,
+      30
+    ],
+    "wide": [
+      1920,
+      1080,
+      30
+    ],
+    "pixel_format": "YUYV"
+  },
+  "rows": [
+    {
+      "name": "left camera present",
+      "ok": true,
+      "detail": "/dev/video4 Arducam B0495 (USB3 2.3MP) @ 2-1.3",
+      "data": {}
+    },
+    {
+      "name": "left on SuperSpeed",
+      "ok": true,
+      "detail": "5000 Mbit/s",
+      "data": {}
+    },
+    {
+      "name": "right camera present",
+      "ok": true,
+      "detail": "/dev/video0 Arducam B0495 (USB3 2.3MP) @ 2-1.4",
+      "data": {}
+    },
+    {
+      "name": "right on SuperSpeed",
+      "ok": true,
+      "detail": "5000 Mbit/s",
+      "data": {}
+    },
+    {
+      "name": "wide camera present",
+      "ok": true,
+      "detail": "/dev/video2 Arducam B0459 (USB3 12MP) @ 2-1.2",
+      "data": {}
+    },
+    {
+      "name": "wide on SuperSpeed",
+      "ok": true,
+      "detail": "5000 Mbit/s",
+      "data": {}
+    },
+    {
+      "name": "left fps (10s)",
+      "ok": true,
+      "detail": "29.9 of 30 fps, worst gap 38 ms, first frame 0.59 s, mode 960x600",
+      "data": {
+        "fps": 29.95,
+        "target": 30,
+        "max_gap_ms": 38.4,
+        "open_to_first_frame_s": 0.5921014550003747
+      }
+    },
+    {
+      "name": "right fps (10s)",
+      "ok": true,
+      "detail": "29.9 of 30 fps, worst gap 38 ms, first frame 0.47 s, mode 960x600",
+      "data": {
+        "fps": 29.94,
+        "target": 30,
+        "max_gap_ms": 38.3,
+        "open_to_first_frame_s": 0.4687526309999157
+      }
+    },
+    {
+      "name": "wide fps (10s)",
+      "ok": true,
+      "detail": "30.0 of 30 fps, worst gap 40 ms, first frame 0.56 s, mode 1920x1080",
+      "data": {
+        "fps": 30.01,
+        "target": 30,
+        "max_gap_ms": 39.8,
+        "open_to_first_frame_s": 0.5627820649997375
+      }
+    },
+    {
+      "name": "stereo arrival skew",
+      "ok": true,
+      "detail": "median 3.42 ms, p95 4.78 ms, 0.3% over 12.0 ms gate",
+      "data": {
+        "n": 300,
+        "median_ms": 3.42,
+        "p95_ms": 4.78,
+        "max_ms": 29.02,
+        "over_gate_pct": 0.3,
+        "gate_ms": 12.0
+      }
+    },
+    {
+      "name": "snapshots",
+      "ok": null,
+      "detail": "/tmp/argus_snap/left.jpg, /tmp/argus_snap/right.jpg, /tmp/argus_snap/wide.jpg",
+      "data": {}
+    },
+    {
+      "name": "free RAM",
+      "ok": true,
+      "detail": "2026 MB available of 7607 MB, swap 1943/3803 MB",
+      "data": {
+        "total_mb": 7607,
+        "available_mb": 2026,
+        "swap_total_mb": 3803,
+        "swap_used_mb": 1943
+      }
+    },
+    {
+      "name": "over-current throttle events",
+      "ok": null,
+      "detail": "oc1=0, oc2=0, oc3=2632",
+      "data": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 2632
+      }
+    },
+    {
+      "name": "llama-server",
+      "ok": true,
+      "detail": "{\"status\":\"ok\"}",
+      "data": {}
+    },
+    {
+      "name": "Piper playback",
+      "ok": true,
+      "detail": "synth+play 1.61 s (completion only; a human must confirm hearing it)",
+      "data": {}
+    }
+  ],
+  "all_ok": true
+}
