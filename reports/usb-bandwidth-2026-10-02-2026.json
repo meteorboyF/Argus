@@ -1,0 +1,43 @@
+{
+  "kind": "argus-usb-bandwidth",
+  "time": "2026-10-02T20:27:06",
+  "roles": {
+    "left": {
+      "port": "2-1.4",
+      "link_mbps": 5000
+    }
+  },
+  "matrix": [
+    {
+      "stereo_fps_requested": 30,
+      "wide_streaming": false,
+      "fps": {
+        "left": 29.94
+      },
+      "max_gap_ms": {
+        "left": 35.0
+      }
+    },
+    {
+      "stereo_fps_requested": 60,
+      "wide_streaming": false,
+      "fps": {
+        "left": 59.75
+      },
+      "max_gap_ms": {
+        "left": 19.3
+      }
+    },
+    {
+      "stereo_fps_requested": 80,
+      "wide_streaming": false,
+      "fps": {
+        "left": 79.45
+      },
+      "max_gap_ms": {
+        "left": 19.8
+      }
+    }
+  ],
+  "wide_open_to_first_frame_s": []
+}

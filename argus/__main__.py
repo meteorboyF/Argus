@@ -5,6 +5,7 @@ Usage (on the Jetson, after setup):
     python -m argus run --no-audio      # fast loop only (no mic/speaker)
     python -m argus query "what is in front of me?"   # one slow-path turn
     python -m argus selftest            # check imports, models, camera, server
+    python -m argus doctor              # rig bring-up table + spoken summary
 """
 from __future__ import annotations
 
@@ -60,6 +61,28 @@ def _cmd_baseline(args):
     sys.exit(0 if report["production_ready"] else 1)
 
 
+def _cmd_doctor(args):
+    from . import doctor
+    cfg = load_config(args.config)
+    stamp = __import__("time").strftime("%Y-%m-%d-%H%M")
+    speak = not args.quiet
+    if args.snap:
+        doctor.run_snap(cfg, seconds=args.seconds, speak=speak)
+        return
+    if args.skew_test:
+        rep = doctor.run_skew_test(cfg, seconds=args.seconds * 2, stereo_fps=args.stereo_fps,
+                                   speak=speak)
+        doctor.write_json(rep, f"skew-test-{stamp}.json")
+        sys.exit(0 if "error" not in rep else 1)
+    if args.bandwidth:
+        rep = doctor.run_bandwidth(cfg, speak=speak)
+        doctor.write_json(rep, f"usb-bandwidth-{stamp}.json")
+        return
+    rep = doctor.run_doctor(cfg, seconds=args.seconds, speak=speak)
+    doctor.write_json(rep, f"doctor-{stamp}.json")
+    sys.exit(0 if rep["all_ok"] else 1)
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(prog="argus", description="ARGUS smart-glasses runtime")
     p.add_argument("--config", default=None, help="path to argus.yaml")
@@ -95,6 +118,18 @@ def main(argv=None):
     pb = sub.add_parser("baseline", help="read-only Jetson environment baseline")
     pb.add_argument("--output", default=None, help="optional JSON report path")
     pb.set_defaults(func=_cmd_baseline)
+
+    pd = sub.add_parser("doctor", help="rig bring-up checks with a spoken summary")
+    pd.add_argument("--seconds", type=float, default=10.0, help="measurement window")
+    pd.add_argument("--snap", action="store_true",
+                    help="guided worn-orientation snapshots to /tmp/argus_snap/")
+    pd.add_argument("--skew-test", action="store_true",
+                    help="true stereo exposure offset from an on-screen timecode")
+    pd.add_argument("--bandwidth", action="store_true",
+                    help="stereo fps matrix with the wide camera closed vs streaming")
+    pd.add_argument("--stereo-fps", type=int, default=None, help="override stereo fps (skew test)")
+    pd.add_argument("--quiet", action="store_true", help="no speech")
+    pd.set_defaults(func=_cmd_doctor)
 
     args = p.parse_args(argv)
     args.func(args)

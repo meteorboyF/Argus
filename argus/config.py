@@ -257,6 +257,7 @@ class ArgusConfig:
     agent: AgentConfig = field(default_factory=AgentConfig)
     speech: SpeechConfig = field(default_factory=SpeechConfig)
     privacy: PrivacyConfig = field(default_factory=PrivacyConfig)
+    source: str = "defaults"           # which YAML file was loaded (reports cite it)
 
 
 def _merge(dc, overrides: dict):
@@ -271,6 +272,7 @@ def load_config(path: str | os.PathLike | None = None) -> ArgusConfig:
     dataclasses above (camera, depth, safety, grounding, agent, speech, privacy)."""
     cfg = ArgusConfig()
     path = Path(path) if path else (CONFIG_DIR / "argus.yaml")
+    cfg.source = str(path) if path.exists() else "defaults"
     if yaml is not None and path.exists():
         data = yaml.safe_load(path.read_text()) or {}
         _merge(cfg.camera, data.get("camera"))

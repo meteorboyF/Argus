@@ -179,6 +179,11 @@ class Speaker:
             self._idle.clear()
             self._cv.notify()
 
+    @property
+    def busy(self) -> bool:
+        """True while something is queued or playing."""
+        return not self._idle.is_set()
+
     def wait_until_idle(self, timeout: float | None = None) -> bool:
         """Block until the queue drains. For one-shot `argus query` and tests."""
         return self._idle.wait(timeout)

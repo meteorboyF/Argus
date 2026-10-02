@@ -1,0 +1,90 @@
+{
+  "kind": "argus-doctor",
+  "time": "2026-10-02T20:26:06",
+  "config": {
+    "stereo": [
+      960,
+      600,
+      30
+    ],
+    "wide": [
+      1920,
+      1080,
+      30
+    ],
+    "pixel_format": "YUYV"
+  },
+  "rows": [
+    {
+      "name": "left camera present",
+      "ok": true,
+      "detail": "/dev/video0 Arducam B0495 (USB3 2.3MP) @ 2-1.4",
+      "data": {}
+    },
+    {
+      "name": "left on SuperSpeed",
+      "ok": true,
+      "detail": "5000 Mbit/s",
+      "data": {}
+    },
+    {
+      "name": "right camera present",
+      "ok": false,
+      "detail": "B0495 not found (port hint 2-1.2)",
+      "data": {}
+    },
+    {
+      "name": "wide camera present",
+      "ok": false,
+      "detail": "B0459 not found (port hint 2-1.4)",
+      "data": {}
+    },
+    {
+      "name": "left fps (3s)",
+      "ok": true,
+      "detail": "29.9 of 30 fps, worst gap 34 ms, first frame 0.55 s, mode 960x600",
+      "data": {
+        "fps": 29.95,
+        "target": 30,
+        "max_gap_ms": 33.8,
+        "open_to_first_frame_s": 0.548619995000081
+      }
+    },
+    {
+      "name": "stereo arrival skew",
+      "ok": false,
+      "detail": "needs both stereo cameras",
+      "data": {}
+    },
+    {
+      "name": "snapshots",
+      "ok": null,
+      "detail": "/tmp/argus_snap/left.jpg",
+      "data": {}
+    },
+    {
+      "name": "free RAM",
+      "ok": true,
+      "detail": "3367 MB available of 7607 MB, swap 16/3803 MB",
+      "data": {
+        "total_mb": 7607,
+        "available_mb": 3367,
+        "swap_total_mb": 3803,
+        "swap_used_mb": 16
+      }
+    },
+    {
+      "name": "llama-server",
+      "ok": false,
+      "detail": "not reachable (URLError)",
+      "data": {}
+    },
+    {
+      "name": "Piper playback",
+      "ok": false,
+      "detail": "Piper voice failed to load",
+      "data": {}
+    }
+  ],
+  "all_ok": false
+}

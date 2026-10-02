@@ -480,3 +480,28 @@ disparity sign at the same time.
 
 **Lesson / consequence.** Synthetic geometry tests must be well-posed before
 their tolerances mean anything.
+
+## 2026-10-02 M0 rig doctor — the deployed config had silently drifted
+
+**Hurdle / problem.** The first `argus doctor` snapshot came back portrait
+(600x960). `load_config()` defaults to `/opt/argus/config/argus.yaml`, and that
+copy dated from 2026-08-13: `left_rotation: 90`, `right_rotation: 270` and
+`depth.backend: sgbm`. Every documented command passes
+`--config config/argus.yaml`, so the drift stayed hidden. Anything run without
+the flag used the old rotations and a CPU depth backend.
+
+**Impact.** A calibration captured without `--config` would have baked in the
+wrong orientation. A runtime started the same way would have chosen a backend
+the production rules forbid.
+
+**Options considered.** Delete the deployed copy; always require `--config`;
+sync the deployed copy from the repo template and make reports cite the file
+they loaded.
+
+**Resolution.** Backed up the old file to
+`/opt/argus/config/argus.yaml.bak-2026-08-13` and replaced it with the repo
+template. `ArgusConfig.source` now records which YAML was loaded, and doctor
+reports include it.
+
+**Lesson / consequence.** Two config files with one silent default is one too
+many. Reports must say which configuration produced them.
