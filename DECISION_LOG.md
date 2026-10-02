@@ -614,3 +614,21 @@ the ~0.1 degree/px budget.
 **Lesson / consequence.** "Connected" is a claim about cables. Enumeration is
 the evidence, and the kernel log distinguishes "no contact" from "USB 2
 fallback".
+
+## 2026-10-02 M0 — skew test OOM-killed while the user was wearing the rig
+
+**Hurdle / problem.** The first live `doctor --skew-test` was killed (exit
+137). The kernel's global OOM killer also took a VS Code process. The test
+kept every raw frame for decoding afterwards: up to 4000 per camera at
+~1.7 MB each, beside the 3 GB resident llama-server.
+
+**Impact.** The person wearing the rig was left mid-test. The crash was
+announced in the headset immediately, but the guided tool had failed at the
+one moment it was supposed to guide.
+
+**Resolution.** A `TimecodeSampler` per camera decodes the newest frame on its
+own thread and keeps only (arrival time, decoded ms). Verified on the live
+pair: RSS flat at 96 MB over 20 s, ~60 decode attempts/s per camera at 60 fps.
+
+**Lesson / consequence.** On an 8 GB shared-memory board, every measurement
+tool needs a memory bound. Buffer results, not images.

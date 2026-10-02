@@ -88,6 +88,8 @@ class StreamProbe:
         self.frames: list[tuple[float, np.ndarray]] = []
         self.keep_frames = keep_frames
         self.latest: np.ndarray | None = None
+        self.latest_ts = 0.0
+        self.seq = 0
         self.error = ""
         self._lock = threading.Lock()
         self._stop = threading.Event()
@@ -117,11 +119,15 @@ class StreamProbe:
                 self.first_frame_s = now - self._t_open
             with self._lock:
                 self.arrivals.append(now)
-                self.latest = frame
+                self.latest, self.latest_ts, self.seq = frame, now, self.seq + 1
                 if self.keep_frames:
                     self.frames.append((now, frame))
                     if len(self.frames) > self.keep_frames:
                         self.frames.pop(0)
+
+    def newest(self) -> tuple[np.ndarray | None, float, int]:
+        with self._lock:
+            return self.latest, self.latest_ts, self.seq
 
     def reset_stats(self):
         with self._lock:
@@ -418,6 +424,40 @@ def run_snap(cfg: ArgusConfig, seconds: float = 10.0, count: int = 3, speak: boo
 # ---------------------------------------------------------------------------
 # --skew-test: true exposure offset from the on-screen timecode
 # ---------------------------------------------------------------------------
+class TimecodeSampler:
+    """Decodes each camera's newest frame on its own thread and keeps only
+    (arrival time, decoded ms). Never buffers images: holding raw 960x600
+    frames for a 20 s window at 60 fps exhausted the 8 GB board (OOM kill,
+    2026-10-02)."""
+
+    def __init__(self, probe: StreamProbe):
+        self.probe = probe
+        self.samples: list[tuple[float, int]] = []
+        self.attempts = 0
+        self._stop = threading.Event()
+        self._thread = threading.Thread(target=self._run, daemon=True,
+                                        name=f"tc-{probe.role}")
+        self._thread.start()
+
+    def _run(self):
+        from . import timecode as tc
+        last = -1
+        while not self._stop.is_set():
+            frame, ts, seq = self.probe.newest()
+            if frame is None or seq == last:
+                time.sleep(0.002)
+                continue
+            last = seq
+            self.attempts += 1
+            v = tc.decode_frame(frame)
+            if v is not None:
+                self.samples.append((ts, v))
+
+    def stop(self):
+        self._stop.set()
+        self._thread.join(timeout=2.0)
+
+
 def run_skew_test(cfg: ArgusConfig, seconds: float = 20.0, stereo_fps: int | None = None,
                   speak: bool = True) -> dict:
     from . import timecode as tc
@@ -429,7 +469,7 @@ def run_skew_test(cfg: ArgusConfig, seconds: float = 20.0, stereo_fps: int | Non
         guide.close()
         return {"error": "need both stereo cameras"}
     probes = _open_probes(cfg, {k: roles[k] for k in ("left", "right")},
-                          stereo_fps=stereo_fps, keep_frames=4000)
+                          stereo_fps=stereo_fps)
     win = "ARGUS skew test"
     cv2.namedWindow(win, cv2.WINDOW_NORMAL)
     cv2.setWindowProperty(win, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
@@ -461,19 +501,19 @@ def run_skew_test(cfg: ArgusConfig, seconds: float = 20.0, stereo_fps: int | Non
         guide.say(f"Good. Hold still for {int(seconds)} seconds.", force=True)
         for p in probes.values():
             p.reset_stats()
+        samplers = {r: TimecodeSampler(p) for r, p in probes.items()}
         end = time.monotonic() + seconds
         while time.monotonic() < end:
             cv2.imshow(win, tc.render(now_ms()))
             cv2.waitKey(1)
+            remaining = int(end - time.monotonic()) + 1
+            if remaining % 5 == 0:
+                guide.say(f"{remaining} seconds.")
+        for sm in samplers.values():
+            sm.stop()
         guide.say("Measuring.", force=True)
-        decoded = {}
-        for role, p in probes.items():
-            items = []
-            for t_arr, f in list(p.frames):
-                v = tc.decode_frame(f)
-                if v is not None:
-                    items.append((t_arr, v, int((t_arr - clock0) * 1000)))
-            decoded[role] = items
+        decoded = {r: [(t, v, int((t - clock0) * 1000)) for t, v in sm.samples]
+                   for r, sm in samplers.items()}
         L, R = decoded["left"], decoded["right"]
         if len(L) < 20 or len(R) < 20:
             guide.failed(f"Too few readable frames: left {len(L)}, right {len(R)}.")
@@ -491,7 +531,8 @@ def run_skew_test(cfg: ArgusConfig, seconds: float = 20.0, stereo_fps: int | Non
         report = {
             "kind": "argus-skew-test", "time": time.strftime("%Y-%m-%dT%H:%M:%S"),
             "stereo_fps": stereo_fps or cfg.camera.stereo_fps,
-            "frames": {r: len(p.frames) for r, p in probes.items()},
+            "frames": {r: len(p.arrivals) for r, p in probes.items()},
+            "decode_attempts": {r: sm.attempts for r, sm in samplers.items()},
             "decoded": {r: len(v) for r, v in decoded.items()},
             "true_offset_ms": {"mean": float(true_off.mean()), "median": float(np.median(true_off)),
                                "p95_abs": float(np.percentile(np.abs(true_off), 95))},
