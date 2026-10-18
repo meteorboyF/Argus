@@ -632,3 +632,37 @@ pair: RSS flat at 96 MB over 20 s, ~60 decode attempts/s per camera at 60 fps.
 
 **Lesson / consequence.** On an 8 GB shared-memory board, every measurement
 tool needs a memory bound. Buffer results, not images.
+
+## 2026-10-18 M1/M2 — printed bridge, swapped cameras, and a screen feedback loop
+
+**Hurdle / problem.** The user printed a rigid bridge: the two B0495s at the
+ends on knob-and-bolt heads, the wide camera on a centre post. Three issues
+came up when measuring it.
+1. Moving the cameras into the bridge swapped them. Template matching showed
+   the near keychain shifting 219 px more than the far monitor, in the
+   swapped direction.
+2. The right camera pointed ~10 degrees down (118 px vertical offset).
+3. During the first live run of the alignment tool, the cameras faced the
+   monitor showing their own pictures. The video feedback produced 775
+   "matches" on screen content and a spurious 0 px vertical offset.
+
+**Impact.** Swapped roles would give negative disparity. A 10 degree pitch
+leaves no shared rows for the matcher. The feedback loop could have announced
+"aligned" for a rig that was not.
+
+**Resolution.**
+- Ports rebound in config (left 2-1.3, right 2-1.4); no replugging needed.
+- `python3 -m argus align` (also `calibrate_stereo.py --align`) speaks one
+  correction at a time in the user's terms (inward/outward, tilt up/down,
+  rotate clockwise seen from behind) over a lined side-by-side view.
+- The user corrected the tilt live. A clean re-measure with no screen in view:
+  vertical 3-4 px (from 118), overlap 82% (from 68%), roll within about
+  ±0.8 degrees.
+- Remaining yaw must be measured on a scene at least 4 m away, because at
+  1 m the 13 cm baseline alone reads as about 7 degrees of toe-out.
+- The tool now tells the user never to aim at its own monitor.
+
+**Lesson / consequence.**
+- A camera-measurement tool must not look at its own display.
+- Every physical rebuild invalidates the left/right binding: re-check it by
+  parallax, not by cable labels.

@@ -268,3 +268,142 @@ def assess(left: np.ndarray, right: np.ndarray, wide: np.ndarray | None,
                 setattr(out, name, r)
     out.advice, out.aligned = advise(pair, out.metrics, out.left_vs_wide, out.right_vs_wide, targets)
     return out
+
+
+# ---------------------------------------------------------------------------
+# Live guided session
+# ---------------------------------------------------------------------------
+def _median_rotation(items: list[Rotation]) -> Rotation:
+    return Rotation(float(np.median([r.yaw for r in items])),
+                    float(np.median([r.pitch for r in items])),
+                    float(np.median([r.roll for r in items])),
+                    int(np.median([r.inliers for r in items])))
+
+
+def _median_metrics(items: list[PairMetrics]) -> PairMetrics:
+    return PairMetrics(*(float(np.median([getattr(m, k) for m in items]))
+                         for k in ("vertical_px", "roll_slope_deg", "disparity_px", "overlap")),
+                       int(np.median([m.inliers for m in items])))
+
+
+def _render(left, right, a: Assessment, aligned_for: float, hold_s: float) -> np.ndarray:
+    """Side-by-side view with horizontal guide lines: a matching feature must
+    sit on the same line in both images when pitch and roll are right."""
+    pair = np.hstack([left, right])
+    h, w = pair.shape[:2]
+    for y in range(0, h, 50):
+        cv2.line(pair, (0, y), (w, y), (0, 200, 255), 1)
+    cv2.line(pair, (w // 2, 0), (w // 2, h), (255, 255, 255), 2)
+    canvas = np.zeros((1080, 1920, 3), np.uint8)
+    s = min(1900 / w, 760 / h)
+    view = cv2.resize(pair, (int(w * s), int(h * s)))
+    y0 = 1080 - view.shape[0] - 10
+    canvas[y0:y0 + view.shape[0], 10:10 + view.shape[1]] = view
+    if a.pair is not None and a.metrics is not None:
+        p, m = a.pair, a.metrics
+        txt = (f"yaw {p.yaw:+.1f} deg   vertical {m.vertical_px:+.0f} px   roll {p.roll:+.2f} deg   "
+               f"overlap {m.overlap:.0%}   matches {p.inliers}")
+        cv2.putText(canvas, txt, (20, y0 - 20), cv2.FONT_HERSHEY_SIMPLEX, 1.0,
+                    (80, 255, 80) if a.aligned else (255, 255, 255), 2, cv2.LINE_AA)
+    if aligned_for > 0:
+        cv2.putText(canvas, f"holding aligned {aligned_for:.0f} / {hold_s:.0f} s", (20, y0 - 60),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (80, 255, 80), 2, cv2.LINE_AA)
+    return canvas
+
+
+def run_align(cfg, scene_m: float = 4.0, baseline_m: float = 0.13, f_stereo: float = 550.0,
+              hold_s: float = 10.0, max_s: float = 900.0, speak: bool = True,
+              targets: Targets = Targets()) -> dict:
+    """Guide the human until the pair is aligned and stays aligned for hold_s
+    seconds (long enough to tighten the mounts without disturbing them)."""
+    import json
+    import time
+    from pathlib import Path
+    from .doctor import _open_probes, _wait_frames, assign_roles, capture_nodes
+    from .guide import Guide
+
+    guide = Guide(cfg.speech, "ARGUS align", speak=speak, show=True, min_gap_s=2.0, repeat_s=10.0)
+    roles = assign_roles(capture_nodes(), cfg)
+    if "left" not in roles or "right" not in roles:
+        guide.failed("Alignment needs both stereo cameras plugged in.")
+        guide.close()
+        return {"error": "need both stereo cameras"}
+    probes = _open_probes(cfg, roles, wide="wide" in roles)
+    history: list[Assessment] = []
+    log = []
+    report: dict = {}
+    try:
+        _wait_frames(probes)
+        guide.announce(f"Alignment. Face the farthest view you can, at least {scene_m:.0f} metres "
+                       "away, with plenty of detail. Do not point the cameras at this monitor: "
+                       "it shows their own pictures and confuses the measurement. "
+                       "Hold the rig still between adjustments.")
+        t0 = time.monotonic()
+        aligned_since = None
+        locked_announced = False
+        while time.monotonic() - t0 < max_s:
+            L, R = probes["left"].snapshot(), probes["right"].snapshot()
+            W = probes["wide"].snapshot() if "wide" in probes else None
+            if L is None or R is None:
+                time.sleep(0.05)
+                continue
+            a = assess(L, R, W, f_stereo, baseline_m, scene_m, targets)
+            if a.pair is not None:
+                history.append(a)
+                history[:] = history[-5:]
+                sm = Assessment(pair=_median_rotation([h.pair for h in history]),
+                                metrics=_median_metrics([h.metrics for h in history]),
+                                left_vs_wide=a.left_vs_wide, right_vs_wide=a.right_vs_wide)
+                sm.advice, sm.aligned = advise(sm.pair, sm.metrics, sm.left_vs_wide,
+                                               sm.right_vs_wide, targets)
+                a = sm
+                log.append({"t": round(time.monotonic() - t0, 2), "yaw": a.pair.yaw,
+                            "pitch": a.pair.pitch, "roll": a.pair.roll,
+                            "vertical_px": a.metrics.vertical_px, "overlap": a.metrics.overlap,
+                            "inliers": a.pair.inliers, "advice": a.advice})
+            else:
+                history.clear()
+            now = time.monotonic()
+            if a.aligned:
+                aligned_since = aligned_since or now
+                if not locked_announced:
+                    guide.say("Aligned. Lock the mounts now, gently. Keep the rig still.", force=True)
+                    locked_announced = True
+                else:
+                    guide.say(f"Still aligned. {int(hold_s - (now - aligned_since)) + 1} seconds.")
+                if now - aligned_since >= hold_s:
+                    p, m = a.pair, a.metrics
+                    report = {"kind": "argus-align", "time": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                              "result": "aligned", "scene_m": scene_m, "baseline_m": baseline_m,
+                              "f_stereo_px": f_stereo, "targets": targets.__dict__,
+                              "final": {"yaw_deg": p.yaw, "pitch_deg": p.pitch, "roll_deg": p.roll,
+                                        "vertical_px": m.vertical_px, "overlap": m.overlap,
+                                        "inliers": p.inliers},
+                              "duration_s": round(now - t0, 1), "trace": log[-200:]}
+                    guide.done("Mounts aligned and held still. You can start calibration.")
+                    break
+            else:
+                if aligned_since is not None and locked_announced:
+                    guide.say("It moved while locking. " + a.advice, force=True)
+                aligned_since = None
+                locked_announced = False
+                guide.say(a.advice)
+            key = guide.show(_render(L, R, a, (now - aligned_since) if aligned_since else 0, hold_s),
+                             sub="Lines must pass through the same features in both pictures. Q to stop.")
+            if key in (ord("q"), 27):
+                guide.failed("Stopped before alignment finished.")
+                report = {"kind": "argus-align", "result": "stopped", "trace": log[-200:]}
+                break
+        else:
+            guide.failed("Out of time before the cameras were aligned.")
+            report = {"kind": "argus-align", "result": "timeout", "trace": log[-200:]}
+        if report:
+            out = Path(__file__).resolve().parents[1] / "reports" / \
+                f"align-{time.strftime('%Y-%m-%d-%H%M')}.json"
+            out.write_text(json.dumps(report, indent=2, default=float))
+            report["path"] = str(out)
+        return report
+    finally:
+        for p in probes.values():
+            p.close()
+        guide.close()

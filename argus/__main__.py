@@ -83,6 +83,14 @@ def _cmd_doctor(args):
     sys.exit(0 if rep["all_ok"] else 1)
 
 
+def _cmd_align(args):
+    from .align import Targets, run_align
+    rep = run_align(load_config(args.config), scene_m=args.scene_m, baseline_m=args.baseline_m,
+                    f_stereo=args.focal_px, hold_s=args.hold_s, speak=not args.quiet)
+    print(rep.get("path", ""), rep.get("result", rep.get("error")))
+    sys.exit(0 if rep.get("result") == "aligned" else 1)
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(prog="argus", description="ARGUS smart-glasses runtime")
     p.add_argument("--config", default=None, help="path to argus.yaml")
@@ -130,6 +138,14 @@ def main(argv=None):
     pd.add_argument("--stereo-fps", type=int, default=None, help="override stereo fps (skew test)")
     pd.add_argument("--quiet", action="store_true", help="no speech")
     pd.set_defaults(func=_cmd_doctor)
+
+    pa = sub.add_parser("align", help="spoken stereo mount alignment before calibration")
+    pa.add_argument("--scene-m", type=float, default=4.0, help="distance to the viewed scene")
+    pa.add_argument("--baseline-m", type=float, default=0.13, help="lens-to-lens distance")
+    pa.add_argument("--focal-px", type=float, default=550.0, help="provisional stereo focal length")
+    pa.add_argument("--hold-s", type=float, default=10.0, help="seconds to stay aligned while locking")
+    pa.add_argument("--quiet", action="store_true", help="no speech")
+    pa.set_defaults(func=_cmd_align)
 
     args = p.parse_args(argv)
     args.func(args)

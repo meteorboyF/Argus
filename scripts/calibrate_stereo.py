@@ -514,6 +514,8 @@ def main():
                     help="show a measured checkerboard and live preview in one fullscreen window")
     ap.add_argument("--verify", action="store_true",
                     help="skip calibration; live-check depth against the saved file")
+    ap.add_argument("--align", action="store_true",
+                    help="spoken mount alignment before calibration (same as `argus align`)")
     ap.add_argument("--coach", action="store_true",
                     help="fullscreen on-screen instructions for a hand-held board; finishes "
                          "automatically once enough diverse views are captured")
@@ -522,6 +524,10 @@ def main():
     ap.add_argument("--max-seconds", type=float, default=300.0,
                     help="headless capture time limit")
     args = ap.parse_args()
+    if args.align:
+        from argus.__main__ import main as argus_main
+        argus_main(["align"])
+        return
     if args.square_mm is None and not args.verify:
         ap.error("--square-mm is required: measure one square of the physical board with a ruler")
     if args.square_mm is None:
