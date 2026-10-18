@@ -389,8 +389,10 @@ def run_align(cfg, scene_m: float = 4.0, baseline_m: float = 0.13, f_stereo: flo
                 locked_announced = False
                 guide.say(a.advice)
             key = guide.show(_render(L, R, a, (now - aligned_since) if aligned_since else 0, hold_s),
-                             sub="Lines must pass through the same features in both pictures. Q to stop.")
-            if key in (ord("q"), 27):
+                             sub="Lines must pass through the same features in both pictures. Esc to stop.")
+            # Esc only: a stray "q" typed elsewhere while this window has focus
+            # ended the first live session after 2 s (2026-10-18).
+            if key == 27:
                 guide.failed("Stopped before alignment finished.")
                 report = {"kind": "argus-align", "result": "stopped", "trace": log[-200:]}
                 break

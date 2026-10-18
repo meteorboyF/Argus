@@ -339,6 +339,14 @@ class Coach:
         return "GOOD, HOLD STILL", "Capturing..."
 
 
+def spoken_instruction(head: str, detail: str) -> str:
+    """Turn the on-screen SHOUTED heading + detail into one spoken sentence."""
+    head = head.strip().rstrip(".").capitalize()
+    if head.lower().startswith("good, hold still"):
+        return "Good. Hold still."
+    return f"{head}. {detail.strip()}" if detail else f"{head}."
+
+
 def render_coach(fL, fR, head, detail, n_views, min_views, covered, done=False):
     """1920x1080 canvas: both feeds on top, big instructions below."""
     canvas = np.zeros((1080, 1920, 3), dtype=np.uint8)
@@ -516,6 +524,7 @@ def main():
                     help="skip calibration; live-check depth against the saved file")
     ap.add_argument("--align", action="store_true",
                     help="spoken mount alignment before calibration (same as `argus align`)")
+    ap.add_argument("--quiet", action="store_true", help="with --coach: no spoken instructions")
     ap.add_argument("--coach", action="store_true",
                     help="fullscreen on-screen instructions for a hand-held board; finishes "
                          "automatically once enough diverse views are captured")
@@ -576,6 +585,16 @@ def main():
     obj = make_object_points(pattern, square_m) if pattern else None
 
     coach = Coach(args.min_views, mirror=not args.behind) if args.coach else None
+    voice = None
+    if coach is not None and not args.quiet:
+        # The person holding the board cannot read the monitor: every coach
+        # instruction is also spoken, only when it changes (argus.guide).
+        from argus.config import load_config
+        from argus.guide import Guide
+        voice = Guide(load_config().speech, "ARGUS stereo calibration", speak=True, show=False,
+                      min_gap_s=2.0, repeat_s=10.0)
+        voice.announce("Stereo calibration. Hold the board flat, facing the cameras, about one "
+                       "metre away. I will tell you where to move it. Hold still when I say so.")
     objpoints, ptsL, ptsR = [], [], []
     accepted_poses = []
     covered: set[int] = set()
@@ -679,6 +698,8 @@ def main():
                 pattern=pattern, okcL=okcL, okcR=okcR, steady=steady, diverse=diverse,
                 corners=cL if both else None, size=size, n_views=len(objpoints),
                 covered=covered, span_frac=span_frac)
+            if voice is not None:
+                voice.say(spoken_instruction(head, detail))
             vL, vR = fL.copy(), fR.copy()
             if okcL:
                 cv2.drawChessboardCorners(vL, pattern, cL, True)
@@ -757,6 +778,8 @@ def main():
                   f"(coverage {len(covered)}/9)")
             if coach is not None:
                 coach.captured(len(objpoints))
+            if voice is not None:
+                voice.say(f"Captured {len(objpoints)} of {args.min_views}.", force=True)
             if (args.headless or coach is not None) and len(objpoints) >= args.min_views \
                     and len(covered) >= 6:
                 if coach is not None:
@@ -842,6 +865,18 @@ def main():
         # across reboots however V4L2 renumbers the devices
         left_port=usb_port_of(left_idx), right_port=usb_port_of(right_idx),
     )
+    if voice is not None:
+        if save_path == args.out:
+            voice.done(f"Calibration accepted. Error {rms:.2f} pixels, baseline "
+                       f"{baseline_m * 100:.1f} centimetres.")
+        else:
+            why = []
+            if not np.isfinite(rms) or rms > max_rms:
+                why.append(f"reprojection error {rms:.2f} pixels is above {max_rms}")
+            if not np.isfinite(v_err) or v_err > max_vertical:
+                why.append(f"row error {v_err:.2f} pixels is above {max_vertical}")
+            voice.failed("Calibration rejected: " + " and ".join(why or ["quality limits"]) + ".")
+        voice.close()
     if coach is not None:
         ok = save_path == args.out
         head = "CALIBRATION ACCEPTED" if ok else "CALIBRATION REJECTED - TRY AGAIN"
