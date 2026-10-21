@@ -101,7 +101,7 @@ def _box(x0, y0, x1, y1):
     ([_box(0, 200, 500, 240)], "Move the page to your right.", False),
     ([_box(400, 200, 960, 240)], "Move the page to your left.", False),
     ([_box(200, 0, 700, 40)], "Move the page down", False),
-    ([_box(400, 250, 520, 280)], "Bring the page closer.", False),
+    ([_box(420, 250, 520, 280)], "Bring the page closer.", False),
     ([_box(200, 150, 760, 190), _box(200, 220, 700, 260)], "Hold still. Capturing.", True),
 ])
 def test_framing_advice(boxes, cue, ready):
@@ -112,8 +112,14 @@ def test_framing_advice(boxes, cue, ready):
 def test_motion_and_blur_block_capture():
     good = [_box(200, 150, 760, 190)]
     assert framing_advice(FrameCheck(good, 960, 540, 200.0, 20.0)) == ("Hold still.", False)
-    msg, ok = framing_advice(FrameCheck(good, 960, 540, 10.0, 1.0))
+    small = [_box(300, 150, 600, 190)]
+    msg, ok = framing_advice(FrameCheck(small, 960, 540, 10.0, 1.0))
     assert "blurry" in msg and not ok
+
+
+def test_large_but_blurry_page_is_too_close_for_the_fixed_focus_lens():
+    msg, ok = framing_advice(FrameCheck([_box(100, 100, 860, 400)], 960, 540, 10.0, 1.0))
+    assert msg.startswith("Move the page a little farther away") and not ok
 
 
 def test_cjk_noise_is_dropped_but_bangla_and_latin_kept():

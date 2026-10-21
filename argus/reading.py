@@ -68,7 +68,12 @@ class FrameCheck:
 @dataclass
 class FrameLimits:
     edge_frac: float = 0.03      # text this close to an edge is probably cut off
-    min_width_frac: float = 0.30 # text block narrower than this: too far away
+    # The 12 MP still has ~2x the linear resolution of the 1080p live view
+    # the coach analyses, so a block 20% of the live width is readable.
+    min_width_frac: float = 0.20 # text block narrower than this: too far away
+    # The B0459 has a fixed-focus lens (no V4L2 focus control): when the
+    # page is still but blurry and already large, it is too close to focus.
+    close_width_frac: float = 0.45
     min_sharpness: float = 60.0
     max_motion: float = 6.0
 
@@ -99,6 +104,8 @@ def framing_advice(fc: FrameCheck, lim: FrameLimits = FrameLimits()) -> tuple[st
     if (x1 - x0) < lim.min_width_frac * fc.width:
         return "Bring the page closer.", False
     if fc.sharpness < lim.min_sharpness:
+        if (x1 - x0) > lim.close_width_frac * fc.width:
+            return "Move the page a little farther away. It is too close to focus.", False
         return "Hold still, the picture is blurry.", False
     return "Hold still. Capturing.", True
 

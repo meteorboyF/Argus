@@ -406,9 +406,12 @@ class Orchestrator:
         word = control_word(question)
         if word == "stop":
             self.seat_cancel.set()
-        if word is not None and getattr(self, "_reader", None) is not None:
+        if word is not None:
             bus.log("user", question)
-            self._reader.control(word)
+            if getattr(self, "_reader", None) is not None:
+                self._reader.control(word)
+            elif word in ("stop", "pause"):
+                self.speaker.cancel_normal()     # nothing to control: just be quiet
             return
         with self._query_lock:
             bus.log("user", question)

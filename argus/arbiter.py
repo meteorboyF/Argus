@@ -213,16 +213,23 @@ class Arbiter:
             last = self._last_depth
             if last is None:
                 continue
-            stale = self._clock() - last > DEPTH_STALE_S
+            now = self._clock()
+            stale = now - last > DEPTH_STALE_S
             if stale and not self._paused_announced:
                 self._paused_announced = True
-                self._earcon("safety_paused")
-                bus.log("system", "safety paused: no fresh depth")
-                bus.record("safety_paused")
-                self.log.append(("safety_paused", "", self._clock()))
+                self._paused_at = now
+                # Earcon at most every 10 s: a flapping loop must not become
+                # a metronome in the user's ear (60 pauses in 140 s, 10-21).
+                if now - getattr(self, "_last_pause_cue", -1e9) >= 10.0:
+                    self._last_pause_cue = now
+                    self._earcon("safety_paused")
+                    bus.log("system", "safety paused: no fresh depth")
+                self.log.append(("safety_paused", "", now))
             elif not stale and self._paused_announced:
                 self._paused_announced = False
-                self.log.append(("safety_resumed", "", self._clock()))
+                gap = last - (self._paused_at - DEPTH_STALE_S)
+                bus.record("depth_gap", gap_s=round(gap, 3))
+                self.log.append(("safety_resumed", "", now))
 
 
 class ArbitratedSpeaker:

@@ -27,6 +27,18 @@ class TRTRunner:
                 "TensorRT/pycuda not available. This runs on the Jetson only; "
                 "install with the JetPack TensorRT and `pip install pycuda`."
             )
+        # pycuda.autoprimaryctx makes the primary context current only on the
+        # importing thread. Engines created or run on worker threads (the fast
+        # loop, seat guidance) failed with "no currently active context"
+        # (2026-10-21), so every call pushes the device's primary context.
+        self._ctx = cuda.Device(0).retain_primary_context()
+        self._ctx.push()
+        try:
+            self._init(engine_path)
+        finally:
+            self._ctx.pop()
+
+    def _init(self, engine_path: str):
         self.logger = trt.Logger(trt.Logger.WARNING)
         with open(engine_path, "rb") as f, trt.Runtime(self.logger) as rt:
             self.engine = rt.deserialize_cuda_engine(f.read())
@@ -49,6 +61,13 @@ class TRTRunner:
                 self.outputs.append(io)
 
     def infer(self, feeds: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
+        self._ctx.push()
+        try:
+            return self._infer(feeds)
+        finally:
+            self._ctx.pop()
+
+    def _infer(self, feeds: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
         for inp in self.inputs:
             data = feeds.get(inp["name"])
             if data is None and len(self.inputs) == 1:
