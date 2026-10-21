@@ -1,0 +1,37 @@
+{
+  "kind": "argus-deferred-acceptance-build",
+  "date": "2026-10-21",
+  "status": "partial",
+  "base_commit": "08019e283a828e57d6a6c0555adc38b892fd2f43",
+  "tests": {
+    "passed": 343,
+    "failures": 0,
+    "errors": 0,
+    "elapsed_s": 22.844
+  },
+  "checks": {
+    "compileall": true,
+    "systemd_analyze_user_verify": true,
+    "cli_help_smoke": true,
+    "repo_and_device_yaml_identical": true
+  },
+  "device_acceptance_run": false,
+  "service_installed": false,
+  "service_enabled": false,
+  "model_or_engine_changed": false,
+  "new_resource_measurements": null,
+  "remaining": [
+    "T1 human workload/fault checks and repeat timing soak on new code",
+    "T2 focus, CER, real first speech, failure guidance",
+    "T3 gated calibration and tape accuracy",
+    "T4 annotated supervised walk and real audio preemption",
+    "T5 seat trials",
+    "T6 real voice and ambient measurement",
+    "T7 gated frame collection and model bake-off",
+    "T8 Bangla evaluation and optional GGUF mode",
+    "T9 two-minute recorded demo",
+    "T10 boot/restart/audio acceptance"
+  ],
+  "runbook": "docs/ACCEPTANCE.md",
+  "note": "Software construction and synthetic verification only. Prior device soak predates this build."
+}

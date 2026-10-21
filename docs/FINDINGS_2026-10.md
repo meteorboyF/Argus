@@ -201,3 +201,15 @@ Automated timing/RSS subtargets passed once; human continuous queries/reading,
 calibrated geometry and full fault acceptance are still pending. NVMe swap
 remains temporarily active, with zero occupancy at the final inspection;
 its earlier isolated trial did not demonstrate a timing benefit.
+
+
+## 2026-10-21 — Deferred-testing build note (no new device measurements)
+
+Fardeen requested software construction now and physical testing later.
+Static inspection identified competing seat/stereo-pair consumption and a
+shared TensorRT execution context/buffer race. Both paths are changed and
+covered synthetically; this is a code finding, not measured device behavior.
+Seat stale-range/arrival cleanup and reading stop behavior are also covered.
+Evidence: `reports/build-2026-10-21.json`; procedures: `docs/ACCEPTANCE.md`.
+No new backend latency, RSS/MemAvailable, GR3D or OC measurements were taken.
+The previous soak must be repeated on the new build; all live DoDs stay partial.

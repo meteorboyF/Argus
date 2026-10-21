@@ -9,6 +9,8 @@ PC without TensorRT installed.
 """
 from __future__ import annotations
 
+import threading
+
 import numpy as np
 
 try:
@@ -31,6 +33,7 @@ class TRTRunner:
         # importing thread. Engines created or run on worker threads (the fast
         # loop, seat guidance) failed with "no currently active context"
         # (2026-10-21), so every call pushes the device's primary context.
+        self._infer_lock = threading.Lock()
         self._ctx = cuda.Device(0).retain_primary_context()
         self._ctx.push()
         try:
@@ -61,11 +64,13 @@ class TRTRunner:
                 self.outputs.append(io)
 
     def infer(self, feeds: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
-        self._ctx.push()
-        try:
-            return self._infer(feeds)
-        finally:
-            self._ctx.pop()
+        # One execution context and its staging buffers belong to one call.
+        with self._infer_lock:
+            self._ctx.push()
+            try:
+                return {name: value.copy() for name, value in self._infer(feeds).items()}
+            finally:
+                self._ctx.pop()
 
     def _infer(self, feeds: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
         for inp in self.inputs:

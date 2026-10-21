@@ -49,7 +49,7 @@ def test_guide_without_depth_uses_most_central():
 def test_lost_target_turns_toward_last_side():
     g = SeatGuide(F, lost_after_s=1.0)
     g.update([_seat(800)], W, None, 0.0)
-    assert g.update([], W, None, 0.5) == "Seat, to your right."   # still the last phrase
+    assert g.update([], W, None, 0.5) == "Hold still. I lost the seat."
     assert g.update([], W, None, 1.6) == "Turn slowly right. I am looking for a seat."
 
 
@@ -75,3 +75,20 @@ def test_decode_seat_classes_only():
                                    ("read this", False), ("where is the door", False)])
 def test_seat_requests(q, yes):
     assert is_seat_request(q) == yes
+
+
+def test_occupied_seat_excluded():
+    raw = np.zeros((84, 2), np.float32)
+    raw[:4, 0] = (320, 250, 100, 150)
+    raw[60, 0] = .9
+    raw[:4, 1] = (320, 210, 70, 180)
+    raw[4, 1] = .9
+    assert detect_seats(raw, 1, 0, 0, (416, 640)) == []
+
+
+def test_lost_seat_invalidates_arrival_and_distance():
+    g = SeatGuide(F)
+    g.update([_seat(480)], W, np.full((600, W), .7), 0)
+    g.update([], W, None, .1)
+    assert not g.state.arrived
+    assert np.isnan(g.state.range_m)

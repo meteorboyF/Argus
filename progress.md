@@ -92,3 +92,17 @@ table, `AGENT_HANDOFF.md` the continuation plan, and
   passed once; T1 still partial pending human voice/reading and fault checks.
 - NVMe swap remains active temporarily at priority 0; no boot configuration
   change. No further sudo action is required for the current experiment.
+
+
+## Software build, physical tests deferred — 2026-10-21
+
+- User requested build now/test later. Built seat/TRT ownership and occupancy
+  safeguards; reading cancellation, bounded still/chunks, column and orientation
+  handling; headless supervisor/unit; acceptance scorers/protocols; gated frame
+  collector and configurable VLM comparison; optional Tesseract Bangla evaluator.
+- 343 synthetic tests pass. Evidence `reports/build-2026-10-21.json`; runbook
+  `docs/ACCEPTANCE.md`. No new live performance results. New service not enabled,
+  no models/packages downloaded, config/pins unchanged. All live DoDs partial.
+- Resume human testing only when requested. Repeat T1 on this build, then focus,
+  calibration, reading, walk, seat, wake and demo. Optional PaddleOCR-VL/wake
+  training/model selection still depend on evaluation, not guessed compatibility.

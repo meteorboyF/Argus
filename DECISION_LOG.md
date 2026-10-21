@@ -935,3 +935,34 @@ Evidence: `reports/soak-inference-budget-2026-10-21-summary.json` and full
 `reports/soak-inference-budget-2026-10-21.json`. 321 tests pass. Do not infer
 swap caused the improvement or that metric safety is validated: calibration
 is still absent and the human voice/reading soak remains pending.
+
+
+## 2026-10-21 M5/M7/M8/T10 — Build software while physical acceptance is deferred
+
+**Hurdle / problem.** Fardeen is unavailable for live trials and requested
+building now/testing later. Inspection found seat guidance draining the safety
+loop's stereo pairs, shared TensorRT buffers without serialization, and stale
+seat distance/arrival state after losing a target. Reading could finish OCR
+and resume speech after stop. **Impact.** These are safety and HCI failures,
+not evidence that a wearer can navigate reliably.
+
+**Options considered.** Defer all work; fabricate acceptance from synthetic
+inputs; or build software and keep device gates partial. **Resolution.** Use
+matched timestamped image/depth snapshots without consuming camera pairs;
+serialize shared TensorRT calls and copy outputs; reject seats overlapping
+people; clear stale range/arrival/whitelist immediately and on exceptions.
+The prior lost-target test expected repeated distance guidance; it is changed
+to require a hold/lost instruction because repeating old guidance is unsafe.
+Add cancellation checks through reading and protect playback activation;
+bound speech chunks/still candidates; retry poorly recognized upside-down
+pages and preserve source-coordinate privacy boxes plus reading order.
+
+Build a headless owned-process supervisor and user unit, numeric acceptance
+scorers, guided preparation/collection, optional Tesseract Bangla evaluation,
+and bounded/custom privacy-masked VLM benchmarks. No privileged operation,
+automatic model switch or service activation. **Lesson / consequence.**
+343 synthetic tests pass; `reports/build-2026-10-21.json` records build checks.
+`docs/ACCEPTANCE.md` lists commands, schemas and remaining device gates. New
+latency/RAM/GR3D/OC evidence is deliberately absent because physical testing
+was deferred. Prior soak numbers do not certify this build. Conservative
+seat overlap and column heuristics require real scenes/pages before acceptance.

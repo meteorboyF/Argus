@@ -23,17 +23,17 @@ implementation exists.
 | Wake word | partial | "Argus" / "Hey Argus" via VAD + Whisper tiny with a glossary hint (9/9 synthetic, 0.78 s). Real voice: the name recognised every time; bare "Argus" -> "Yes?". False wakes/hour not measured. Trained openWakeWord model not built (`training/hey_argus/`) |
 | VAD / STT | partial | Silero endpointing (0.7 s, 15 s cap) works live; Whisper tiny English only; mishearings seen ("Read the" -> "I'm the") |
 | Conversation layer | partial | `argus/dialogue.py`: rule routing + Gemma JSON routing (13/14, 0.99 s), context, follow-ups without the wake word, exit, filler, persona. Live voice: chat 1.6 s, describe 2.4-3.0 s. Reading/seat flows not yet voice-tested end to end |
-| Reading / OCR | partial | RapidOCR CPU; locate document -> CLAHE crop -> OCR (1.5 s); light/glare/blur-aware coach; diagnose and retry. Synthetic sign perfect; real book cover failed on optics (fixed-focus lens, backlight). Needs `doctor --focus` + CER test. Bangla not evaluated |
+| Reading / OCR | partial | Software additions: bounded best-of-N still option, 180-degree poor-result retry, clear-gutter column order, cancellable coaching/OCR playback. Synthetic checks only; see `docs/ACCEPTANCE.md`.  RapidOCR CPU; locate document -> CLAHE crop -> OCR (1.5 s); light/glare/blur-aware coach; diagnose and retry. Synthetic sign perfect; real book cover failed on optics (fixed-focus lens, backlight). Needs `doctor --focus` + CER test. Bangla not evaluated |
 | Sensitive-text privacy | done (unit) | Luhn cards, BD mobiles, OTP/PIN codes masked before logs, screen and Gemma; demo face blur display-only |
 | Face privacy gate | partial | InsightFace, threshold 0.25 after a 0.27 miss; fail-closed. Adversarial set still needed |
 | Gemma 4 agent | partial | QAT UD-Q4_K_XL + vision-only mmproj on GPU, 280-token images; describe ~2.2 s; text-only routing/answers. Qwen3.5-2B bake-off not done |
 | YOLO-World grounding | partial | TRT FP16 + 401-label precomputed vocabulary (no torch at runtime); optional conf override (reading uses 0.12) |
-| Seat guidance | partial | Closed loop on YOLO11n chair/couch/bench; corridor whitelist; direction only until calibration. Live voice test pending (seen when the user stood up) |
+| Seat guidance | partial | Occupied-seat overlap rejection, matched image/depth snapshots, immediate lost-target range/arrival reset and exception-safe whitelist cleanup built with synthetic checks.  Closed loop on YOLO11n chair/couch/bench; corridor whitelist; direction only until calibration. Live voice test pending (seen when the user stood up) |
 | SLAM / navigation | partial | Stereo VO + corridor guidance exist with synthetic tests; off until calibration |
 | Demo view / recording | done | `run --demo [--record]`: POV with display face blur, captions, hazard banner, insets, chips; x264 via ffmpeg thread (1.5 ms/frame); TTS audio muxed; closes only on Esc x2 or "shut down" |
 | Session logger / study metrics | done | JSONL with masking; `scripts/summarise_session.py` (alarms/min, lead, task times, latency percentiles, precision/recall vs annotated truth) |
 | Memory budget | partial | Production excludes optional torch conversion imports (fresh STT worker peak RSS 690.5 -> 360.0 MiB); final combined peak RSS 4123 MiB. 8 GiB NVMe swap active temporarily, no demonstrated benefit in its isolated comparison. System-wide paging still measured; no blanket no-thrashing claim. `reports/stt-import-memory-2026-10-21.json`, `reports/nvme-swap-comparison-2026-10-21.json` |
-| Headless service/soak/fault tests | partial | Automated synthetic 600 s soaks and guided human soak tool exist. No boot service; human workload and full fault acceptance remain incomplete |
+| Headless service/soak/fault tests | partial | Automated synthetic 600 s soaks and guided human soak tool exist. `argus/service.py`, user unit and installer built (not installed/enabled); owned-process recovery and failure speech have synthetic coverage. `docs/ACCEPTANCE.md`; boot/audio/crash and human/fault acceptance pending |
 
 ## Reproducibility pins
 
@@ -167,3 +167,22 @@ request errors. System-wide paging 103.8 MiB in / 188.2 MiB out; single sequenti
 trial with desktop/warm-cache confounds. Timing and RSS automated subtargets
 passed; **T1 remains partial** pending the human workload and fault acceptance.
 All model/engine SHA pins remain unchanged. 321 tests pass.
+
+
+## Deferred-acceptance software build — 2026-10-21
+
+Fardeen requested building now and physical testing later. New runtime changes
+have **not** repeated the prior automated timing soak. `docs/ACCEPTANCE.md`
+contains the runbook. `reports/build-2026-10-21.json` records synthetic results;
+343 tests pass. All model/engine pins and both configuration files are unchanged.
+
+Built: serialized TensorRT execution with owned output arrays; non-consuming
+matched stereo observations for seats; occupied-seat rejection and lost-target
+cleanup; reading cancellation, bounded chunks, conservative columns, 180-degree
+retry and bounded still selection; headless supervisor/user-unit installer;
+reading/seat/wake/demo scorers; guided protocol rehearsal and 30-frame privacy
+collection; custom VLM variants and bounded frame loading with sensitive masking;
+optional local Tesseract Bangla evaluator. No package/model download, service
+activation, calibration bypass, or live walking claim. PaddleOCR-VL GGUF mode,
+optional trained wake model and any model switch remain evaluation-dependent.
+All prototype acceptance requirements remain partial until measured on device.

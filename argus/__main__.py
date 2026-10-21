@@ -23,6 +23,8 @@ def _cmd_run(args):
     orch.run(dashboard=args.dashboard, fullscreen=not args.windowed,
              ask_file=args.ask_file, demo=args.demo, record=args.record,
              session_log=args.session_log)
+    if getattr(orch, "_fast_error", None):
+        raise RuntimeError("Safety loop failed") from orch._fast_error
 
 
 def _cmd_query(args):

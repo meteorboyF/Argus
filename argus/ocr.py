@@ -93,6 +93,25 @@ class Reading:
 def order_lines(words: list[Word], overlap: float = 0.5) -> list[Line]:
     """Cluster words into lines: a word joins a line when their vertical
     extents overlap by at least `overlap` of the smaller height."""
+    # A persistent blank gutter must be supported by multiple rows on each
+    # side. Spanning headings stay ahead of columns; ambiguous layouts retain
+    # the ordinary line clustering rather than guessing.
+    if len(words) >= 6:
+        heights = [w.height for w in words if w.height > 0]
+        typical = float(np.median(heights)) if heights else 1
+        edges = sorted({float(w.box[:, 0].max()) for w in words})
+        for edge in edges:
+            left = [w for w in words if float(w.box[:, 0].max()) <= edge]
+            right = [w for w in words if w.x0 > edge + 2 * typical]
+            spanning = [w for w in words if all(w is not v for v in left+right)]
+            if len(left) < 3 or len(right) < 3:
+                continue
+            if spanning and max(w.y1 for w in spanning) > min(w.y0 for w in left+right):
+                continue
+            if min(max(w.y1 for w in left), max(w.y1 for w in right)) <= max(min(w.y0 for w in left), min(w.y0 for w in right)):
+                continue
+            return (order_lines(spanning, overlap) + order_lines(left, overlap)
+                    + order_lines(right, overlap))
     lines: list[Line] = []
     for w in sorted(words, key=lambda w: w.cy):
         best, best_ov = None, 0.0
@@ -134,7 +153,17 @@ def speakable_chunks(lines: list[Line], max_chars: int = 160) -> list[str]:
             buf = ""
     if buf:
         chunks.append(buf)
-    return chunks
+    bounded = []
+    for chunk in chunks:
+        while len(chunk) > max_chars:
+            split = chunk.rfind(" ", 0, max_chars + 1)
+            if split <= 0:
+                split = max_chars
+            bounded.append(chunk[:split])
+            chunk = chunk[split:].lstrip()
+        if chunk:
+            bounded.append(chunk)
+    return bounded
 
 
 _CJK = re.compile(r"[\u3000-\u9fff\uac00-\ud7af\uff00-\uffef]")
@@ -215,11 +244,25 @@ class OCREngine:
     def read(self, img_bgr: np.ndarray) -> Reading:
         t0 = time.perf_counter()
         result, _ = self._ocr(img_bgr)
+        rotated_result = False
+        # Retry the whole image only if the first recognition is poor. Keep
+        # boxes in source coordinates for downstream sensitive-text masking.
+        good = [r for r in (result or []) if float(r[2]) >= self.min_score and plausible(str(r[1]))]
+        if sum(len(str(r[1])) for r in good) < 4:
+            rotated, _ = self._ocr(np.ascontiguousarray(img_bgr[::-1, ::-1]))
+            alternative = [r for r in (rotated or []) if float(r[2]) >= self.min_score and plausible(str(r[1]))]
+            if sum(len(str(r[1])) for r in alternative) > sum(len(str(r[1])) for r in good):
+                result = alternative
+                rotated_result = True
         words = []
         for box, text, score in result or []:
             score = float(score)
             if score >= self.min_score and plausible(str(text)):
                 words.append(Word(str(text).strip(), np.asarray(box, np.float32), score))
         lines = order_lines(words)
+        if rotated_result:
+            h, w = img_bgr.shape[:2]
+            for word in words:
+                word.box = np.array([w-1, h-1])-word.box
         text = "\n".join(l.text for l in lines)
         return Reading(lines, time.perf_counter() - t0, bool(find_sensitive(text)))

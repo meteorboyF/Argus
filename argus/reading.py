@@ -172,6 +172,7 @@ class ReadingSession:
         self._pos = 0
         self._playing = threading.Event()
         self._stop = threading.Event()
+        self._playback_lock = threading.Lock()
         self._thread: threading.Thread | None = None
 
     # -------------------------------------------------------------- coach
@@ -186,7 +187,8 @@ class ReadingSession:
         said_at = 0.0
         t0 = time.monotonic()
         steady = 0
-        while time.monotonic() - t0 < self.coach_timeout_s:
+        while (time.monotonic() - t0 < self.coach_timeout_s
+               and not self._stop.is_set()):
             frame = self.rig.get_wide_frame()
             if frame is None:
                 time.sleep(0.1)
@@ -235,12 +237,17 @@ class ReadingSession:
         """Coach, capture, OCR, then speak. `on_finished` runs once the whole
         page has been spoken (not when it was stopped)."""
         self.stop()
+        self._stop.clear()
         self._on_finished = on_finished
         if intro:
             self.speaker.speak(intro)
         reading = None
         for attempt in range(3):
+            if self._stop.is_set():
+                return None
             if coach and not self.coach():
+                if self._stop.is_set():
+                    return None
                 fc = getattr(self, "last_check", None)
                 hint = framing_advice(fc)[0] if fc is not None else ""
                 self.speaker.speak("I couldn't get a clear view of the text. " + hint)
@@ -248,11 +255,15 @@ class ReadingSession:
             earcons.play("capturing")
             t0 = time.perf_counter()
             still = self.rig.capture_still()
+            if self._stop.is_set():
+                return None
             if still is None:
                 self.speaker.speak("The camera did not give me a picture.")
                 return None
             capture_s = time.perf_counter() - t0
             reading = self.ocr.read_robust(still, self.locate)
+            if self._stop.is_set():
+                return None
             if len(reading.text.replace(" ", "")) >= 4:
                 break
             # Nothing readable: say why, the way a helper would, and retry.
@@ -274,7 +285,7 @@ class ReadingSession:
         self._chunks = speakable_chunks(reading.lines)
         self._pos = 0
         if play:
-            self._start_playback()
+            self._start_playback(restart=False)
         return reading
 
     def diagnose(self, still: np.ndarray) -> str:
@@ -295,18 +306,25 @@ class ReadingSession:
         return cue
 
     # -------------------------------------------------------------- playback
-    def _start_playback(self):
-        self._stop.clear()
-        self._playing.set()
-        self._thread = threading.Thread(target=self._play_loop, daemon=True, name="reading")
-        self._thread.start()
+    def _start_playback(self, restart=True):
+        with self._playback_lock:
+            if restart:
+                self._stop.clear()
+            elif self._stop.is_set():
+                return
+            self._playing.set()
+            self._thread = threading.Thread(target=self._play_loop, daemon=True, name="reading")
+            self._thread.start()
 
     def _play_loop(self):
         while self._pos < len(self._chunks) and not self._stop.is_set():
             if not self._playing.wait(0.2):
                 continue
             self.speaker.speak(self._chunks[self._pos])
-            self.speaker.wait_until_idle(timeout=30.0)
+            while not self._stop.is_set():
+                self.speaker.wait_until_idle(timeout=0.2)
+                if not self.speaker.busy:
+                    break
             if self._playing.is_set() and not self._stop.is_set():
                 self._pos += 1
         if self._pos >= len(self._chunks) and not self._stop.is_set():
@@ -334,10 +352,11 @@ class ReadingSession:
             self._start_playback()
 
     def stop(self) -> None:
-        self._stop.set()
-        self._playing.set()
-        self.speaker.cancel_normal()
-        if self._thread is not None:
+        with self._playback_lock:
+            self._stop.set()
+            self._playing.set()
+            self.speaker.cancel_normal()
+        if self._thread is not None and self._thread is not threading.current_thread():
             self._thread.join(timeout=2.0)
 
     @property

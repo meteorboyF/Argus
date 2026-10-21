@@ -1,6 +1,6 @@
 # ARGUS agent handoff
 
-Last updated: 2026-10-21 (Codex T1 continuation; see newest git commit).
+Last updated: 2026-10-21 (Codex deferred-acceptance build; see newest git commit).
 Read in this order: this file → `STATUS.md` → `docs/FINDINGS_2026-10.md` →
 `ARCHITECTURE.md` → the newest entries at the end of `DECISION_LOG.md`. Material
 under `historical/` is evidence, not instructions.
@@ -40,7 +40,7 @@ DISPLAY=:0 python3 -m argus run --demo --record reports/sessions/demo.mp4
 #   wake: "Argus, what's in front of me?" | "Argus" -> "Yes?" -> request
 #   close: Esc twice within 2 s, or "Argus, shut down" (saves recording + log)
 DISPLAY=:0 python3 -m argus run --dashboard --no-mic --ask-file /tmp/ask.txt   # typed questions
-python3 -m pytest -q tests/                            # 321 tests; all must pass
+python3 -m pytest -q tests/                            # 343 tests; all must pass
 python3 scripts/summarise_session.py reports/sessions/<log>.jsonl
 ```
 
@@ -106,6 +106,15 @@ and ends with DONE or FAILED):
   throttling.
 
 ## 5. Open work, in priority order
+
+**Latest user steering:** build software now, physical testing later. Do not
+repeat the seated-soak ask until Fardeen resumes testing. New code is synthetic
+verified only; the previous T1 timing evidence predates it. Read
+`docs/ACCEPTANCE.md` for the built headless service, acceptance scorers, guided
+protocols/frame collection, optional Bangla evaluator and VLM variant support.
+Service is not installed/enabled. No assets/configuration/pins changed. Synthetic
+build report: `reports/build-2026-10-21.json`. All live DoDs remain pending.
+
 
 1. **Fast-loop starvation under the full stack** (safety-critical).
    `depth_gap` events of 0.26–0.73 s and 12–20 ms skew drops occur while
@@ -176,6 +185,11 @@ and ends with DONE or FAILED):
 9. **Demo deliverable (M8):** a 2-minute recording covering the startup
    summary, a find-object, reading a page, and an approach warning
    interrupting speech (the last needs calibration).
+
+10. **Headless service:** code/unit/installer built. Later install using
+    `python3 scripts/install_user_service.py`, then deliberately test start,
+    voice shutdown, crash recovery, logs and boot/USB audio. It does not enable
+    user lingering or use sudo. No service is currently enabled by this session.
 
 ## 6. Where things live
 
@@ -320,3 +334,28 @@ and ends with DONE or FAILED):
 - Next [AGENT]: review/perform remaining timeout and fault checks without
   weakening gates. Next [HUMAN]: the seated guided soak when available, then
   focus and measured calibration inputs. Preserve the explicit not-done state.
+
+
+### Session log — 2026-10-21, build now / test later
+
+- **Changes (see latest conventional commit):** seat camera ownership,
+  occupied-seat/lost-target rules, TRT serialization/output ownership, robust
+  reading/still options, headless supervisor and user unit, acceptance/CER
+  scorers, guided rehearsal/frame collection, optional Tesseract Bangla adapter,
+  privacy-masked bounded VLM benchmarks with custom model variants and pins.
+- **Verification:** 343 synthetic tests; compile checks and CLI help smoke
+  checks. `reports/build-2026-10-21.json`. No new camera/audio/GPU/performance
+  measurements. The prior 600-second timing result must be repeated on this
+  version before inferring equivalent performance. All live acceptance pending.
+- **Resume:** read `docs/ACCEPTANCE.md`; review build changes, then T1 real
+  workload/fault checks, focus/calibration, reading, walk, seat and wake trials.
+  New best-of-N still mode remains opt-in; Bangla evaluator is not the live
+  reading backend. Model downloads/switches and PaddleOCR-VL remain pending
+  evaluation; optional wake training remains off-device.
+- **Exact next [HUMAN] ask (only when testing resumes):** “Stay seated with
+  USB headset on, rig pointed into the room away from the monitor, and a printed
+  page ready. I will run `DISPLAY=:0 python3 scripts/soak_fast_loop.py --seconds
+  600 --out reports/soak-2026-10-21.json`. It gives spoken/displayed prompts
+  about every 45 seconds and ends DONE/FAILED. For ten minutes ask room questions
+  and try read this, stop, repeat and next page. Then report missed speech,
+  failed reads and interruptions.” No human action is requested now.

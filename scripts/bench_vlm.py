@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import base64
 import json
+import hashlib
 import math
 import os
 import re
@@ -58,11 +59,11 @@ VARIANTS: dict[str, dict] = {
                           "args": [], "max_side": 256},
     "vision_gpu_tokens": {"model": f"{M}/gemma-4-E2B-it-Q4_K_M.gguf",
                           "mmproj": f"{M}/mmproj-gemma4-e2b-vision-f16.gguf",
-                          "args": ["--image-max-tokens", "560", "-ub", "1024", "-b", "1024"],
+                          "args": ["--image-max-tokens", "560", "-ub", "256", "-b", "256"],
                           "tokens": True},
     "qat_vision_gpu_tokens": {"model": f"{M}/gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf",
                               "mmproj": f"{M}/mmproj-gemma4-e2b-vision-f16.gguf",
-                              "args": ["--image-max-tokens", "560", "-ub", "1024", "-b", "1024"],
+                              "args": ["--image-max-tokens", "560", "-ub", "256", "-b", "256"],
                               "tokens": True},
 }
 
@@ -98,12 +99,22 @@ def load_tasks(path: Path) -> list[dict]:
     gate = PrivacyGate(PrivacyConfig())
     if not gate.ready:
         raise SystemExit("privacy gate unavailable: refusing to send images to a VLM")
+    # Validate metadata now; load and gate just one frame at a time below.
     for t in tasks:
-        img = cv2.imread(str(FRAMES / t["image"]))
-        if img is None:
-            raise SystemExit(f"missing frame {t['image']}")
-        t["_img"], t["_faces"] = gate.apply(img)
+        if not (FRAMES / t["image"]).is_file():
+            raise SystemExit("missing benchmark frame")
     return tasks
+
+
+def task_image(task, gate, ocr):
+    from argus.sensitive import blur_boxes
+    img = cv2.imread(str(FRAMES / task["image"]))
+    if img is None:
+        raise RuntimeError("Unreadable benchmark frame")
+    img, faces = gate.apply(img)
+    reading = ocr.read(img)
+    return blur_boxes(img, reading.sensitive_boxes()), faces
+
 
 
 class Tegra:
@@ -158,6 +169,14 @@ def proc_status(pid: int) -> dict:
     return out
 
 
+def file_sha256(path):
+    digest = hashlib.sha256()
+    with open(path, 'rb') as source:
+        for block in iter(lambda: source.read(1024*1024), b''):
+            digest.update(block)
+    return digest.hexdigest()
+
+
 def start_server(v: dict, log: Path) -> subprocess.Popen:
     cmd = [BIN, "--model", v["model"], "--mmproj", v["mmproj"], *COMMON, *v["args"]]
     f = open(log, "w")
@@ -172,6 +191,7 @@ def start_server(v: dict, log: Path) -> subprocess.Popen:
         except requests.RequestException:
             pass
         time.sleep(0.5)
+    stop_server(p)
     raise RuntimeError("server did not become healthy in 240 s")
 
 
@@ -196,7 +216,8 @@ def ask(img_url: str, prompt: str, max_tokens: int) -> dict:
     wall = time.perf_counter() - t0
     r.raise_for_status()
     j = r.json()
-    return {"wall_s": round(wall, 3), "text": j["choices"][0]["message"].get("content", ""),
+    from argus.sensitive import mask_text
+    return {"wall_s": round(wall, 3), "text": mask_text(j["choices"][0]["message"].get("content", "") or ""),
             "timings": {k: j.get("timings", {}).get(k) for k in
                         ("prompt_n", "prompt_ms", "predicted_n", "predicted_ms", "predicted_per_second")}}
 
@@ -204,13 +225,21 @@ def ask(img_url: str, prompt: str, max_tokens: int) -> dict:
 def run_variant(name: str, v: dict, tasks: list[dict], reps: int, tegra: Tegra,
                 logdir: Path) -> dict:
     from argus.doctor import oc_events
+    from argus.sensitive import mask_text
+    from argus.privacy import PrivacyGate
+    from argus.config import PrivacyConfig
+    from argus.ocr import OCREngine
+    gate, ocr = PrivacyGate(PrivacyConfig()), OCREngine()
+    if not gate.ready:
+        raise RuntimeError("Privacy gate unavailable")
     oc0 = oc_events()
     avail0 = mem_available_mb()
     m0 = tegra.mark()
     t_start = time.perf_counter()
     p = start_server(v, logdir / f"llama-{name}.log")
     load_s = time.perf_counter() - t_start
-    res = {"variant": name, "model": Path(v["model"]).name, "mmproj": Path(v["mmproj"]).name,
+    res = {"backend": "llama.cpp CUDA0", "sha256": {key: file_sha256(v[key]) for key in ("model", "mmproj")},
+           "variant": name, "model": Path(v["model"]).name, "mmproj": Path(v["mmproj"]).name,
            "args": v["args"], "load_s": round(load_s, 1), "tasks": []}
     try:
         idle = proc_status(p.pid)
@@ -218,15 +247,16 @@ def run_variant(name: str, v: dict, tasks: list[dict], reps: int, tegra: Tegra,
         res["idle_mem_drop_mb"] = avail0 - mem_available_mb()
         min_avail = mem_available_mb()
         for t in tasks:
+            source, faces = task_image(t, gate, ocr)
             if v.get("tokens"):
-                img = resize_to_tokens(t["_img"], t.get("tokens", 280))
+                img = resize_to_tokens(source, v.get("token_budget", t.get("tokens", 280)), v.get("cell", 48))
             else:
-                img = resize_max_side(t["_img"], v.get("max_side", 256))
+                img = resize_max_side(source, v.get("max_side", 256))
             url = data_url(img)
             runs = []
             for i in range(reps + 1):  # first run = cold for this image
                 mk = tegra.mark()
-                r = ask(url, t["prompt"], t.get("max_tokens", 64))
+                r = ask(url, mask_text(t["prompt"]), t.get("max_tokens", 64))
                 r.update(tegra.window(mk))
                 r["cold"] = i == 0
                 runs.append(r)
@@ -234,12 +264,12 @@ def run_variant(name: str, v: dict, tasks: list[dict], reps: int, tegra: Tegra,
             warm = [r["wall_s"] for r in runs if not r["cold"]]
             res["tasks"].append({
                 "id": t["id"], "image": t["image"], "sent_px": [img.shape[1], img.shape[0]],
-                "faces_blurred": t["_faces"],
+                "faces_blurred": faces,
                 "cold_s": runs[0]["wall_s"],
                 "warm_median_s": round(float(np.median(warm)), 3) if warm else None,
                 "warm_p95_s": round(float(np.percentile(warm, 95)), 3) if warm else None,
                 "prompt_tokens": runs[-1]["timings"]["prompt_n"],
-                "answer": runs[-1]["text"], "expect": t.get("expect"), "runs": runs})
+                "answer": runs[-1]["text"], "expect": mask_text(t.get("expect") or ""), "runs": runs})
         st = proc_status(p.pid)
         res["peak_rss_mb"] = st.get("VmHWM")
         res["rss_mb"] = st.get("VmRSS")
@@ -254,12 +284,35 @@ def run_variant(name: str, v: dict, tasks: list[dict], reps: int, tegra: Tegra,
 
 
 def main() -> int:
+    global FRAMES
     ap = argparse.ArgumentParser()
     ap.add_argument("--variants", default="baseline")
+    ap.add_argument("--frames", type=Path, default=FRAMES, help="Directory containing task images")
+    ap.add_argument("--allow-concurrent-server", action="store_true", help="Explicitly permit another model server on :8080 (may exhaust RAM)")
+    ap.add_argument("--variant-file", type=Path, help="JSON map of custom model/mmproj/args/token_budget/cell variants")
     ap.add_argument("--tasks", default=str(FRAMES.parent / "tasks_m3.json"))
     ap.add_argument("--reps", type=int, default=3)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
+    FRAMES = args.frames
+    if not args.allow_concurrent_server:
+        try:
+            production_active = requests.get("http://127.0.0.1:8080/health", timeout=2).status_code == 200
+        except requests.RequestException:
+            production_active = False
+        if production_active:
+            ap.error("Stop the production model server before the bake-off; refusing two resident models")
+    if args.variant_file:
+        VARIANTS.update(json.loads(args.variant_file.read_text()))
+    if args.reps < 1:
+        ap.error("--reps must be positive")
+    selected = args.variants.split(",")
+    for name in selected:
+        if name not in VARIANTS:
+            ap.error("unknown variant: "+name)
+        for key in ("model", "mmproj"):
+            if not Path(VARIANTS[name][key]).is_file():
+                ap.error("model or projector file is missing for "+name)
     tasks = load_tasks(Path(args.tasks))
     logdir = Path("/tmp/argus_bench")
     logdir.mkdir(exist_ok=True)
@@ -268,7 +321,7 @@ def main() -> int:
               "llama_cpp": "ef8268feee28ae943958049bf3bbab4bda99c0ea", "reps": args.reps,
               "results": []}
     try:
-        for name in args.variants.split(","):
+        for name in selected:
             print(f"== {name}", flush=True)
             r = run_variant(name, VARIANTS[name], tasks, args.reps, tegra, logdir)
             report["results"].append(r)

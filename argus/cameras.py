@@ -426,7 +426,7 @@ class CameraRig:
         return StereoFrame(left=fL, right=fR, skew_ms=abs(tR-tL)*1000, ts=min(tL, tR))
 
     def capture_still(self, width: int = 4048, height: int = 3040,
-                      settle_frames: int = 2) -> np.ndarray | None:
+                      settle_frames: int = 2, candidates: int = 1) -> np.ndarray | None:
         """One full-resolution wide-camera frame for reading small print.
 
         At 1080p 10-pt print is ~5 px x-height; the 12 MP mode gives ~2x that.
@@ -434,18 +434,26 @@ class CameraRig:
         (measured 2026-10-21: ~1.0 s to first frame, 6.4 fps), a couple of
         frames discarded while exposure settles, and the stream restored.
         Only the slow loop calls this; the stereo safety loop is untouched."""
+        if not 1 <= candidates <= 8 or settle_frames < 0:
+            raise ValueError("still candidates must be 1..8; settle frames nonnegative")
+        from .still_quality import quality
         cfg = self.cfg
         self.wide.release()
         frame = None
-        cap = _open(self.wide_index, width, height, 10, cfg.pixel_format)
+        cap = None
+        best_score = float("-inf")
         try:
+            cap = _open(self.wide_index, width, height, 10, cfg.pixel_format)
             if cap.isOpened():
-                for _ in range(settle_frames + 1):
+                for i in range(settle_frames + candidates):
                     ok, f = cap.read()
-                    if ok and f is not None:
-                        frame = f
+                    if ok and f is not None and i >= settle_frames:
+                        score = quality(f) if candidates > 1 else 0
+                        if score > best_score:
+                            frame, best_score = f, score
         finally:
-            cap.release()
+            if cap is not None:
+                cap.release()
             self.wide = _Reader("wide", self.wide_index, cfg.wide_width, cfg.wide_height,
                                 cfg.wide_fps, cfg.pixel_format, cfg.wide_rotation,
                                 cfg.wide_flip_horizontal, cfg.wide_flip_vertical,

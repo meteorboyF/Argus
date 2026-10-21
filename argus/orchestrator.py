@@ -84,6 +84,7 @@ class Orchestrator:
         self.enable_audio = enable_audio
 
         self._latest_depth: np.ndarray | None = None
+        self._latest_left = None
         self._latest_depth_ts = None
         self._depth_lock = threading.Lock()
         self._stop = threading.Event()
@@ -164,6 +165,9 @@ class Orchestrator:
                         bus.record("depth_stale", age_ms=(time.perf_counter()-pair.ts)*1000)
                     else:
                         with self._depth_lock:
+                            rectified = getattr(self.depth, "last_rectified", None)
+                            self._latest_left = (rectified[0] if rectified is not None
+                                                 else None) if self.depth.calibrated else pair.left
                             self._latest_depth = depth_m
                             self._latest_depth_ts = pair.ts
                         self._fast_ready.set()
@@ -401,6 +405,16 @@ class Orchestrator:
             if self._latest_depth is None or not depth_is_current(self._latest_depth_ts):
                 return None
             return self._latest_depth.copy()
+
+    def latest_observation(self):
+        """Matched image/depth snapshot; slow consumers never drain stereo pairs."""
+        with self._depth_lock:
+            if (getattr(self, "_latest_left", None) is None
+                    or not depth_is_current(self._latest_depth_ts)):
+                return None
+            return (self._latest_left.copy(),
+                    self._latest_depth.copy() if self.depth.calibrated else None,
+                    self._latest_depth_ts)
 
     # ------------------------------------------------------------------ slow loop
     @property

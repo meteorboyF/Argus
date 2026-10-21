@@ -51,10 +51,22 @@ def detect_seats(raw: np.ndarray, scale: float, px: int, py: int, frame_shape,
     cls = keep[sub.argmax(axis=0)[m]]
     sc = score[m]
     idx = cv2.dnn.NMSBoxes(boxes.tolist(), sc.tolist(), conf, 0.5)
+    people = raw[:4, raw[4] >= conf].T
     H, W = frame_shape[:2]
     out = []
     for i in np.asarray(idx).reshape(-1):
         x, y, bw, bh = boxes[i]
+        occupied = False
+        for cx, cy, pw, ph in people:
+            overlap = (max(0, min(x+bw, cx+pw/2)-max(x, cx-pw/2))
+                       * max(0, min(y+bh, cy+ph/2)-max(y, cy-ph/2)))
+            # Conservative overlap excludes people sitting on or directly in
+            # front of a seat. A nearby, non-overlapping person is allowed.
+            if overlap / max(1, min(bw*bh, pw*ph)) >= 0.15:
+                occupied = True
+                break
+        if occupied:
+            continue
         b = np.array([(x - px) / scale, (y - py) / scale,
                       (x + bw - px) / scale, (y + bh - py) / scale], np.float32)
         b[[0, 2]] = np.clip(b[[0, 2]], 0, W - 1)
@@ -112,6 +124,9 @@ class SeatGuide:
     def update(self, seats: list[SeatSighting], frame_w: int,
                depth_m: np.ndarray | None, now: float) -> str:
         if not seats:
+            self.state.range_m = math.nan
+            self.state.arrived = False
+            self.state.phrase = "Hold still. I lost the seat."
             if self.state.lost_since is None:
                 self.state.lost_since = now
             if now - self.state.lost_since >= self.lost_after_s:
@@ -162,46 +177,51 @@ class SeatSession:
         said, said_at = "", 0.0
         t0 = time.monotonic()
         o.seat_cancel.clear()
-        while (time.monotonic() - t0 < self.timeout_s and not o._stop.is_set()
-               and not o.seat_cancel.is_set()):
-            pair = o.rig.get_stereo_pair()
-            frame = None
-            if o.depth.calibrated and o.depth.last_rectified is not None:
-                frame = o.depth.last_rectified[0]
-            elif pair is not None:
-                frame = pair.left
-            if frame is None:
-                time.sleep(0.05)
-                continue
-            blob, s, px, py = letterbox(frame)
-            raw = next(iter(det.runner.infer({"images": blob}).values()))[0]
-            seats = detect_seats(raw, s, px, py, frame.shape)
-            depth = o.latest_depth() if o.depth.calibrated else None
-            if depth is not None and depth.shape[:2] != frame.shape[:2]:
-                import cv2
-                depth = cv2.resize(depth, (frame.shape[1], frame.shape[0]),
-                                   interpolation=cv2.INTER_NEAREST)
-            phrase = guide.update(seats, frame.shape[1], depth, time.monotonic())
-            bus.set(seat=phrase or "searching")
-            # Configure down, never disable: the target seat may sit in the
-            # corridor without triggering obstacle speech; drop-off and
-            # head-level rules are untouched.
-            if math.isfinite(guide.state.range_m):
-                o.corridor_whitelist = (guide.state.range_m, time.monotonic() + 1.5)
-            now = time.monotonic()
-            if phrase and (phrase != said or now - said_at > 4.0) and not o.speaker.busy:
-                o.speaker.speak(phrase, Priority.GUIDANCE)
-                said, said_at = phrase, now
-            if guide.state.arrived:
-                bus.record("seat_arrived", duration_s=time.monotonic() - t0)
-                o.corridor_whitelist = None
-                o.speaker.wait_until_idle(timeout=5.0)
-                return True
-            time.sleep(self.period_s)
-        o.corridor_whitelist = None
-        bus.record("seat_abandoned", duration_s=time.monotonic() - t0)
-        o.speaker.speak("I stopped looking for a seat.", Priority.GUIDANCE)
-        return False
+        try:
+            while (time.monotonic() - t0 < self.timeout_s and not o._stop.is_set()
+                   and not o.seat_cancel.is_set()):
+                observation = o.latest_observation()
+                if observation is None:
+                    o.corridor_whitelist = None
+                    time.sleep(0.05)
+                    continue
+                frame, depth, source_ts = observation
+                blob, s, px, py = letterbox(frame)
+                raw = next(iter(det.runner.infer({"images": blob}).values()))[0]
+                seats = detect_seats(raw, s, px, py, frame.shape)
+                from .depth_freshness import depth_is_current
+                if not depth_is_current(source_ts):
+                    o.corridor_whitelist = None
+                    continue
+                if depth is not None and depth.shape[:2] != frame.shape[:2]:
+                    import cv2
+                    depth = cv2.resize(depth, (frame.shape[1], frame.shape[0]),
+                                       interpolation=cv2.INTER_NEAREST)
+                phrase = guide.update(seats, frame.shape[1], depth, time.monotonic())
+                bus.set(seat=phrase or "searching")
+                # Configure down, never disable: the target seat may sit in the
+                # corridor without triggering obstacle speech; drop-off and
+                # head-level rules are untouched.
+                if math.isfinite(guide.state.range_m):
+                    o.corridor_whitelist = (guide.state.range_m, time.monotonic() + 1.5)
+                else:
+                    o.corridor_whitelist = None
+                now = time.monotonic()
+                if phrase and (phrase != said or now - said_at > 4.0) and not o.speaker.busy:
+                    o.speaker.speak(phrase, Priority.GUIDANCE)
+                    said, said_at = phrase, now
+                if guide.state.arrived:
+                    bus.record("seat_arrived", duration_s=time.monotonic() - t0)
+                    o.corridor_whitelist = None
+                    o.speaker.wait_until_idle(timeout=5.0)
+                    return True
+                time.sleep(self.period_s)
+            o.corridor_whitelist = None
+            bus.record("seat_abandoned", duration_s=time.monotonic() - t0)
+            o.speaker.speak("I stopped looking for a seat.", Priority.GUIDANCE)
+            return False
+        finally:
+            o.corridor_whitelist = None
 
 
 def is_seat_request(q: str) -> bool:
