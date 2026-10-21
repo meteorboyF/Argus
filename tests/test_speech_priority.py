@@ -41,11 +41,12 @@ class RecordingSpeaker(Speaker):
             self._interrupt.clear()
             self.interrupted.append(text)
 
-    def speak(self, text: str, priority: Priority = Priority.NORMAL):
-        # Mirror the real preemption side effect: sd.stop() aborts sd.wait().
-        if priority >= Priority.DANGER:
-            self._interrupt.set()
-        super().speak(text, priority)
+    def _abort_playback(self):
+        # Interrupt from the same place the real speaker aborts audio: inside
+        # speak()'s lock, *after* stale queued speech was dropped. Setting it
+        # before super().speak() raced the playback thread, which could pop
+        # the stale answer in between (the suite's long-standing flaky test).
+        self._interrupt.set()
 
 
 @pytest.fixture

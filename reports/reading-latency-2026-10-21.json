@@ -1,0 +1,15 @@
+{
+  "kind": "argus-reading-latency",
+  "time": "2026-10-21T12:10",
+  "engine": "RapidOCR 1.4.4 (PP-OCRv4 ch+en det/rec, onnxruntime 1.23.2 CPUExecutionProvider)",
+  "still_capture": {"mode": "4048x3040 YUYV", "capture_s": [1.24, 1.26],
+                    "stream_restored_fps": 30.0},
+  "ocr_live_12mp_s": [2.96, 2.22],
+  "ocr_synthetic_sign_s": {"4048": 1.25, "3000": 1.19, "2400": 1.27, "1920": 1.21,
+                            "split_4048": {"det": 0.88, "cls": 0.01, "rec": 0.34}},
+  "synthetic_sign_lines": ["FIRE", "EXIT", "Room 204 - Physics Lab", "Keep this door closed",
+                           "Open 9:00AM-5:30 PM"],
+  "estimated_capture_to_first_word_s": "3.5-4.2 + Piper first sentence ~0.3",
+  "pending": ["printed English page CER < 3% (needs a page held in front of the wide camera)",
+              "Bangla evaluation (Tesseract ben needs apt/sudo; PaddleOCR-VL-Bangla GGUF memory test)"]
+}

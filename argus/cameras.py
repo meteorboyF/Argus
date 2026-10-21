@@ -415,6 +415,36 @@ class CameraRig:
         self._last_pair = (sL, sR)
         return StereoFrame(left=fL, right=fR, skew_ms=abs(tR - tL) * 1000.0, ts=min(tL, tR))
 
+    def capture_still(self, width: int = 4048, height: int = 3040,
+                      settle_frames: int = 2) -> np.ndarray | None:
+        """One full-resolution wide-camera frame for reading small print.
+
+        At 1080p 10-pt print is ~5 px x-height; the 12 MP mode gives ~2x that.
+        The 1080p stream is released, the camera reopened at the still size
+        (measured 2026-10-21: ~1.0 s to first frame, 6.4 fps), a couple of
+        frames discarded while exposure settles, and the stream restored.
+        Only the slow loop calls this; the stereo safety loop is untouched."""
+        cfg = self.cfg
+        self.wide.release()
+        frame = None
+        cap = _open(self.wide_index, width, height, 10, cfg.pixel_format)
+        try:
+            if cap.isOpened():
+                for _ in range(settle_frames + 1):
+                    ok, f = cap.read()
+                    if ok and f is not None:
+                        frame = f
+        finally:
+            cap.release()
+            self.wide = _Reader("wide", self.wide_index, cfg.wide_width, cfg.wide_height,
+                                cfg.wide_fps, cfg.pixel_format, cfg.wide_rotation,
+                                cfg.wide_flip_horizontal, cfg.wide_flip_vertical,
+                                cfg.reconnect, cfg.reconnect_interval_s)
+        if frame is None:
+            return None
+        return transform_frame(frame, cfg.wide_rotation, cfg.wide_flip_horizontal,
+                               cfg.wide_flip_vertical)
+
     def rates(self) -> dict[str, float]:
         return {"left": self.left.fps, "right": self.right.fps, "wide": self.wide.fps}
 

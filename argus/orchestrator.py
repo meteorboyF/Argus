@@ -282,11 +282,48 @@ class Orchestrator:
             return None if self._latest_depth is None else self._latest_depth.copy()
 
     # ------------------------------------------------------------------ slow loop
+    @property
+    def reader(self):
+        """Reading mode, created on first use (OCR loads in ~0.3 s)."""
+        if getattr(self, "_reader", None) is None:
+            from .reading import ReadingSession
+            self._reader = ReadingSession(self.rig, self.speaker)
+        return self._reader
+
+    def _route_reading(self, question: str) -> bool:
+        """Reading-mode commands and page questions. True if handled."""
+        from .reading import control_word, is_page_question, is_read_request
+        word = control_word(question)
+        if word is not None and getattr(self, "_reader", None) is not None:
+            self._reader.control(word)
+            return True
+        if is_read_request(question):
+            self.reader.read()
+            return True
+        if getattr(self, "_reader", None) is not None and self._reader.active \
+                and is_page_question(question):
+            started = time.perf_counter()
+            bus.set(gemma="answering about the page (text only)")
+            answer = self.agent.ask_text(question, self._reader.page_context(), max_tokens=64)
+            bus.set(query_latency=f"{time.perf_counter() - started:.1f}s (page question)")
+            self.speaker.speak(answer or "I couldn't find that on the page.")
+            return True
+        return False
+
     def handle_query(self, question: str):
         """Run one full slow-path interaction for an already-transcribed query."""
+        # Playback controls must work while a long read is being spoken, so
+        # they are handled before waiting for the query lock.
+        from .reading import control_word
+        if control_word(question) is not None and getattr(self, "_reader", None) is not None:
+            bus.log("user", question)
+            self._reader.control(control_word(question))
+            return
         with self._query_lock:
             bus.log("user", question)
             try:
+                if self._route_reading(question):
+                    return
                 self._handle_query(question)
             except Exception as exc:  # noqa: BLE001 — a query must never kill the process
                 bus.log("system", f"query failed: {exc}")

@@ -188,6 +188,14 @@ class Speaker:
         """Block until the queue drains. For one-shot `argus query` and tests."""
         return self._idle.wait(timeout)
 
+    def cancel_normal(self):
+        """Drop queued NORMAL speech and cut off a NORMAL utterance in flight.
+        Safety speech (WARN/DANGER), queued or playing, is never touched."""
+        with self._cv:
+            self._queue = [it for it in self._queue if it[0] >= Priority.WARN]
+            if self._playing is not None and self._playing < Priority.WARN:
+                self._abort_playback()
+
     def stop(self):
         """Stop the playback thread, abandoning anything still queued."""
         with self._cv:

@@ -154,6 +154,26 @@ class GemmaAgent:
         ]
         return self._parse(self._post(messages, [FIND_OBJECT_TOOL]))
 
+    def ask_text(self, question: str, context: str, max_tokens: int | None = None) -> str:
+        """Text-only question about OCR'd text (no image is sent). Small VLMs
+        misread text in images; the OCR engine reads, Gemma only reasons."""
+        messages = [
+            {"role": "system", "content": (
+                "You answer a blind user's question about a document they are holding. "
+                "The document text was read by OCR and is given below; [hidden] marks "
+                "private numbers you must not guess. Answer in one short spoken sentence, "
+                "using only the document text. If the answer is not in it, say so.")},
+            {"role": "user", "content": f"Document text:\n{context}\n\nQuestion: {question}"},
+        ]
+        saved = self.cfg.max_tokens
+        try:
+            if max_tokens:
+                self.cfg.max_tokens = max_tokens
+            data = self._post(messages, None)
+        finally:
+            self.cfg.max_tokens = saved
+        return (data["choices"][0]["message"].get("content") or "").strip()
+
     def with_tool_result(self, question: str, tool_result: dict) -> AgentReply:
         """Second turn: feed the find_object result back for a final answer.
 
