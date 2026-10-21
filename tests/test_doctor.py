@@ -55,3 +55,57 @@ def test_assign_roles_lone_stereo_camera_named_by_port():
     cfg.camera.left_usb_port, cfg.camera.right_usb_port = "2-1.1", "2-1.2"
     roles = assign_roles([_node(0, "Arducam B0495", "1-2.2")], cfg)
     assert list(roles) == ["right"]
+
+
+def test_probe_reopens_a_camera_that_dropped_off_usb(monkeypatch):
+    """A camera that falls off USB comes back as a different /dev/video node.
+    The probe must notice the stall and reopen it by hub port, not freeze."""
+    import time
+    import numpy as np
+    from argus import doctor
+
+    class FakeCap:
+        def __init__(self, frames):
+            self.frames = frames
+        def isOpened(self):
+            return True
+        def get(self, _):
+            return 0
+        def read(self):
+            time.sleep(0.005)
+            if self.frames > 0:
+                self.frames -= 1
+                return True, np.zeros((4, 4, 3), np.uint8)
+            return False, None
+        def release(self):
+            pass
+
+    caps = {0: FakeCap(5), 7: FakeCap(10**6)}
+    monkeypatch.setattr(doctor, "_open", lambda index, *a: caps[index])
+    old = VideoNode(index=0, name="Arducam B0495", usb_port="2-1.1", link_mbps=5000)
+    new = VideoNode(index=7, name="Arducam B0495", usb_port="2-1.1", link_mbps=5000)
+    monkeypatch.setattr(doctor, "capture_nodes", lambda *a: [new])
+    p = doctor.StreamProbe("left", old, 960, 600, 60, "YUYV", stall_s=0.1)
+    try:
+        deadline = time.time() + 3
+        while time.time() < deadline and p.node.index != 7:
+            time.sleep(0.02)
+        seq_after_reopen = p.seq
+        time.sleep(0.1)
+        assert p.node.index == 7 and p.stalls == 1
+        assert p.seq > seq_after_reopen          # frames flow again
+        assert p.snapshot(max_age_s=0.5) is not None
+    finally:
+        p.close()
+
+
+def test_snapshot_refuses_stale_frames():
+    import time
+    import numpy as np
+    from argus import doctor
+    p = doctor.StreamProbe.__new__(doctor.StreamProbe)
+    import threading
+    p._lock, p.rotation = threading.Lock(), 0
+    p.latest, p.latest_ts = np.zeros((2, 2, 3), np.uint8), time.perf_counter() - 2.0
+    assert p.snapshot() is not None
+    assert p.snapshot(max_age_s=1.0) is None

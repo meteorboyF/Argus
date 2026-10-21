@@ -1,0 +1,16 @@
+{
+  "kind": "argus-align",
+  "result": "stopped",
+  "trace": [
+    {
+      "t": 0.37,
+      "yaw": -5.181696710118783,
+      "pitch": -6.126513838478058,
+      "roll": -4.004986872676188,
+      "vertical_px": -70.84800720214844,
+      "overlap": 0.7915240342881944,
+      "inliers": 179,
+      "advice": "Tilt the right camera up, about 7 degrees."
+    }
+  ]
+}

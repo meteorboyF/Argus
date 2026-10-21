@@ -81,8 +81,13 @@ class StreamProbe:
     newest frame. Measures open latency (open call -> first frame)."""
 
     def __init__(self, role: str, node: VideoNode, width: int, height: int, fps: int,
-                 pixel_format: str, rotation: int = 0, keep_frames: int = 0):
+                 pixel_format: str, rotation: int = 0, keep_frames: int = 0,
+                 stall_s: float = 1.0):
         self.role, self.node = role, node
+        self._open_args = (width, height, fps, pixel_format)
+        self.stall_s = stall_s
+        self.stalls = 0           # times the stream stopped and was reopened
+        self.stalled = False
         self.rotation = rotation
         self.arrivals: list[float] = []
         self.frames: list[tuple[float, np.ndarray]] = []
@@ -108,13 +113,45 @@ class StreamProbe:
         else:
             self.error = "open failed"
 
+    def _reopen(self) -> bool:
+        """Find the same physical camera again (by hub port and model: after a
+        USB drop it can come back as a different /dev/video node) and reopen."""
+        try:
+            self.cap.release()
+        except Exception:  # noqa: BLE001
+            pass
+        hub = self.node.usb_port.rsplit(".", 1)[-1]
+        model = self.node.name
+        for n in capture_nodes():
+            if n.name == model and n.usb_port.rsplit(".", 1)[-1] == hub:
+                cap = _open(n.index, *self._open_args)
+                if cap.isOpened():
+                    self.cap, self.node = cap, n
+                    return True
+                cap.release()
+        return False
+
     def _run(self):
+        last_ok = time.perf_counter()
         while not self._stop.is_set():
             ok, frame = self.cap.read()
             now = time.perf_counter()
             if not ok or frame is None:
+                # A camera that dropped off USB never delivers again on the old
+                # handle: the picture freezes. Detect it and reopen, so a
+                # cable that was knocked during an adjustment recovers.
+                if self.seq and now - last_ok > self.stall_s:
+                    if not self.stalled:
+                        self.stalled = True
+                        self.stalls += 1
+                    if self._reopen():
+                        last_ok = time.perf_counter()
+                        continue
+                    time.sleep(0.5)
                 time.sleep(0.01)
                 continue
+            last_ok = now
+            self.stalled = False
             if self.first_frame_s is None:
                 self.first_frame_s = now - self._t_open
             with self._lock:
@@ -134,10 +171,14 @@ class StreamProbe:
             self.arrivals.clear()
             self.frames.clear()
 
-    def snapshot(self) -> np.ndarray | None:
+    def snapshot(self, max_age_s: float | None = None) -> np.ndarray | None:
+        """Newest upright frame; None if there is none, or (with max_age_s) if
+        it is older than that, so a frozen camera is never analysed."""
         with self._lock:
-            f = self.latest
-        return None if f is None else transform_frame(f, self.rotation)
+            f, ts = self.latest, self.latest_ts
+        if f is None or (max_age_s is not None and time.perf_counter() - ts > max_age_s):
+            return None
+        return transform_frame(f, self.rotation)
 
     def delivered_fps(self) -> float:
         with self._lock:

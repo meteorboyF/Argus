@@ -351,10 +351,16 @@ def run_align(cfg, scene_m: float = 4.0, baseline_m: float = 0.13, f_stereo: flo
         aligned_since = None
         locked_announced = False
         while time.monotonic() - t0 < max_s:
-            L, R = probes["left"].snapshot(), probes["right"].snapshot()
-            W = probes["wide"].snapshot() if "wide" in probes else None
+            L, R = probes["left"].snapshot(1.0), probes["right"].snapshot(1.0)
+            W = probes["wide"].snapshot(1.0) if "wide" in probes else None
             if L is None or R is None:
-                time.sleep(0.05)
+                frozen = [r for r, f in (("left", L), ("right", R)) if f is None
+                          and probes[r].seq > 0]
+                if frozen:
+                    guide.say(f"The {frozen[0]} camera froze. Check its cable. "
+                              "I will reconnect it automatically.")
+                    guide.show(sub="Waiting for the camera to come back")
+                time.sleep(0.1)
                 continue
             a = assess(L, R, W, f_stereo, baseline_m, scene_m, targets)
             if a.pair is not None:
