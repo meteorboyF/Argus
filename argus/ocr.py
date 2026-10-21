@@ -151,6 +151,31 @@ def plausible(text: str) -> bool:
     return cjk == 0 or cjk / len(t) < 0.5
 
 
+def enhance(img_bgr: np.ndarray, clip: float = 3.0) -> np.ndarray:
+    """Local contrast equalisation on lightness only (LAB), colour kept.
+
+    Light lettering on a dark book cover was invisible to the detector: no
+    text at all on the raw still, 'Crime and Punishment' (0.86) once the
+    crop was CLAHE-equalised (2026-10-21)."""
+    import cv2
+    lab = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2LAB)
+    lab[:, :, 0] = cv2.createCLAHE(clip, (8, 8)).apply(lab[:, :, 0])
+    return cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
+
+
+def crop_box(img: np.ndarray, box, pad: float = 0.06, min_side: int = 1400) -> np.ndarray:
+    """Padded crop, upscaled so its longer side is at least `min_side`."""
+    import cv2
+    x1, y1, x2, y2 = (int(v) for v in box)
+    h, w = img.shape[:2]
+    px, py = int((x2 - x1) * pad), int((y2 - y1) * pad)
+    c = img[max(0, y1 - py):min(h, y2 + py), max(0, x1 - px):min(w, x2 + px)]
+    s = min_side / max(c.shape[:2]) if c.size else 1.0
+    if s > 1.0:
+        c = cv2.resize(c, None, fx=min(s, 3.0), fy=min(s, 3.0), interpolation=cv2.INTER_CUBIC)
+    return c
+
+
 class OCREngine:
     """Fail-closed wrapper: raises instead of returning partial garbage."""
 
@@ -158,6 +183,34 @@ class OCREngine:
         from rapidocr_onnxruntime import RapidOCR
         self._ocr = RapidOCR()
         self.min_score = min_score
+
+    def read_robust(self, img_bgr: np.ndarray, locate=None,
+                    objects=("book", "paper", "label", "sign")) -> Reading:
+        """Locate a document first (`locate(name, img) -> Detection | None`,
+        the YOLO-World grounder, ~60 ms) and read its contrast-enhanced,
+        upscaled crop (~1 s); otherwise, or if that finds little, read the
+        enhanced full still. Full-still-first took 4.9 s for a book cover."""
+        import cv2
+        t0 = time.perf_counter()
+        best: Reading | None = None
+        if locate is not None:
+            small = cv2.resize(img_bgr, (1920, int(img_bgr.shape[0] * 1920 / img_bgr.shape[1])))
+            k = img_bgr.shape[1] / 1920.0
+            for name in objects:
+                det = locate(name, small)
+                if det is None:
+                    continue
+                r = self.read(enhance(crop_box(img_bgr, [v * k for v in det.bbox])))
+                if best is None or len(r.text) > len(best.text):
+                    best = r
+                if len(best.lines) >= 1:
+                    break
+        if best is None or not best.lines:
+            full = self.read(enhance(img_bgr))
+            if best is None or len(full.text) > len(best.text):
+                best = full
+        best.elapsed_s = time.perf_counter() - t0
+        return best
 
     def read(self, img_bgr: np.ndarray) -> Reading:
         t0 = time.perf_counter()

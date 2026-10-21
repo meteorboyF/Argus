@@ -382,7 +382,8 @@ class Orchestrator:
         """Reading mode, created on first use (OCR loads in ~0.3 s)."""
         if getattr(self, "_reader", None) is None:
             from .reading import ReadingSession
-            self._reader = ReadingSession(self.rig, self.speaker)
+            self._reader = ReadingSession(self.rig, self.speaker,
+                                          locate=self.grounder.find_object)
         return self._reader
 
     def handle_query(self, question: str):

@@ -117,7 +117,8 @@ class ReadingSession:
     """Owns one 'read this' interaction and the playback that follows."""
 
     def __init__(self, rig, speaker, ocr: OCREngine | None = None,
-                 coach_timeout_s: float = 30.0):
+                 coach_timeout_s: float = 30.0, locate=None):
+        self.locate = locate        # grounder.find_object: crop books/labels to read
         self.rig = rig
         self.speaker = speaker
         self.ocr = ocr or OCREngine()
@@ -191,7 +192,7 @@ class ReadingSession:
             self.speaker.speak("The camera did not give me a picture.")
             return None
         capture_s = time.perf_counter() - t0
-        reading = self.ocr.read(still)
+        reading = self.ocr.read_robust(still, self.locate)
         bus.record("reading", capture_s=capture_s, ocr_s=reading.elapsed_s,
                    lines=len(reading.lines), sensitive=reading.sensitive)
         bus.set(reading=f"{len(reading.lines)} lines in {time.perf_counter() - t0:.1f}s "
