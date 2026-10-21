@@ -59,6 +59,8 @@ class Orchestrator:
         self.rig = CameraRig(cfg.camera)
         self.safety = SafetyReflex(cfg.safety)
         self.agent = GemmaAgent(cfg.agent)
+        self.seat_cancel = threading.Event()
+        self.corridor_whitelist = None     # (range_m, until) set by seat guidance
         # P0-P4 arbitration over Piper: hazards cut answers, answers resume,
         # the user talking holds non-safety speech (argus/arbiter.py).
         from .arbiter import ArbitratedSpeaker
@@ -251,6 +253,11 @@ class Orchestrator:
         gray = cv2.cvtColor(left_bgr, cv2.COLOR_BGR2GRAY)
         alerts = self._hazards.tick(depth_m, gray)
         obs = self._hazards.last
+        wl = getattr(self, "corridor_whitelist", None)
+        if wl is not None and time.monotonic() < wl[1] and np.isfinite(obs.body_m) \
+                and abs(obs.body_m - wl[0]) < 0.6:
+            # The obstacle ahead is the seat being approached (M7 whitelist).
+            alerts = [a for a in alerts if a.key != "body"]
         bus.set(corridor_body=f"{obs.body_m:.1f} m {obs.body_side}" if np.isfinite(obs.body_m)
                 else "clear",
                 corridor_head=f"{obs.head_m:.1f} m" if np.isfinite(obs.head_m) else "clear",
@@ -389,14 +396,21 @@ class Orchestrator:
         # Playback controls must work while a long read is being spoken, so
         # they are handled before waiting for the query lock.
         from .reading import control_word
-        if control_word(question) is not None and getattr(self, "_reader", None) is not None:
+        word = control_word(question)
+        if word == "stop":
+            self.seat_cancel.set()
+        if word is not None and getattr(self, "_reader", None) is not None:
             bus.log("user", question)
-            self._reader.control(control_word(question))
+            self._reader.control(word)
             return
         with self._query_lock:
             bus.log("user", question)
             try:
                 if self._route_reading(question):
+                    return
+                from .seat import SeatSession, is_seat_request
+                if is_seat_request(question):
+                    SeatSession(self).run()
                     return
                 self._handle_query(question)
             except Exception as exc:  # noqa: BLE001 — a query must never kill the process
