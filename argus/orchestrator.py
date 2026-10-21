@@ -141,6 +141,11 @@ class Orchestrator:
                     state = self._evaluate_safety_depth(depth_m)
                     now = time.perf_counter()
                     corridor = self._corridor_alerts(depth_m, pair.left)
+                    for alert in self._mover_alerts(depth_m, pair.left):
+                        from . import earcons
+                        earcons.play("alert")
+                        self.speaker.speak(alert.text, Priority.DANGER
+                                           if alert.level == "DANGER" else Priority.WARN)
                     if corridor is not None:
                         for alert in corridor:
                             # Earcon first: faster to perceive than words.
@@ -251,6 +256,38 @@ class Orchestrator:
                 corridor_head=f"{obs.head_m:.1f} m" if np.isfinite(obs.head_m) else "clear",
                 corridor_drop=obs.drop, head_turn_deg_s=round(self._hazards.gate.deg_s))
         return alerts
+
+    def _mover_alerts(self, depth_m: np.ndarray, left_bgr: np.ndarray) -> list:
+        """Approaching people/vehicles. Detection and tracking always run (the
+        dashboard shows them); spoken TTC alerts need calibrated depth."""
+        if getattr(self, "_movers", None) is None:
+            if getattr(self, "_movers_failed", False):
+                return []
+            try:
+                from .movers import ApproachMonitor, MoverDetector, Tracker
+                self._movers = (MoverDetector(self.cfg.safety.mover_engine), Tracker(),
+                                ApproachMonitor())
+            except Exception as exc:  # noqa: BLE001 — optional rule, never fatal
+                self._movers_failed = True
+                bus.set(movers=f"off ({exc})")
+                return []
+        det, tracker, monitor = self._movers
+        frame = left_bgr
+        if self.depth.calibrated and self.depth.last_rectified is not None:
+            frame = self.depth.last_rectified[0]       # aligned with depth_m
+        tracks = tracker.update(det.detect(frame))
+        bus.set(movers=", ".join(f"{t.cls}#{t.id}" for t in tracks) or "none")
+        if not self.depth.calibrated:
+            return []
+        if depth_m.shape[:2] != frame.shape[:2]:
+            depth_m = cv2.resize(depth_m, (frame.shape[1], frame.shape[0]),
+                                 interpolation=cv2.INTER_NEAREST)
+        ego = None
+        if self.slam is not None:
+            st = self.slam.state
+            if st.tracking and st.quality >= 0.5:
+                ego = st.speed_mps
+        return monitor.update(tracks, depth_m, frame.shape[1], time.monotonic(), ego)
 
     def _check_calibration_health(self):
         """Announce calibration drift once, when it is first detected.

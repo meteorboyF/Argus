@@ -148,6 +148,10 @@ class SafetyConfig:
     # drop-offs, head-motion gate, alarm hygiene. When on, it owns static
     # obstacle and drop speech; the legacy reflex keeps the approach/TTC rule.
     corridor_engine: bool = True
+    # Approaching person/vehicle: YOLO11n TensorRT on the left frame + tracker
+    # + range Kalman + TTC hysteresis (argus/movers.py). Optional: a missing
+    # engine disables this rule only and is shown on the dashboard.
+    mover_engine: str = str(ENGINES_DIR / "yolo11n_416x640_fp16.engine")
     ttc_warn_s: float = 3.0
     ttc_danger_s: float = 1.5
 
