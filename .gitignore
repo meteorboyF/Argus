@@ -43,3 +43,6 @@ configs/stereo_calib.npz
 .DS_Store
 Thumbs.db
 .claude/
+
+# Demo recordings stay on the device (large, may show the room/people)
+reports/sessions/*.mp4
