@@ -16,6 +16,7 @@ from __future__ import annotations
 import threading
 import time
 
+import cv2
 import numpy as np
 
 from .agent import AgentError, GemmaAgent, requested_object
@@ -139,6 +140,18 @@ class Orchestrator:
                 # hazard speech until physical calibration has been verified.
                     state = self._evaluate_safety_depth(depth_m)
                     now = time.perf_counter()
+                    corridor = self._corridor_alerts(depth_m, pair.left)
+                    if corridor is not None:
+                        for alert in corridor:
+                            # Earcon first: faster to perceive than words.
+                            from . import earcons
+                            earcons.play("alert")
+                            self.speaker.speak(alert.text, Priority.DANGER
+                                               if alert.level == "DANGER" else Priority.WARN)
+                        # The corridor engine owns static obstacles and drops;
+                        # the legacy reflex only keeps its approach/TTC rule.
+                        if state is not None and state.approach_direction is None:
+                            state = None
                 # DANGER speaks immediately (rate-limited); WARN speaks on a
                 # longer cadence so the user isn't flooded. Both hand off to the
                 # speaker thread and return at once — this loop must never block
@@ -218,6 +231,26 @@ class Orchestrator:
                 approach=(f"{state.approach_direction} {state.closing_speed_mps:.1f} m/s "
                           f"TTC {state.ttc_s:.1f} s" if state.approach_direction else "none"))
         return state
+
+    def _corridor_alerts(self, depth_m: np.ndarray, left_bgr: np.ndarray):
+        """Corridor hazard engine on calibrated depth; None when unavailable
+        (uncalibrated depth never produces hazard speech)."""
+        if not (self.cfg.safety.corridor_engine and self.depth.calibrated):
+            return None
+        if getattr(self, "_hazards", None) is None:
+            from .hazards import HazardEngine, Intrinsics
+            k = self.depth.intrinsics()
+            calib_w = float(np.asarray(self.depth._calib["image_size"])[0])
+            s = depth_m.shape[1] / calib_w          # depth may be downscaled
+            self._hazards = HazardEngine(Intrinsics(k["fx"] * s, k["cx"] * s, k["cy"] * s))
+        gray = cv2.cvtColor(left_bgr, cv2.COLOR_BGR2GRAY)
+        alerts = self._hazards.tick(depth_m, gray)
+        obs = self._hazards.last
+        bus.set(corridor_body=f"{obs.body_m:.1f} m {obs.body_side}" if np.isfinite(obs.body_m)
+                else "clear",
+                corridor_head=f"{obs.head_m:.1f} m" if np.isfinite(obs.head_m) else "clear",
+                corridor_drop=obs.drop, head_turn_deg_s=round(self._hazards.gate.deg_s))
+        return alerts
 
     def _check_calibration_health(self):
         """Announce calibration drift once, when it is first detected.

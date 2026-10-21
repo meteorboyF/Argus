@@ -144,6 +144,10 @@ class SafetyConfig:
     approach_min_samples: int = 4
     approach_min_speed_mps: float = 0.6   # slower closings are handled by distance rules
     approach_max_range_m: float = 15.0    # ignore noise from very far surfaces
+    # Corridor engine (argus/hazards.py): ground plane, body/head bands,
+    # drop-offs, head-motion gate, alarm hygiene. When on, it owns static
+    # obstacle and drop speech; the legacy reflex keeps the approach/TTC rule.
+    corridor_engine: bool = True
     ttc_warn_s: float = 3.0
     ttc_danger_s: float = 1.5
 
