@@ -219,8 +219,8 @@ and ends with DONE or FAILED):
 
 ### 2026-10-21 (Codex, JETSON_PROMPT_04 T1)
 
-- **Changes:** conventional T1 safety/resource commit in this session (see
-  `git log`): stage/heartbeat timings, fresh bounded pairing, old source/cached
+- **Changes:** `a7b58b6` (`fix(safety): bound fast-loop contention and expire
+  stale depth`, pushed to origin/main): stage/heartbeat timings, fresh bounded pairing, old source/cached
   depth rejection, CPU caps, latest-only previews, batch 256, matrix and guided
   soak tools. No calibration/model/engine changes. 314 tests pass.
 - **Measured:** `reports/doctor-2026-10-21-1336.json`,
