@@ -274,7 +274,8 @@ and ends with DONE or FAILED):
 
 ### 2026-10-21 (Codex follow-up: NVMe activated, inference imports)
 
-- **Changed:** production import budget (`runtime_imports.py`), explicit
+- **Changed:** `de142de` (`fix(memory): exclude optional torch conversion imports
+  from inference`, pushed to origin/main): production import budget, explicit
   unsupported-label handling with honest speech, pin of existing CTranslate2
   4.8.0, `scripts/bench_stt_memory.py`, torch-presence resource samples.
   No installed package patches, new models/engines or YAML changes.
