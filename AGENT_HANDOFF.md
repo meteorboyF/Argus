@@ -40,7 +40,7 @@ DISPLAY=:0 python3 -m argus run --demo --record reports/sessions/demo.mp4
 #   wake: "Argus, what's in front of me?" | "Argus" -> "Yes?" -> request
 #   close: Esc twice within 2 s, or "Argus, shut down" (saves recording + log)
 DISPLAY=:0 python3 -m argus run --dashboard --no-mic --ask-file /tmp/ask.txt   # typed questions
-python3 -m pytest -q tests/                            # 314 tests; all must pass
+python3 -m pytest -q tests/                            # 321 tests; all must pass
 python3 scripts/summarise_session.py reports/sessions/<log>.jsonl
 ```
 
@@ -125,9 +125,18 @@ and ends with DONE or FAILED):
      `DISPLAY=:0 python3 scripts/soak_fast_loop.py --seconds 600 --out reports/soak-2026-10-21.json`.
      Stay seated, printed page/headset ready; Guide prompts every 45 s,
      display/recording, final DONE/FAILED. Report never auto-claims T1 complete.
-   - The user requested NVMe swap. Root is NVMe/ext4, 399 GiB free; current
-     swap is only 3803 MiB zram, priority 5. Prepare an 8 GiB file, then Fardeen
-     must activate it with sudo, priority 0. No fstab edit before measurement.
+   - Fardeen activated the 8 GiB NVMe file at priority 0; zram priority 5 and
+     swappiness 60 remain. The paired 600 s run still had two outages (302/574
+     ms) and no observed NVMe occupancy at five-second samples. No timing
+     benefit demonstrated; no fstab edit. See `reports/nvme-swap-comparison-2026-10-21.json`.
+   - Found unnecessary torch imports from CTranslate2 conversion/spec modules.
+     `runtime_imports.py` excludes torch in production; preloaded torch requires
+     a fresh process. Unknown production object labels cannot use live CLIP.
+     Fresh-process STT/VAD test saved 330.5 MiB peak worker RSS with identical
+     synthetic outputs. CTranslate2 is pinned to installed 4.8.0. Final combined
+     validation passed timing/RSS subtargets once (zero >250 ms gaps); see
+     `reports/soak-inference-budget-2026-10-21-summary.json`. Human/fault
+     acceptance remains pending.
    - Profile per thread if remaining tails persist.
    - Candidate fixes:
      - give the fast loop its own process or raised priority;
@@ -262,3 +271,51 @@ and ends with DONE or FAILED):
   and microbatch 256 (now the script defaults), logging to
   `/tmp/argus-t1-llama-256.log`. No ARGUS wearable runtime remains running
   after the benches. Do not kill the server before the paired swap trial.
+
+### 2026-10-21 (Codex follow-up: NVMe activated, inference imports)
+
+- **Changed:** production import budget (`runtime_imports.py`), explicit
+  unsupported-label handling with honest speech, pin of existing CTranslate2
+  4.8.0, `scripts/bench_stt_memory.py`, torch-presence resource samples.
+  No installed package patches, new models/engines or YAML changes.
+- **Measured:** active priority-0 NVMe verified in
+  `reports/memory-after-nvme-activation-2026-10-21.json`;
+  `reports/soak-nvme-swap-2026-10-21.json`,
+  `reports/nvme-swap-observer-2026-10-21.json`,
+  `reports/nvme-swap-comparison-2026-10-21.json` (two >250 ms outages; no
+  observed disk occupancy, no timing benefit); fresh CPU STT/VAD comparison in
+  `reports/stt-import-memory-2026-10-21.json` saved 330.5 MiB peak worker RSS.
+- **Tests:** 321 pass; full combined validation with production import budget
+  completed and the final result is appended below.
+- **Current system:** 8 GiB NVMe swap active temporarily; existing zram still
+  preferred; swappiness 60. No `/etc/fstab` changes. Do not request activation
+  again. llama-server uses unchanged QAT weights/projector, batch/microbatch 256.
+- **Next [HUMAN] ask:** when Fardeen is available, headset and printed page for
+  the already-described seated 10-minute guided voice/reading soak:
+  `DISPLAY=:0 python3 scripts/soak_fast_loop.py --seconds 600 --out reports/soak-2026-10-21.json`.
+  It speaks/displays prompts every 45 s and DONE/FAILED; collect missed speech,
+  reading failures and interruptions. Do not repeat the ask until available.
+  Focus/calibration inputs follow; no calibrated/walking acceptance yet.
+
+#### Follow-up final outcome / resume
+
+- Final 600.2 s automated combined run: zero >250 ms depth outages, maximum
+  heartbeat interval 202.7 ms, CUDA SAD, tick 43.2/81.3 ms median/p95, peak
+  stack RSS 4123 MiB, minimum MemAvailable 426 MiB, GR3D 99%, OC3 +51511.
+  Torch absent from all samples, no reported request errors. 321 tests pass.
+- Reports: `reports/soak-inference-budget-2026-10-21-summary.json` plus full
+  `reports/soak-inference-budget-2026-10-21.json`. Automated timing/RSS
+  subtargets passed once. Do not mark T1 complete: synthetic workload,
+  uncalibrated geometry, human continuous voice/reading and full fault checks
+  are incomplete. Re-run once calibration activates the geometry engines.
+- Only the standalone worker saved 330.5 MiB RSS; full-stack peak RSS remained
+  comparable. Lower system paging may include warm-cache/desktop effects.
+  NVMe alone did not demonstrate a timing benefit. Do not attribute the final
+  zero-gap result to disk paging.
+- Swap remains active temporarily at priority 0, swappiness 60, zram priority 5.
+  No further activation ask, package patches or boot configuration changes.
+  llama-server is running batch/microbatch 256, unchanged model/engine pins.
+  Profiling runtimes and observers have ended; no cameras are left open.
+- Next [AGENT]: review/perform remaining timeout and fault checks without
+  weakening gates. Next [HUMAN]: the seated guided soak when available, then
+  focus and measured calibration inputs. Preserve the explicit not-done state.

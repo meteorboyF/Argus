@@ -1,0 +1,6342 @@
+{
+  "kind": "argus-nvme-swap-observer",
+  "interval_s": 5,
+  "samples": [
+    {
+      "wall": 1792570468.624893,
+      "elapsed_s": 0.0002571000004536472,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 423780,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 426300,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 427264,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 424668,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 413528,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 424164,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570473.6295893,
+      "elapsed_s": 5.0049534249992575,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 428632,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 429772,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 430228,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 428252,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 417752,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 427760,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570478.6336062,
+      "elapsed_s": 10.008970483000667,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 467132,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 466548,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 461016,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 468104,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 458016,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 453664,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570483.6376534,
+      "elapsed_s": 15.013017658000535,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 503372,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 503532,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 496376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 497124,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 485476,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 487280,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570488.6416743,
+      "elapsed_s": 20.017038283000147,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 501016,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 501888,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 495224,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 495956,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 483704,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 485900,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570493.6456225,
+      "elapsed_s": 25.020986984000047,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 500896,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 501776,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 494928,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 495872,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 483592,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 485856,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570498.6500382,
+      "elapsed_s": 30.025402257999303,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 500032,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 501048,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 493948,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 494684,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 482292,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 485028,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570503.653881,
+      "elapsed_s": 35.02924550199896,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 534248,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 533028,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 523200,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 539956,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 522552,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 522024,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570508.6592846,
+      "elapsed_s": 40.034649940000236,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 534148,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 532864,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 523048,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 539844,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 522416,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 521920,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570513.6656694,
+      "elapsed_s": 45.041033600000446,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 534040,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 532792,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 522888,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 539636,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 522256,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 521860,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570518.6724691,
+      "elapsed_s": 50.04783341899929,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 533988,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 532768,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 522848,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 539548,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 522228,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 521836,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570523.6777089,
+      "elapsed_s": 55.053072898999744,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 533604,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 532160,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 522484,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 539052,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 521720,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 521380,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570528.6846573,
+      "elapsed_s": 60.06002169900057,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 546156,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 544576,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 537480,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 550768,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 534568,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 537104,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570533.6896243,
+      "elapsed_s": 65.06498832599937,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 544908,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 543776,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 536944,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 549332,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 533396,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 536152,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570538.6947944,
+      "elapsed_s": 70.07018504999905,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 544620,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 543612,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 536784,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 548908,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 533296,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 536008,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570543.7020137,
+      "elapsed_s": 75.07737796899892,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 544532,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 543456,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 536696,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 548852,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 533256,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 535924,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570548.7101028,
+      "elapsed_s": 80.08546761599973,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 547996,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 550184,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 543640,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 556432,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 541776,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 540452,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570553.7182117,
+      "elapsed_s": 85.09357584499958,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 540700,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 542372,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 536380,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 549668,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 532992,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 533388,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570558.7296386,
+      "elapsed_s": 90.10500303200024,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 540416,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 542236,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 536200,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 549424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 532692,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 533252,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570563.7377946,
+      "elapsed_s": 95.11315906299933,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 540260,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 542080,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 536120,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 549332,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 532584,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 533076,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570568.7469506,
+      "elapsed_s": 100.12231488799989,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 540128,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 541944,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 535992,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 549212,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 532368,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 533040,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570573.7658157,
+      "elapsed_s": 105.14118008200057,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 545944,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 549620,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 544308,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 557464,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 537424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 538380,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570578.7738576,
+      "elapsed_s": 110.1492218000003,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 545900,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 549576,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 544264,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 557412,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 537376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 538356,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570583.7842388,
+      "elapsed_s": 115.1596030669989,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 544584,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 548432,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 542992,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 555668,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 535868,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 536124,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570588.793768,
+      "elapsed_s": 120.16913216099965,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 544580,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 548396,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 542944,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 555632,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 535792,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 536068,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570593.8018239,
+      "elapsed_s": 125.1771879400003,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 544704,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 549496,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 544360,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 556024,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 537012,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 536092,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570598.811472,
+      "elapsed_s": 130.18688830700012,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 558120,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 562768,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 560452,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 574712,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 545860,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 546720,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570603.8298538,
+      "elapsed_s": 135.20521862900023,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 558008,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 562756,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 560412,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 574656,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 545612,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 546676,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570608.837643,
+      "elapsed_s": 140.21300744499968,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 557896,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 562624,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 560244,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 574552,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 545564,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 546472,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570613.8458726,
+      "elapsed_s": 145.22123661799924,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 557752,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 562340,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 560108,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 574384,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 545344,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 546400,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570618.855378,
+      "elapsed_s": 150.2307425099989,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 559408,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 562844,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 561444,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 575124,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 546252,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 548092,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570623.878225,
+      "elapsed_s": 155.25358955299998,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 559368,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 562828,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 561420,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 575084,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 546196,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 548012,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570628.885671,
+      "elapsed_s": 160.26103512599911,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 559300,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 562692,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 561124,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 575036,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 546164,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 547824,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570633.8936832,
+      "elapsed_s": 165.26904757699958,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 559268,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 562364,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 560996,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 574988,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 546080,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 547676,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570638.9018018,
+      "elapsed_s": 170.27716605800015,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 559268,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 562364,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 560996,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 574988,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 546080,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 547676,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570643.9098783,
+      "elapsed_s": 175.2852425029996,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 573988,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 568068,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 567004,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581232,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 554828,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559956,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570648.919631,
+      "elapsed_s": 180.29499555199982,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 573208,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 567340,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 566328,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 580384,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 553984,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559480,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570653.929723,
+      "elapsed_s": 185.30508774199916,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 572996,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 567260,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 566244,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 580296,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 553872,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559288,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570658.9378252,
+      "elapsed_s": 190.31319040299968,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 572836,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 567100,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 566164,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 580216,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 553780,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559092,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570663.948311,
+      "elapsed_s": 195.32367527699898,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 577836,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 570160,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 567288,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 582720,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 559908,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559580,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570668.9537244,
+      "elapsed_s": 200.32908928299912,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 577836,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 570160,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 567288,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 582720,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 559908,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559580,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570673.9616985,
+      "elapsed_s": 205.33706286400047,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 577796,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 570044,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 567148,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 582632,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 559852,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559508,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570678.97331,
+      "elapsed_s": 210.34867418000067,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 577780,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 569980,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 567096,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 582560,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 559820,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559232,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570683.9936812,
+      "elapsed_s": 215.3690455649994,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 577780,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 569980,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 567096,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 582560,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 559820,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559232,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570689.0016415,
+      "elapsed_s": 220.37700588400003,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581932,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 573412,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 573740,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591644,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 566296,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 561628,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570694.0123503,
+      "elapsed_s": 225.3877142170004,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581804,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 573236,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 573572,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591464,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 566048,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 561504,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570699.0256796,
+      "elapsed_s": 230.4010438740006,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581804,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 573236,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 573572,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591464,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 566048,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 561504,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570704.0377266,
+      "elapsed_s": 235.41309101499974,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581704,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 573188,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 573516,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591316,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 565992,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 561400,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570709.0456429,
+      "elapsed_s": 240.42100685100013,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 582216,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 573488,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 573840,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 592340,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 566292,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 561428,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570714.0536463,
+      "elapsed_s": 245.42901076499948,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581500,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 573032,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 573204,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591724,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 565876,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560684,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570719.061688,
+      "elapsed_s": 250.43705223100005,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581440,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 572960,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 573140,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591600,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 565804,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560564,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570724.0700347,
+      "elapsed_s": 255.445398975,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581404,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 572908,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 573108,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591572,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 565720,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560540,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570729.0808887,
+      "elapsed_s": 260.4562532050004,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581404,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 572908,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 573108,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591572,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 565720,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560540,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570734.089746,
+      "elapsed_s": 265.4651101620002,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581572,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 578280,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 579008,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 592700,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 570340,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560796,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570739.102183,
+      "elapsed_s": 270.47754739300035,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581572,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 578280,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 579008,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 592700,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 570340,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560796,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570744.1136355,
+      "elapsed_s": 275.4889997190003,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581572,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 578280,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 579008,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 592700,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 570340,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560796,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570749.121613,
+      "elapsed_s": 280.4969770579992,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581572,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 578280,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 579008,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 592700,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 570340,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560796,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570754.12964,
+      "elapsed_s": 285.5050045829994,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581496,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 578180,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 578932,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 592528,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 570144,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560648,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570759.1417308,
+      "elapsed_s": 290.5170956809998,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581436,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 578116,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 578844,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 592408,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 570088,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560524,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570764.154781,
+      "elapsed_s": 295.5301453609991,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581144,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577960,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 578476,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 592280,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 569836,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560184,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570769.1704633,
+      "elapsed_s": 300.5458279350005,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 580864,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577820,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 578376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591988,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 569736,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560072,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570774.1817214,
+      "elapsed_s": 305.5570861269989,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 580692,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577756,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 578300,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591936,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 569680,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559980,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570779.1937273,
+      "elapsed_s": 310.56909144699966,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 580292,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576728,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 576428,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591052,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 568376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559580,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570784.2016084,
+      "elapsed_s": 315.5769725329992,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 580292,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576728,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 576428,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591052,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 568376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559580,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570789.2219865,
+      "elapsed_s": 320.59735147299943,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 580292,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576728,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 576428,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591052,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 568376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559580,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570794.23414,
+      "elapsed_s": 325.6095046419996,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 580248,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576668,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 576396,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591024,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 568340,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559524,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570799.2457757,
+      "elapsed_s": 330.6211401979999,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 580124,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576576,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 576336,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 591012,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 568196,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559444,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570804.2576604,
+      "elapsed_s": 335.63302460699924,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 584128,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 583864,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 583424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593708,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 575132,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560628,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570809.2734172,
+      "elapsed_s": 340.6487814110005,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 584128,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 583864,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 583424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593708,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 575132,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560628,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570814.2856374,
+      "elapsed_s": 345.66100173799896,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 584128,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 583864,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 583424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593708,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 575132,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560628,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570819.2977257,
+      "elapsed_s": 350.6730901440005,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 584088,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 583836,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 583388,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593684,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 575048,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560584,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570824.3236144,
+      "elapsed_s": 355.6989787469993,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 584228,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 585060,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584924,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593912,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576820,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560660,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570829.3376906,
+      "elapsed_s": 360.7130547399993,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 584208,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 585040,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584896,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593864,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576796,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560544,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570834.3497603,
+      "elapsed_s": 365.72512453799936,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 584124,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 584948,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584836,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593824,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576688,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560416,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570839.3615527,
+      "elapsed_s": 370.7369168240002,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 583980,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 584856,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584688,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593708,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576544,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560292,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570844.3736522,
+      "elapsed_s": 375.7490164230003,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 583864,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 584632,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584564,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593616,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576384,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560240,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570849.3976278,
+      "elapsed_s": 380.77299205599957,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 583808,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 584556,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584552,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593588,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576344,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560196,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570854.4137156,
+      "elapsed_s": 385.78908015100023,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 583808,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 584556,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584552,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593588,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576344,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560196,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570859.4298398,
+      "elapsed_s": 390.8052045179993,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 583808,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 584556,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584552,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593588,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576344,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560196,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570864.441631,
+      "elapsed_s": 395.81699519299946,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 583764,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 584492,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584508,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593568,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576304,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560152,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570869.4576752,
+      "elapsed_s": 400.83303946399974,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 583764,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 584492,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584508,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593568,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576304,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560152,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570874.469665,
+      "elapsed_s": 405.84502919700026,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 583604,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 584292,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584484,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 593372,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576180,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560088,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570879.4815874,
+      "elapsed_s": 410.85695169000064,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 583172,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 584048,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584416,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 592896,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 575636,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559804,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570884.5057704,
+      "elapsed_s": 415.8811345359991,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 583172,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 584048,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 584416,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 592896,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 575636,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559804,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570889.517685,
+      "elapsed_s": 420.8930491829997,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 572776,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 575304,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 575540,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 575496,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 558924,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 549484,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570894.5295944,
+      "elapsed_s": 425.90495852099957,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 580804,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577968,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 586240,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 582892,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 570860,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 553196,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570899.5456526,
+      "elapsed_s": 430.9210170509996,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 580504,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577628,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 585548,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 582424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 570468,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 553084,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570904.5576775,
+      "elapsed_s": 435.9330422459989,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 580504,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577628,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 585548,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 582424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 570468,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 553084,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570909.5698144,
+      "elapsed_s": 440.9451792639993,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 580504,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577628,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 585548,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 582424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 570468,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 553084,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570914.601709,
+      "elapsed_s": 445.97707291000006,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577904,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 586200,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 582592,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 571412,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 553752,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570919.613683,
+      "elapsed_s": 450.9890471660001,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581708,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577944,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 586860,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 583560,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 572648,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 554780,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570924.6257343,
+      "elapsed_s": 456.0010988190006,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581620,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577924,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 586816,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 583488,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 572628,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 554768,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570929.6517422,
+      "elapsed_s": 461.0271066229998,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581392,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577844,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 586804,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 583324,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 572564,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 554548,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570934.6776397,
+      "elapsed_s": 466.0530039160003,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581392,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577844,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 586804,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 583324,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 572564,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 554548,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570939.6977384,
+      "elapsed_s": 471.073103024999,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 582444,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 579820,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 591176,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 584708,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 575984,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559372,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570944.7176564,
+      "elapsed_s": 476.09302049100006,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581360,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 578812,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 589240,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 583084,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 574312,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 557480,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570949.7318635,
+      "elapsed_s": 481.10722768599953,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 581296,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 578796,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 589200,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 583028,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 574288,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 557424,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570954.7457685,
+      "elapsed_s": 486.1211328869995,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579792,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576900,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 588220,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581416,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 572492,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 556508,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570959.781564,
+      "elapsed_s": 491.15692802800004,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579800,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576904,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 588464,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581456,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 572796,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 557020,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570964.797721,
+      "elapsed_s": 496.1730849739997,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579780,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576828,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 588424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 572788,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 556988,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570969.8100429,
+      "elapsed_s": 501.1854073159993,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579780,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576828,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 588424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 572788,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 556988,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570974.8264556,
+      "elapsed_s": 506.2018197799989,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579780,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576828,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 588424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 572788,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 556988,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570979.8417792,
+      "elapsed_s": 511.217143767999,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579780,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576828,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 588424,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 572788,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 556988,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570984.861849,
+      "elapsed_s": 516.2372135229998,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579936,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577012,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 591332,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581660,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 574000,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559392,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570989.8857708,
+      "elapsed_s": 521.2611353809989,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579916,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576980,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 591288,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581624,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 573916,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559352,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570994.9047124,
+      "elapsed_s": 526.2800787630003,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 578888,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 575940,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 589812,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 580680,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 572428,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 558160,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792570999.9216564,
+      "elapsed_s": 531.2970207149992,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 578520,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 575460,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 589388,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 580488,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 572144,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 558116,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571004.9417977,
+      "elapsed_s": 536.3171619519999,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 578196,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 575376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 589448,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 580260,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 571832,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 557972,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571009.9616156,
+      "elapsed_s": 541.3369796509996,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 578196,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 575376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 589448,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 580260,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 571832,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 557972,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571014.9776545,
+      "elapsed_s": 546.3530187069991,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 578164,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 575356,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 589404,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 580204,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 571764,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 557936,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571019.9896483,
+      "elapsed_s": 551.365012840999,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 578164,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 575356,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 589404,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 580204,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 571764,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 557936,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571025.0158527,
+      "elapsed_s": 556.3912174710003,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 578052,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 575180,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 589132,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 580080,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 571616,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 557744,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571030.0576742,
+      "elapsed_s": 561.4330386040001,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579552,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576640,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 593572,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581656,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 575608,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559256,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571035.0736675,
+      "elapsed_s": 566.4490315900002,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579552,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576640,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 593572,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581656,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 575608,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559256,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571040.0901082,
+      "elapsed_s": 571.4654724739994,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579316,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576528,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 593520,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581296,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 575276,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559068,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571045.1216824,
+      "elapsed_s": 576.497047126999,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579316,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576528,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 593520,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581296,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 575276,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559068,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571050.1458776,
+      "elapsed_s": 581.5212425360005,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579488,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576984,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 594396,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581728,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576488,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560052,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571055.1736114,
+      "elapsed_s": 586.5489758530002,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579464,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576912,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 594344,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581688,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 576448,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 560024,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571060.1936753,
+      "elapsed_s": 591.5690395839993,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 579088,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 576472,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 593980,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 581296,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 575920,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 559564,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571065.2140183,
+      "elapsed_s": 596.589382447999,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 578372,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 575816,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 593212,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 580636,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 574924,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 558752,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571070.237646,
+      "elapsed_s": 601.6130103209998,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 578372,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 575816,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 593212,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 580636,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 574924,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 558752,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571075.2697284,
+      "elapsed_s": 606.6450926799989,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 584376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577508,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 596808,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 583656,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 579240,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 561392,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571080.2844777,
+      "elapsed_s": 611.6598420560003,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 584376,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577508,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 596808,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 583656,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 579240,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 561392,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571085.309909,
+      "elapsed_s": 616.6852738140005,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 584268,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 577272,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 596732,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 583520,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 579140,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 561280,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571090.3339057,
+      "elapsed_s": 621.7092700590001,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 543884,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 527156,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 548180,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 533720,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 531444,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 524932,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571095.3578784,
+      "elapsed_s": 626.7332433880001,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 470232,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 462312,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 476240,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 468636,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 467820,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 463884,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571100.3778577,
+      "elapsed_s": 631.7532222640002,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 470172,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 462272,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 476204,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 468604,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 467744,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 463872,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571105.4016638,
+      "elapsed_s": 636.7770277809996,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 470172,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 462272,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 476204,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 468604,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 467744,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 463872,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571110.421795,
+      "elapsed_s": 641.7971593719994,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 470172,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 462272,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 476204,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 468604,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 467744,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 463872,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571115.4435635,
+      "elapsed_s": 646.8189279590006,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 470172,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 462272,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 476204,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 468604,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 467744,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 463872,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571120.4632976,
+      "elapsed_s": 651.8386620130004,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 470148,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 462240,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 476176,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 468548,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 467700,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 463800,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    },
+    {
+      "wall": 1792571125.4865372,
+      "elapsed_s": 656.8619020000006,
+      "swaps": [
+        {
+          "path": "/dev/zram0",
+          "size_kib": 649148,
+          "used_kib": 470148,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram1",
+          "size_kib": 649148,
+          "used_kib": 462240,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram2",
+          "size_kib": 649148,
+          "used_kib": 476176,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram3",
+          "size_kib": 649148,
+          "used_kib": 468548,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram4",
+          "size_kib": 649148,
+          "used_kib": 467700,
+          "priority": 5
+        },
+        {
+          "path": "/dev/zram5",
+          "size_kib": 649148,
+          "used_kib": 463800,
+          "priority": 5
+        },
+        {
+          "path": "/opt/argus/swapfile.nvme-8g",
+          "size_kib": 8388604,
+          "used_kib": 0,
+          "priority": 0
+        }
+      ]
+    }
+  ]
+}

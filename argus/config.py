@@ -165,7 +165,7 @@ class GroundingConfig:
     weights_pt: str = str(MODELS_DIR / "yolov8s-worldv2.pt")  # ultralytics fallback
     text_encoder: str = str(MODELS_DIR / "clip" / "ViT-B-32.pt")
     # Precomputed embeddings for the common vocabulary (built by
-    # scripts/build_vocab_embeddings.py); CLIP+torch load only for other words.
+    # scripts/build_vocab_embeddings.py); unknown words fail closed in production.
     vocab_embeddings: str = str(MODELS_DIR / "clip" / "vocab_embeddings.npy")
     conf_threshold: float = 0.25
     imgsz: int = 640

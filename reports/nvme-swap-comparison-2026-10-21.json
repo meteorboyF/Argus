@@ -1,0 +1,96 @@
+{
+  "kind": "argus-nvme-swap-comparison",
+  "T1_complete": false,
+  "before": {
+    "source": "reports/soak-automated-offscreen-2026-10-21.json",
+    "backend": "cuda_sad",
+    "calibrated": false,
+    "duration_s": 600.5519101460013,
+    "tick_ms": {
+      "n": 5935,
+      "median": 42.80349600048794,
+      "p95": 79.75668129911357,
+      "max": 254.8293529998773
+    },
+    "depth_ms": {
+      "n": 5934,
+      "median": 14.043637499526085,
+      "p95": 26.49421904943665,
+      "max": 107.04687400175317
+    },
+    "outage_ms": [
+      518.8047109986655,
+      261.93442800104094
+    ],
+    "peak_stack_rss_mib": 4195.796875,
+    "minimum_MemAvailable_mib": 400.5703125,
+    "peak_gr3d_percent": 100,
+    "oc_delta": {
+      "oc1": 0,
+      "oc2": 0,
+      "oc3": 51587
+    },
+    "swap_in_mib": 248.5078125,
+    "swap_out_mib": 692.6171875,
+    "major_fault_delta": 67065,
+    "request_errors": [],
+    "completed_operations": {
+      "gemma": 188,
+      "whisper": 257,
+      "ocr": 28,
+      "render": 7021
+    }
+  },
+  "nvme_active": {
+    "source": "reports/soak-nvme-swap-2026-10-21.json",
+    "backend": "cuda_sad",
+    "calibrated": false,
+    "duration_s": 600.0451512009986,
+    "tick_ms": {
+      "n": 5933,
+      "median": 43.72753499956161,
+      "p95": 80.64151199978369,
+      "max": 200.2224429998023
+    },
+    "depth_ms": {
+      "n": 5929,
+      "median": 13.980042000184767,
+      "p95": 25.77802359955966,
+      "max": 92.87656400010746
+    },
+    "outage_ms": [
+      301.4731719995325,
+      573.6209360002249
+    ],
+    "peak_stack_rss_mib": 4117.75390625,
+    "minimum_MemAvailable_mib": 263.85546875,
+    "peak_gr3d_percent": 99,
+    "oc_delta": {
+      "oc1": 0,
+      "oc2": 0,
+      "oc3": 50752
+    },
+    "swap_in_mib": 260.81640625,
+    "swap_out_mib": 1176.69921875,
+    "major_fault_delta": 72284,
+    "request_errors": [],
+    "completed_operations": {
+      "gemma": 188,
+      "whisper": 255,
+      "ocr": 27,
+      "render": 7080
+    }
+  },
+  "nvme_priority": 0,
+  "zram_priority": 5,
+  "swappiness": 60,
+  "maximum_observed_nvme_swap_mib": 0.0,
+  "observer_interval_s": 5,
+  "conclusion": "No demonstrated timing improvement. Both runs had two >250 ms outages; no NVMe occupancy observed in five-second samples. Extra capacity stays active temporarily; boot config unchanged.",
+  "limitations": [
+    "Sequential single runs with a development desktop, not randomized causal evidence.",
+    "Baseline overlapped a small synthetic test at the end and preceded final post-mover freshness guard.",
+    "Synthetic speech/page workload and offscreen display/recording; human acceptance remains pending.",
+    "System-wide paging includes zram and unrelated desktop processes."
+  ]
+}

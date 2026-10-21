@@ -886,3 +886,52 @@ NVMe swap file is prepared/verified at `/opt/argus/swapfile.nvme-8g`, mode 0600,
 fully allocated with a swap header. Fardeen must activate it at priority 0;
 no fstab or swappiness change. Then repeat the same offscreen workload and
 compare tails/paging. See `docs/operations/MEMORY_TRIAL.md`. 314 tests pass.
+
+## 2026-10-21 T1 memory — NVMe capacity did not remove stalls; optional imports consumed RAM
+
+**Hurdle / problem.** Fardeen activated the prepared 8 GiB NVMe swap at
+priority 0. The 600 s comparison still had two depth outages (302/574 ms),
+tick median/p95 43.7/80.6 ms, peak stack RSS 4118 MiB, minimum MemAvailable
+264 MiB, peak GR3D 99%, OC3 +50752. No NVMe swap occupancy was observed at
+five-second intervals. This did not demonstrate a timing improvement.
+
+**Impact.** Adding backing capacity alone did not resolve T1. Inspection
+of process maps then found PyTorch loaded through CTranslate2's optional
+converter/model-spec imports, even though Whisper uses compiled CTranslate2
+and VAD uses ONNX. This had escaped the earlier grounding-only memory audit.
+
+**Options considered.** Force disk preference or disable zram (requires
+another privileged system change and may worsen latency); patch installed
+packages; avoid unnecessary frameworks in the production inference process.
+
+**Resolution.** Keep the activated swap temporary, zram preferred and
+swappiness 60. Add an explicit production import policy that excludes torch
+before models initialise; CTranslate2's optional sites handle ImportError.
+Do not unload a preloaded framework or edit installed packages. Diagnostics
+and conversion run separately. Missing production object embeddings fail
+closed with an honest spoken unsupported-object response, rather than loading
+live CLIP. Pin the already-installed CTranslate2 4.8.0; model/engine bytes and
+YAML configuration are unchanged.
+
+**Lesson / consequence.** In a fresh-process comparison (Whisper tiny int8
+CTranslate2 CPU + Silero ONNX CPU), peak worker RSS fell 690.5 to 360.0 MiB;
+all ten synthetic transcripts and the VAD silence probability matched. STT
+median/p95 989.6/1106.2 ms with the policy; OC delta zero. GR3D sampled unrelated
+desktop work (74% peak), not STT GPU inference. Full-stack validation is recorded below;
+this does not establish real-voice recall or T1 acceptance. Evidence:
+`reports/nvme-swap-comparison-2026-10-21.json`,
+`reports/memory-after-nvme-activation-2026-10-21.json`,
+`reports/stt-import-memory-2026-10-21.json`.
+Upstream corroboration: https://github.com/OpenNMT/CTranslate2/issues/2079 .
+
+The final 600.2 s synthetic combined run with this import policy and the already
+active NVMe swap had no >250 ms outages (max heartbeat 202.7 ms), tick median/
+p95 43.2/81.3 ms, peak stack RSS 4123 MiB, minimum MemAvailable 426 MiB,
+GR3D peak 99%, OC3 +51511. Torch was absent in every sampled state and there
+were no reported request errors. System-wide paging was 103.8/188.2 MiB in/out,
+27786 major faults; it includes the desktop and warm-cache effects. This
+passes automated timing/RSS subtargets in one run, not human T1 acceptance.
+Evidence: `reports/soak-inference-budget-2026-10-21-summary.json` and full
+`reports/soak-inference-budget-2026-10-21.json`. 321 tests pass. Do not infer
+swap caused the improvement or that metric safety is validated: calibration
+is still absent and the human voice/reading soak remains pending.

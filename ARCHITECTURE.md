@@ -110,3 +110,12 @@ heartbeat intervals. Reports count open outages as well as recovered ones.
 CPU pools and llama prefill batches are bounded; model/geometry/privacy gates
 are unchanged. Physical calibration and full human workload acceptance remain
 required before wearable safety claims.
+
+Production startup also installs `runtime_imports.enforce_inference_import_budget`
+before model construction. CTranslate2 4.8.0's optional conversion imports see
+a normal ImportError for torch; Whisper CTranslate2 and Silero ONNX still load.
+Already-loaded torch causes an explicit startup error instead of attempting to
+unload a live framework. Diagnostic/conversion commands run in separate
+processes; the explicit diagnostic torch override does not install this policy.
+Unknown production labels cannot start live CLIP and receive an unsupported
+object response. Installed vocabulary embeddings and TRT execution are unchanged.

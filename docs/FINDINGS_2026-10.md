@@ -161,3 +161,43 @@ human voice/reading acceptance is still absent. A small synthetic test run
 overlapped the tail, and the final post-mover age guard needs validation in
 the post-swap run. The prepared NVMe swap file is not evidence of an
 improvement until activated and measured (`reports/nvme-swap-preparation-2026-10-21.json`).
+
+### NVMe activation and optional-framework follow-up
+
+Fardeen activated the 8 GiB swap file (root-owned, mode 0600, priority 0),
+leaving priority-5 zram and swappiness 60. A further 600 s combined run used
+CUDA SAD and measured 43.7/80.6 ms median/p95 tick, 4118 MiB peak RSS,
+264 MiB minimum MemAvailable, GR3D peak 99%, OC3 +50752; two outages
+301.5/573.6 ms. No NVMe occupancy was observed in five-second samples.
+Activation did not demonstrate a timing benefit. System-wide swap-in/out
+was 260.8/1176.7 MiB (`reports/nvme-swap-comparison-2026-10-21.json`).
+
+The running process mapped torch libraries despite TRT grounding. Installed
+CTranslate2 4.8.0 imports torch through optional conversion/spec modules.
+Excluding that optional import in fresh workers reduced peak RSS
+690.5 -> 360.0 MiB. Ten synthetic Whisper transcripts were identical;
+Silero silence probability was identical (0.0238286). Policy STT median/p95
+989.6/1106.2 ms, minimum MemAvailable 1748.8 MiB, OC delta zero. STT/VAD
+backends were CPU; GR3D peak 74% reflected the desktop, not GPU STT.
+`reports/stt-import-memory-2026-10-21.json` records both workers. Do not
+attribute this memory saving to swap or claim real-voice acceptance.
+
+### Final automated run with production import budget
+
+`reports/soak-inference-budget-2026-10-21-summary.json` (full samples in
+`reports/soak-inference-budget-2026-10-21.json`): 600.2 s combined synthetic
+load, CUDA SAD, tick median/p95 43.2/81.3 ms, no >250 ms depth outages,
+worst heartbeat interval 202.7 ms, peak stack RSS 4123 MiB, minimum MemAvailable
+426 MiB, peak GR3D 99%, OC3 +51511. Torch was absent from all sampled states;
+process maps were checked during the run and contained no torch libraries.
+No reported request errors. Completed operations: 189 Gemma, 253 Whisper,
+27 busy-page OCR, 7282 rendered frames. Latency distributions are in the summary.
+
+System-wide swap-in/out 103.8/188.2 MiB and major-fault delta 27786 were lower
+than the preceding run, but the desktop and warm caches prevent a causal
+latency guarantee. Do not claim a full-stack RSS reduction from the isolated
+330.5 MiB worker saving: peak combined RSS was comparable across these trials.
+Automated timing/RSS subtargets passed once; human continuous queries/reading,
+calibrated geometry and full fault acceptance are still pending. NVMe swap
+remains temporarily active, with zero occupancy at the final inspection;
+its earlier isolated trial did not demonstrate a timing benefit.

@@ -18,7 +18,7 @@ implementation exists.
 | Corridor hazards | partial | `argus/hazards.py`: ground plane, body/head bands, head-level rule, drop-off, head-motion gate (deg/s), 3-frame persistence, refractory, hysteresis; 5 ms/tick; 12 ray-cast tests. Speech only with calibration. Test walk pending |
 | Approaching person/vehicle | partial | YOLO11n TRT (3.3 ms GPU, 14.4 ms end to end) + ByteTrack-style tracker + range Kalman + TTC hysteresis; 10 tests; live person detected. Speech only with calibration |
 | Legacy reflex / TTC zones | partial | `argus/safety.py`; now keeps only the approach-zone rule when the corridor engine is on |
-| Fast-loop timing | **partial — T1 not accepted** | Bounded fresh stereo pairing, source-age rejection, CPU thread caps, asynchronous depth previews and scalar stage timing. Short combined-load check: tick median/p95 34.5/56.7 ms, RSS peak 3856 MiB, GR3D peak 99%, OC3 +1654; separate busy OCR phase still had a >250 ms outage (`reports/t1-profile-final-2026-10-21.json`). Human 10-minute voice/reading soak unavailable; walking remains blocked |
+| Fast-loop timing | **partial — human acceptance pending** | Final 600 s automated combined run: CUDA SAD, tick median/p95 43.2/81.3 ms, no >250 ms outages (max heartbeat 202.7 ms), stack RSS peak 4123 MiB, MemAvailable minimum 426 MiB, GR3D 99%, OC3 +51511. Synthetic voice/page; uncalibrated geometry. See `reports/soak-inference-budget-2026-10-21-summary.json`. Human voice/reading and remaining fault checks required |
 | Speech arbiter | done (unit) | P0-P4, preemption < 50 ms in test, answer resume / "repeat?" offer, user-speech hold, depth watchdog earcon (rate-limited). Legacy priority suite fixed and green |
 | Wake word | partial | "Argus" / "Hey Argus" via VAD + Whisper tiny with a glossary hint (9/9 synthetic, 0.78 s). Real voice: the name recognised every time; bare "Argus" -> "Yes?". False wakes/hour not measured. Trained openWakeWord model not built (`training/hey_argus/`) |
 | VAD / STT | partial | Silero endpointing (0.7 s, 15 s cap) works live; Whisper tiny English only; mishearings seen ("Read the" -> "I'm the") |
@@ -32,8 +32,8 @@ implementation exists.
 | SLAM / navigation | partial | Stereo VO + corridor guidance exist with synthetic tests; off until calibration |
 | Demo view / recording | done | `run --demo [--record]`: POV with display face blur, captions, hazard banner, insets, chips; x264 via ffmpeg thread (1.5 ms/frame); TTS audio muxed; closes only on Esc x2 or "shut down" |
 | Session logger / study metrics | done | JSONL with masking; `scripts/summarise_session.py` (alarms/min, lead, task times, latency percentiles, precision/recall vs annotated truth) |
-| Memory budget | partial | Measured short combined stack RSS 3856 MiB, but only 292 MiB MemAvailable and active paging with the development desktop. 1024-token llama batches twice failed CUDA allocation; default batch/microbatch now 256. 8 GiB NVMe swap file prepared (activation pending); see `reports/t1-failures-2026-10-21.json` and `reports/t1-profile-final-2026-10-21.json` |
-| Headless service/soak/fault tests | not started | No systemd unit or long soak |
+| Memory budget | partial | Production excludes optional torch conversion imports (fresh STT worker peak RSS 690.5 -> 360.0 MiB); final combined peak RSS 4123 MiB. 8 GiB NVMe swap active temporarily, no demonstrated benefit in its isolated comparison. System-wide paging still measured; no blanket no-thrashing claim. `reports/stt-import-memory-2026-10-21.json`, `reports/nvme-swap-comparison-2026-10-21.json` |
+| Headless service/soak/fault tests | partial | Automated synthetic 600 s soaks and guided human soak tool exist. No boot service; human workload and full fault acceptance remain incomplete |
 
 ## Reproducibility pins
 
@@ -129,7 +129,7 @@ and cold-start latency remain explicit blockers to wearable acceptance.
 
 ## 2026-10-21 Codex T1 audit
 
-314 synthetic tests pass. No model/engine artifacts changed; SHA-256 pins above remain unchanged. `config/argus.yaml` and `/opt/argus/config/argus.yaml` match. Stereo calibration is still absent. A result older than 250 ms from source capture cannot refresh the depth watchdog or drive rules; cached depth also expires. CPU work is bounded (OpenCV 1, face ONNX Runtime 1/1 without spinning, RapidOCR 1/1, Whisper 2 with one worker). These are mitigations, not T1 acceptance.
+321 synthetic tests pass. No model/engine artifacts changed; SHA-256 pins above remain unchanged. `config/argus.yaml` and `/opt/argus/config/argus.yaml` match. Stereo calibration is still absent. A result older than 250 ms from source capture cannot refresh the depth watchdog or drive rules; cached depth also expires. CPU work is bounded (OpenCV 1, face ONNX Runtime 1/1 without spinning, RapidOCR 1/1, Whisper 2 with one worker). These are mitigations, not T1 acceptance.
 
 Automated 10-minute pre-swap stress (`reports/soak-2026-10-21-summary.json`):
 CUDA SAD, tick 42.8/79.8 ms median/p95, 4196 MiB peak stack RSS, 401 MiB
@@ -140,3 +140,30 @@ Fardeen declined the human soak. The 8 GiB file at
 `/opt/argus/swapfile.nvme-8g` is allocated and formatted, mode 0600; not active
 at preparation. See `reports/nvme-swap-preparation-2026-10-21.json` and
 `docs/operations/MEMORY_TRIAL.md`. Activation requires Fardeen's sudo command.
+
+## NVMe activation and optional import follow-up (2026-10-21)
+
+Fardeen activated the 8 GiB NVMe swap at priority 0, zram remains priority 5,
+swappiness 60. The 600 s paired run had 43.7/80.6 ms median/p95 tick and two
+outages (302/574 ms), 4118 MiB peak stack RSS, 264 MiB minimum MemAvailable,
+GR3D peak 99%, OC3 +50752. No NVMe swap occupancy observed at five-second
+intervals. There is no demonstrated timing benefit; T1 remains partial.
+Evidence: `reports/nvme-swap-comparison-2026-10-21.json`.
+
+Production startup now excludes optional torch imports. Installed CTranslate2
+4.8.0 had loaded torch through conversion/spec modules. Fresh-process Whisper
+tiny int8 CPU + Silero ONNX CPU check: worker RSS peak 690.5 -> 360.0 MiB;
+ten synthetic transcripts and VAD silence result identical. Policy STT
+989.6/1106.2 ms median/p95, OC delta zero. No package or model files changed;
+CTranslate2 4.8.0 is now explicitly pinned in `requirements-jetson.txt`.
+Unknown object labels fail closed instead of loading live CLIP. 321 tests pass.
+Full combined validation completed; see the result below.
+
+Final automated run (`reports/soak-inference-budget-2026-10-21-summary.json`):
+600.2 s, CUDA SAD, 43.2/81.3 ms median/p95 tick, no >250 ms outages, worst
+heartbeat 202.7 ms, peak stack RSS 4123 MiB, minimum MemAvailable 426 MiB,
+GR3D peak 99%, OC3 +51511. PyTorch absent in all resource samples, no reported
+request errors. System-wide paging 103.8 MiB in / 188.2 MiB out; single sequential
+trial with desktop/warm-cache confounds. Timing and RSS automated subtargets
+passed; **T1 remains partial** pending the human workload and fault acceptance.
+All model/engine SHA pins remain unchanged. 321 tests pass.

@@ -28,7 +28,7 @@ table, `AGENT_HANDOFF.md` the continuation plan, and
 - **Seat guidance**, closed loop with a corridor whitelist.
 - **Demo:** first-person view, MP4 recording with audio, JSONL study logs,
   `summarise_session.py`.
-- 314 tests pass after the Codex T1 changes.
+- 321 tests pass after the Codex T1 changes.
 
 ## Live results with the user (2026-10-21)
 
@@ -73,3 +73,22 @@ table, `AGENT_HANDOFF.md` the continuation plan, and
 - Prepared and verified `/opt/argus/swapfile.nvme-8g` (8 GiB, mode 0600,
   swap signature, no holes). Waiting for Fardeen to activate at priority 0;
   exact command and post-swap comparison in `docs/operations/MEMORY_TRIAL.md`.
+
+## NVMe follow-up, 2026-10-21
+
+- Fardeen activated 8 GiB NVMe swap, temporary priority 0; no boot changes.
+  Paired 600 s run: 43.7/80.6 ms median/p95 tick, two outages (302/574 ms),
+  4118 MiB peak RSS, 264 MiB minimum available, GR3D 99%, OC3 +50752.
+  No observed NVMe occupancy; no timing benefit demonstrated.
+- Found CTranslate2's optional torch imports. Production excludes them and
+  rejects unsupported object labels without live CLIP. No installed package
+  edits. Fresh-process STT/VAD check saved 330.5 MiB peak RSS with identical
+  synthetic outputs. 321 tests pass. Final 600 s full-stack validation completed (below).
+
+- Final automated run: no >250 ms outages, max heartbeat 202.7 ms; CUDA SAD,
+  43.2/81.3 ms median/p95 tick, 4123 MiB peak RSS, 426 MiB minimum available,
+  GR3D 99%, OC3 +51511. Torch absent, no reported request errors. Summary:
+  `reports/soak-inference-budget-2026-10-21-summary.json`. Timing/RSS subtargets
+  passed once; T1 still partial pending human voice/reading and fault checks.
+- NVMe swap remains active temporarily at priority 0; no boot configuration
+  change. No further sudo action is required for the current experiment.

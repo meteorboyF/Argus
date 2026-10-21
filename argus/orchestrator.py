@@ -26,7 +26,7 @@ from .cameras import CameraRig
 from .config import ArgusConfig
 from .depth import DepthEstimator
 from .depth_freshness import depth_is_current
-from .grounding import Grounder
+from .grounding import Grounder, UnsupportedObjectError
 from .privacy import PrivacyGate
 from .safety import Level, SafetyReflex
 from .speech import Priority, Speaker, Transcriber, WakeWord, record
@@ -44,6 +44,9 @@ def _direction_of(col: int, width: int) -> str:
 class Orchestrator:
     def __init__(self, cfg: ArgusConfig, enable_audio: bool = True,
                  enable_mic: bool | None = None):
+        if not cfg.grounding.allow_torch_fallback:
+            from .runtime_imports import enforce_inference_import_budget
+            enforce_inference_import_budget()
         from .cpu_budget import configure_opencv
         configure_opencv()
         self.cfg = cfg
@@ -426,6 +429,8 @@ class Orchestrator:
             bus.record("query_start", text=question)
             try:
                 self.dialogue.handle(question)
+            except UnsupportedObjectError:
+                self.speaker.speak("I can't identify that object yet. Try another object.")
             except Exception as exc:  # noqa: BLE001 — a query must never kill the process
                 bus.log("system", f"query failed: {exc}")
                 self.speaker.speak("Sorry, something went wrong with that question.")

@@ -1,0 +1,74 @@
+{
+  "kind": "argus-inference-import-budget-soak",
+  "source": "reports/soak-inference-budget-2026-10-21.json",
+  "T1_complete": false,
+  "human_acceptance": "pending; no new human availability confirmed",
+  "automated_timing_and_rss_pass": true,
+  "duration_s": 600.2034708400006,
+  "backend": "cuda_sad",
+  "other_backends": [
+    "YOLO11n TensorRT FP16",
+    "Gemma4 E2B QAT CUDA via llama-server, batch/microbatch 256",
+    "Whisper tiny CTranslate2 int8 CPU",
+    "RapidOCR ONNX Runtime CPU",
+    "InsightFace ONNX Runtime CPU",
+    "ffmpeg x264 CPU"
+  ],
+  "calibrated": false,
+  "tick_ms": {
+    "n": 5932,
+    "median": 43.2054335005887,
+    "p95": 81.33622265058875,
+    "max": 212.0537439986947
+  },
+  "heartbeat_interval_ms": {
+    "n": 5931,
+    "median": 100.52831199936918,
+    "p95": 115.48391550059023,
+    "max": 202.6790740001161
+  },
+  "outages": [],
+  "peak_stack_rss_mib": 4122.53125,
+  "minimum_MemAvailable_mib": 425.90234375,
+  "peak_gr3d_percent": 99,
+  "oc_delta": {
+    "oc1": 0,
+    "oc2": 0,
+    "oc3": 51511
+  },
+  "system_swap_in_mib": 103.77734375,
+  "system_swap_out_mib": 188.22265625,
+  "system_major_fault_delta": 27786,
+  "any_torch_loaded": false,
+  "operations": {
+    "gemma": {
+      "count": 189,
+      "median_ms": 3097.961048999423,
+      "p95_ms": 3338.4759351989487
+    },
+    "ocr": {
+      "count": 27,
+      "median_ms": 21891.174754999156,
+      "p95_ms": 23484.60816679999
+    },
+    "render": {
+      "count": 7282,
+      "median_ms": 54.64305149962456,
+      "p95_ms": 142.46138514890845
+    },
+    "whisper": {
+      "count": 253,
+      "median_ms": 2268.8048549989617,
+      "p95_ms": 2620.463072200073
+    }
+  },
+  "errors": [],
+  "limitations": [
+    "Synthetic speech and busy synthetic page; offscreen rendering/recording; calibrated geometry disabled.",
+    "One sequential stress run with development desktop; warm-cache and background activity prevent a causal latency guarantee.",
+    "System-wide paging includes unrelated processes; no standalone no-thrashing acceptance claimed.",
+    "NVMe swap remained active; the earlier NVMe-only trial showed no observed disk occupancy or demonstrated timing benefit.",
+    "Human continuous voice queries, reading acceptance and fault/walking acceptance remain incomplete.",
+    "OC counters extend through inference-worker and encoder draining; timing and resource samples use the measured phase."
+  ]
+}

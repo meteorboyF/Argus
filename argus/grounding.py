@@ -10,6 +10,10 @@ import numpy as np
 from .config import GroundingConfig
 
 
+class UnsupportedObjectError(RuntimeError):
+    """A production request has no installed, verified label embedding."""
+
+
 @dataclass
 class Detection:
     name: str
@@ -67,11 +71,14 @@ class Grounder:
             self._classes = names
 
     def _embed(self, name: str) -> np.ndarray:
-        """Normalised CLIP embedding: precomputed table first, live CLIP after."""
+        """Use installed embeddings; live CLIP is an explicit diagnostic path."""
         if self.vocab is not None:
             vec = self.vocab.get(name)
             if vec is not None:
                 return vec
+        if not self.cfg.allow_torch_fallback:
+            raise UnsupportedObjectError(
+                f"No installed embedding for {name!r}; live CLIP is diagnostic-only")
         return self._embed_live(name)
 
     @property
@@ -81,6 +88,8 @@ class Grounder:
     @lru_cache(maxsize=64)
     def _embed_live(self, name: str) -> np.ndarray:
         """Encode one out-of-vocabulary label on CPU and cache the vector."""
+        if not self.cfg.allow_torch_fallback:
+            raise UnsupportedObjectError("Live CLIP is diagnostic-only")
         if self._text_model is None:
             import clip
             self._text_model, _ = clip.load(

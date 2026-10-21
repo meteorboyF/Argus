@@ -3,8 +3,9 @@
 Loading torch + CLIP to embed one label costs ~1.4 GB of resident memory and
 ~10 s of cold start on the Orin Nano. The labels ARGUS is asked to find are
 mostly predictable, so they are embedded once offline
-(`scripts/build_vocab_embeddings.py`) and looked up here. Only a label that is
-not in the table falls back to the live CLIP text encoder.
+(`scripts/build_vocab_embeddings.py`) and looked up here. A label outside the
+table can use live CLIP only in the explicit diagnostic mode; production
+reports the object as unsupported without importing torch.
 """
 from __future__ import annotations
 

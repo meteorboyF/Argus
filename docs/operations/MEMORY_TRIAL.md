@@ -32,6 +32,11 @@ Priority 0 leaves existing priority-5 zram preferred. Keep swappiness at its
 current value (60) for this trial, so only the extra backing capacity changes.
 The first activation is temporary: do not edit `/etc/fstab` or disable zram.
 
+Fardeen activated the file on 2026-10-21. The agent verified root ownership,
+mode 0600 and active priority 0 in `/proc/swaps`; see
+`reports/memory-after-nvme-activation-2026-10-21.json`. The first paired
+comparison has completed; see the outcome below.
+
 ## Compare
 
 Keep the same llama batch/microbatch (256), model, camera roles, CPU caps,
@@ -68,3 +73,45 @@ sudo swapoff /opt/argus/swapfile.nvme-8g
 
 Confirm the file is absent from `/proc/swaps` before removing it. No reboot
 configuration was changed by this trial.
+
+## First comparison outcome
+
+`reports/nvme-swap-comparison-2026-10-21.json` records the paired results.
+
+| Metric | Before NVMe activation | NVMe active, priority 0 |
+|---|---:|---:|
+| Tick median / p95 | 42.8 / 79.8 ms | 43.7 / 80.6 ms |
+| Outages over 250 ms | 2 (519 / 262 ms) | 2 (302 / 574 ms) |
+| Peak stack RSS | 4196 MiB | 4118 MiB |
+| Minimum MemAvailable | 401 MiB | 264 MiB |
+| GR3D peak | 100% | 99% |
+| OC3 delta | 51587 | 50752 |
+| System swap in / out | 248.5 / 692.6 MiB | 260.8 / 1176.7 MiB |
+
+Both used CUDA SAD and the same synthetic combined workload for 600 s.
+No NVMe swap occupancy was observed in five-second samples. There is no
+measured timing benefit from activation in this run. The single sequential
+comparison, desktop activity and baseline source-age guard difference prevent
+strong causal claims. Additional capacity remains temporarily active; it is
+not a demonstrated solution to T1. No boot configuration change was made.
+
+While investigating, the agent found CTranslate2 4.8.0 eagerly importing
+PyTorch for optional conversion modules. A fresh-process experiment avoided
+that import and saved 330.5 MiB peak worker RSS with identical synthetic
+Whisper transcripts and Silero silence probability. This is a separate runtime
+memory fix, not an effect of swap; see
+`reports/stt-import-memory-2026-10-21.json`.
+
+## Subsequent import-budget validation
+
+With the temporary swap still active, the production import policy completed
+600.2 s combined synthetic stress with no >250 ms outages (worst heartbeat
+202.7 ms), CUDA SAD tick median/p95 43.2/81.3 ms, peak stack RSS 4123 MiB,
+minimum MemAvailable 426 MiB, GR3D 99%, OC3 +51511. No reported request errors;
+torch absent in all samples. Evidence:
+`reports/soak-inference-budget-2026-10-21-summary.json`.
+
+This is a separate change with one sequential run. The combined RSS peak did
+not fall by the standalone worker saving. Paging decreased but includes warm
+caches and desktop activity; do not claim disk swap caused the zero-gap result.
+Automated timing/RSS subtargets passed; T1 human/fault acceptance remains pending.

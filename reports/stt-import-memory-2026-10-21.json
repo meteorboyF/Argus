@@ -1,0 +1,87 @@
+{
+  "kind": "argus-stt-optional-import-memory",
+  "synthetic_phrase": "Hey Argus, what is in front of me?",
+  "rows": [
+    {
+      "policy": "existing",
+      "backend": "Whisper tiny CTranslate2 int8 CPU; Silero ONNX CPU",
+      "ctranslate2": "4.8.0",
+      "torch_loaded": true,
+      "load_s": 4.156527502000245,
+      "transcripts": [
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?"
+      ],
+      "latency_ms": {
+        "median": 1065.3384940005708,
+        "p95": 1092.6543287492677
+      },
+      "peak_worker_rss_mib": 690.5390625,
+      "minimum_MemAvailable_mib": 1545.9921875,
+      "peak_gr3d_percent": 65,
+      "vad_silence_probability": 0.023828625679016113,
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 113196
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 113196
+      }
+    },
+    {
+      "policy": "inference",
+      "backend": "Whisper tiny CTranslate2 int8 CPU; Silero ONNX CPU",
+      "ctranslate2": "4.8.0",
+      "torch_loaded": false,
+      "load_s": 1.2338717950005957,
+      "transcripts": [
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?",
+        "Hey Argus, what is in front of me?"
+      ],
+      "latency_ms": {
+        "median": 989.5702015001007,
+        "p95": 1106.1675210495193
+      },
+      "peak_worker_rss_mib": 360.015625,
+      "minimum_MemAvailable_mib": 1748.79296875,
+      "peak_gr3d_percent": 74,
+      "vad_silence_probability": 0.023828625679016113,
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 113196
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 113196
+      }
+    }
+  ],
+  "transcripts_identical": true,
+  "worker_rss_saved_mib": 330.5234375,
+  "notes": [
+    "Fixed synthetic phrase, ten decodes per fresh process; not real-voice acceptance.",
+    "Whisper and Silero used CPU backends. GR3D samples include unrelated desktop activity; no GPU speed claim.",
+    "Installed packages and model weights were not modified. Optional conversion imports are excluded by the ARGUS process policy."
+  ]
+}

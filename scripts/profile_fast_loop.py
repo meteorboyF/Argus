@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stationary T1 component isolation. No acceptance claim or saved camera frames.
+"""Stationary T1 component isolation. No acceptance claim or saved raw camera stills.
 
 Run with llama-server up and cameras free. Each phase runs real production
 modules; Whisper uses a synthetic spoken query and OCR a synthetic busy page.
@@ -49,7 +49,8 @@ def memory():
         key, value = line.split()
         if key in ('pswpin', 'pswpout', 'pgmajfault'):
             counters[key] = int(value)
-    return dict(vmstat=counters, stack_rss_mb=rss / 2**20, available_mb=mem.available / 2**20,
+    return dict(torch_loaded='torch' in sys.modules, vmstat=counters,
+                stack_rss_mb=rss / 2**20, available_mb=mem.available / 2**20,
                 swap_used_mb=vm.used / 2**20, swap_in=vm.sin, swap_out=vm.sout,
                 threads=proc.num_threads(), gr3d=bus.get('gr3d_percent'))
 
