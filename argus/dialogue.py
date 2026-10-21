@@ -37,7 +37,9 @@ PERSONA = (
     "in at most two short sentences. Use plain words, no lists, no markdown, no "
     "emoji. Confirm what you are doing. Never pretend to see something you have "
     "not been shown; never guess private numbers; for anything about safety, say "
-    "you will watch and that the safety system warns automatically.")
+    "you will watch and that the safety system warns automatically. Never say you "
+    "are doing or have done something you were not given a tool for (opening apps, "
+    "closing windows, calling people, changing settings); say you can't do that yet.")
 
 SKILLS = ("describe", "read", "next_page", "find", "seat", "page_question", "chat")
 
@@ -58,6 +60,10 @@ ROUTER_INSTRUCTIONS = (
     'other skill, "say" is a brief acknowledgement of at most six words, such as '
     '"Sure, let me look." or "Okay, hold the book up."')
 
+_EXIT = re.compile(r"\b(shut ?down|switch off|turn (yourself )?off|power off|"
+                   r"close (the )?(first[- ]person )?(view|window|screen|demo)|exit argus|"
+                   r"quit argus|goodbye argus)\b", re.I)
+_FILLER = re.compile(r"^\s*(u+m+|u+h+|hmm+|ah+|er+|okay|ok|yeah|hm)[\s.,!?]*$", re.I)
 _STOP = re.compile(r"^\s*(stop|cancel|quiet|be quiet|shut up|enough)\b", re.I)
 _PAUSE = re.compile(r"^\s*(pause|wait|hold on)\b", re.I)
 _CONTINUE = re.compile(r"^\s*(continue|resume|go on|carry on|keep going)\b", re.I)
@@ -92,6 +98,10 @@ def rule_route(text: str, reading_active: bool, reading_playing: bool) -> Intent
     from .reading import is_page_question, is_read_request
     from .seat import is_seat_request
     t = text.strip()
+    if not t or _FILLER.search(t):
+        return Intent("ignore")
+    if _EXIT.search(t):
+        return Intent("exit", say="Closing. Goodbye.")
     if _STOP.search(t):
         return Intent("control", "stop")
     if _PAUSE.search(t):
@@ -209,12 +219,19 @@ class DialogueManager:
                    source=intent.source)
         bus.set(intent=f"{intent.skill} ({intent.source})")
         reply = self.run(intent, text)
-        if intent.skill != "control":
+        if intent.skill not in ("control", "ignore", "exit"):
             self.history.append(Turn(text, reply, intent.skill))
 
     def run(self, intent: Intent, text: str) -> str:
         o = self.o
         self.expect_reply = False
+        if intent.skill == "ignore":
+            return ""
+        if intent.skill == "exit":
+            self._say(intent.say)
+            o.speaker.wait_until_idle(timeout=5.0)
+            o.request_exit()
+            return intent.say
         if intent.skill == "control":
             if intent.name == "stop":
                 o.seat_cancel.set()

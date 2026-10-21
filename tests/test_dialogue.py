@@ -158,3 +158,23 @@ def test_find_uses_grounding_path():
     o = FakeOrch(FakeAgent())
     DialogueManager(o).handle("where are my keys?")
     assert o.queries == ["find the keys"]
+
+
+@pytest.mark.parametrize("text", ["shut down", "close the first person view", "exit argus",
+                                  "Jarvis, turn yourself off"])
+def test_exit_commands(text):
+    assert rule_route(text, False, False).skill == "exit"
+
+
+@pytest.mark.parametrize("text", ["Um...", "uh", "hmm", "okay", ""])
+def test_filler_is_ignored(text):
+    assert rule_route(text, False, False).skill == "ignore"
+
+
+def test_exit_speaks_and_requests_exit():
+    o = FakeOrch(FakeAgent())
+    o.speaker.wait_until_idle = lambda timeout=None: True
+    o.exited = False
+    o.request_exit = lambda: setattr(o, "exited", True)
+    DialogueManager(o).handle("shut down")
+    assert o.speaker.said == ["Closing.", "Goodbye."] and o.exited

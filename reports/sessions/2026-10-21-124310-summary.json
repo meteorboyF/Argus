@@ -1,0 +1,46 @@
+{
+  "duration_min": 4.17,
+  "events": 286,
+  "alarms": {},
+  "alarms_per_min_total": 0.0,
+  "lead": {
+    "distance_m_at_announcement": {
+      "n": 0
+    },
+    "ttc_s_at_announcement": {
+      "n": 0
+    }
+  },
+  "queries": {
+    "n": 7,
+    "median": 2.404,
+    "p95": 2.955,
+    "max": 2.966
+  },
+  "reading": {
+    "capture_s": {
+      "n": 0
+    },
+    "ocr_s": {
+      "n": 0
+    }
+  },
+  "seat": {
+    "arrived": {
+      "n": 0
+    },
+    "abandoned": 0
+  },
+  "speech": {
+    "preemptions": 0,
+    "stale_safety_dropped": 0,
+    "queue_wait_s": {
+      "n": 10,
+      "median": 0.0,
+      "p95": 1.444,
+      "max": 1.908
+    }
+  },
+  "skew_drops": 17,
+  "safety_paused": 0
+}

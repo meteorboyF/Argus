@@ -299,10 +299,19 @@ class Dashboard(threading.Thread):
                                  name="dashboard-question", daemon=True).start()
             return True
         if key == 27:
-            if not self.typed and self.allow_key_quit:
+            if self.typed:
+                self.typed = ""
+                return True
+            if self.allow_key_quit:
                 bus.log("system", "window closed: Esc pressed")
                 return False
-            self.typed = ""
+            # Demo: Esc twice within 2 s closes; one stray press never does.
+            now = time.monotonic()
+            if now - getattr(self, "_esc_at", -10.0) <= 2.0:
+                bus.log("system", "window closed: Esc pressed twice")
+                return False
+            self._esc_at = now
+            bus.set(close_hint_until=now + 2.0)
             return True
         if key in (8, 127):
             self.typed = self.typed[:-1]

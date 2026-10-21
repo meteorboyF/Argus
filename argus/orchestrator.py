@@ -586,7 +586,7 @@ class Orchestrator:
             if not self.enable_mic:
                 # No wake word / STT: questions arrive typed from the dashboard
                 # (or not at all in headless mode). The fast loop keeps running.
-                while not self._stop.is_set():
+                while not self._stop.is_set() and not getattr(self, "_exit_requested", False):
                     if self._dashboard is not None and self._dashboard.closed.is_set():
                         break
                     time.sleep(0.2)
@@ -626,6 +626,8 @@ class Orchestrator:
                 break
             if self._dashboard is not None and self._dashboard.closed.is_set():
                 break
+            if getattr(self, "_exit_requested", False):
+                break
             if self.wake.detected(block):
                 # Earcon instead of "Yes?": ~0.25 s instead of a Piper sentence.
                 from . import earcons
@@ -659,6 +661,13 @@ class Orchestrator:
                 self._follow_ups()
                 self.wake.reset()
 
+    def request_exit(self) -> None:
+        """Voice "shut down": end the session cleanly (recording + log saved)."""
+        bus.log("system", "session ended by voice command")
+        if self._dashboard is not None:
+            self._dashboard.stop()
+        self._exit_requested = True
+
     def _follow_ups(self, window_s: float = 6.0, max_turns: int = 4):
         """After ARGUS asks something (e.g. "say next page when you've turned
         it"), listen again without the wake word, like a conversation."""
@@ -671,7 +680,8 @@ class Orchestrator:
             if waiting_page:
                 # Long read in progress: wait for it to finish (or be stopped).
                 self.speaker.wait_until_idle(timeout=120.0)
-            if not self.dialogue.expect_reply or self._stop.is_set():
+            if (not self.dialogue.expect_reply or self._stop.is_set()
+                    or getattr(self, "_exit_requested", False)):
                 return
             earcons.play("listening")
             audio, state = record_utterance(
