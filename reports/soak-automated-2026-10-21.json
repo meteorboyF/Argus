@@ -1,0 +1,53 @@
+{
+  "kind": "argus-fast-loop-profile",
+  "acceptance": false,
+  "config": "/opt/argus/config/argus.yaml",
+  "cv_threads": 1,
+  "cache_prompt": false,
+  "notes": [
+    "Stationary, uncalibrated rig; geometry rules requiring calibration are inactive.",
+    "Phases toggle active work; previously loaded model memory remains resident.",
+    "OCR busy page and Whisper speech are synthetic, not human acceptance."
+  ],
+  "phases": [],
+  "server_commands": [
+    [
+      "/opt/argus/llama.cpp/build/bin/llama-server",
+      "--model",
+      "/opt/argus/models/gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf",
+      "--mmproj",
+      "/opt/argus/models/mmproj-gemma4-e2b-vision-f16.gguf",
+      "--device",
+      "CUDA0",
+      "-ngl",
+      "99",
+      "--parallel",
+      "1",
+      "--fit",
+      "off",
+      "--flash-attn",
+      "on",
+      "--reasoning",
+      "off",
+      "--cache-ram",
+      "0",
+      "--ctx-size",
+      "2048",
+      "--jinja",
+      "--image-max-tokens",
+      "560",
+      "-ub",
+      "256",
+      "-b",
+      "256",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "8080"
+    ]
+  ],
+  "backend": "cuda_sad",
+  "calibrated": false,
+  "interrupted": true,
+  "reason": "Demo received double Esc and closed early; agent stopped the run because rendering no longer contributed. No valid 10-minute measurement. Replaced by offscreen run."
+}

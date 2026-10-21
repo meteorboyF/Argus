@@ -23,6 +23,7 @@ are captured grab()-then-retrieve() to minimise the inter-camera time skew.
 from __future__ import annotations
 
 import sys
+from collections import deque
 import threading
 import time
 from dataclasses import dataclass
@@ -306,6 +307,7 @@ class _Reader:
                 f"Failed to open {name} camera (/dev/video{index}). Check connections "
                 "and v4l2-ctl --list-devices; override indices in argus.yaml if needed.")
         self._lock = threading.Lock()
+        self._history = deque(maxlen=3 if name in ("left", "right") else 1)
         self._frame: np.ndarray | None = None
         self._ts = 0.0
         self._seq = 0
@@ -325,6 +327,7 @@ class _Reader:
                 frame = transform_frame(frame, *self._xform)
                 with self._lock:
                     self._frame, self._ts, self._seq = frame, now, self._seq + 1
+                    self._history.append((frame, now, self._seq))
                 rate_n += 1
                 if now - rate_t >= 1.0:
                     self._fps = rate_n / (now - rate_t)
@@ -363,6 +366,10 @@ class _Reader:
     def latest(self) -> tuple[np.ndarray | None, float, int]:
         with self._lock:
             return self._frame, self._ts, self._seq
+
+    def history(self):
+        with self._lock:
+            return list(self._history)
 
     def release(self):
         self._stop.set()
@@ -403,17 +410,20 @@ class CameraRig:
 
     # ------------------------------------------------------------------ stereo
     def get_stereo_pair(self) -> StereoFrame | None:
-        """Newest left/right frames with their real arrival skew.
+        """Newest fresh pair within the skew gate, never reusing either frame.
 
-        Returns None until both cameras have delivered, and None again when
-        neither camera has produced a new frame since the last call, so a
-        stalled pair is never re-evaluated as fresh."""
-        fL, tL, sL = self.left.latest()
-        fR, tR, sR = self.right.latest()
-        if fL is None or fR is None or (sL, sR) == self._last_pair:
+        Three-frame histories avoid discarding a pair simply because one
+        camera has just delivered the next frame before the other. No stale
+        history is allowed to keep the depth watchdog alive.
+        """
+        from .stereo_pairing import select_pair
+        selected = select_pair(self.left.history(), self.right.history(),
+                               self._last_pair, time.perf_counter(), self.cfg.max_skew_ms)
+        if selected is None:
             return None
+        (fL, tL, sL), (fR, tR, sR) = selected
         self._last_pair = (sL, sR)
-        return StereoFrame(left=fL, right=fR, skew_ms=abs(tR - tL) * 1000.0, ts=min(tL, tR))
+        return StereoFrame(left=fL, right=fR, skew_ms=abs(tR-tL)*1000, ts=min(tL, tR))
 
     def capture_still(self, width: int = 4048, height: int = 3040,
                       settle_frames: int = 2) -> np.ndarray | None:

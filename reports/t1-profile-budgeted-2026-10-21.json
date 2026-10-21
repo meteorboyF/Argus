@@ -1,0 +1,565 @@
+{
+  "kind": "argus-fast-loop-profile",
+  "acceptance": false,
+  "config": "/opt/argus/config/argus.yaml",
+  "cv_threads": 1,
+  "cache_prompt": false,
+  "phases": [
+    {
+      "phase": "baseline",
+      "operations": [],
+      "errors": [],
+      "duration_s": 30.06427710800017,
+      "ticks": 301,
+      "valid_depth": 301,
+      "timing": {
+        "tick_ms": {
+          "n": 301,
+          "median": 60.55580100110092,
+          "p95": 84.21152199844073,
+          "max": 97.63043800012383
+        },
+        "interval_ms": {
+          "n": 301,
+          "median": 100.13457299828588,
+          "p95": 100.27600900139078,
+          "max": 101.95154199936951
+        },
+        "capture_wait_ms": {
+          "n": 301,
+          "median": 0.18054499923891854,
+          "p95": 0.26975999935530126,
+          "max": 1.2059550008416409
+        },
+        "depth_ms": {
+          "n": 301,
+          "median": 22.57283099970664,
+          "p95": 32.99755700027163,
+          "max": 42.12527500021679
+        },
+        "hazards_ms": {
+          "n": 301,
+          "median": 0.025023999114637263,
+          "p95": 0.02873599987651687,
+          "max": 0.07760100015730131
+        },
+        "movers_ms": {
+          "n": 301,
+          "median": 22.58712100046978,
+          "p95": 30.80295300060243,
+          "max": 40.855150000425056
+        },
+        "publish_ms": {
+          "n": 301,
+          "median": 16.444334998595878,
+          "p95": 25.013533000674215,
+          "max": 35.11826199974166
+        },
+        "navigation_ms": {
+          "n": 301,
+          "median": 0.011359999916749075,
+          "p95": 0.014400000509340316,
+          "max": 0.01574400084791705
+        },
+        "alarms_health_ms": {
+          "n": 301,
+          "median": 0.018144000932807103,
+          "p95": 0.022144000467960723,
+          "max": 0.08166400039044674
+        },
+        "skew_ms": {
+          "n": 301,
+          "median": 4.390699999930803,
+          "p95": 6.480722999185673,
+          "max": 11.988765998466988
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 301,
+          "median": 0.004703999366029166,
+          "p95": 0.005760000931331888,
+          "max": 0.04588900083035696
+        },
+        "disparity_ms": {
+          "n": 301,
+          "median": 18.012264001299627,
+          "p95": 28.1317669996497,
+          "max": 37.59352199995192
+        }
+      },
+      "depth_gaps": [],
+      "heartbeat_interval_ms": {
+        "n": 299,
+        "median": 100.10685300039768,
+        "p95": 108.93121069875633,
+        "max": 119.51709100139851
+      },
+      "resources": [
+        {
+          "stack_rss_mb": 640.75,
+          "available_mb": 3107.26171875,
+          "swap_used_mb": 2281.8515625,
+          "swap_in": 2756116480,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 69
+        },
+        {
+          "stack_rss_mb": 640.7421875,
+          "available_mb": 3106.5390625,
+          "swap_used_mb": 2281.8515625,
+          "swap_in": 2756116480,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 36
+        },
+        {
+          "stack_rss_mb": 640.73828125,
+          "available_mb": 3106.5390625,
+          "swap_used_mb": 2281.8515625,
+          "swap_in": 2756128768,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 23
+        },
+        {
+          "stack_rss_mb": 640.73046875,
+          "available_mb": 3106.83203125,
+          "swap_used_mb": 2281.8515625,
+          "swap_in": 2756173824,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 86
+        },
+        {
+          "stack_rss_mb": 640.72265625,
+          "available_mb": 3107.0859375,
+          "swap_used_mb": 2281.8515625,
+          "swap_in": 2756182016,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 60
+        },
+        {
+          "stack_rss_mb": 640.7109375,
+          "available_mb": 3107.1171875,
+          "swap_used_mb": 2281.6015625,
+          "swap_in": 2756386816,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 91
+        },
+        {
+          "stack_rss_mb": 640.703125,
+          "available_mb": 3104.23046875,
+          "swap_used_mb": 2281.6015625,
+          "swap_in": 2756390912,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 32
+        },
+        {
+          "stack_rss_mb": 640.6953125,
+          "available_mb": 3103.73828125,
+          "swap_used_mb": 2281.3515625,
+          "swap_in": 2756403200,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 47
+        },
+        {
+          "stack_rss_mb": 640.69140625,
+          "available_mb": 3104.76953125,
+          "swap_used_mb": 2281.3515625,
+          "swap_in": 2756411392,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 34
+        },
+        {
+          "stack_rss_mb": 640.68359375,
+          "available_mb": 3104.27734375,
+          "swap_used_mb": 2281.1015625,
+          "swap_in": 2756435968,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 28
+        },
+        {
+          "stack_rss_mb": 640.9296875,
+          "available_mb": 3104.5546875,
+          "swap_used_mb": 2281.1015625,
+          "swap_in": 2756440064,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 52
+        },
+        {
+          "stack_rss_mb": 640.921875,
+          "available_mb": 3104.80078125,
+          "swap_used_mb": 2281.1015625,
+          "swap_in": 2756440064,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 71
+        },
+        {
+          "stack_rss_mb": 640.91796875,
+          "available_mb": 3104.80078125,
+          "swap_used_mb": 2281.1015625,
+          "swap_in": 2756440064,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 85
+        },
+        {
+          "stack_rss_mb": 641.16796875,
+          "available_mb": 3104.35546875,
+          "swap_used_mb": 2281.1015625,
+          "swap_in": 2756444160,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 82
+        },
+        {
+          "stack_rss_mb": 641.15234375,
+          "available_mb": 3103.125,
+          "swap_used_mb": 2280.8515625,
+          "swap_in": 2756517888,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 39
+        },
+        {
+          "stack_rss_mb": 641.14453125,
+          "available_mb": 3102.17578125,
+          "swap_used_mb": 2280.8515625,
+          "swap_in": 2756534272,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 54
+        },
+        {
+          "stack_rss_mb": 641.12890625,
+          "available_mb": 3102.17578125,
+          "swap_used_mb": 2280.8515625,
+          "swap_in": 2756550656,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 42
+        },
+        {
+          "stack_rss_mb": 641.125,
+          "available_mb": 3099.51171875,
+          "swap_used_mb": 2280.6015625,
+          "swap_in": 2756702208,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 26
+        },
+        {
+          "stack_rss_mb": 641.11328125,
+          "available_mb": 3111.68359375,
+          "swap_used_mb": 2280.6015625,
+          "swap_in": 2756739072,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 71
+        },
+        {
+          "stack_rss_mb": 641.1015625,
+          "available_mb": 3111.1484375,
+          "swap_used_mb": 2280.6015625,
+          "swap_in": 2756739072,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 64
+        },
+        {
+          "stack_rss_mb": 641.09765625,
+          "available_mb": 3110.40234375,
+          "swap_used_mb": 2280.3515625,
+          "swap_in": 2756796416,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 12
+        },
+        {
+          "stack_rss_mb": 641.08984375,
+          "available_mb": 3110.50390625,
+          "swap_used_mb": 2280.3515625,
+          "swap_in": 2756816896,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 30
+        },
+        {
+          "stack_rss_mb": 641.08203125,
+          "available_mb": 3110.53125,
+          "swap_used_mb": 2277.3515625,
+          "swap_in": 2759933952,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 9
+        },
+        {
+          "stack_rss_mb": 641.07421875,
+          "available_mb": 3112.13671875,
+          "swap_used_mb": 2277.3515625,
+          "swap_in": 2760011776,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 43
+        },
+        {
+          "stack_rss_mb": 641.06640625,
+          "available_mb": 3123.65625,
+          "swap_used_mb": 2277.3515625,
+          "swap_in": 2760019968,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 40
+        },
+        {
+          "stack_rss_mb": 641.05859375,
+          "available_mb": 3123.51171875,
+          "swap_used_mb": 2277.3515625,
+          "swap_in": 2760032256,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 81
+        },
+        {
+          "stack_rss_mb": 641.05078125,
+          "available_mb": 3119.22265625,
+          "swap_used_mb": 2277.3515625,
+          "swap_in": 2760056832,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 93
+        },
+        {
+          "stack_rss_mb": 641.04296875,
+          "available_mb": 3118.74609375,
+          "swap_used_mb": 2277.3515625,
+          "swap_in": 2760060928,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 79
+        },
+        {
+          "stack_rss_mb": 641.0234375,
+          "available_mb": 3118.74609375,
+          "swap_used_mb": 2277.3515625,
+          "swap_in": 2760089600,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 71
+        },
+        {
+          "stack_rss_mb": 641.015625,
+          "available_mb": 3118.51171875,
+          "swap_used_mb": 2277.3515625,
+          "swap_in": 2760126464,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 46
+        },
+        {
+          "stack_rss_mb": 641.01171875,
+          "available_mb": 3109.93359375,
+          "swap_used_mb": 2277.1015625,
+          "swap_in": 2760503296,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 70
+        },
+        {
+          "stack_rss_mb": 641.00390625,
+          "available_mb": 3110.1953125,
+          "swap_used_mb": 2277.1015625,
+          "swap_in": 2760531968,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 46
+        },
+        {
+          "stack_rss_mb": 640.99609375,
+          "available_mb": 3113.01953125,
+          "swap_used_mb": 2277.1015625,
+          "swap_in": 2760589312,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 72
+        },
+        {
+          "stack_rss_mb": 640.98828125,
+          "available_mb": 3114.66796875,
+          "swap_used_mb": 2276.6015625,
+          "swap_in": 2761162752,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 79
+        },
+        {
+          "stack_rss_mb": 640.98046875,
+          "available_mb": 3114.3125,
+          "swap_used_mb": 2276.3515625,
+          "swap_in": 2761175040,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 47
+        },
+        {
+          "stack_rss_mb": 641.23046875,
+          "available_mb": 3114.0703125,
+          "swap_used_mb": 2276.3515625,
+          "swap_in": 2761183232,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 58
+        },
+        {
+          "stack_rss_mb": 641.55078125,
+          "available_mb": 3115.56640625,
+          "swap_used_mb": 2276.3515625,
+          "swap_in": 2761183232,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 68
+        },
+        {
+          "stack_rss_mb": 641.54296875,
+          "available_mb": 3115.33203125,
+          "swap_used_mb": 2276.3515625,
+          "swap_in": 2761183232,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 9
+        },
+        {
+          "stack_rss_mb": 641.52734375,
+          "available_mb": 3114.92578125,
+          "swap_used_mb": 2276.3515625,
+          "swap_in": 2761191424,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 41
+        },
+        {
+          "stack_rss_mb": 641.51953125,
+          "available_mb": 3114.43359375,
+          "swap_used_mb": 2276.3515625,
+          "swap_in": 2761281536,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 8
+        },
+        {
+          "stack_rss_mb": 641.50390625,
+          "available_mb": 3111.50390625,
+          "swap_used_mb": 2276.3515625,
+          "swap_in": 2761367552,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 641.4921875,
+          "available_mb": 3111.26171875,
+          "swap_used_mb": 2276.1015625,
+          "swap_in": 2761474048,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 79
+        },
+        {
+          "stack_rss_mb": 641.48828125,
+          "available_mb": 3110.76953125,
+          "swap_used_mb": 2276.1015625,
+          "swap_in": 2761539584,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 51
+        },
+        {
+          "stack_rss_mb": 641.48046875,
+          "available_mb": 3112.5,
+          "swap_used_mb": 2276.1015625,
+          "swap_in": 2761568256,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 91
+        },
+        {
+          "stack_rss_mb": 641.47265625,
+          "available_mb": 3107.76171875,
+          "swap_used_mb": 2275.8515625,
+          "swap_in": 2761969664,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 57
+        },
+        {
+          "stack_rss_mb": 641.4609375,
+          "available_mb": 3103.91796875,
+          "swap_used_mb": 2275.6015625,
+          "swap_in": 2762272768,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 77
+        },
+        {
+          "stack_rss_mb": 641.45703125,
+          "available_mb": 3103.90625,
+          "swap_used_mb": 2275.6015625,
+          "swap_in": 2762285056,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 58
+        },
+        {
+          "stack_rss_mb": 641.453125,
+          "available_mb": 3103.671875,
+          "swap_used_mb": 2275.3515625,
+          "swap_in": 2762309632,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 82
+        },
+        {
+          "stack_rss_mb": 641.4375,
+          "available_mb": 3103.671875,
+          "swap_used_mb": 2275.3515625,
+          "swap_in": 2762309632,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 55
+        },
+        {
+          "stack_rss_mb": 641.4296875,
+          "available_mb": 3102.1953125,
+          "swap_used_mb": 2275.3515625,
+          "swap_in": 2762326016,
+          "swap_out": 7420080128,
+          "threads": 26,
+          "gr3d": 38
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 2931
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 2931
+      }
+    }
+  ],
+  "backend": "cuda_sad",
+  "calibrated": false,
+  "caveats_report": "reports/t1-failures-2026-10-21.json"
+}

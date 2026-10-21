@@ -25,6 +25,7 @@ from .calib_health import CalibState
 from .cameras import CameraRig
 from .config import ArgusConfig
 from .depth import DepthEstimator
+from .depth_freshness import depth_is_current
 from .grounding import Grounder
 from .privacy import PrivacyGate
 from .safety import Level, SafetyReflex
@@ -43,6 +44,8 @@ def _direction_of(col: int, width: int) -> str:
 class Orchestrator:
     def __init__(self, cfg: ArgusConfig, enable_audio: bool = True,
                  enable_mic: bool | None = None):
+        from .cpu_budget import configure_opencv
+        configure_opencv()
         self.cfg = cfg
         self.enable_mic = enable_audio if enable_mic is None else enable_mic
         # Validate required production inference backends before opening cameras
@@ -58,6 +61,8 @@ class Orchestrator:
                 "(see selftest), or set privacy.require_gate: false for bench debugging only.")
 
         self.rig = CameraRig(cfg.camera)
+        from .depth_preview import DepthPreview
+        self._depth_preview = DepthPreview(self.depth, self.rig)
         self.safety = SafetyReflex(cfg.safety)
         self.agent = GemmaAgent(cfg.agent)
         self.seat_cancel = threading.Event()
@@ -76,6 +81,7 @@ class Orchestrator:
         self.enable_audio = enable_audio
 
         self._latest_depth: np.ndarray | None = None
+        self._latest_depth_ts = None
         self._depth_lock = threading.Lock()
         self._stop = threading.Event()
         self._last_danger = 0.0
@@ -128,61 +134,93 @@ class Orchestrator:
     # ------------------------------------------------------------------ fast loop
     def _fast_loop(self):
         period = 1.0 / self.cfg.safety.tick_hz
+        from .timing import TickTiming
+        previous_start = None
         try:
             while not self._stop.is_set():
-                t0 = time.perf_counter()
+                timing = TickTiming(previous_start)
+                t0 = previous_start = timing.start
+                depth_ok = False
                 pair = self.rig.get_stereo_pair()
+                timing.mark("capture_wait")
                 if pair is not None:
                     bus.frame("left", pair.left)
                     bus.frame("right", pair.right)
                     bus.set(skew_ms=pair.skew_ms)
+                    timing.values["capture_age_ms"] = (time.perf_counter()-pair.ts)*1000
                 if pair is not None and self._skew_ok(pair):
                     depth_started = time.perf_counter()
                     depth_m = self.depth.depth_map(pair.left, pair.right)
+                    timing.mark("depth")
+                    depth_ok = depth_is_current(pair.ts)
                     bus.set(depth_ms=(time.perf_counter() - depth_started) * 1000.0)
-                    with self._depth_lock:
-                        self._latest_depth = depth_m
-                    self._fast_ready.set()
-                    self._publish_depth(depth_m)
-                    self._update_slam_and_nav(depth_m, pair.ts)
-                # Uncalibrated disparity cannot support a metric danger decision.
-                # Keep producing diagnostic depth, but never turn it into wearable
-                # hazard speech until physical calibration has been verified.
-                    state = self._evaluate_safety_depth(depth_m)
-                    now = time.perf_counter()
-                    corridor = self._corridor_alerts(depth_m, pair.left)
-                    for alert in self._mover_alerts(depth_m, pair.left):
-                        bus.record("approach_announced", level=alert.level, ttc_s=alert.ttc_s,
-                                   range_m=alert.range_m, closing_mps=alert.closing_mps,
-                                   track=alert.track_id, text=alert.text)
-                        from . import earcons
-                        earcons.play("alert")
-                        self.speaker.speak(alert.text, Priority.DANGER
-                                           if alert.level == "DANGER" else Priority.WARN)
-                    if corridor is not None:
-                        for alert in corridor:
-                            bus.record("hazard_announced", rule=alert.key, level=alert.level,
-                                       distance_m=alert.distance_m, text=alert.text)
-                            # Earcon first: faster to perceive than words.
+                    if not depth_ok:
+                        with self._depth_lock:
+                            self._latest_depth = None
+                            self._latest_depth_ts = None
+                        bus.record("depth_stale", age_ms=(time.perf_counter()-pair.ts)*1000)
+                    else:
+                        with self._depth_lock:
+                            self._latest_depth = depth_m
+                            self._latest_depth_ts = pair.ts
+                        self._fast_ready.set()
+                        self._publish_depth(depth_m)
+                        timing.mark("publish")
+                        self._update_slam_and_nav(depth_m, pair.ts)
+                        timing.mark("navigation")
+                        # Uncalibrated disparity cannot support a metric danger decision.
+                        # Keep producing diagnostic depth, but never turn it into wearable
+                        # hazard speech until physical calibration has been verified.
+                        state = self._evaluate_safety_depth(depth_m)
+                        now = time.perf_counter()
+                        corridor = self._corridor_alerts(depth_m, pair.left)
+                        timing.mark("hazards")
+                        mover_alerts = self._mover_alerts(depth_m, pair.left)
+                        timing.mark("movers")
+                        if not depth_is_current(pair.ts):
+                            # Detection can block on the shared GPU after depth
+                            # returned. Never announce rules from old geometry.
+                            state, corridor, mover_alerts = None, [], []
+                            bus.set(safety_level="UNKNOWN")
+                            bus.record("hazards_stale", age_ms=(time.perf_counter()-pair.ts)*1000)
+                        for alert in mover_alerts:
+                            bus.record("approach_announced", level=alert.level, ttc_s=alert.ttc_s,
+                                       range_m=alert.range_m, closing_mps=alert.closing_mps,
+                                       track=alert.track_id, text=alert.text)
                             from . import earcons
                             earcons.play("alert")
                             self.speaker.speak(alert.text, Priority.DANGER
                                                if alert.level == "DANGER" else Priority.WARN)
-                        # The corridor engine owns static obstacles and drops;
-                        # the legacy reflex only keeps its approach/TTC rule.
-                        if state is not None and state.approach_direction is None:
-                            state = None
-                # DANGER speaks immediately (rate-limited); WARN speaks on a
-                # longer cadence so the user isn't flooded. Both hand off to the
-                # speaker thread and return at once — this loop must never block
-                # on audio, or it stops watching for hazards while it talks.
-                    if state is not None and state.level == Level.DANGER and (now - self._last_danger) > self.cfg.safety.danger_repeat_s:
-                        self.speaker.speak(state.message, Priority.DANGER)
-                        self._last_danger = now
-                    elif state is not None and state.level == Level.WARN and (now - self._last_warn) > self.cfg.safety.warn_repeat_s:
-                        self.speaker.speak(state.message, Priority.WARN)
-                        self._last_warn = now
+                        if corridor is not None:
+                            for alert in corridor:
+                                bus.record("hazard_announced", rule=alert.key, level=alert.level,
+                                           distance_m=alert.distance_m, text=alert.text)
+                                # Earcon first: faster to perceive than words.
+                                from . import earcons
+                                earcons.play("alert")
+                                self.speaker.speak(alert.text, Priority.DANGER
+                                                   if alert.level == "DANGER" else Priority.WARN)
+                            # The corridor engine owns static obstacles and drops;
+                            # the legacy reflex only keeps its approach/TTC rule.
+                            if state is not None and state.approach_direction is None:
+                                state = None
+                        # DANGER speaks immediately (rate-limited); WARN speaks on a
+                        # longer cadence so the user isn't flooded. Both hand off to the
+                        # speaker thread and return at once — this loop must never block
+                        # on audio, or it stops watching for hazards while it talks.
+                        if state is not None and state.level == Level.DANGER and (now - self._last_danger) > self.cfg.safety.danger_repeat_s:
+                            self.speaker.speak(state.message, Priority.DANGER)
+                            self._last_danger = now
+                        elif state is not None and state.level == Level.WARN and (now - self._last_warn) > self.cfg.safety.warn_repeat_s:
+                            self.speaker.speak(state.message, Priority.WARN)
+                            self._last_warn = now
+                if not depth_ok:
+                    bus.set(safety_level="UNKNOWN" if self.depth.calibrated else "UNCALIBRATED")
                 self._check_calibration_health()
+                timing.mark("alarms_health")
+                bus.record("fast_tick", **timing.finish(
+                    depth_ok=depth_ok, skew_ms=None if pair is None else pair.skew_ms,
+                    depth_stages=getattr(self.depth, "last_timing", {}) if depth_ok else {}))
                 dt = time.perf_counter() - t0
                 self._note_tick(dt)
                 time.sleep(max(0.0, period - dt))
@@ -213,27 +251,10 @@ class Orchestrator:
                 self.speaker.speak(phrase, Priority.GUIDANCE)
 
     def _publish_depth(self, depth_m: np.ndarray):
+        """Heartbeat is synchronous; display work consumes only the latest map."""
         self.speaker.arbiter.depth_heartbeat()
-        """Dashboard view of the depth map, sampled at most ~10 Hz."""
-        from .dashboard import depth_to_color, disparity_to_color
-        now = time.perf_counter()
-        if now - getattr(self, "_last_depth_publish", 0.0) < 0.1:
-            return
-        self._last_depth_publish = now
-        small = depth_m[::2, ::2]
-        if self.depth.calibrated:
-            bus.frame("depth_color", depth_to_color(small))
-        else:
-            with np.errstate(divide="ignore", invalid="ignore"):
-                disp = (self.cfg.depth.focal_px * self.cfg.depth.baseline_m) / small
-            disp[~np.isfinite(small)] = 0
-            bus.frame("depth_color", disparity_to_color(disp))
-        bus.set(fps_left=self.rig.left.fps, fps_right=self.rig.right.fps,
-                fps_wide=self.rig.wide.fps,
-                link_left=self.rig.left.link_mbps, link_right=self.rig.right.link_mbps,
-                link_wide=self.rig.wide.link_mbps)
-        wide, _, _ = self.rig.wide.latest()
-        bus.frame("wide", wide)
+        bus.record("depth_ready")
+        self._depth_preview.submit(depth_m)
 
     def _evaluate_safety_depth(self, depth_m: np.ndarray):
         """Only calibrated metric depth may drive wearable hazard speech."""
@@ -374,7 +395,9 @@ class Orchestrator:
 
     def latest_depth(self) -> np.ndarray | None:
         with self._depth_lock:
-            return None if self._latest_depth is None else self._latest_depth.copy()
+            if self._latest_depth is None or not depth_is_current(self._latest_depth_ts):
+                return None
+            return self._latest_depth.copy()
 
     # ------------------------------------------------------------------ slow loop
     @property
@@ -764,6 +787,7 @@ class Orchestrator:
 
     def stop(self):
         self._stop.set()
+        self._depth_preview.stop()
         self.rig.release()
         if (self._fast_thread is not None and self._fast_thread.is_alive()
                 and self._fast_thread is not threading.current_thread()):

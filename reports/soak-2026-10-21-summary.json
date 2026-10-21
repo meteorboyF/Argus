@@ -1,0 +1,103 @@
+{
+  "kind": "argus-t1-soak-summary",
+  "T1_complete": false,
+  "human_acceptance": "not performed; Fardeen unavailable",
+  "backend": "cuda_sad",
+  "calibrated": false,
+  "source": "reports/soak-automated-offscreen-2026-10-21.json",
+  "duration_s": 600.5519101460013,
+  "timing": {
+    "tick_ms": {
+      "n": 5935,
+      "median": 42.80349600048794,
+      "p95": 79.75668129911357,
+      "max": 254.8293529998773
+    },
+    "interval_ms": {
+      "n": 5935,
+      "median": 100.13866599911125,
+      "p95": 105.93949139947654,
+      "max": 427.35779599934176
+    },
+    "capture_wait_ms": {
+      "n": 5935,
+      "median": 0.1335460001428146,
+      "p95": 0.2807033988574404,
+      "max": 23.50948500134109
+    },
+    "depth_ms": {
+      "n": 5934,
+      "median": 14.043637499526085,
+      "p95": 26.49421904943665,
+      "max": 107.04687400175317
+    },
+    "hazards_ms": {
+      "n": 5934,
+      "median": 0.01945799886016175,
+      "p95": 0.04174250088908592,
+      "max": 15.35404800051765
+    },
+    "movers_ms": {
+      "n": 5934,
+      "median": 27.38287899956049,
+      "p95": 58.511237099810366,
+      "max": 228.80950899889285
+    },
+    "publish_ms": {
+      "n": 5934,
+      "median": 0.15303950021916535,
+      "p95": 1.4160801499201594,
+      "max": 32.679912001185585
+    },
+    "navigation_ms": {
+      "n": 5934,
+      "median": 0.007743999958620407,
+      "p95": 0.01920199974847492,
+      "max": 27.791578000687878
+    },
+    "alarms_health_ms": {
+      "n": 5935,
+      "median": 0.013088998457533307,
+      "p95": 0.032546600232308265,
+      "max": 56.82200999945053
+    },
+    "skew_ms": {
+      "n": 5934,
+      "median": 4.475941001146566,
+      "p95": 11.344024000845819,
+      "max": 11.999706999631599
+    }
+  },
+  "outages": [
+    {
+      "start": 9763.180288776,
+      "end": 9763.699093487,
+      "gap_s": 0.5188047109986655,
+      "open": false
+    },
+    {
+      "start": 9829.447496447,
+      "end": 9829.709430875,
+      "gap_s": 0.26193442800104094,
+      "open": false
+    }
+  ],
+  "peak_stack_rss_mib": 4195.796875,
+  "minimum_MemAvailable_mib": 400.5703125,
+  "peak_gr3d_percent": 100,
+  "oc_delta": {
+    "oc1": 0,
+    "oc2": 0,
+    "oc3": 51587
+  },
+  "system_swap_in_mib": 248.5078125,
+  "system_swap_out_mib": 692.6171875,
+  "system_major_fault_delta": 67065,
+  "errors": [],
+  "limitations": [
+    "Synthetic speech and busy synthetic page; offscreen rendering/recording, no physical acceptance.",
+    "System-wide paging includes the development desktop.",
+    "A small synthetic freshness/guide test run overlapped the end of this stress run.",
+    "Additional post-mover source-age guard added during baseline; validate final code with the post-swap run."
+  ]
+}

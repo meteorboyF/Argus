@@ -25,10 +25,12 @@ class PrivacyGate:
     def _init_face(self):
         try:
             from insightface.app import FaceAnalysis
+            from .cpu_budget import ort_options
             self._face = FaceAnalysis(
                 name=self.cfg.face_model,
                 allowed_modules=["detection"],
                 providers=["CPUExecutionProvider"],
+                sess_options=ort_options(),
             )
             self._face.prepare(ctx_id=0, det_size=(self.cfg.det_size, self.cfg.det_size),
                                det_thresh=self.cfg.det_thresh)

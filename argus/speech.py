@@ -96,7 +96,9 @@ class Transcriber:
     def __init__(self, cfg: SpeechConfig):
         self.cfg = cfg
         from faster_whisper import WhisperModel
-        self.model = WhisperModel(cfg.whisper_model, device="cpu", compute_type=cfg.whisper_compute)
+        self.model = WhisperModel(cfg.whisper_model, device="cpu",
+                                  compute_type=cfg.whisper_compute,
+                                  cpu_threads=2, num_workers=1)
 
     def transcribe(self, audio_float32: np.ndarray) -> str:
         segments, _ = self.model.transcribe(audio_float32, language="en")

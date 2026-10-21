@@ -838,3 +838,51 @@ see it properly", instead of failing silently.
 **Lesson / consequence.** For a blind user, "I couldn't read it" is not an
 answer. The useful output of a failed perception is the instruction that
 fixes it.
+
+## 2026-10-21 T1 — resource contention, pairing and stale-depth honesty
+
+**Hurdle / problem.** The lab stack had 0.26–0.73 s heartbeat gaps. Scalar
+stage timing reproduced 138 ms OCR-phase p95 ticks and a 366 ms maximum;
+display publication alone reached 236 ms. Latest-only stereo selection also
+rejected otherwise short ticks. The production llama-server twice aborted on
+compute-buffer allocation (the second failure requested 234 MiB of CUDA
+memory). USB errors produced a separate real capture outage.
+
+**Impact.** Average inference speed concealed lost safety observations. A
+late GPU result could refresh the heartbeat despite old source imagery, and
+seat guidance could retrieve cached depth after capture stopped. A report
+counting only recovered watchdog gaps could miss a terminal outage entirely.
+
+**Options considered.** Separate safety process/priority; bound CPU pools;
+reduce preview/recording cost; bounded stereo pairing; smaller llama batches;
+NVMe swap requested by the user. Keep a process split as the next option if
+these bounded changes fail the acceptance soak.
+
+**Resolution.** Keep scalar timing in `timing.py`; cap OpenCV, ONNX Runtime,
+RapidOCR and Whisper workers; move preview rendering/sysfs off safety through
+a latest-only worker. Retain three stereo frames per reader, select fresh
+arrivals within the existing skew gate and consume both sequences. Reject
+source depth older than 250 ms and expire cached depth. The watchdog threshold,
+calibration gate, privacy gate and geometry rules remain unchanged. Set llama
+batch and microbatch to 256, with environment overrides. Add stationary matrix
+and guided human soak tools; the latter uses Guide speech plus the same words
+in the existing demo window. Keep recordings ignored throughout reports/.
+
+**Lesson / consequence.** Short combined synthetic check: 34.5/56.7 ms median/
+p95 tick, 3856 MiB RSS peak, 292 MiB minimum MemAvailable, GR3D peak 99%, OC3
++1654 (`reports/t1-profile-final-2026-10-21.json`). Separate busy OCR still had
+a >250 ms outage. **T1 is partial**, not dependable-walking acceptance.
+Fardeen is unavailable for the human voice/reading soak. Failed and interrupted
+runs remain evidence with explicit caveats (`reports/t1-failures-2026-10-21.json`).
+NVMe swap must be activated by Fardeen under the prompt's sudo rule; do not
+change fstab before a measured trial. No model/engine artifacts changed.
+
+The subsequent 600.6 s automated pre-swap stress retained llama-server and
+measured 42.8/79.8 ms median/p95 tick, 4196 MiB peak RSS, 401 MiB minimum
+MemAvailable, GR3D peak 100%, OC3 +51587, but two outages of 519/262 ms.
+System-wide paging was 248.5 MiB in / 692.6 MiB out. This fails T1; it is not
+promoted to human acceptance (`reports/soak-2026-10-21-summary.json`). An 8 GiB
+NVMe swap file is prepared/verified at `/opt/argus/swapfile.nvme-8g`, mode 0600,
+fully allocated with a swap header. Fardeen must activate it at priority 0;
+no fstab or swappiness change. Then repeat the same offscreen workload and
+compare tails/paging. See `docs/operations/MEMORY_TRIAL.md`. 314 tests pass.

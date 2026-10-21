@@ -1,0 +1,18 @@
+{
+  "kind": "argus-nvme-swap-preparation",
+  "wall": 1792570169.7237182,
+  "path": "/opt/argus/swapfile.nvme-8g",
+  "size_bytes": 8589934592,
+  "allocated_bytes": 8589938688,
+  "mode": "0o600",
+  "uid": 1000,
+  "gid": 1000,
+  "extents": 82,
+  "all_logical_blocks_allocated": true,
+  "blkid": "/opt/argus/swapfile.nvme-8g: UUID=\"bb6ee86b-f34c-4546-9d39-4c4b7341c424\" VERSION=\"1\" TYPE=\"swap\" USAGE=\"other\"",
+  "active": false,
+  "fstab_changed": false,
+  "activation_command": "sudo chown root:root /opt/argus/swapfile.nvme-8g && sudo swapon --priority 0 /opt/argus/swapfile.nvme-8g",
+  "baseline": "reports/soak-automated-offscreen-2026-10-21.json",
+  "post_activation_comparison": "pending"
+}

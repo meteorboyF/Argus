@@ -1,0 +1,3487 @@
+{
+  "kind": "argus-fast-loop-profile",
+  "acceptance": false,
+  "config": "/opt/argus/config/argus.yaml",
+  "cv_threads": 1,
+  "cache_prompt": false,
+  "phases": [
+    {
+      "phase": "baseline",
+      "operations": [],
+      "errors": [],
+      "duration_s": 20.416867005998938,
+      "ticks": 204,
+      "valid_depth": 204,
+      "timing": {
+        "tick_ms": {
+          "n": 204,
+          "median": 63.254161000259046,
+          "p95": 84.66256900037479,
+          "max": 94.46245999970415
+        },
+        "interval_ms": {
+          "n": 204,
+          "median": 100.13807449922751,
+          "p95": 100.25380854949617,
+          "max": 102.09342900088814
+        },
+        "capture_wait_ms": {
+          "n": 204,
+          "median": 0.18304099921806483,
+          "p95": 0.2447130007567466,
+          "max": 0.425090000135242
+        },
+        "depth_ms": {
+          "n": 204,
+          "median": 22.09576399945945,
+          "p95": 31.524716750118383,
+          "max": 43.75941999933275
+        },
+        "hazards_ms": {
+          "n": 204,
+          "median": 0.025839999580057338,
+          "p95": 0.029580799764516996,
+          "max": 0.1498889996582875
+        },
+        "movers_ms": {
+          "n": 204,
+          "median": 26.241775000016787,
+          "p95": 32.59730484987813,
+          "max": 41.17458899963822
+        },
+        "publish_ms": {
+          "n": 204,
+          "median": 16.70382150041405,
+          "p95": 24.772101998860308,
+          "max": 28.457987000365392
+        },
+        "navigation_ms": {
+          "n": 204,
+          "median": 0.011520000043674372,
+          "p95": 0.014481599373539211,
+          "max": 0.04572899888444226
+        },
+        "alarms_health_ms": {
+          "n": 204,
+          "median": 0.018287999409949407,
+          "p95": 0.02054719916486647,
+          "max": 0.08972899922810029
+        },
+        "skew_ms": {
+          "n": 204,
+          "median": 4.646165000849578,
+          "p95": 11.765440749877598,
+          "max": 11.955351999858976
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 204,
+          "median": 0.004319999789004214,
+          "p95": 0.005398399298428558,
+          "max": 0.024959999791462906
+        },
+        "disparity_ms": {
+          "n": 204,
+          "median": 17.623283499233366,
+          "p95": 26.734983950700553,
+          "max": 38.947748000282445
+        }
+      },
+      "depth_gaps": [],
+      "heartbeat_interval_ms": {
+        "n": 203,
+        "median": 100.15113299959921,
+        "p95": 109.37811719923047,
+        "max": 117.88620500010438
+      },
+      "resources": [
+        {
+          "stack_rss_mb": 3154.8984375,
+          "available_mb": 1786.61328125,
+          "swap_used_mb": 2376.828125,
+          "swap_in": 2797735936,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 0
+        },
+        {
+          "stack_rss_mb": 3154.8984375,
+          "available_mb": 1786.37890625,
+          "swap_used_mb": 2376.578125,
+          "swap_in": 2797797376,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 53
+        },
+        {
+          "stack_rss_mb": 3154.89453125,
+          "available_mb": 1785.90234375,
+          "swap_used_mb": 2376.578125,
+          "swap_in": 2797912064,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 51
+        },
+        {
+          "stack_rss_mb": 3154.89453125,
+          "available_mb": 1785.66796875,
+          "swap_used_mb": 2376.578125,
+          "swap_in": 2797916160,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 54
+        },
+        {
+          "stack_rss_mb": 3154.88671875,
+          "available_mb": 1785.27734375,
+          "swap_used_mb": 2376.578125,
+          "swap_in": 2797961216,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 42
+        },
+        {
+          "stack_rss_mb": 3154.8828125,
+          "available_mb": 1783.0,
+          "swap_used_mb": 2376.578125,
+          "swap_in": 2797965312,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 69
+        },
+        {
+          "stack_rss_mb": 3154.87890625,
+          "available_mb": 1782.19140625,
+          "swap_used_mb": 2375.328125,
+          "swap_in": 2799312896,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 46
+        },
+        {
+          "stack_rss_mb": 3154.87890625,
+          "available_mb": 1781.7890625,
+          "swap_used_mb": 2375.328125,
+          "swap_in": 2799357952,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 3154.87890625,
+          "available_mb": 1781.375,
+          "swap_used_mb": 2375.328125,
+          "swap_in": 2799370240,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 67
+        },
+        {
+          "stack_rss_mb": 3154.87109375,
+          "available_mb": 1779.609375,
+          "swap_used_mb": 2375.328125,
+          "swap_in": 2799427584,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 56
+        },
+        {
+          "stack_rss_mb": 3155.125,
+          "available_mb": 1779.734375,
+          "swap_used_mb": 2375.078125,
+          "swap_in": 2799763456,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 79
+        },
+        {
+          "stack_rss_mb": 3155.125,
+          "available_mb": 1779.83203125,
+          "swap_used_mb": 2375.078125,
+          "swap_in": 2799796224,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 67
+        },
+        {
+          "stack_rss_mb": 3155.125,
+          "available_mb": 1780.8203125,
+          "swap_used_mb": 2375.078125,
+          "swap_in": 2799923200,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 54
+        },
+        {
+          "stack_rss_mb": 3155.46484375,
+          "available_mb": 1781.109375,
+          "swap_used_mb": 2375.078125,
+          "swap_in": 2799955968,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 28
+        },
+        {
+          "stack_rss_mb": 3155.45703125,
+          "available_mb": 1781.109375,
+          "swap_used_mb": 2375.078125,
+          "swap_in": 2799996928,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 28
+        },
+        {
+          "stack_rss_mb": 3155.453125,
+          "available_mb": 1782.55078125,
+          "swap_used_mb": 2375.078125,
+          "swap_in": 2800013312,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 33
+        },
+        {
+          "stack_rss_mb": 3155.44921875,
+          "available_mb": 1782.39453125,
+          "swap_used_mb": 2374.578125,
+          "swap_in": 2800140288,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 91
+        },
+        {
+          "stack_rss_mb": 3155.44921875,
+          "available_mb": 1782.39453125,
+          "swap_used_mb": 2374.578125,
+          "swap_in": 2800156672,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 63
+        },
+        {
+          "stack_rss_mb": 3155.4453125,
+          "available_mb": 1781.92578125,
+          "swap_used_mb": 2374.578125,
+          "swap_in": 2800160768,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 93
+        },
+        {
+          "stack_rss_mb": 3155.44140625,
+          "available_mb": 1779.71484375,
+          "swap_used_mb": 2374.578125,
+          "swap_in": 2800173056,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 86
+        },
+        {
+          "stack_rss_mb": 3155.4375,
+          "available_mb": 1779.9140625,
+          "swap_used_mb": 2374.578125,
+          "swap_in": 2800173056,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 31
+        },
+        {
+          "stack_rss_mb": 3155.4375,
+          "available_mb": 1779.921875,
+          "swap_used_mb": 2374.578125,
+          "swap_in": 2800185344,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 78
+        },
+        {
+          "stack_rss_mb": 3155.43359375,
+          "available_mb": 1780.24609375,
+          "swap_used_mb": 2374.578125,
+          "swap_in": 2800197632,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 34
+        },
+        {
+          "stack_rss_mb": 3155.43359375,
+          "available_mb": 1780.66796875,
+          "swap_used_mb": 2374.578125,
+          "swap_in": 2800230400,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 77
+        },
+        {
+          "stack_rss_mb": 3155.42578125,
+          "available_mb": 1780.19921875,
+          "swap_used_mb": 2374.578125,
+          "swap_in": 2800238592,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 80
+        },
+        {
+          "stack_rss_mb": 3155.42578125,
+          "available_mb": 1777.765625,
+          "swap_used_mb": 2374.578125,
+          "swap_in": 2800263168,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 79
+        },
+        {
+          "stack_rss_mb": 3155.42578125,
+          "available_mb": 1777.53125,
+          "swap_used_mb": 2374.578125,
+          "swap_in": 2800271360,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 60
+        },
+        {
+          "stack_rss_mb": 3155.41796875,
+          "available_mb": 1777.69921875,
+          "swap_used_mb": 2374.578125,
+          "swap_in": 2800283648,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 31
+        },
+        {
+          "stack_rss_mb": 3155.40625,
+          "available_mb": 1777.78515625,
+          "swap_used_mb": 2374.328125,
+          "swap_in": 2800308224,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 11
+        },
+        {
+          "stack_rss_mb": 3155.40234375,
+          "available_mb": 1778.46875,
+          "swap_used_mb": 2374.328125,
+          "swap_in": 2800308224,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 62
+        },
+        {
+          "stack_rss_mb": 3156.94921875,
+          "available_mb": 1777.796875,
+          "swap_used_mb": 2374.328125,
+          "swap_in": 2800316416,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 55
+        },
+        {
+          "stack_rss_mb": 3156.9453125,
+          "available_mb": 1777.796875,
+          "swap_used_mb": 2374.078125,
+          "swap_in": 2800357376,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 73
+        },
+        {
+          "stack_rss_mb": 3156.9375,
+          "available_mb": 1776.07421875,
+          "swap_used_mb": 2374.078125,
+          "swap_in": 2800361472,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 53
+        },
+        {
+          "stack_rss_mb": 3156.93359375,
+          "available_mb": 1776.140625,
+          "swap_used_mb": 2374.078125,
+          "swap_in": 2800361472,
+          "swap_out": 7561576448,
+          "threads": 26,
+          "gr3d": 54
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 2931
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 2931
+      }
+    },
+    {
+      "phase": "gemma",
+      "operations": [
+        {
+          "name": "gemma",
+          "ms": 3462.3640040008468
+        },
+        {
+          "name": "gemma",
+          "ms": 3146.688696999263
+        },
+        {
+          "name": "gemma",
+          "ms": 3162.4792290003825
+        },
+        {
+          "name": "gemma",
+          "ms": 3065.4247679995024
+        },
+        {
+          "name": "gemma",
+          "ms": 2830.79714500127
+        },
+        {
+          "name": "gemma",
+          "ms": 2983.6365159990237
+        },
+        {
+          "name": "gemma",
+          "ms": 3008.529984999768
+        }
+      ],
+      "errors": [],
+      "duration_s": 20.282902323999224,
+      "ticks": 203,
+      "valid_depth": 203,
+      "timing": {
+        "tick_ms": {
+          "n": 203,
+          "median": 45.61275300147827,
+          "p95": 64.1628469007628,
+          "max": 101.1686269994243
+        },
+        "interval_ms": {
+          "n": 203,
+          "median": 100.12918999927933,
+          "p95": 100.28371089847496,
+          "max": 103.34195100040233
+        },
+        "capture_wait_ms": {
+          "n": 203,
+          "median": 0.15350499961641617,
+          "p95": 0.24786429967207366,
+          "max": 1.5485210005863337
+        },
+        "depth_ms": {
+          "n": 203,
+          "median": 15.255823000188684,
+          "p95": 20.55302950084296,
+          "max": 33.46301700003096
+        },
+        "hazards_ms": {
+          "n": 203,
+          "median": 0.020351999410195276,
+          "p95": 0.025728000400704325,
+          "max": 0.06095999924582429
+        },
+        "movers_ms": {
+          "n": 203,
+          "median": 15.953366000758251,
+          "p95": 22.654720799437193,
+          "max": 39.668489998803125
+        },
+        "publish_ms": {
+          "n": 203,
+          "median": 13.887402999898768,
+          "p95": 24.092798299352577,
+          "max": 68.89450600101554
+        },
+        "navigation_ms": {
+          "n": 203,
+          "median": 0.008928000170271844,
+          "p95": 0.01312319927819771,
+          "max": 0.08540899943909608
+        },
+        "alarms_health_ms": {
+          "n": 203,
+          "median": 0.013983999451738782,
+          "p95": 0.01781759874575072,
+          "max": 0.030752000384381972
+        },
+        "skew_ms": {
+          "n": 203,
+          "median": 4.613432000041939,
+          "p95": 11.463791900678187,
+          "max": 11.987904999841703
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 203,
+          "median": 0.003552000634954311,
+          "p95": 0.004768000508192927,
+          "max": 0.007456001185346395
+        },
+        "disparity_ms": {
+          "n": 203,
+          "median": 11.411354000301799,
+          "p95": 15.639410301264432,
+          "max": 23.932089001391432
+        }
+      },
+      "depth_gaps": [],
+      "heartbeat_interval_ms": {
+        "n": 202,
+        "median": 100.33546449994901,
+        "p95": 105.98663645014312,
+        "max": 109.03584600055183
+      },
+      "resources": [
+        {
+          "stack_rss_mb": 3209.3359375,
+          "available_mb": 1768.16015625,
+          "swap_used_mb": 2374.078125,
+          "swap_in": 2800398336,
+          "swap_out": 7561576448,
+          "threads": 27,
+          "gr3d": 45
+        },
+        {
+          "stack_rss_mb": 3310.05859375,
+          "available_mb": 1688.62109375,
+          "swap_used_mb": 2373.078125,
+          "swap_in": 2801672192,
+          "swap_out": 7561576448,
+          "threads": 27,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 3397.35546875,
+          "available_mb": 1416.7734375,
+          "swap_used_mb": 2372.828125,
+          "swap_in": 2801766400,
+          "swap_out": 7561576448,
+          "threads": 27,
+          "gr3d": 55
+        },
+        {
+          "stack_rss_mb": 3407.953125,
+          "available_mb": 1396.78125,
+          "swap_used_mb": 2371.578125,
+          "swap_in": 2803609600,
+          "swap_out": 7561576448,
+          "threads": 27,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 3422.17578125,
+          "available_mb": 1500.57421875,
+          "swap_used_mb": 2375.18359375,
+          "swap_in": 2803777536,
+          "swap_out": 7565946880,
+          "threads": 27,
+          "gr3d": 80
+        },
+        {
+          "stack_rss_mb": 3422.16015625,
+          "available_mb": 1500.4921875,
+          "swap_used_mb": 2375.18359375,
+          "swap_in": 2803793920,
+          "swap_out": 7565946880,
+          "threads": 27,
+          "gr3d": 83
+        },
+        {
+          "stack_rss_mb": 3437.85546875,
+          "available_mb": 1483.77734375,
+          "swap_used_mb": 2375.18359375,
+          "swap_in": 2803855360,
+          "swap_out": 7565946880,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3497.65234375,
+          "available_mb": 1438.23828125,
+          "swap_used_mb": 2375.6875,
+          "swap_in": 2803879936,
+          "swap_out": 7566221312,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3498.16796875,
+          "available_mb": 1363.83984375,
+          "swap_used_mb": 2375.1875,
+          "swap_in": 2804158464,
+          "swap_out": 7566221312,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3523.8515625,
+          "available_mb": 1403.046875,
+          "swap_used_mb": 2375.1875,
+          "swap_in": 2804371456,
+          "swap_out": 7566532608,
+          "threads": 27,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 3524.09765625,
+          "available_mb": 1378.9921875,
+          "swap_used_mb": 2378.90625,
+          "swap_in": 2804473856,
+          "swap_out": 7570460672,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3524.08203125,
+          "available_mb": 1372.94140625,
+          "swap_used_mb": 2378.65625,
+          "swap_in": 2804568064,
+          "swap_out": 7570460672,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3554.8203125,
+          "available_mb": 1359.4296875,
+          "swap_used_mb": 2381.76171875,
+          "swap_in": 2804817920,
+          "swap_out": 7573655552,
+          "threads": 27,
+          "gr3d": 63
+        },
+        {
+          "stack_rss_mb": 3562.55078125,
+          "available_mb": 1349.4375,
+          "swap_used_mb": 2381.51171875,
+          "swap_in": 2805067776,
+          "swap_out": 7573655552,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3562.41015625,
+          "available_mb": 1348.47265625,
+          "swap_used_mb": 2374.51171875,
+          "swap_in": 2812035072,
+          "swap_out": 7573655552,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3553.58203125,
+          "available_mb": 1354.7578125,
+          "swap_used_mb": 2374.51171875,
+          "swap_in": 2812104704,
+          "swap_out": 7573655552,
+          "threads": 27,
+          "gr3d": 82
+        },
+        {
+          "stack_rss_mb": 3553.5703125,
+          "available_mb": 1355.32421875,
+          "swap_used_mb": 2374.51171875,
+          "swap_in": 2812186624,
+          "swap_out": 7573655552,
+          "threads": 27,
+          "gr3d": 95
+        },
+        {
+          "stack_rss_mb": 3567.859375,
+          "available_mb": 1354.46484375,
+          "swap_used_mb": 2374.51171875,
+          "swap_in": 2812231680,
+          "swap_out": 7573655552,
+          "threads": 27,
+          "gr3d": 81
+        },
+        {
+          "stack_rss_mb": 3562.12109375,
+          "available_mb": 1328.96484375,
+          "swap_used_mb": 2374.51171875,
+          "swap_in": 2812350464,
+          "swap_out": 7573655552,
+          "threads": 27,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 3508.16796875,
+          "available_mb": 1321.79296875,
+          "swap_used_mb": 2373.26171875,
+          "swap_in": 2813427712,
+          "swap_out": 7573655552,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3564.34765625,
+          "available_mb": 1293.24609375,
+          "swap_used_mb": 2373.26171875,
+          "swap_in": 2813538304,
+          "swap_out": 7573655552,
+          "threads": 27,
+          "gr3d": 88
+        },
+        {
+          "stack_rss_mb": 3576.15625,
+          "available_mb": 1289.4296875,
+          "swap_used_mb": 2372.76171875,
+          "swap_in": 2813911040,
+          "swap_out": 7573655552,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3576.14453125,
+          "available_mb": 1289.16796875,
+          "swap_used_mb": 2372.26171875,
+          "swap_in": 2814644224,
+          "swap_out": 7573655552,
+          "threads": 27,
+          "gr3d": 86
+        },
+        {
+          "stack_rss_mb": 3599.046875,
+          "available_mb": 1214.4375,
+          "swap_used_mb": 2372.26171875,
+          "swap_in": 2814648320,
+          "swap_out": 7573696512,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3599.0390625,
+          "available_mb": 1307.6328125,
+          "swap_used_mb": 2372.01171875,
+          "swap_in": 2814849024,
+          "swap_out": 7573696512,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3545.0390625,
+          "available_mb": 1305.64453125,
+          "swap_used_mb": 2372.01171875,
+          "swap_in": 2814865408,
+          "swap_out": 7573696512,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3610.24609375,
+          "available_mb": 1306.4765625,
+          "swap_used_mb": 2372.01171875,
+          "swap_in": 2814869504,
+          "swap_out": 7573696512,
+          "threads": 27,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 3610.0234375,
+          "available_mb": 1302.140625,
+          "swap_used_mb": 2372.01171875,
+          "swap_in": 2814894080,
+          "swap_out": 7573696512,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3612.95703125,
+          "available_mb": 1205.4765625,
+          "swap_used_mb": 2372.59375,
+          "swap_in": 2814898176,
+          "swap_out": 7574339584,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3612.94921875,
+          "available_mb": 1303.1796875,
+          "swap_used_mb": 2372.59375,
+          "swap_in": 2814898176,
+          "swap_out": 7574339584,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3559.24609375,
+          "available_mb": 1301.171875,
+          "swap_used_mb": 2372.59375,
+          "swap_in": 2814906368,
+          "swap_out": 7574339584,
+          "threads": 27,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 3613.59375,
+          "available_mb": 1300.6015625,
+          "swap_used_mb": 2372.34375,
+          "swap_in": 2815049728,
+          "swap_out": 7574339584,
+          "threads": 27,
+          "gr3d": 93
+        },
+        {
+          "stack_rss_mb": 3613.58203125,
+          "available_mb": 1299.0078125,
+          "swap_used_mb": 2372.34375,
+          "swap_in": 2815057920,
+          "swap_out": 7574339584,
+          "threads": 27,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3613.6015625,
+          "available_mb": 1298.7890625,
+          "swap_used_mb": 2372.34375,
+          "swap_in": 2815057920,
+          "swap_out": 7574339584,
+          "threads": 27,
+          "gr3d": 98
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 2931
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 3306
+      }
+    },
+    {
+      "phase": "whisper",
+      "operations": [
+        {
+          "name": "whisper",
+          "ms": 1412.133616000574
+        },
+        {
+          "name": "whisper",
+          "ms": 1461.5175079998153
+        },
+        {
+          "name": "whisper",
+          "ms": 1422.4436750009772
+        },
+        {
+          "name": "whisper",
+          "ms": 1261.2740579988895
+        },
+        {
+          "name": "whisper",
+          "ms": 1368.6624639994989
+        },
+        {
+          "name": "whisper",
+          "ms": 1280.18671099926
+        },
+        {
+          "name": "whisper",
+          "ms": 1304.0945479988295
+        },
+        {
+          "name": "whisper",
+          "ms": 1325.0846449991514
+        },
+        {
+          "name": "whisper",
+          "ms": 1352.6409219994093
+        },
+        {
+          "name": "whisper",
+          "ms": 1395.1610479998635
+        },
+        {
+          "name": "whisper",
+          "ms": 1373.747840998476
+        },
+        {
+          "name": "whisper",
+          "ms": 1367.2576160006429
+        },
+        {
+          "name": "whisper",
+          "ms": 1225.183805998313
+        },
+        {
+          "name": "whisper",
+          "ms": 1377.9292969993548
+        },
+        {
+          "name": "whisper",
+          "ms": 1269.9581929991837
+        }
+      ],
+      "errors": [],
+      "duration_s": 20.553459591999854,
+      "ticks": 206,
+      "valid_depth": 206,
+      "timing": {
+        "tick_ms": {
+          "n": 206,
+          "median": 55.0158445003035,
+          "p95": 81.22521975064956,
+          "max": 197.02095600041503
+        },
+        "interval_ms": {
+          "n": 206,
+          "median": 100.13508650081349,
+          "p95": 101.1813657496532,
+          "max": 197.13302000127442
+        },
+        "capture_wait_ms": {
+          "n": 206,
+          "median": 0.16646499989292352,
+          "p95": 0.2638089995343762,
+          "max": 0.5528359997697407
+        },
+        "depth_ms": {
+          "n": 206,
+          "median": 21.682358999896678,
+          "p95": 31.659406501148624,
+          "max": 43.75798600085545
+        },
+        "hazards_ms": {
+          "n": 206,
+          "median": 0.021648000256391242,
+          "p95": 0.02856799983419478,
+          "max": 0.11760000052163377
+        },
+        "movers_ms": {
+          "n": 206,
+          "median": 22.81972750006389,
+          "p95": 33.153267249417695,
+          "max": 160.10426100001496
+        },
+        "publish_ms": {
+          "n": 206,
+          "median": 11.552262000805058,
+          "p95": 24.142295249475865,
+          "max": 32.51153100063675
+        },
+        "navigation_ms": {
+          "n": 206,
+          "median": 0.010752500202215742,
+          "p95": 0.01348000068901456,
+          "max": 0.04825599899049848
+        },
+        "alarms_health_ms": {
+          "n": 206,
+          "median": 0.015887999325059354,
+          "p95": 0.029255998924782034,
+          "max": 0.045728000259259716
+        },
+        "skew_ms": {
+          "n": 206,
+          "median": 4.606732500178623,
+          "p95": 11.617166499036102,
+          "max": 11.998762000075658
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 206,
+          "median": 0.0031364997994387522,
+          "p95": 0.0043599993659881875,
+          "max": 0.01926500044646673
+        },
+        "disparity_ms": {
+          "n": 206,
+          "median": 18.20512150061404,
+          "p95": 27.572858500661823,
+          "max": 40.07111700047972
+        }
+      },
+      "depth_gaps": [],
+      "heartbeat_interval_ms": {
+        "n": 204,
+        "median": 100.52400800032046,
+        "p95": 111.4769151497967,
+        "max": 128.71807500050636
+      },
+      "resources": [
+        {
+          "stack_rss_mb": 3795.2734375,
+          "available_mb": 1014.0703125,
+          "swap_used_mb": 2521.046875,
+          "swap_in": 2819080192,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 70
+        },
+        {
+          "stack_rss_mb": 3937.375,
+          "available_mb": 942.1015625,
+          "swap_used_mb": 2521.046875,
+          "swap_in": 2819133440,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 63
+        },
+        {
+          "stack_rss_mb": 3852.21484375,
+          "available_mb": 922.94921875,
+          "swap_used_mb": 2520.796875,
+          "swap_in": 2819366912,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 21
+        },
+        {
+          "stack_rss_mb": 3907.97265625,
+          "available_mb": 920.3359375,
+          "swap_used_mb": 2520.796875,
+          "swap_in": 2819375104,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 24
+        },
+        {
+          "stack_rss_mb": 3858.33203125,
+          "available_mb": 830.28125,
+          "swap_used_mb": 2520.796875,
+          "swap_in": 2819395584,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 43
+        },
+        {
+          "stack_rss_mb": 3858.63671875,
+          "available_mb": 923.671875,
+          "swap_used_mb": 2520.296875,
+          "swap_in": 2819469312,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 2
+        },
+        {
+          "stack_rss_mb": 3937.1171875,
+          "available_mb": 915.92578125,
+          "swap_used_mb": 2520.296875,
+          "swap_in": 2819510272,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 80
+        },
+        {
+          "stack_rss_mb": 3859.71484375,
+          "available_mb": 920.9765625,
+          "swap_used_mb": 2520.296875,
+          "swap_in": 2819567616,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 51
+        },
+        {
+          "stack_rss_mb": 3875.296875,
+          "available_mb": 822.34375,
+          "swap_used_mb": 2518.796875,
+          "swap_in": 2821373952,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 20
+        },
+        {
+          "stack_rss_mb": 3962.49609375,
+          "available_mb": 890.34375,
+          "swap_used_mb": 2518.546875,
+          "swap_in": 2821419008,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 3877.02734375,
+          "available_mb": 918.17578125,
+          "swap_used_mb": 2518.546875,
+          "swap_in": 2821455872,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 83
+        },
+        {
+          "stack_rss_mb": 3962.7421875,
+          "available_mb": 863.72265625,
+          "swap_used_mb": 2518.546875,
+          "swap_in": 2821484544,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 48
+        },
+        {
+          "stack_rss_mb": 3859.6875,
+          "available_mb": 926.9921875,
+          "swap_used_mb": 2518.046875,
+          "swap_in": 2821591040,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 42
+        },
+        {
+          "stack_rss_mb": 3941.65234375,
+          "available_mb": 898.87109375,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2821636096,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 25
+        },
+        {
+          "stack_rss_mb": 3859.671875,
+          "available_mb": 815.82421875,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2821664768,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 76
+        },
+        {
+          "stack_rss_mb": 3960.609375,
+          "available_mb": 873.66015625,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2821709824,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 91
+        },
+        {
+          "stack_rss_mb": 3877.65234375,
+          "available_mb": 817.19140625,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2821722112,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 55
+        },
+        {
+          "stack_rss_mb": 3860.19140625,
+          "available_mb": 908.6640625,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2821853184,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 40
+        },
+        {
+          "stack_rss_mb": 3872.55078125,
+          "available_mb": 820.68359375,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2821898240,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 58
+        },
+        {
+          "stack_rss_mb": 3860.1796875,
+          "available_mb": 918.609375,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2821906432,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 10
+        },
+        {
+          "stack_rss_mb": 3860.109375,
+          "available_mb": 819.55859375,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2821906432,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 92
+        },
+        {
+          "stack_rss_mb": 3960.38671875,
+          "available_mb": 867.16015625,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822017024,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 64
+        },
+        {
+          "stack_rss_mb": 3860.16796875,
+          "available_mb": 912.71484375,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822086656,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 46
+        },
+        {
+          "stack_rss_mb": 3860.2265625,
+          "available_mb": 849.03125,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822090752,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 57
+        },
+        {
+          "stack_rss_mb": 3860.34765625,
+          "available_mb": 922.14453125,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822090752,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 3962.75390625,
+          "available_mb": 887.7421875,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822103040,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 69
+        },
+        {
+          "stack_rss_mb": 3891.65625,
+          "available_mb": 861.58984375,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822111232,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 84
+        },
+        {
+          "stack_rss_mb": 3860.2734375,
+          "available_mb": 911.78125,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822111232,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 95
+        },
+        {
+          "stack_rss_mb": 3962.1640625,
+          "available_mb": 886.23046875,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822111232,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 69
+        },
+        {
+          "stack_rss_mb": 3860.26171875,
+          "available_mb": 816.22265625,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822115328,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 22
+        },
+        {
+          "stack_rss_mb": 3932.56640625,
+          "available_mb": 900.44921875,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822115328,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 85
+        },
+        {
+          "stack_rss_mb": 3877.578125,
+          "available_mb": 822.27734375,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822123520,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 3860.1171875,
+          "available_mb": 918.2265625,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822123520,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 50
+        },
+        {
+          "stack_rss_mb": 3877.5,
+          "available_mb": 855.84765625,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822123520,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 50
+        },
+        {
+          "stack_rss_mb": 3860.09375,
+          "available_mb": 921.00390625,
+          "swap_used_mb": 2517.796875,
+          "swap_in": 2822131712,
+          "swap_out": 7734878208,
+          "threads": 43,
+          "gr3d": 38
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 3306
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 3306
+      }
+    },
+    {
+      "phase": "faceblur",
+      "operations": [],
+      "errors": [],
+      "duration_s": 20.079150080000545,
+      "ticks": 201,
+      "valid_depth": 66,
+      "timing": {
+        "tick_ms": {
+          "n": 201,
+          "median": 0.14979300067352597,
+          "p95": 81.77979299944127,
+          "max": 202.24369499919703
+        },
+        "interval_ms": {
+          "n": 201,
+          "median": 100.16177499892365,
+          "p95": 100.44687600020552,
+          "max": 202.3086230001354
+        },
+        "capture_wait_ms": {
+          "n": 201,
+          "median": 0.1187210000352934,
+          "p95": 0.21241699869278818,
+          "max": 0.4418580010678852
+        },
+        "depth_ms": {
+          "n": 66,
+          "median": 22.48757100005605,
+          "p95": 32.36660799939273,
+          "max": 73.31659699957527
+        },
+        "hazards_ms": {
+          "n": 66,
+          "median": 0.02118399970640894,
+          "p95": 0.029256000743771438,
+          "max": 0.06873699931020383
+        },
+        "movers_ms": {
+          "n": 66,
+          "median": 23.08677449946117,
+          "p95": 39.44767824941664,
+          "max": 47.292182000092
+        },
+        "publish_ms": {
+          "n": 66,
+          "median": 13.625688499814714,
+          "p95": 36.11494599908838,
+          "max": 89.13855500031787
+        },
+        "navigation_ms": {
+          "n": 66,
+          "median": 0.010768000720418058,
+          "p95": 0.014319999536382966,
+          "max": 0.04275199898984283
+        },
+        "alarms_health_ms": {
+          "n": 201,
+          "median": 0.01564800004416611,
+          "p95": 0.019999999494757503,
+          "max": 0.056831999245332554
+        },
+        "skew_ms": {
+          "n": 66,
+          "median": 4.546733999632124,
+          "p95": 10.96373549898999,
+          "max": 11.968172999331728
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 66,
+          "median": 0.0031520003176410682,
+          "p95": 0.004896000518783694,
+          "max": 0.006016000043018721
+        },
+        "disparity_ms": {
+          "n": 66,
+          "median": 19.704144499883114,
+          "p95": 28.787768999791297,
+          "max": 54.16268199951446
+        }
+      },
+      "depth_gaps": [],
+      "heartbeat_interval_ms": {
+        "n": 64,
+        "median": 100.49898999932338,
+        "p95": 111.22817695104459,
+        "max": 126.51244100015901
+      },
+      "resources": [
+        {
+          "stack_rss_mb": 3732.84375,
+          "available_mb": 982.65234375,
+          "swap_used_mb": 2647.3984375,
+          "swap_in": 2822336512,
+          "swap_out": 7870226432,
+          "threads": 49,
+          "gr3d": 0
+        },
+        {
+          "stack_rss_mb": 3732.84375,
+          "available_mb": 976.6171875,
+          "swap_used_mb": 2647.1484375,
+          "swap_in": 2822389760,
+          "swap_out": 7870226432,
+          "threads": 49,
+          "gr3d": 22
+        },
+        {
+          "stack_rss_mb": 3806.19921875,
+          "available_mb": 903.15625,
+          "swap_used_mb": 2641.1484375,
+          "swap_in": 2828546048,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 42
+        },
+        {
+          "stack_rss_mb": 3836.359375,
+          "available_mb": 836.4609375,
+          "swap_used_mb": 2637.8984375,
+          "swap_in": 2831753216,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 40
+        },
+        {
+          "stack_rss_mb": 3851.82421875,
+          "available_mb": 820.50390625,
+          "swap_used_mb": 2637.8984375,
+          "swap_in": 2831761408,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 54
+        },
+        {
+          "stack_rss_mb": 3851.8203125,
+          "available_mb": 820.5234375,
+          "swap_used_mb": 2637.6484375,
+          "swap_in": 2831773696,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 77
+        },
+        {
+          "stack_rss_mb": 3851.8203125,
+          "available_mb": 820.27734375,
+          "swap_used_mb": 2637.6484375,
+          "swap_in": 2831785984,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 51
+        },
+        {
+          "stack_rss_mb": 3851.8203125,
+          "available_mb": 820.27734375,
+          "swap_used_mb": 2637.6484375,
+          "swap_in": 2831806464,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 30
+        },
+        {
+          "stack_rss_mb": 3851.8203125,
+          "available_mb": 818.06640625,
+          "swap_used_mb": 2637.6484375,
+          "swap_in": 2831814656,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 31
+        },
+        {
+          "stack_rss_mb": 3851.81640625,
+          "available_mb": 814.41015625,
+          "swap_used_mb": 2634.6484375,
+          "swap_in": 2834788352,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 29
+        },
+        {
+          "stack_rss_mb": 3851.81640625,
+          "available_mb": 814.01171875,
+          "swap_used_mb": 2634.6484375,
+          "swap_in": 2834841600,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 29
+        },
+        {
+          "stack_rss_mb": 3851.81640625,
+          "available_mb": 814.015625,
+          "swap_used_mb": 2634.6484375,
+          "swap_in": 2834841600,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 22
+        },
+        {
+          "stack_rss_mb": 3851.81640625,
+          "available_mb": 813.88671875,
+          "swap_used_mb": 2634.6484375,
+          "swap_in": 2834849792,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 0
+        },
+        {
+          "stack_rss_mb": 3851.81640625,
+          "available_mb": 813.88671875,
+          "swap_used_mb": 2634.6484375,
+          "swap_in": 2834853888,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 22
+        },
+        {
+          "stack_rss_mb": 3851.81640625,
+          "available_mb": 813.640625,
+          "swap_used_mb": 2634.3984375,
+          "swap_in": 2835017728,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 18
+        },
+        {
+          "stack_rss_mb": 3851.81640625,
+          "available_mb": 811.20703125,
+          "swap_used_mb": 2634.3984375,
+          "swap_in": 2835017728,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 31
+        },
+        {
+          "stack_rss_mb": 3851.81640625,
+          "available_mb": 808.3359375,
+          "swap_used_mb": 2634.1484375,
+          "swap_in": 2835226624,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 29
+        },
+        {
+          "stack_rss_mb": 3842.234375,
+          "available_mb": 792.5703125,
+          "swap_used_mb": 2633.8984375,
+          "swap_in": 2835419136,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 12
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 844.1796875,
+          "swap_used_mb": 2633.6484375,
+          "swap_in": 2835517440,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 35
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 864.0,
+          "swap_used_mb": 2633.6484375,
+          "swap_in": 2835623936,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 3
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 864.03125,
+          "swap_used_mb": 2633.6484375,
+          "swap_in": 2835628032,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 1
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 868.4140625,
+          "swap_used_mb": 2632.3984375,
+          "swap_in": 2836979712,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 0
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 870.6171875,
+          "swap_used_mb": 2632.3984375,
+          "swap_in": 2836983808,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 28
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 870.37109375,
+          "swap_used_mb": 2632.3984375,
+          "swap_in": 2836983808,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 0
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 870.1875,
+          "swap_used_mb": 2632.3984375,
+          "swap_in": 2836983808,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 0
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 869.95703125,
+          "swap_used_mb": 2632.3984375,
+          "swap_in": 2836992000,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 42
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 869.7109375,
+          "swap_used_mb": 2632.3984375,
+          "swap_in": 2836992000,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 0
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 871.20703125,
+          "swap_used_mb": 2630.3984375,
+          "swap_in": 2838872064,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 28
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 871.20703125,
+          "swap_used_mb": 2630.3984375,
+          "swap_in": 2838884352,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 23
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 871.90234375,
+          "swap_used_mb": 2630.3984375,
+          "swap_in": 2838884352,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 0
+        },
+        {
+          "stack_rss_mb": 3818.30078125,
+          "available_mb": 871.87109375,
+          "swap_used_mb": 2630.3984375,
+          "swap_in": 2838949888,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 22
+        },
+        {
+          "stack_rss_mb": 3819.453125,
+          "available_mb": 872.04296875,
+          "swap_used_mb": 2630.3984375,
+          "swap_in": 2838958080,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 90
+        },
+        {
+          "stack_rss_mb": 3819.453125,
+          "available_mb": 869.16015625,
+          "swap_used_mb": 2630.1484375,
+          "swap_in": 2839011328,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 80
+        },
+        {
+          "stack_rss_mb": 3819.453125,
+          "available_mb": 868.77734375,
+          "swap_used_mb": 2630.1484375,
+          "swap_in": 2839105536,
+          "swap_out": 7870226432,
+          "threads": 50,
+          "gr3d": 11
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 3306
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 3306
+      }
+    },
+    {
+      "phase": "recorder",
+      "operations": [],
+      "errors": [],
+      "duration_s": 20.435920886999156,
+      "ticks": 204,
+      "valid_depth": 137,
+      "timing": {
+        "tick_ms": {
+          "n": 204,
+          "median": 48.61170399999537,
+          "p95": 80.25527155041345,
+          "max": 90.902924999682
+        },
+        "interval_ms": {
+          "n": 204,
+          "median": 100.16036950037233,
+          "p95": 100.46085650074019,
+          "max": 102.41320900058781
+        },
+        "capture_wait_ms": {
+          "n": 204,
+          "median": 0.1624015003471868,
+          "p95": 0.23472040102205938,
+          "max": 0.41718699867487885
+        },
+        "depth_ms": {
+          "n": 137,
+          "median": 22.112479999123025,
+          "p95": 34.11870599993562,
+          "max": 42.24644399982935
+        },
+        "hazards_ms": {
+          "n": 137,
+          "median": 0.02486400080670137,
+          "p95": 0.03006799961440265,
+          "max": 0.6873009988339618
+        },
+        "movers_ms": {
+          "n": 137,
+          "median": 24.775860001682304,
+          "p95": 34.226125799978036,
+          "max": 37.96174300077837
+        },
+        "publish_ms": {
+          "n": 137,
+          "median": 15.414158000567113,
+          "p95": 24.24592239985941,
+          "max": 31.410686000526766
+        },
+        "navigation_ms": {
+          "n": 137,
+          "median": 0.011009000445483252,
+          "p95": 0.014988801558502018,
+          "max": 0.03126400042674504
+        },
+        "alarms_health_ms": {
+          "n": 204,
+          "median": 0.015952498870319687,
+          "p95": 0.020214399046381004,
+          "max": 0.050881000788649544
+        },
+        "skew_ms": {
+          "n": 137,
+          "median": 9.943529001247953,
+          "p95": 11.269049199836445,
+          "max": 11.567346000447287
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 137,
+          "median": 0.00399999953515362,
+          "p95": 0.005286400482873432,
+          "max": 0.022592001187149435
+        },
+        "disparity_ms": {
+          "n": 137,
+          "median": 17.97840399922279,
+          "p95": 29.285217400320104,
+          "max": 37.5312109990773
+        }
+      },
+      "depth_gaps": [
+        {
+          "t": 8673.067017146,
+          "wall": 1792568792.91624,
+          "event": "depth_gap",
+          "gap_s": 20.437
+        }
+      ],
+      "heartbeat_interval_ms": {
+        "n": 136,
+        "median": 100.88806950079743,
+        "p95": 113.06002350056588,
+        "max": 123.52595700031088
+      },
+      "resources": [
+        {
+          "stack_rss_mb": 3819.0234375,
+          "available_mb": 863.59375,
+          "swap_used_mb": 2629.1484375,
+          "swap_in": 2840649728,
+          "swap_out": 7870226432,
+          "threads": 51,
+          "gr3d": 0
+        },
+        {
+          "stack_rss_mb": 3837.54296875,
+          "available_mb": 864.796875,
+          "swap_used_mb": 2627.6484375,
+          "swap_in": 2842263552,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 24
+        },
+        {
+          "stack_rss_mb": 3824.453125,
+          "available_mb": 864.01953125,
+          "swap_used_mb": 2627.6484375,
+          "swap_in": 2842361856,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 54
+        },
+        {
+          "stack_rss_mb": 3824.453125,
+          "available_mb": 862.16015625,
+          "swap_used_mb": 2627.1484375,
+          "swap_in": 2842628096,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 44
+        },
+        {
+          "stack_rss_mb": 3824.453125,
+          "available_mb": 865.953125,
+          "swap_used_mb": 2626.3984375,
+          "swap_in": 2842775552,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 40
+        },
+        {
+          "stack_rss_mb": 3824.453125,
+          "available_mb": 865.69921875,
+          "swap_used_mb": 2626.3984375,
+          "swap_in": 2842775552,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 64
+        },
+        {
+          "stack_rss_mb": 3824.453125,
+          "available_mb": 865.09375,
+          "swap_used_mb": 2626.3984375,
+          "swap_in": 2842779648,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 55
+        },
+        {
+          "stack_rss_mb": 3824.453125,
+          "available_mb": 873.96875,
+          "swap_used_mb": 2625.1484375,
+          "swap_in": 2844438528,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 39
+        },
+        {
+          "stack_rss_mb": 3824.453125,
+          "available_mb": 874.13671875,
+          "swap_used_mb": 2625.1484375,
+          "swap_in": 2844438528,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 14
+        },
+        {
+          "stack_rss_mb": 3824.453125,
+          "available_mb": 869.953125,
+          "swap_used_mb": 2625.1484375,
+          "swap_in": 2844729344,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 2
+        },
+        {
+          "stack_rss_mb": 3824.453125,
+          "available_mb": 869.41796875,
+          "swap_used_mb": 2625.1484375,
+          "swap_in": 2844798976,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 61
+        },
+        {
+          "stack_rss_mb": 3823.61328125,
+          "available_mb": 869.8359375,
+          "swap_used_mb": 2625.1484375,
+          "swap_in": 2844803072,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 55
+        },
+        {
+          "stack_rss_mb": 3826.2578125,
+          "available_mb": 868.125,
+          "swap_used_mb": 2624.8984375,
+          "swap_in": 2844835840,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 56
+        },
+        {
+          "stack_rss_mb": 3826.2578125,
+          "available_mb": 868.20703125,
+          "swap_used_mb": 2624.8984375,
+          "swap_in": 2844844032,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 14
+        },
+        {
+          "stack_rss_mb": 3826.25390625,
+          "available_mb": 898.98046875,
+          "swap_used_mb": 2624.3984375,
+          "swap_in": 2845155328,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 48
+        },
+        {
+          "stack_rss_mb": 3826.25390625,
+          "available_mb": 899.01953125,
+          "swap_used_mb": 2624.1484375,
+          "swap_in": 2845249536,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 63
+        },
+        {
+          "stack_rss_mb": 3826.25,
+          "available_mb": 898.87890625,
+          "swap_used_mb": 2624.1484375,
+          "swap_in": 2845249536,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 7
+        },
+        {
+          "stack_rss_mb": 3826.25,
+          "available_mb": 898.6328125,
+          "swap_used_mb": 2624.1484375,
+          "swap_in": 2845253632,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 94
+        },
+        {
+          "stack_rss_mb": 3826.24609375,
+          "available_mb": 898.390625,
+          "swap_used_mb": 2623.8984375,
+          "swap_in": 2845261824,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 71
+        },
+        {
+          "stack_rss_mb": 3826.24609375,
+          "available_mb": 893.2109375,
+          "swap_used_mb": 2616.1484375,
+          "swap_in": 2853904384,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 89
+        },
+        {
+          "stack_rss_mb": 3826.24609375,
+          "available_mb": 882.2421875,
+          "swap_used_mb": 2614.8984375,
+          "swap_in": 2855092224,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 39
+        },
+        {
+          "stack_rss_mb": 3826.140625,
+          "available_mb": 843.60546875,
+          "swap_used_mb": 2614.8984375,
+          "swap_in": 2855129088,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 0
+        },
+        {
+          "stack_rss_mb": 3826.140625,
+          "available_mb": 813.8671875,
+          "swap_used_mb": 2614.8984375,
+          "swap_in": 2855170048,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 34
+        },
+        {
+          "stack_rss_mb": 3826.13671875,
+          "available_mb": 814.0234375,
+          "swap_used_mb": 2614.3984375,
+          "swap_in": 2855555072,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 48
+        },
+        {
+          "stack_rss_mb": 3826.13671875,
+          "available_mb": 809.50390625,
+          "swap_used_mb": 2614.1484375,
+          "swap_in": 2855759872,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 60
+        },
+        {
+          "stack_rss_mb": 3826.13671875,
+          "available_mb": 800.8125,
+          "swap_used_mb": 2614.1484375,
+          "swap_in": 2856054784,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 74
+        },
+        {
+          "stack_rss_mb": 3826.13671875,
+          "available_mb": 800.875,
+          "swap_used_mb": 2614.1484375,
+          "swap_in": 2856054784,
+          "swap_out": 7870226432,
+          "threads": 45,
+          "gr3d": 92
+        },
+        {
+          "stack_rss_mb": 3825.83203125,
+          "available_mb": 830.78125,
+          "swap_used_mb": 2613.6484375,
+          "swap_in": 2856742912,
+          "swap_out": 7870242816,
+          "threads": 45,
+          "gr3d": 61
+        },
+        {
+          "stack_rss_mb": 3810.19140625,
+          "available_mb": 822.01953125,
+          "swap_used_mb": 2613.1484375,
+          "swap_in": 2856853504,
+          "swap_out": 7870242816,
+          "threads": 45,
+          "gr3d": 67
+        },
+        {
+          "stack_rss_mb": 3756.1484375,
+          "available_mb": 884.0390625,
+          "swap_used_mb": 2612.8984375,
+          "swap_in": 2856980480,
+          "swap_out": 7870242816,
+          "threads": 45,
+          "gr3d": 6
+        },
+        {
+          "stack_rss_mb": 3756.1484375,
+          "available_mb": 882.55078125,
+          "swap_used_mb": 2612.8984375,
+          "swap_in": 2856984576,
+          "swap_out": 7870242816,
+          "threads": 45,
+          "gr3d": 69
+        },
+        {
+          "stack_rss_mb": 3756.14453125,
+          "available_mb": 876.1484375,
+          "swap_used_mb": 2612.8984375,
+          "swap_in": 2856984576,
+          "swap_out": 7870242816,
+          "threads": 45,
+          "gr3d": 62
+        },
+        {
+          "stack_rss_mb": 3756.14453125,
+          "available_mb": 875.90234375,
+          "swap_used_mb": 2612.8984375,
+          "swap_in": 2856984576,
+          "swap_out": 7870242816,
+          "threads": 45,
+          "gr3d": 74
+        },
+        {
+          "stack_rss_mb": 3756.14453125,
+          "available_mb": 875.90234375,
+          "swap_used_mb": 2612.8984375,
+          "swap_in": 2856988672,
+          "swap_out": 7870242816,
+          "threads": 45,
+          "gr3d": 46
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 3306
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 3306
+      }
+    },
+    {
+      "phase": "ocr",
+      "operations": [
+        {
+          "name": "ocr",
+          "ms": 19875.79447799908
+        },
+        {
+          "name": "ocr",
+          "ms": 16545.516133001
+        }
+      ],
+      "errors": [],
+      "duration_s": 20.53742305800006,
+      "ticks": 206,
+      "valid_depth": 206,
+      "timing": {
+        "tick_ms": {
+          "n": 206,
+          "median": 51.83658700025262,
+          "p95": 78.0372587491911,
+          "max": 319.6812130008766
+        },
+        "interval_ms": {
+          "n": 206,
+          "median": 100.13149750011507,
+          "p95": 100.57641524963401,
+          "max": 319.7567019997223
+        },
+        "capture_wait_ms": {
+          "n": 206,
+          "median": 0.16915299966058228,
+          "p95": 0.2894179997383617,
+          "max": 1.2241050008015009
+        },
+        "depth_ms": {
+          "n": 206,
+          "median": 20.01393150021613,
+          "p95": 29.44097924955713,
+          "max": 120.22883700046805
+        },
+        "hazards_ms": {
+          "n": 206,
+          "median": 0.021375999494921416,
+          "p95": 0.027407998913986376,
+          "max": 0.052384000809979625
+        },
+        "movers_ms": {
+          "n": 206,
+          "median": 21.539126499192207,
+          "p95": 30.658518999644002,
+          "max": 41.24107899951923
+        },
+        "publish_ms": {
+          "n": 206,
+          "median": 11.817196499578131,
+          "p95": 25.19891500060112,
+          "max": 178.97843099854072
+        },
+        "navigation_ms": {
+          "n": 206,
+          "median": 0.010816000212798826,
+          "p95": 0.014999999621068127,
+          "max": 0.07587199979752768
+        },
+        "alarms_health_ms": {
+          "n": 206,
+          "median": 0.013327999113244005,
+          "p95": 0.01718400017125532,
+          "max": 0.037216001146589406
+        },
+        "skew_ms": {
+          "n": 206,
+          "median": 9.860189000391983,
+          "p95": 11.258478500622005,
+          "max": 11.867227000038838
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 206,
+          "median": 0.0036319997889222577,
+          "p95": 0.005263998900773004,
+          "max": 0.03900800038536545
+        },
+        "disparity_ms": {
+          "n": 206,
+          "median": 16.117182000925823,
+          "p95": 25.685294750473986,
+          "max": 47.446083999602706
+        }
+      },
+      "depth_gaps": [],
+      "heartbeat_interval_ms": {
+        "n": 204,
+        "median": 100.2657734998138,
+        "p95": 110.73813265038552,
+        "max": 115.89258899948618
+      },
+      "resources": [
+        {
+          "stack_rss_mb": 3763.36328125,
+          "available_mb": 888.12109375,
+          "swap_used_mb": 2612.6484375,
+          "swap_in": 2857218048,
+          "swap_out": 7870242816,
+          "threads": 45,
+          "gr3d": 0
+        },
+        {
+          "stack_rss_mb": 3823.7109375,
+          "available_mb": 730.5625,
+          "swap_used_mb": 2613.86328125,
+          "swap_in": 2857254912,
+          "swap_out": 7871451136,
+          "threads": 45,
+          "gr3d": 36
+        },
+        {
+          "stack_rss_mb": 3861.58203125,
+          "available_mb": 685.1328125,
+          "swap_used_mb": 2614.046875,
+          "swap_in": 2857545728,
+          "swap_out": 7872196608,
+          "threads": 45,
+          "gr3d": 48
+        },
+        {
+          "stack_rss_mb": 3793.7421875,
+          "available_mb": 629.9765625,
+          "swap_used_mb": 2688.3515625,
+          "swap_in": 2857553920,
+          "swap_out": 7950254080,
+          "threads": 45,
+          "gr3d": 82
+        },
+        {
+          "stack_rss_mb": 3751.2890625,
+          "available_mb": 664.5703125,
+          "swap_used_mb": 2687.8515625,
+          "swap_in": 2858147840,
+          "swap_out": 7950254080,
+          "threads": 45,
+          "gr3d": 34
+        },
+        {
+          "stack_rss_mb": 3763.5,
+          "available_mb": 656.15625,
+          "swap_used_mb": 2687.8515625,
+          "swap_in": 2858176512,
+          "swap_out": 7950254080,
+          "threads": 45,
+          "gr3d": 84
+        },
+        {
+          "stack_rss_mb": 3748.30078125,
+          "available_mb": 658.640625,
+          "swap_used_mb": 2687.8515625,
+          "swap_in": 2858266624,
+          "swap_out": 7950254080,
+          "threads": 45,
+          "gr3d": 46
+        },
+        {
+          "stack_rss_mb": 3910.40625,
+          "available_mb": 543.8671875,
+          "swap_used_mb": 2695.5234375,
+          "swap_in": 2858266624,
+          "swap_out": 7958114304,
+          "threads": 45,
+          "gr3d": 23
+        },
+        {
+          "stack_rss_mb": 3854.93359375,
+          "available_mb": 577.75,
+          "swap_used_mb": 2738.796875,
+          "swap_in": 2858291200,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 10
+        },
+        {
+          "stack_rss_mb": 3833.15234375,
+          "available_mb": 591.4296875,
+          "swap_used_mb": 2738.546875,
+          "swap_in": 2858455040,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 26
+        },
+        {
+          "stack_rss_mb": 3901.3828125,
+          "available_mb": 603.41796875,
+          "swap_used_mb": 2738.546875,
+          "swap_in": 2858504192,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 29
+        },
+        {
+          "stack_rss_mb": 3702.2421875,
+          "available_mb": 712.5859375,
+          "swap_used_mb": 2738.546875,
+          "swap_in": 2858590208,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 71
+        },
+        {
+          "stack_rss_mb": 3702.234375,
+          "available_mb": 713.63671875,
+          "swap_used_mb": 2738.296875,
+          "swap_in": 2858602496,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 64
+        },
+        {
+          "stack_rss_mb": 3702.23046875,
+          "available_mb": 717.99609375,
+          "swap_used_mb": 2738.046875,
+          "swap_in": 2858700800,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 21
+        },
+        {
+          "stack_rss_mb": 3746.71484375,
+          "available_mb": 698.71484375,
+          "swap_used_mb": 2738.046875,
+          "swap_in": 2858807296,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 80
+        },
+        {
+          "stack_rss_mb": 3746.7109375,
+          "available_mb": 660.36328125,
+          "swap_used_mb": 2737.796875,
+          "swap_in": 2859130880,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 81
+        },
+        {
+          "stack_rss_mb": 3746.703125,
+          "available_mb": 674.15234375,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2859483136,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 43
+        },
+        {
+          "stack_rss_mb": 3631.4921875,
+          "available_mb": 795.5078125,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2859503616,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 51
+        },
+        {
+          "stack_rss_mb": 3631.48828125,
+          "available_mb": 788.7578125,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2859507712,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 55
+        },
+        {
+          "stack_rss_mb": 3631.48046875,
+          "available_mb": 788.7578125,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2859511808,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 49
+        },
+        {
+          "stack_rss_mb": 3639.30859375,
+          "available_mb": 785.15625,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2859511808,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 48
+        },
+        {
+          "stack_rss_mb": 3729.21875,
+          "available_mb": 729.6484375,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2859638784,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 28
+        },
+        {
+          "stack_rss_mb": 3680.55859375,
+          "available_mb": 726.375,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2859663360,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 44
+        },
+        {
+          "stack_rss_mb": 3680.55078125,
+          "available_mb": 725.6953125,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2859773952,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 77
+        },
+        {
+          "stack_rss_mb": 3729.19921875,
+          "available_mb": 675.63671875,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2859851776,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 50
+        },
+        {
+          "stack_rss_mb": 3729.1953125,
+          "available_mb": 675.62109375,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2859884544,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 1
+        },
+        {
+          "stack_rss_mb": 3729.19140625,
+          "available_mb": 679.61328125,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2860093440,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 53
+        },
+        {
+          "stack_rss_mb": 3729.1875,
+          "available_mb": 679.13671875,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2860097536,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 54
+        },
+        {
+          "stack_rss_mb": 3680.5234375,
+          "available_mb": 728.21875,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2860101632,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 43
+        },
+        {
+          "stack_rss_mb": 3680.515625,
+          "available_mb": 728.21875,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2860105728,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 50
+        },
+        {
+          "stack_rss_mb": 3680.76953125,
+          "available_mb": 732.6953125,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2860118016,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 93
+        },
+        {
+          "stack_rss_mb": 3731.7421875,
+          "available_mb": 690.609375,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2860118016,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 60
+        },
+        {
+          "stack_rss_mb": 3731.734375,
+          "available_mb": 690.609375,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2860130304,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 63
+        },
+        {
+          "stack_rss_mb": 3731.73046875,
+          "available_mb": 693.1796875,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2860146688,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 45
+        },
+        {
+          "stack_rss_mb": 3698.66796875,
+          "available_mb": 743.44140625,
+          "swap_used_mb": 2737.296875,
+          "swap_in": 2860187648,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 37
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 3306
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 3306
+      }
+    },
+    {
+      "phase": "still",
+      "operations": [
+        {
+          "name": "still",
+          "ms": 3303.778109000632
+        },
+        {
+          "name": "still",
+          "ms": 3273.303042999032
+        },
+        {
+          "name": "still",
+          "ms": 3281.542920998618
+        },
+        {
+          "name": "still",
+          "ms": 3315.7860999999684
+        },
+        {
+          "name": "still",
+          "ms": 3296.116493000227
+        },
+        {
+          "name": "still",
+          "ms": 3295.727563998298
+        },
+        {
+          "name": "still",
+          "ms": 1306.3048530002561
+        }
+      ],
+      "errors": [],
+      "duration_s": 20.589380422999966,
+      "ticks": 206,
+      "valid_depth": 206,
+      "timing": {
+        "tick_ms": {
+          "n": 206,
+          "median": 62.14485449982021,
+          "p95": 81.24920699992799,
+          "max": 100.41001500030688
+        },
+        "interval_ms": {
+          "n": 206,
+          "median": 100.13330099991435,
+          "p95": 100.25687899906188,
+          "max": 101.66596900126024
+        },
+        "capture_wait_ms": {
+          "n": 206,
+          "median": 0.17612949977774406,
+          "p95": 0.26368300041212933,
+          "max": 1.448075998268905
+        },
+        "depth_ms": {
+          "n": 206,
+          "median": 23.430088000168325,
+          "p95": 32.81058549964655,
+          "max": 55.088199998863274
+        },
+        "hazards_ms": {
+          "n": 206,
+          "median": 0.02428799962217454,
+          "p95": 0.02756000094450428,
+          "max": 1.2666029997490114
+        },
+        "movers_ms": {
+          "n": 206,
+          "median": 24.162411500583403,
+          "p95": 33.62438475005547,
+          "max": 39.591663000464905
+        },
+        "publish_ms": {
+          "n": 206,
+          "median": 16.542604499591107,
+          "p95": 25.029291750342963,
+          "max": 30.384989000594942
+        },
+        "navigation_ms": {
+          "n": 206,
+          "median": 0.010944000678136945,
+          "p95": 0.014552000266121468,
+          "max": 0.06745700011379085
+        },
+        "alarms_health_ms": {
+          "n": 206,
+          "median": 0.014415999430639204,
+          "p95": 0.017047999790520407,
+          "max": 0.07744100003037602
+        },
+        "skew_ms": {
+          "n": 206,
+          "median": 6.931418000931444,
+          "p95": 10.76732325100238,
+          "max": 11.937541999941459
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 206,
+          "median": 0.0043839991121785715,
+          "p95": 0.005440000222733943,
+          "max": 0.48102800064953044
+        },
+        "disparity_ms": {
+          "n": 206,
+          "median": 19.34121900012542,
+          "p95": 27.86889599974529,
+          "max": 50.57760300041991
+        }
+      },
+      "depth_gaps": [],
+      "heartbeat_interval_ms": {
+        "n": 205,
+        "median": 100.13509999953385,
+        "p95": 107.98430279937747,
+        "max": 117.17269000109809
+      },
+      "resources": [
+        {
+          "stack_rss_mb": 3667.21484375,
+          "available_mb": 821.30859375,
+          "swap_used_mb": 2736.296875,
+          "swap_in": 2860781568,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 53
+        },
+        {
+          "stack_rss_mb": 3667.2109375,
+          "available_mb": 795.2265625,
+          "swap_used_mb": 2736.296875,
+          "swap_in": 2860793856,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 49
+        },
+        {
+          "stack_rss_mb": 3671.16015625,
+          "available_mb": 732.51171875,
+          "swap_used_mb": 2736.046875,
+          "swap_in": 2861174784,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 60
+        },
+        {
+          "stack_rss_mb": 3671.15625,
+          "available_mb": 821.02734375,
+          "swap_used_mb": 2736.046875,
+          "swap_in": 2861400064,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 65
+        },
+        {
+          "stack_rss_mb": 3671.1484375,
+          "available_mb": 820.78515625,
+          "swap_used_mb": 2736.046875,
+          "swap_in": 2861404160,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 21
+        },
+        {
+          "stack_rss_mb": 3671.14453125,
+          "available_mb": 822.49609375,
+          "swap_used_mb": 2736.046875,
+          "swap_in": 2861412352,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 40
+        },
+        {
+          "stack_rss_mb": 3667.1796875,
+          "available_mb": 802.94921875,
+          "swap_used_mb": 2735.796875,
+          "swap_in": 2861547520,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 37
+        },
+        {
+          "stack_rss_mb": 3760.89453125,
+          "available_mb": 729.89453125,
+          "swap_used_mb": 2735.546875,
+          "swap_in": 2861555712,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 56
+        },
+        {
+          "stack_rss_mb": 3671.125,
+          "available_mb": 822.80859375,
+          "swap_used_mb": 2735.546875,
+          "swap_in": 2861563904,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 22
+        },
+        {
+          "stack_rss_mb": 3671.12109375,
+          "available_mb": 821.859375,
+          "swap_used_mb": 2735.546875,
+          "swap_in": 2861563904,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 12
+        },
+        {
+          "stack_rss_mb": 3671.11328125,
+          "available_mb": 821.859375,
+          "swap_used_mb": 2735.546875,
+          "swap_in": 2861563904,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 61
+        },
+        {
+          "stack_rss_mb": 3671.10546875,
+          "available_mb": 821.859375,
+          "swap_used_mb": 2735.546875,
+          "swap_in": 2861568000,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 96
+        },
+        {
+          "stack_rss_mb": 3667.14453125,
+          "available_mb": 805.21484375,
+          "swap_used_mb": 2735.546875,
+          "swap_in": 2861580288,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 88
+        },
+        {
+          "stack_rss_mb": 3761.03515625,
+          "available_mb": 722.60546875,
+          "swap_used_mb": 2735.546875,
+          "swap_in": 2861580288,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 54
+        },
+        {
+          "stack_rss_mb": 3671.09375,
+          "available_mb": 825.75390625,
+          "swap_used_mb": 2735.546875,
+          "swap_in": 2861588480,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 31
+        },
+        {
+          "stack_rss_mb": 3671.08203125,
+          "available_mb": 820.33203125,
+          "swap_used_mb": 2735.546875,
+          "swap_in": 2861658112,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 47
+        },
+        {
+          "stack_rss_mb": 3671.078125,
+          "available_mb": 819.59375,
+          "swap_used_mb": 2735.546875,
+          "swap_in": 2861662208,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 45
+        },
+        {
+          "stack_rss_mb": 3667.1171875,
+          "available_mb": 796.1328125,
+          "swap_used_mb": 2735.546875,
+          "swap_in": 2861670400,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 55
+        },
+        {
+          "stack_rss_mb": 3697.09375,
+          "available_mb": 796.1328125,
+          "swap_used_mb": 2735.546875,
+          "swap_in": 2861674496,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 44
+        },
+        {
+          "stack_rss_mb": 3671.05859375,
+          "available_mb": 794.890625,
+          "swap_used_mb": 2735.296875,
+          "swap_in": 2861715456,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 78
+        },
+        {
+          "stack_rss_mb": 3671.0546875,
+          "available_mb": 822.09375,
+          "swap_used_mb": 2735.296875,
+          "swap_in": 2861731840,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 59
+        },
+        {
+          "stack_rss_mb": 3671.05078125,
+          "available_mb": 819.65625,
+          "swap_used_mb": 2735.046875,
+          "swap_in": 2861772800,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 70
+        },
+        {
+          "stack_rss_mb": 3671.3046875,
+          "available_mb": 818.59765625,
+          "swap_used_mb": 2735.046875,
+          "swap_in": 2861789184,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 50
+        },
+        {
+          "stack_rss_mb": 3667.34375,
+          "available_mb": 801.08203125,
+          "swap_used_mb": 2735.046875,
+          "swap_in": 2861805568,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 40
+        },
+        {
+          "stack_rss_mb": 3761.06640625,
+          "available_mb": 732.3359375,
+          "swap_used_mb": 2735.046875,
+          "swap_in": 2861998080,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 51
+        },
+        {
+          "stack_rss_mb": 3671.30078125,
+          "available_mb": 822.60546875,
+          "swap_used_mb": 2735.046875,
+          "swap_in": 2862034944,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 69
+        },
+        {
+          "stack_rss_mb": 3671.30078125,
+          "available_mb": 821.9921875,
+          "swap_used_mb": 2735.046875,
+          "swap_in": 2862071808,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 95
+        },
+        {
+          "stack_rss_mb": 3671.30078125,
+          "available_mb": 821.94140625,
+          "swap_used_mb": 2735.046875,
+          "swap_in": 2862096384,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 82
+        },
+        {
+          "stack_rss_mb": 3667.33984375,
+          "available_mb": 818.5234375,
+          "swap_used_mb": 2735.046875,
+          "swap_in": 2862149632,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 66
+        },
+        {
+          "stack_rss_mb": 3667.33984375,
+          "available_mb": 801.5546875,
+          "swap_used_mb": 2735.046875,
+          "swap_in": 2862190592,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 88
+        },
+        {
+          "stack_rss_mb": 3702.55078125,
+          "available_mb": 736.01171875,
+          "swap_used_mb": 2735.046875,
+          "swap_in": 2862219264,
+          "swap_out": 8003739648,
+          "threads": 44,
+          "gr3d": 50
+        },
+        {
+          "stack_rss_mb": 3671.296875,
+          "available_mb": 822.0078125,
+          "swap_used_mb": 2734.796875,
+          "swap_in": 2862247936,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 63
+        },
+        {
+          "stack_rss_mb": 3671.29296875,
+          "available_mb": 822.4375,
+          "swap_used_mb": 2734.796875,
+          "swap_in": 2862272512,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 20
+        },
+        {
+          "stack_rss_mb": 3671.29296875,
+          "available_mb": 822.8984375,
+          "swap_used_mb": 2734.796875,
+          "swap_in": 2862297088,
+          "swap_out": 8003739648,
+          "threads": 45,
+          "gr3d": 82
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 3306
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 3306
+      }
+    },
+    {
+      "phase": "combined",
+      "operations": [
+        {
+          "name": "whisper",
+          "ms": 2786.7390440005693
+        },
+        {
+          "name": "whisper",
+          "ms": 2025.8124950014462
+        },
+        {
+          "name": "gemma",
+          "ms": 4948.735080000915
+        },
+        {
+          "name": "whisper",
+          "ms": 1929.5422169998346
+        },
+        {
+          "name": "gemma",
+          "ms": 3599.98932200142
+        },
+        {
+          "name": "whisper",
+          "ms": 2514.6290809989296
+        },
+        {
+          "name": "whisper",
+          "ms": 1942.6387009989412
+        },
+        {
+          "name": "gemma",
+          "ms": 3673.2827550004004
+        },
+        {
+          "name": "whisper",
+          "ms": 1605.106696999428
+        },
+        {
+          "name": "whisper",
+          "ms": 1580.9619529991323
+        },
+        {
+          "name": "gemma",
+          "ms": 3362.665280001238
+        },
+        {
+          "name": "whisper",
+          "ms": 1755.8143839996774
+        },
+        {
+          "name": "whisper",
+          "ms": 1989.0606469998602
+        },
+        {
+          "name": "whisper",
+          "ms": 2235.0376459999097
+        },
+        {
+          "name": "whisper",
+          "ms": 3106.0729429991625
+        },
+        {
+          "name": "ocr",
+          "ms": 24029.399560000456
+        }
+      ],
+      "errors": [
+        {
+          "name": "gemma",
+          "error": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+        }
+      ],
+      "duration_s": 20.56479907799985,
+      "ticks": 201,
+      "valid_depth": 201,
+      "timing": {
+        "tick_ms": {
+          "n": 201,
+          "median": 50.75156199927733,
+          "p95": 105.29063600006339,
+          "max": 216.32993899947905
+        },
+        "interval_ms": {
+          "n": 201,
+          "median": 100.14877400135447,
+          "p95": 109.8500670013891,
+          "max": 359.22861699873465
+        },
+        "capture_wait_ms": {
+          "n": 201,
+          "median": 0.13971299995318986,
+          "p95": 0.3826279989880277,
+          "max": 8.756622000873904
+        },
+        "depth_ms": {
+          "n": 201,
+          "median": 15.628622999429354,
+          "p95": 34.678936999625876,
+          "max": 100.05755699967267
+        },
+        "hazards_ms": {
+          "n": 201,
+          "median": 0.017984000805881806,
+          "p95": 0.037056999644846655,
+          "max": 1.017321001199889
+        },
+        "movers_ms": {
+          "n": 201,
+          "median": 20.918238999001915,
+          "p95": 42.348258999481914,
+          "max": 85.5648859997018
+        },
+        "publish_ms": {
+          "n": 201,
+          "median": 14.266240999859292,
+          "p95": 43.76938299901667,
+          "max": 141.04590299939446
+        },
+        "navigation_ms": {
+          "n": 201,
+          "median": 0.009375999070471153,
+          "p95": 0.016383999536628835,
+          "max": 0.38928300091356505
+        },
+        "alarms_health_ms": {
+          "n": 201,
+          "median": 0.010816000212798826,
+          "p95": 0.031071998819243163,
+          "max": 0.1000969987217104
+        },
+        "skew_ms": {
+          "n": 201,
+          "median": 7.122816999981296,
+          "p95": 10.911104998740484,
+          "max": 11.977963000390446
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 201,
+          "median": 0.0028799986466765404,
+          "p95": 0.004160998287261464,
+          "max": 0.07628799903613981
+        },
+        "disparity_ms": {
+          "n": 201,
+          "median": 12.099950999981957,
+          "p95": 27.790590000222437,
+          "max": 94.52150799916126
+        }
+      },
+      "depth_gaps": [
+        {
+          "t": 8756.712772063,
+          "wall": 1792568876.5619946,
+          "event": "depth_gap",
+          "gap_s": 0.26
+        }
+      ],
+      "heartbeat_interval_ms": {
+        "n": 200,
+        "median": 100.58357599973533,
+        "p95": 121.14119084899352,
+        "max": 230.2972329998738
+      },
+      "resources": [
+        {
+          "stack_rss_mb": 3892.375,
+          "available_mb": 562.34375,
+          "swap_used_mb": 3006.453125,
+          "swap_in": 2899709952,
+          "swap_out": 8330346496,
+          "threads": 55,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 4051.0625,
+          "available_mb": 323.8046875,
+          "swap_used_mb": 3025.1796875,
+          "swap_in": 2915033088,
+          "swap_out": 8364867584,
+          "threads": 55,
+          "gr3d": 35
+        },
+        {
+          "stack_rss_mb": 3992.00390625,
+          "available_mb": 546.1875,
+          "swap_used_mb": 3130.4609375,
+          "swap_in": 2924642304,
+          "swap_out": 8485302272,
+          "threads": 55,
+          "gr3d": 95
+        },
+        {
+          "stack_rss_mb": 3886.37890625,
+          "available_mb": 537.26953125,
+          "swap_used_mb": 3130.4609375,
+          "swap_in": 2924666880,
+          "swap_out": 8485302272,
+          "threads": 55,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 4130.015625,
+          "available_mb": 493.14453125,
+          "swap_used_mb": 3131.49609375,
+          "swap_in": 2929610752,
+          "swap_out": 8491565056,
+          "threads": 55,
+          "gr3d": 43
+        },
+        {
+          "stack_rss_mb": 4107.046875,
+          "available_mb": 351.99609375,
+          "swap_used_mb": 3159.4375,
+          "swap_in": 2945011712,
+          "swap_out": 8536739840,
+          "threads": 55,
+          "gr3d": 60
+        },
+        {
+          "stack_rss_mb": 3902.8203125,
+          "available_mb": 294.81640625,
+          "swap_used_mb": 3199.30859375,
+          "swap_in": 2945417216,
+          "swap_out": 8579063808,
+          "threads": 55,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 4085.47265625,
+          "available_mb": 374.125,
+          "swap_used_mb": 3223.51953125,
+          "swap_in": 2947915776,
+          "swap_out": 8606744576,
+          "threads": 55,
+          "gr3d": 20
+        },
+        {
+          "stack_rss_mb": 4014.53515625,
+          "available_mb": 365.90234375,
+          "swap_used_mb": 3221.76953125,
+          "swap_in": 2949406720,
+          "swap_out": 8606744576,
+          "threads": 55,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3896.76953125,
+          "available_mb": 262.91015625,
+          "swap_used_mb": 3301.16015625,
+          "swap_in": 2954682368,
+          "swap_out": 8694521856,
+          "threads": 55,
+          "gr3d": 87
+        },
+        {
+          "stack_rss_mb": 3744.73828125,
+          "available_mb": 458.45703125,
+          "swap_used_mb": 3251.4140625,
+          "swap_in": 3007660032,
+          "swap_out": 8695255040,
+          "threads": 55,
+          "gr3d": 19
+        },
+        {
+          "stack_rss_mb": 3879.5859375,
+          "available_mb": 347.5546875,
+          "swap_used_mb": 3251.1640625,
+          "swap_in": 3008143360,
+          "swap_out": 8695255040,
+          "threads": 55,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3887.3359375,
+          "available_mb": 462.640625,
+          "swap_used_mb": 3246.4140625,
+          "swap_in": 3013177344,
+          "swap_out": 8695255040,
+          "threads": 55,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3777.9453125,
+          "available_mb": 439.3125,
+          "swap_used_mb": 3245.6640625,
+          "swap_in": 3013754880,
+          "swap_out": 8695255040,
+          "threads": 55,
+          "gr3d": 71
+        },
+        {
+          "stack_rss_mb": 3790.6875,
+          "available_mb": 345.2578125,
+          "swap_used_mb": 3245.1640625,
+          "swap_in": 3014029312,
+          "swap_out": 8695255040,
+          "threads": 55,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 3864.88671875,
+          "available_mb": 438.9140625,
+          "swap_used_mb": 3244.4140625,
+          "swap_in": 3015065600,
+          "swap_out": 8695255040,
+          "threads": 55,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3809.45703125,
+          "available_mb": 420.875,
+          "swap_used_mb": 3222.9140625,
+          "swap_in": 3037229056,
+          "swap_out": 8695255040,
+          "threads": 55,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3905.93359375,
+          "available_mb": 398.87109375,
+          "swap_used_mb": 3222.9140625,
+          "swap_in": 3037270016,
+          "swap_out": 8695255040,
+          "threads": 55,
+          "gr3d": 98
+        },
+        {
+          "stack_rss_mb": 3749.06640625,
+          "available_mb": 306.75390625,
+          "swap_used_mb": 3222.9140625,
+          "swap_in": 3037331456,
+          "swap_out": 8695255040,
+          "threads": 55,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3827.73828125,
+          "available_mb": 333.48828125,
+          "swap_used_mb": 3221.6640625,
+          "swap_in": 3038601216,
+          "swap_out": 8695255040,
+          "threads": 55,
+          "gr3d": 95
+        },
+        {
+          "stack_rss_mb": 3865.48828125,
+          "available_mb": 326.359375,
+          "swap_used_mb": 3221.1640625,
+          "swap_in": 3039297536,
+          "swap_out": 8695255040,
+          "threads": 55,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3827.84375,
+          "available_mb": 267.71875,
+          "swap_used_mb": 3211.91015625,
+          "swap_in": 3062345728,
+          "swap_out": 8708218880,
+          "threads": 55,
+          "gr3d": 44
+        },
+        {
+          "stack_rss_mb": 3862.12109375,
+          "available_mb": 359.69921875,
+          "swap_used_mb": 3211.41015625,
+          "swap_in": 3062611968,
+          "swap_out": 8708218880,
+          "threads": 55,
+          "gr3d": 99
+        },
+        {
+          "stack_rss_mb": 3650.24609375,
+          "available_mb": 434.546875,
+          "swap_used_mb": 3217.33984375,
+          "swap_in": 3063463936,
+          "swap_out": 8715239424,
+          "threads": 55,
+          "gr3d": 25
+        },
+        {
+          "stack_rss_mb": 3545.1953125,
+          "available_mb": 584.16796875,
+          "swap_used_mb": 3215.58984375,
+          "swap_in": 3064872960,
+          "swap_out": 8715239424,
+          "threads": 55,
+          "gr3d": 33
+        },
+        {
+          "stack_rss_mb": 3520.9375,
+          "available_mb": 579.1796875,
+          "swap_used_mb": 3215.58984375,
+          "swap_in": 3064913920,
+          "swap_out": 8715239424,
+          "threads": 55,
+          "gr3d": 47
+        },
+        {
+          "stack_rss_mb": 3547.37890625,
+          "available_mb": 495.61328125,
+          "swap_used_mb": 3201.58984375,
+          "swap_in": 3079569408,
+          "swap_out": 8715239424,
+          "threads": 55,
+          "gr3d": 20
+        },
+        {
+          "stack_rss_mb": 3538.18359375,
+          "available_mb": 421.125,
+          "swap_used_mb": 3137.4453125,
+          "swap_in": 3163320320,
+          "swap_out": 8724987904,
+          "threads": 55,
+          "gr3d": 84
+        },
+        {
+          "stack_rss_mb": 3495.9453125,
+          "available_mb": 533.4609375,
+          "swap_used_mb": 3122.1953125,
+          "swap_in": 3179778048,
+          "swap_out": 8724987904,
+          "threads": 55,
+          "gr3d": 67
+        },
+        {
+          "stack_rss_mb": 3539.8671875,
+          "available_mb": 448.11328125,
+          "swap_used_mb": 3116.1953125,
+          "swap_in": 3186413568,
+          "swap_out": 8724987904,
+          "threads": 55,
+          "gr3d": 34
+        },
+        {
+          "stack_rss_mb": 3530.34375,
+          "available_mb": 434.6875,
+          "swap_used_mb": 3107.4453125,
+          "swap_in": 3195199488,
+          "swap_out": 8724987904,
+          "threads": 55,
+          "gr3d": 92
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 3353
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4027
+      }
+    }
+  ],
+  "backend": "cuda_sad",
+  "calibrated": false,
+  "caveats_report": "reports/t1-failures-2026-10-21.json"
+}

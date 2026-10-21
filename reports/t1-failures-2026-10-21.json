@@ -1,0 +1,30 @@
+{
+  "kind": "argus-t1-failure-evidence",
+  "date": "2026-10-21",
+  "backend": "cuda_sad + YOLO11n TensorRT + Gemma4 E2B QAT CUDA projector/decoder",
+  "events": [
+    {
+      "source": "/tmp/llama_prod.log",
+      "run": "t1-profile-default-2026-10-21.json",
+      "error": "failed to allocate compute pp buffers"
+    },
+    {
+      "source": "/tmp/argus-t1-llama.log",
+      "run": "t1-profile-budgeted-live-2026-10-21.json",
+      "allocation_mib": 234.04,
+      "error": "cudaMalloc failed: out of memory; failed to allocate compute pp buffers"
+    },
+    {
+      "source": "journalctl -k",
+      "event": "USB -71 on 2-1.1, 2-1.2, 2-1.4; OpenCV video2 select timeout; left reader reopened",
+      "run": "t1-profile-budgeted-live-2026-10-21.json"
+    }
+  ],
+  "limitations": [
+    "Default Gemma phase used production prompt caching; do not compare its request speed. Later runs set cache_prompt=false.",
+    "budgeted.json is an interrupted baseline with llama-server absent: not full-stack evidence.",
+    "budgeted-live faceblur has 66/201 fresh ticks and recorder 137/204; completed interval percentiles omit the ongoing outage at a boundary. These phases FAILED; zero completed depth_gap events does not mean zero outages.",
+    "No kernel OOM kill found during the profiles; server logs directly show CUDA allocator failures.",
+    "No calibrated geometry, human voice workload, reading CER, or walking acceptance in these stationary profiles."
+  ]
+}

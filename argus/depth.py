@@ -183,6 +183,9 @@ class DepthEstimator:
     def disparity(self, left_bgr: np.ndarray, right_bgr: np.ndarray) -> np.ndarray:
         """Disparity in FULL-resolution pixel units (so Q stays valid), even when
         SGBM matching runs on downscaled images for fast-loop speed."""
+        from .timing import TickTiming
+        timing = TickTiming()
+        self.last_timing = {}
         if self._calib is not None:
             left_bgr, right_bgr = self._rectify_pair(left_bgr, right_bgr)
             self.last_rectified = (left_bgr, right_bgr)
@@ -191,12 +194,15 @@ class DepthEstimator:
             # when calibrated — without a calibration there is no rectification
             # to have drifted.
             self.health.submit(left_bgr, right_bgr)
-        if self.backend == "raft_trt" and self._trt is not None:
-            return self._raft_disparity(left_bgr, right_bgr)
-        if self.backend == "cuda_sad" and self._cuda_matcher is not None:
-            return self._cuda_disparity(left_bgr, right_bgr)
-        if self.backend == "vpi_sgm":
-            return self._vpi_disparity(left_bgr, right_bgr)
+        timing.mark("rectify")
+        if self.backend in ("raft_trt", "cuda_sad", "vpi_sgm"):
+            compute = {"raft_trt": self._raft_disparity,
+                       "cuda_sad": self._cuda_disparity,
+                       "vpi_sgm": self._vpi_disparity}[self.backend]
+            result = compute(left_bgr, right_bgr)
+            timing.mark("disparity")
+            self.last_timing = dict(timing.values)
+            return result
         gl = cv2.cvtColor(left_bgr, cv2.COLOR_BGR2GRAY)
         gr = cv2.cvtColor(right_bgr, cv2.COLOR_BGR2GRAY)
         s = max(1, int(self.cfg.fast_downscale))

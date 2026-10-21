@@ -1,0 +1,6837 @@
+{
+  "kind": "argus-fast-loop-profile",
+  "acceptance": false,
+  "config": "/opt/argus/config/argus.yaml",
+  "cv_threads": 1,
+  "cache_prompt": false,
+  "notes": [
+    "Stationary, uncalibrated rig; geometry rules requiring calibration are inactive.",
+    "Phases toggle active work; previously loaded model memory remains resident.",
+    "OCR busy page and Whisper speech are synthetic, not human acceptance."
+  ],
+  "phases": [
+    {
+      "phase": "baseline",
+      "operations": [],
+      "errors": [],
+      "duration_s": 30.335511276000034,
+      "ticks": 303,
+      "valid_depth": 303,
+      "timing": {
+        "tick_ms": {
+          "n": 303,
+          "median": 52.35294800149859,
+          "p95": 63.59307350012386,
+          "max": 85.20624300035706
+        },
+        "interval_ms": {
+          "n": 303,
+          "median": 100.13988700120535,
+          "p95": 100.38035880061216,
+          "max": 116.04579300001205
+        },
+        "capture_wait_ms": {
+          "n": 303,
+          "median": 0.18243399972561747,
+          "p95": 0.32751670041761777,
+          "max": 12.816753000151948
+        },
+        "depth_ms": {
+          "n": 303,
+          "median": 23.002636999081005,
+          "p95": 31.722200400326983,
+          "max": 47.433147999981884
+        },
+        "hazards_ms": {
+          "n": 303,
+          "median": 0.02377599957981147,
+          "p95": 0.028800000654882744,
+          "max": 0.18864199955714867
+        },
+        "movers_ms": {
+          "n": 303,
+          "median": 27.616637999017257,
+          "p95": 37.074044799555836,
+          "max": 59.39378200127976
+        },
+        "publish_ms": {
+          "n": 303,
+          "median": 0.16163400141522288,
+          "p95": 0.24384929929510665,
+          "max": 2.1342959989851806
+        },
+        "navigation_ms": {
+          "n": 303,
+          "median": 0.009408000551047735,
+          "p95": 0.011549700138857588,
+          "max": 2.2088900004746392
+        },
+        "alarms_health_ms": {
+          "n": 303,
+          "median": 0.015904000974842347,
+          "p95": 0.0185087987119914,
+          "max": 0.05875300121260807
+        },
+        "skew_ms": {
+          "n": 303,
+          "median": 0.5539909998333314,
+          "p95": 2.4187276996599367,
+          "max": 11.803205999967759
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 303,
+          "median": 0.004287998308427632,
+          "p95": 0.005568899905483704,
+          "max": 0.04124899896851275
+        },
+        "disparity_ms": {
+          "n": 303,
+          "median": 19.07490899975528,
+          "p95": 27.42232460041123,
+          "max": 39.97875899949577
+        }
+      },
+      "depth_gaps": [],
+      "outages": [],
+      "heartbeat_interval_ms": {
+        "n": 302,
+        "median": 100.13270049967105,
+        "p95": 110.8404888496807,
+        "max": 129.71029999971506
+      },
+      "resources": [
+        {
+          "vmstat": {
+            "pswpin": 897237,
+            "pswpout": 2139375,
+            "pgmajfault": 1069459
+          },
+          "stack_rss_mb": 3083.7578125,
+          "available_mb": 1858.26171875,
+          "swap_used_mb": 2275.03125,
+          "swap_in": 3675082752,
+          "swap_out": 8762880000,
+          "threads": 27,
+          "gr3d": 23
+        },
+        {
+          "vmstat": {
+            "pswpin": 897237,
+            "pswpout": 2139375,
+            "pgmajfault": 1069463
+          },
+          "stack_rss_mb": 3083.75390625,
+          "available_mb": 1857.63671875,
+          "swap_used_mb": 2275.03125,
+          "swap_in": 3675082752,
+          "swap_out": 8762880000,
+          "threads": 27,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 897237,
+            "pswpout": 2139375,
+            "pgmajfault": 1069463
+          },
+          "stack_rss_mb": 3083.75390625,
+          "available_mb": 1854.515625,
+          "swap_used_mb": 2275.03125,
+          "swap_in": 3675082752,
+          "swap_out": 8762880000,
+          "threads": 27,
+          "gr3d": 76
+        },
+        {
+          "vmstat": {
+            "pswpin": 897242,
+            "pswpout": 2139375,
+            "pgmajfault": 1069471
+          },
+          "stack_rss_mb": 3083.75390625,
+          "available_mb": 1854.5,
+          "swap_used_mb": 2275.03125,
+          "swap_in": 3675103232,
+          "swap_out": 8762880000,
+          "threads": 27,
+          "gr3d": 65
+        },
+        {
+          "vmstat": {
+            "pswpin": 912489,
+            "pswpout": 2139375,
+            "pgmajfault": 1084701
+          },
+          "stack_rss_mb": 3083.74609375,
+          "available_mb": 1825.70703125,
+          "swap_used_mb": 2216.78125,
+          "swap_in": 3737554944,
+          "swap_out": 8762880000,
+          "threads": 27,
+          "gr3d": 87
+        },
+        {
+          "vmstat": {
+            "pswpin": 912502,
+            "pswpout": 2139375,
+            "pgmajfault": 1084714
+          },
+          "stack_rss_mb": 3083.7421875,
+          "available_mb": 1825.24609375,
+          "swap_used_mb": 2216.78125,
+          "swap_in": 3737608192,
+          "swap_out": 8762880000,
+          "threads": 27,
+          "gr3d": 75
+        },
+        {
+          "vmstat": {
+            "pswpin": 913103,
+            "pswpout": 2139375,
+            "pgmajfault": 1085321
+          },
+          "stack_rss_mb": 3083.73828125,
+          "available_mb": 1884.30859375,
+          "swap_used_mb": 2214.53125,
+          "swap_in": 3740069888,
+          "swap_out": 8762880000,
+          "threads": 27,
+          "gr3d": 57
+        },
+        {
+          "vmstat": {
+            "pswpin": 913107,
+            "pswpout": 2139375,
+            "pgmajfault": 1085323
+          },
+          "stack_rss_mb": 3083.73828125,
+          "available_mb": 1886.08984375,
+          "swap_used_mb": 2214.53125,
+          "swap_in": 3740086272,
+          "swap_out": 8762880000,
+          "threads": 27,
+          "gr3d": 95
+        },
+        {
+          "vmstat": {
+            "pswpin": 913112,
+            "pswpout": 2139375,
+            "pgmajfault": 1085350
+          },
+          "stack_rss_mb": 3083.734375,
+          "available_mb": 1885.4765625,
+          "swap_used_mb": 2214.53125,
+          "swap_in": 3740106752,
+          "swap_out": 8762880000,
+          "threads": 27,
+          "gr3d": 76
+        },
+        {
+          "vmstat": {
+            "pswpin": 913139,
+            "pswpout": 2139375,
+            "pgmajfault": 1085414
+          },
+          "stack_rss_mb": 3083.73046875,
+          "available_mb": 1887.04296875,
+          "swap_used_mb": 2214.28125,
+          "swap_in": 3740217344,
+          "swap_out": 8762880000,
+          "threads": 27,
+          "gr3d": 84
+        },
+        {
+          "vmstat": {
+            "pswpin": 913216,
+            "pswpout": 2139375,
+            "pgmajfault": 1085623
+          },
+          "stack_rss_mb": 3083.7265625,
+          "available_mb": 1882.765625,
+          "swap_used_mb": 2214.03125,
+          "swap_in": 3740532736,
+          "swap_out": 8762880000,
+          "threads": 27,
+          "gr3d": 24
+        },
+        {
+          "vmstat": {
+            "pswpin": 913220,
+            "pswpout": 2139375,
+            "pgmajfault": 1085629
+          },
+          "stack_rss_mb": 3083.984375,
+          "available_mb": 1878.2734375,
+          "swap_used_mb": 2213.78125,
+          "swap_in": 3740549120,
+          "swap_out": 8762880000,
+          "threads": 27,
+          "gr3d": 55
+        },
+        {
+          "vmstat": {
+            "pswpin": 914245,
+            "pswpout": 2139376,
+            "pgmajfault": 1086977
+          },
+          "stack_rss_mb": 3083.96484375,
+          "available_mb": 1894.11328125,
+          "swap_used_mb": 2209.78125,
+          "swap_in": 3744747520,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 44
+        },
+        {
+          "vmstat": {
+            "pswpin": 914259,
+            "pswpout": 2139376,
+            "pgmajfault": 1086995
+          },
+          "stack_rss_mb": 3083.9609375,
+          "available_mb": 1889.015625,
+          "swap_used_mb": 2209.53125,
+          "swap_in": 3744804864,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 48
+        },
+        {
+          "vmstat": {
+            "pswpin": 914266,
+            "pswpout": 2139376,
+            "pgmajfault": 1087002
+          },
+          "stack_rss_mb": 3083.95703125,
+          "available_mb": 1886.69140625,
+          "swap_used_mb": 2209.53125,
+          "swap_in": 3744833536,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 29
+        },
+        {
+          "vmstat": {
+            "pswpin": 914268,
+            "pswpout": 2139376,
+            "pgmajfault": 1087004
+          },
+          "stack_rss_mb": 3083.953125,
+          "available_mb": 1881.421875,
+          "swap_used_mb": 2209.53125,
+          "swap_in": 3744841728,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 47
+        },
+        {
+          "vmstat": {
+            "pswpin": 914268,
+            "pswpout": 2139376,
+            "pgmajfault": 1087004
+          },
+          "stack_rss_mb": 3083.94921875,
+          "available_mb": 1880.93359375,
+          "swap_used_mb": 2209.53125,
+          "swap_in": 3744841728,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 58
+        },
+        {
+          "vmstat": {
+            "pswpin": 914268,
+            "pswpout": 2139376,
+            "pgmajfault": 1087004
+          },
+          "stack_rss_mb": 3083.94921875,
+          "available_mb": 1880.71484375,
+          "swap_used_mb": 2209.53125,
+          "swap_in": 3744841728,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 31
+        },
+        {
+          "vmstat": {
+            "pswpin": 914276,
+            "pswpout": 2139376,
+            "pgmajfault": 1087039
+          },
+          "stack_rss_mb": 3083.94140625,
+          "available_mb": 1882.375,
+          "swap_used_mb": 2209.53125,
+          "swap_in": 3744874496,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 82
+        },
+        {
+          "vmstat": {
+            "pswpin": 914278,
+            "pswpout": 2139376,
+            "pgmajfault": 1087041
+          },
+          "stack_rss_mb": 3083.9375,
+          "available_mb": 1882.8515625,
+          "swap_used_mb": 2209.53125,
+          "swap_in": 3744882688,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 97
+        },
+        {
+          "vmstat": {
+            "pswpin": 914278,
+            "pswpout": 2139376,
+            "pgmajfault": 1087041
+          },
+          "stack_rss_mb": 3083.9375,
+          "available_mb": 1882.734375,
+          "swap_used_mb": 2209.53125,
+          "swap_in": 3744882688,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 28
+        },
+        {
+          "vmstat": {
+            "pswpin": 914278,
+            "pswpout": 2139376,
+            "pgmajfault": 1087041
+          },
+          "stack_rss_mb": 3083.9375,
+          "available_mb": 1882.734375,
+          "swap_used_mb": 2209.53125,
+          "swap_in": 3744882688,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 69
+        },
+        {
+          "vmstat": {
+            "pswpin": 914282,
+            "pswpout": 2139376,
+            "pgmajfault": 1087045
+          },
+          "stack_rss_mb": 3083.9375,
+          "available_mb": 1882.48828125,
+          "swap_used_mb": 2209.53125,
+          "swap_in": 3744899072,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 56
+        },
+        {
+          "vmstat": {
+            "pswpin": 914282,
+            "pswpout": 2139376,
+            "pgmajfault": 1087045
+          },
+          "stack_rss_mb": 3084.18359375,
+          "available_mb": 1882.49609375,
+          "swap_used_mb": 2209.53125,
+          "swap_in": 3744899072,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 90
+        },
+        {
+          "vmstat": {
+            "pswpin": 914437,
+            "pswpout": 2139376,
+            "pgmajfault": 1087206
+          },
+          "stack_rss_mb": 3084.1796875,
+          "available_mb": 1882.734375,
+          "swap_used_mb": 2208.78125,
+          "swap_in": 3745533952,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 41
+        },
+        {
+          "vmstat": {
+            "pswpin": 914437,
+            "pswpout": 2139376,
+            "pgmajfault": 1087206
+          },
+          "stack_rss_mb": 3084.1796875,
+          "available_mb": 1882.734375,
+          "swap_used_mb": 2208.78125,
+          "swap_in": 3745533952,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 91
+        },
+        {
+          "vmstat": {
+            "pswpin": 914499,
+            "pswpout": 2139376,
+            "pgmajfault": 1087273
+          },
+          "stack_rss_mb": 3084.1796875,
+          "available_mb": 1882.46484375,
+          "swap_used_mb": 2208.78125,
+          "swap_in": 3745787904,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 45
+        },
+        {
+          "vmstat": {
+            "pswpin": 914501,
+            "pswpout": 2139376,
+            "pgmajfault": 1087275
+          },
+          "stack_rss_mb": 3084.1640625,
+          "available_mb": 1882.4453125,
+          "swap_used_mb": 2208.78125,
+          "swap_in": 3745796096,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 2
+        },
+        {
+          "vmstat": {
+            "pswpin": 914522,
+            "pswpout": 2139376,
+            "pgmajfault": 1087320
+          },
+          "stack_rss_mb": 3084.15625,
+          "available_mb": 1882.76953125,
+          "swap_used_mb": 2208.78125,
+          "swap_in": 3745882112,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 39
+        },
+        {
+          "vmstat": {
+            "pswpin": 914528,
+            "pswpout": 2139376,
+            "pgmajfault": 1087326
+          },
+          "stack_rss_mb": 3084.15625,
+          "available_mb": 1880.58203125,
+          "swap_used_mb": 2208.78125,
+          "swap_in": 3745906688,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 55
+        },
+        {
+          "vmstat": {
+            "pswpin": 914535,
+            "pswpout": 2139376,
+            "pgmajfault": 1087334
+          },
+          "stack_rss_mb": 3084.15625,
+          "available_mb": 1880.609375,
+          "swap_used_mb": 2208.53125,
+          "swap_in": 3745935360,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 43
+        },
+        {
+          "vmstat": {
+            "pswpin": 914538,
+            "pswpout": 2139376,
+            "pgmajfault": 1087337
+          },
+          "stack_rss_mb": 3084.15234375,
+          "available_mb": 1880.62890625,
+          "swap_used_mb": 2208.53125,
+          "swap_in": 3745947648,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 88
+        },
+        {
+          "vmstat": {
+            "pswpin": 914542,
+            "pswpout": 2139376,
+            "pgmajfault": 1087341
+          },
+          "stack_rss_mb": 3084.14453125,
+          "available_mb": 1880.4609375,
+          "swap_used_mb": 2208.53125,
+          "swap_in": 3745964032,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 56
+        },
+        {
+          "vmstat": {
+            "pswpin": 914550,
+            "pswpout": 2139376,
+            "pgmajfault": 1087349
+          },
+          "stack_rss_mb": 3084.1328125,
+          "available_mb": 1880.46484375,
+          "swap_used_mb": 2208.53125,
+          "swap_in": 3745996800,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 70
+        },
+        {
+          "vmstat": {
+            "pswpin": 914556,
+            "pswpout": 2139376,
+            "pgmajfault": 1087355
+          },
+          "stack_rss_mb": 3084.12890625,
+          "available_mb": 1880.46484375,
+          "swap_used_mb": 2208.53125,
+          "swap_in": 3746021376,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 64
+        },
+        {
+          "vmstat": {
+            "pswpin": 914913,
+            "pswpout": 2139376,
+            "pgmajfault": 1087791
+          },
+          "stack_rss_mb": 3084.125,
+          "available_mb": 1869.57421875,
+          "swap_used_mb": 2207.28125,
+          "swap_in": 3747483648,
+          "swap_out": 8762884096,
+          "threads": 27,
+          "gr3d": 16
+        },
+        {
+          "vmstat": {
+            "pswpin": 917547,
+            "pswpout": 2139435,
+            "pgmajfault": 1090683
+          },
+          "stack_rss_mb": 3084.1171875,
+          "available_mb": 1830.71875,
+          "swap_used_mb": 2197.28125,
+          "swap_in": 3758272512,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 32
+        },
+        {
+          "vmstat": {
+            "pswpin": 917549,
+            "pswpout": 2139435,
+            "pgmajfault": 1090708
+          },
+          "stack_rss_mb": 3084.10546875,
+          "available_mb": 1833.90625,
+          "swap_used_mb": 2197.28125,
+          "swap_in": 3758280704,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 917551,
+            "pswpout": 2139435,
+            "pgmajfault": 1090710
+          },
+          "stack_rss_mb": 3084.09765625,
+          "available_mb": 1835.69140625,
+          "swap_used_mb": 2197.28125,
+          "swap_in": 3758288896,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 71
+        },
+        {
+          "vmstat": {
+            "pswpin": 917551,
+            "pswpout": 2139435,
+            "pgmajfault": 1090710
+          },
+          "stack_rss_mb": 3084.08203125,
+          "available_mb": 1835.69140625,
+          "swap_used_mb": 2197.28125,
+          "swap_in": 3758288896,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 61
+        },
+        {
+          "vmstat": {
+            "pswpin": 917551,
+            "pswpout": 2139435,
+            "pgmajfault": 1090710
+          },
+          "stack_rss_mb": 3084.06640625,
+          "available_mb": 1835.45703125,
+          "swap_used_mb": 2197.28125,
+          "swap_in": 3758288896,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 10
+        },
+        {
+          "vmstat": {
+            "pswpin": 917551,
+            "pswpout": 2139435,
+            "pgmajfault": 1090710
+          },
+          "stack_rss_mb": 3084.0546875,
+          "available_mb": 1835.45703125,
+          "swap_used_mb": 2197.28125,
+          "swap_in": 3758288896,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 52
+        },
+        {
+          "vmstat": {
+            "pswpin": 917551,
+            "pswpout": 2139435,
+            "pgmajfault": 1090710
+          },
+          "stack_rss_mb": 3084.05078125,
+          "available_mb": 1835.22265625,
+          "swap_used_mb": 2197.28125,
+          "swap_in": 3758288896,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 57
+        },
+        {
+          "vmstat": {
+            "pswpin": 917557,
+            "pswpout": 2139435,
+            "pgmajfault": 1090716
+          },
+          "stack_rss_mb": 3084.30078125,
+          "available_mb": 1833.0078125,
+          "swap_used_mb": 2197.28125,
+          "swap_in": 3758313472,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 12
+        },
+        {
+          "vmstat": {
+            "pswpin": 917573,
+            "pswpout": 2139435,
+            "pgmajfault": 1090732
+          },
+          "stack_rss_mb": 3084.296875,
+          "available_mb": 1832.59375,
+          "swap_used_mb": 2191.78125,
+          "swap_in": 3758379008,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 39
+        },
+        {
+          "vmstat": {
+            "pswpin": 917573,
+            "pswpout": 2139435,
+            "pgmajfault": 1090732
+          },
+          "stack_rss_mb": 3084.28515625,
+          "available_mb": 1832.703125,
+          "swap_used_mb": 2191.78125,
+          "swap_in": 3758379008,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 52
+        },
+        {
+          "vmstat": {
+            "pswpin": 917573,
+            "pswpout": 2139435,
+            "pgmajfault": 1090732
+          },
+          "stack_rss_mb": 3084.27734375,
+          "available_mb": 1832.703125,
+          "swap_used_mb": 2191.78125,
+          "swap_in": 3758379008,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 51
+        },
+        {
+          "vmstat": {
+            "pswpin": 917577,
+            "pswpout": 2139435,
+            "pgmajfault": 1090736
+          },
+          "stack_rss_mb": 3084.2734375,
+          "available_mb": 1832.703125,
+          "swap_used_mb": 2191.78125,
+          "swap_in": 3758395392,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 917578,
+            "pswpout": 2139435,
+            "pgmajfault": 1090738
+          },
+          "stack_rss_mb": 3084.26953125,
+          "available_mb": 1832.7578125,
+          "swap_used_mb": 2191.78125,
+          "swap_in": 3758399488,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 38
+        },
+        {
+          "vmstat": {
+            "pswpin": 917578,
+            "pswpout": 2139435,
+            "pgmajfault": 1090738
+          },
+          "stack_rss_mb": 3084.25390625,
+          "available_mb": 1832.7578125,
+          "swap_used_mb": 2191.78125,
+          "swap_in": 3758399488,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 57
+        },
+        {
+          "vmstat": {
+            "pswpin": 917594,
+            "pswpout": 2139435,
+            "pgmajfault": 1090754
+          },
+          "stack_rss_mb": 3084.2421875,
+          "available_mb": 1831.84375,
+          "swap_used_mb": 2189.53125,
+          "swap_in": 3758465024,
+          "swap_out": 8763125760,
+          "threads": 27,
+          "gr3d": 70
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4027
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4027
+      }
+    },
+    {
+      "phase": "gemma",
+      "operations": [
+        {
+          "name": "gemma",
+          "ms": 3361.5083059994504
+        },
+        {
+          "name": "gemma",
+          "ms": 2917.0777300005284
+        },
+        {
+          "name": "gemma",
+          "ms": 2923.0034590000287
+        },
+        {
+          "name": "gemma",
+          "ms": 2911.218032000761
+        },
+        {
+          "name": "gemma",
+          "ms": 2695.560354999543
+        },
+        {
+          "name": "gemma",
+          "ms": 2741.0341539998626
+        },
+        {
+          "name": "gemma",
+          "ms": 2744.547837999562
+        },
+        {
+          "name": "gemma",
+          "ms": 2653.5210239999287
+        },
+        {
+          "name": "gemma",
+          "ms": 3121.706928999629
+        },
+        {
+          "name": "gemma",
+          "ms": 3048.7168039999233
+        },
+        {
+          "name": "gemma",
+          "ms": 2934.966302000248
+        }
+      ],
+      "errors": [],
+      "duration_s": 30.420103424001354,
+      "ticks": 304,
+      "valid_depth": 304,
+      "timing": {
+        "tick_ms": {
+          "n": 304,
+          "median": 35.68450349939667,
+          "p95": 46.303809999881175,
+          "max": 67.85855299858667
+        },
+        "interval_ms": {
+          "n": 304,
+          "median": 100.14027199940756,
+          "p95": 100.30796600067333,
+          "max": 109.15567600022769
+        },
+        "capture_wait_ms": {
+          "n": 304,
+          "median": 0.15769750098115765,
+          "p95": 0.2932878005594829,
+          "max": 0.6027920007909415
+        },
+        "depth_ms": {
+          "n": 304,
+          "median": 15.698504999818397,
+          "p95": 21.23140290059382,
+          "max": 29.63839400035795
+        },
+        "hazards_ms": {
+          "n": 304,
+          "median": 0.02097650030918885,
+          "p95": 0.028256149471417257,
+          "max": 0.08435299969278276
+        },
+        "movers_ms": {
+          "n": 304,
+          "median": 18.7919050003984,
+          "p95": 27.687948100538048,
+          "max": 42.32263899939426
+        },
+        "publish_ms": {
+          "n": 304,
+          "median": 0.1361780005026958,
+          "p95": 0.20015719919683753,
+          "max": 6.2261869989015395
+        },
+        "navigation_ms": {
+          "n": 304,
+          "median": 0.008400000297115184,
+          "p95": 0.01023520062517491,
+          "max": 0.055168999097077176
+        },
+        "alarms_health_ms": {
+          "n": 304,
+          "median": 0.013471999409375712,
+          "p95": 0.016182399849640202,
+          "max": 0.07990499943844043
+        },
+        "skew_ms": {
+          "n": 304,
+          "median": 0.5577504998655058,
+          "p95": 2.5389786486812183,
+          "max": 9.390577000885969
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 304,
+          "median": 0.004000000444648322,
+          "p95": 0.005248000616120407,
+          "max": 0.02668799970706459
+        },
+        "disparity_ms": {
+          "n": 304,
+          "median": 11.451607500021055,
+          "p95": 16.42934080055056,
+          "max": 23.698453000179143
+        }
+      },
+      "depth_gaps": [],
+      "outages": [],
+      "heartbeat_interval_ms": {
+        "n": 303,
+        "median": 100.46920899912948,
+        "p95": 106.3531243999023,
+        "max": 113.55374400045548
+      },
+      "resources": [
+        {
+          "vmstat": {
+            "pswpin": 917596,
+            "pswpout": 2139507,
+            "pgmajfault": 1090798
+          },
+          "stack_rss_mb": 3128.56640625,
+          "available_mb": 1823.94140625,
+          "swap_used_mb": 2189.78125,
+          "swap_in": 3758473216,
+          "swap_out": 8763420672,
+          "threads": 28,
+          "gr3d": 94
+        },
+        {
+          "vmstat": {
+            "pswpin": 917602,
+            "pswpout": 2139831,
+            "pgmajfault": 1091000
+          },
+          "stack_rss_mb": 3192.375,
+          "available_mb": 1791.60546875,
+          "swap_used_mb": 2191.01171875,
+          "swap_in": 3758497792,
+          "swap_out": 8764747776,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917608,
+            "pswpout": 2140430,
+            "pgmajfault": 1091123
+          },
+          "stack_rss_mb": 3317.46484375,
+          "available_mb": 1676.671875,
+          "swap_used_mb": 2193.42578125,
+          "swap_in": 3758522368,
+          "swap_out": 8767201280,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917640,
+            "pswpout": 2140430,
+            "pgmajfault": 1091172
+          },
+          "stack_rss_mb": 3320.1640625,
+          "available_mb": 1681.1328125,
+          "swap_used_mb": 2193.42578125,
+          "swap_in": 3758653440,
+          "swap_out": 8767201280,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917642,
+            "pswpout": 2140430,
+            "pgmajfault": 1091209
+          },
+          "stack_rss_mb": 3343.69140625,
+          "available_mb": 1654.0234375,
+          "swap_used_mb": 2193.42578125,
+          "swap_in": 3758661632,
+          "swap_out": 8767201280,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917642,
+            "pswpout": 2140430,
+            "pgmajfault": 1091217
+          },
+          "stack_rss_mb": 3343.68359375,
+          "available_mb": 1651.38671875,
+          "swap_used_mb": 2193.42578125,
+          "swap_in": 3758661632,
+          "swap_out": 8767201280,
+          "threads": 28,
+          "gr3d": 79
+        },
+        {
+          "vmstat": {
+            "pswpin": 917646,
+            "pswpout": 2141627,
+            "pgmajfault": 1091238
+          },
+          "stack_rss_mb": 3377.48828125,
+          "available_mb": 1620.859375,
+          "swap_used_mb": 2197.77734375,
+          "swap_in": 3758678016,
+          "swap_out": 8772104192,
+          "threads": 28,
+          "gr3d": 38
+        },
+        {
+          "vmstat": {
+            "pswpin": 917685,
+            "pswpout": 2141661,
+            "pgmajfault": 1091279
+          },
+          "stack_rss_mb": 3420.25,
+          "available_mb": 1607.63671875,
+          "swap_used_mb": 2198.0546875,
+          "swap_in": 3758837760,
+          "swap_out": 8772243456,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917693,
+            "pswpout": 2142221,
+            "pgmajfault": 1091289
+          },
+          "stack_rss_mb": 3419.83984375,
+          "available_mb": 1592.55859375,
+          "swap_used_mb": 2200.25390625,
+          "swap_in": 3758870528,
+          "swap_out": 8774537216,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917707,
+            "pswpout": 2142221,
+            "pgmajfault": 1091303
+          },
+          "stack_rss_mb": 3444.2421875,
+          "available_mb": 1570.59765625,
+          "swap_used_mb": 2200.00390625,
+          "swap_in": 3758927872,
+          "swap_out": 8774537216,
+          "threads": 28,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 917716,
+            "pswpout": 2142221,
+            "pgmajfault": 1091312
+          },
+          "stack_rss_mb": 3444.48828125,
+          "available_mb": 1566.37109375,
+          "swap_used_mb": 2200.00390625,
+          "swap_in": 3758964736,
+          "swap_out": 8774537216,
+          "threads": 28,
+          "gr3d": 92
+        },
+        {
+          "vmstat": {
+            "pswpin": 917732,
+            "pswpout": 2143604,
+            "pgmajfault": 1091334
+          },
+          "stack_rss_mb": 3476.89453125,
+          "available_mb": 1541.23828125,
+          "swap_used_mb": 2205.37890625,
+          "swap_in": 3759030272,
+          "swap_out": 8780201984,
+          "threads": 28,
+          "gr3d": 45
+        },
+        {
+          "vmstat": {
+            "pswpin": 917823,
+            "pswpout": 2144291,
+            "pgmajfault": 1091449
+          },
+          "stack_rss_mb": 3484.6015625,
+          "available_mb": 1526.93359375,
+          "swap_used_mb": 2207.6328125,
+          "swap_in": 3759403008,
+          "swap_out": 8783015936,
+          "threads": 28,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 917866,
+            "pswpout": 2145489,
+            "pgmajfault": 1091497
+          },
+          "stack_rss_mb": 3484.64453125,
+          "available_mb": 1525.8125,
+          "swap_used_mb": 2212.78125,
+          "swap_in": 3759579136,
+          "swap_out": 8787922944,
+          "threads": 28,
+          "gr3d": 89
+        },
+        {
+          "vmstat": {
+            "pswpin": 917866,
+            "pswpout": 2145489,
+            "pgmajfault": 1091497
+          },
+          "stack_rss_mb": 3492.8203125,
+          "available_mb": 1521.296875,
+          "swap_used_mb": 2212.78125,
+          "swap_in": 3759579136,
+          "swap_out": 8787922944,
+          "threads": 28,
+          "gr3d": 97
+        },
+        {
+          "vmstat": {
+            "pswpin": 917867,
+            "pswpout": 2145489,
+            "pgmajfault": 1091498
+          },
+          "stack_rss_mb": 3492.81640625,
+          "available_mb": 1518.44921875,
+          "swap_used_mb": 2212.78125,
+          "swap_in": 3759583232,
+          "swap_out": 8787922944,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917867,
+            "pswpout": 2145489,
+            "pgmajfault": 1091499
+          },
+          "stack_rss_mb": 3507.24609375,
+          "available_mb": 1517.890625,
+          "swap_used_mb": 2212.78125,
+          "swap_in": 3759583232,
+          "swap_out": 8787922944,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917871,
+            "pswpout": 2146496,
+            "pgmajfault": 1091505
+          },
+          "stack_rss_mb": 3517.24609375,
+          "available_mb": 1494.3984375,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3759599616,
+          "swap_out": 8792047616,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917872,
+            "pswpout": 2146496,
+            "pgmajfault": 1091506
+          },
+          "stack_rss_mb": 3508.203125,
+          "available_mb": 1498.97265625,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3759603712,
+          "swap_out": 8792047616,
+          "threads": 28,
+          "gr3d": 12
+        },
+        {
+          "vmstat": {
+            "pswpin": 917874,
+            "pswpout": 2146496,
+            "pgmajfault": 1091508
+          },
+          "stack_rss_mb": 3508.51953125,
+          "available_mb": 1493.74609375,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3759611904,
+          "swap_out": 8792047616,
+          "threads": 28,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 917914,
+            "pswpout": 2146496,
+            "pgmajfault": 1091548
+          },
+          "stack_rss_mb": 3508.51171875,
+          "available_mb": 1484.66015625,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3759775744,
+          "swap_out": 8792047616,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917915,
+            "pswpout": 2146496,
+            "pgmajfault": 1091549
+          },
+          "stack_rss_mb": 3517.62109375,
+          "available_mb": 1483.203125,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3759779840,
+          "swap_out": 8792047616,
+          "threads": 28,
+          "gr3d": 90
+        },
+        {
+          "vmstat": {
+            "pswpin": 917915,
+            "pswpout": 2146496,
+            "pgmajfault": 1091549
+          },
+          "stack_rss_mb": 3538.5234375,
+          "available_mb": 1453.20703125,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3759779840,
+          "swap_out": 8792047616,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917918,
+            "pswpout": 2146502,
+            "pgmajfault": 1091554
+          },
+          "stack_rss_mb": 3532.70703125,
+          "available_mb": 1461.98828125,
+          "swap_used_mb": 2216.8515625,
+          "swap_in": 3759792128,
+          "swap_out": 8792072192,
+          "threads": 28,
+          "gr3d": 18
+        },
+        {
+          "vmstat": {
+            "pswpin": 917918,
+            "pswpout": 2146502,
+            "pgmajfault": 1091554
+          },
+          "stack_rss_mb": 3539.54296875,
+          "available_mb": 1451.3671875,
+          "swap_used_mb": 2216.8515625,
+          "swap_in": 3759792128,
+          "swap_out": 8792072192,
+          "threads": 28,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 917922,
+            "pswpout": 2146502,
+            "pgmajfault": 1091558
+          },
+          "stack_rss_mb": 3539.53515625,
+          "available_mb": 1435.40625,
+          "swap_used_mb": 2216.8515625,
+          "swap_in": 3759808512,
+          "swap_out": 8792072192,
+          "threads": 28,
+          "gr3d": 92
+        },
+        {
+          "vmstat": {
+            "pswpin": 917929,
+            "pswpout": 2146502,
+            "pgmajfault": 1091566
+          },
+          "stack_rss_mb": 3539.30078125,
+          "available_mb": 1435.70703125,
+          "swap_used_mb": 2216.8515625,
+          "swap_in": 3759837184,
+          "swap_out": 8792072192,
+          "threads": 28,
+          "gr3d": 24
+        },
+        {
+          "vmstat": {
+            "pswpin": 917929,
+            "pswpout": 2146502,
+            "pgmajfault": 1091566
+          },
+          "stack_rss_mb": 3547.0234375,
+          "available_mb": 1429.34375,
+          "swap_used_mb": 2216.8515625,
+          "swap_in": 3759837184,
+          "swap_out": 8792072192,
+          "threads": 28,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 917932,
+            "pswpout": 2146504,
+            "pgmajfault": 1091569
+          },
+          "stack_rss_mb": 3546.8515625,
+          "available_mb": 1425.953125,
+          "swap_used_mb": 2216.8515625,
+          "swap_in": 3759849472,
+          "swap_out": 8792080384,
+          "threads": 28,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 917932,
+            "pswpout": 2146504,
+            "pgmajfault": 1091569
+          },
+          "stack_rss_mb": 3546.859375,
+          "available_mb": 1419.72265625,
+          "swap_used_mb": 2216.8515625,
+          "swap_in": 3759849472,
+          "swap_out": 8792080384,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917932,
+            "pswpout": 2146504,
+            "pgmajfault": 1091569
+          },
+          "stack_rss_mb": 3546.84765625,
+          "available_mb": 1412.26953125,
+          "swap_used_mb": 2216.8515625,
+          "swap_in": 3759849472,
+          "swap_out": 8792080384,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917932,
+            "pswpout": 2146504,
+            "pgmajfault": 1091569
+          },
+          "stack_rss_mb": 3546.87109375,
+          "available_mb": 1411.8203125,
+          "swap_used_mb": 2216.8515625,
+          "swap_in": 3759849472,
+          "swap_out": 8792080384,
+          "threads": 28,
+          "gr3d": 24
+        },
+        {
+          "vmstat": {
+            "pswpin": 917932,
+            "pswpout": 2146504,
+            "pgmajfault": 1091569
+          },
+          "stack_rss_mb": 3546.8671875,
+          "available_mb": 1411.5859375,
+          "swap_used_mb": 2216.8515625,
+          "swap_in": 3759849472,
+          "swap_out": 8792080384,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917936,
+            "pswpout": 2146504,
+            "pgmajfault": 1091573
+          },
+          "stack_rss_mb": 3546.84375,
+          "available_mb": 1404.83984375,
+          "swap_used_mb": 2216.8515625,
+          "swap_in": 3759865856,
+          "swap_out": 8792080384,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917960,
+            "pswpout": 2146504,
+            "pgmajfault": 1091598
+          },
+          "stack_rss_mb": 3555.6484375,
+          "available_mb": 1403.87890625,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3759964160,
+          "swap_out": 8792080384,
+          "threads": 28,
+          "gr3d": 82
+        },
+        {
+          "vmstat": {
+            "pswpin": 917962,
+            "pswpout": 2146504,
+            "pgmajfault": 1091600
+          },
+          "stack_rss_mb": 3555.640625,
+          "available_mb": 1403.79296875,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3759972352,
+          "swap_out": 8792080384,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917962,
+            "pswpout": 2146504,
+            "pgmajfault": 1091600
+          },
+          "stack_rss_mb": 3563.14453125,
+          "available_mb": 1403.34375,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3759972352,
+          "swap_out": 8792080384,
+          "threads": 28,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 917964,
+            "pswpout": 2146504,
+            "pgmajfault": 1091602
+          },
+          "stack_rss_mb": 3563.14453125,
+          "available_mb": 1397.69140625,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3759980544,
+          "swap_out": 8792080384,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917965,
+            "pswpout": 2146504,
+            "pgmajfault": 1091603
+          },
+          "stack_rss_mb": 3563.09375,
+          "available_mb": 1392.57421875,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3759984640,
+          "swap_out": 8792080384,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 917966,
+            "pswpout": 2146504,
+            "pgmajfault": 1091604
+          },
+          "stack_rss_mb": 3563.08984375,
+          "available_mb": 1392.33984375,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3759988736,
+          "swap_out": 8792080384,
+          "threads": 28,
+          "gr3d": 95
+        },
+        {
+          "vmstat": {
+            "pswpin": 917977,
+            "pswpout": 2146511,
+            "pgmajfault": 1091618
+          },
+          "stack_rss_mb": 3563.07421875,
+          "available_mb": 1402.0390625,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3760033792,
+          "swap_out": 8792109056,
+          "threads": 28,
+          "gr3d": 45
+        },
+        {
+          "vmstat": {
+            "pswpin": 918018,
+            "pswpout": 2146511,
+            "pgmajfault": 1091659
+          },
+          "stack_rss_mb": 3563.09765625,
+          "available_mb": 1397.55078125,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3760201728,
+          "swap_out": 8792109056,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 918027,
+            "pswpout": 2146511,
+            "pgmajfault": 1091668
+          },
+          "stack_rss_mb": 3563.35546875,
+          "available_mb": 1393.03125,
+          "swap_used_mb": 2216.6015625,
+          "swap_in": 3760238592,
+          "swap_out": 8792109056,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 918032,
+            "pswpout": 2146511,
+            "pgmajfault": 1091673
+          },
+          "stack_rss_mb": 3563.5390625,
+          "available_mb": 1373.98828125,
+          "swap_used_mb": 2216.3515625,
+          "swap_in": 3760259072,
+          "swap_out": 8792109056,
+          "threads": 28,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 918041,
+            "pswpout": 2146519,
+            "pgmajfault": 1091682
+          },
+          "stack_rss_mb": 3560.73828125,
+          "available_mb": 1398.4296875,
+          "swap_used_mb": 2215.8515625,
+          "swap_in": 3760295936,
+          "swap_out": 8792141824,
+          "threads": 28,
+          "gr3d": 95
+        },
+        {
+          "vmstat": {
+            "pswpin": 918546,
+            "pswpout": 2146519,
+            "pgmajfault": 1092199
+          },
+          "stack_rss_mb": 3560.73046875,
+          "available_mb": 1387.9921875,
+          "swap_used_mb": 2214.1015625,
+          "swap_in": 3762364416,
+          "swap_out": 8792141824,
+          "threads": 28,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 918546,
+            "pswpout": 2146519,
+            "pgmajfault": 1092199
+          },
+          "stack_rss_mb": 3561.06640625,
+          "available_mb": 1387.85546875,
+          "swap_used_mb": 2214.1015625,
+          "swap_in": 3762364416,
+          "swap_out": 8792141824,
+          "threads": 28,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 918548,
+            "pswpout": 2146519,
+            "pgmajfault": 1092201
+          },
+          "stack_rss_mb": 3561.06640625,
+          "available_mb": 1387.60546875,
+          "swap_used_mb": 2214.1015625,
+          "swap_in": 3762372608,
+          "swap_out": 8792141824,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 918550,
+            "pswpout": 2146892,
+            "pgmajfault": 1092203
+          },
+          "stack_rss_mb": 3561.5546875,
+          "available_mb": 1349.2578125,
+          "swap_used_mb": 2215.6640625,
+          "swap_in": 3762380800,
+          "swap_out": 8793669632,
+          "threads": 28,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 918552,
+            "pswpout": 2146892,
+            "pgmajfault": 1092206
+          },
+          "stack_rss_mb": 3561.5390625,
+          "available_mb": 1343.265625,
+          "swap_used_mb": 2215.6640625,
+          "swap_in": 3762388992,
+          "swap_out": 8793669632,
+          "threads": 28,
+          "gr3d": 94
+        },
+        {
+          "vmstat": {
+            "pswpin": 928878,
+            "pswpout": 2146929,
+            "pgmajfault": 1102589
+          },
+          "stack_rss_mb": 3561.53125,
+          "available_mb": 1342.40234375,
+          "swap_used_mb": 2175.6640625,
+          "swap_in": 3804557312,
+          "swap_out": 8793821184,
+          "threads": 28,
+          "gr3d": 97
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4027
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4665
+      }
+    },
+    {
+      "phase": "whisper",
+      "operations": [
+        {
+          "name": "whisper",
+          "ms": 1468.9305729989428
+        },
+        {
+          "name": "whisper",
+          "ms": 1229.875921000712
+        },
+        {
+          "name": "whisper",
+          "ms": 1398.1757430010475
+        },
+        {
+          "name": "whisper",
+          "ms": 1304.175249999389
+        },
+        {
+          "name": "whisper",
+          "ms": 1283.5097070001211
+        },
+        {
+          "name": "whisper",
+          "ms": 1329.4654020010057
+        },
+        {
+          "name": "whisper",
+          "ms": 1308.4702220003237
+        },
+        {
+          "name": "whisper",
+          "ms": 1357.393893000335
+        },
+        {
+          "name": "whisper",
+          "ms": 1305.9904309993726
+        },
+        {
+          "name": "whisper",
+          "ms": 1259.6673520001787
+        },
+        {
+          "name": "whisper",
+          "ms": 1470.0387260018033
+        },
+        {
+          "name": "whisper",
+          "ms": 1366.896159001044
+        },
+        {
+          "name": "whisper",
+          "ms": 1292.2465479987295
+        },
+        {
+          "name": "whisper",
+          "ms": 1197.7637569998478
+        },
+        {
+          "name": "whisper",
+          "ms": 1346.1352989997977
+        },
+        {
+          "name": "whisper",
+          "ms": 1536.3775779987918
+        },
+        {
+          "name": "whisper",
+          "ms": 1273.247586999787
+        },
+        {
+          "name": "whisper",
+          "ms": 1422.626413999751
+        },
+        {
+          "name": "whisper",
+          "ms": 1388.3320260010805
+        },
+        {
+          "name": "whisper",
+          "ms": 1607.1551290006028
+        },
+        {
+          "name": "whisper",
+          "ms": 1333.2627449999563
+        },
+        {
+          "name": "whisper",
+          "ms": 1344.5909750007559
+        }
+      ],
+      "errors": [],
+      "duration_s": 30.587909226000193,
+      "ticks": 305,
+      "valid_depth": 305,
+      "timing": {
+        "tick_ms": {
+          "n": 305,
+          "median": 51.77025400007551,
+          "p95": 71.52580600013607,
+          "max": 227.17682999973476
+        },
+        "interval_ms": {
+          "n": 305,
+          "median": 100.13596600038,
+          "p95": 101.19025159983721,
+          "max": 227.22828599944478
+        },
+        "capture_wait_ms": {
+          "n": 305,
+          "median": 0.16896200031624176,
+          "p95": 0.3476208003121429,
+          "max": 0.7417689994326793
+        },
+        "depth_ms": {
+          "n": 305,
+          "median": 22.358358000929,
+          "p95": 32.374014200104284,
+          "max": 159.28553300000203
+        },
+        "hazards_ms": {
+          "n": 305,
+          "median": 0.02159999894502107,
+          "p95": 0.040487200749339536,
+          "max": 0.1033610005833907
+        },
+        "movers_ms": {
+          "n": 305,
+          "median": 27.809982999315253,
+          "p95": 41.51239200036798,
+          "max": 67.52681100078917
+        },
+        "publish_ms": {
+          "n": 305,
+          "median": 0.17017800018948037,
+          "p95": 0.3824943993095078,
+          "max": 6.521904999317485
+        },
+        "navigation_ms": {
+          "n": 305,
+          "median": 0.008863999028108083,
+          "p95": 0.022579999858862724,
+          "max": 0.23485099882236682
+        },
+        "alarms_health_ms": {
+          "n": 305,
+          "median": 0.014528000974678434,
+          "p95": 0.031648000003770015,
+          "max": 0.1001939999696333
+        },
+        "skew_ms": {
+          "n": 305,
+          "median": 0.5209350001678104,
+          "p95": 2.3406112002703607,
+          "max": 9.579352999935509
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 305,
+          "median": 0.0033599990274524316,
+          "p95": 0.004896000609733164,
+          "max": 0.18739400002232287
+        },
+        "disparity_ms": {
+          "n": 305,
+          "median": 18.745610999758355,
+          "p95": 28.870026999356927,
+          "max": 155.2661569985503
+        }
+      },
+      "depth_gaps": [],
+      "outages": [],
+      "heartbeat_interval_ms": {
+        "n": 304,
+        "median": 100.28540999974211,
+        "p95": 112.22282484914103,
+        "max": 125.24568699882366
+      },
+      "resources": [
+        {
+          "vmstat": {
+            "pswpin": 939404,
+            "pswpout": 2171964,
+            "pgmajfault": 1114398
+          },
+          "stack_rss_mb": 3708.2890625,
+          "available_mb": 1115.53515625,
+          "swap_used_mb": 2216.62109375,
+          "swap_in": 3847798784,
+          "swap_out": 8896364544,
+          "threads": 41,
+          "gr3d": 13
+        },
+        {
+          "vmstat": {
+            "pswpin": 939404,
+            "pswpout": 2173549,
+            "pgmajfault": 1114403
+          },
+          "stack_rss_mb": 3862.40625,
+          "available_mb": 951.48046875,
+          "swap_used_mb": 2222.66015625,
+          "swap_in": 3847798784,
+          "swap_out": 8902811648,
+          "threads": 44,
+          "gr3d": 50
+        },
+        {
+          "vmstat": {
+            "pswpin": 939423,
+            "pswpout": 2174274,
+            "pgmajfault": 1114424
+          },
+          "stack_rss_mb": 3767.12890625,
+          "available_mb": 1064.3984375,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3847876608,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 22
+        },
+        {
+          "vmstat": {
+            "pswpin": 939424,
+            "pswpout": 2174274,
+            "pgmajfault": 1114426
+          },
+          "stack_rss_mb": 3847.15234375,
+          "available_mb": 980.12890625,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3847880704,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 46
+        },
+        {
+          "vmstat": {
+            "pswpin": 939424,
+            "pswpout": 2174274,
+            "pgmajfault": 1114426
+          },
+          "stack_rss_mb": 3836.36328125,
+          "available_mb": 1056.8984375,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3847880704,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 56
+        },
+        {
+          "vmstat": {
+            "pswpin": 939424,
+            "pswpout": 2174274,
+            "pgmajfault": 1114426
+          },
+          "stack_rss_mb": 3799.234375,
+          "available_mb": 1056.484375,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3847880704,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 34
+        },
+        {
+          "vmstat": {
+            "pswpin": 939424,
+            "pswpout": 2174274,
+            "pgmajfault": 1114426
+          },
+          "stack_rss_mb": 3884.828125,
+          "available_mb": 1014.1796875,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3847880704,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 95
+        },
+        {
+          "vmstat": {
+            "pswpin": 939424,
+            "pswpout": 2174274,
+            "pgmajfault": 1114426
+          },
+          "stack_rss_mb": 3782.03125,
+          "available_mb": 1053.3359375,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3847880704,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 59
+        },
+        {
+          "vmstat": {
+            "pswpin": 939455,
+            "pswpout": 2174274,
+            "pgmajfault": 1114457
+          },
+          "stack_rss_mb": 3833.265625,
+          "available_mb": 1052.58203125,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3848007680,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 74
+        },
+        {
+          "vmstat": {
+            "pswpin": 939464,
+            "pswpout": 2174274,
+            "pgmajfault": 1114466
+          },
+          "stack_rss_mb": 3876.03125,
+          "available_mb": 975.51953125,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3848044544,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 74
+        },
+        {
+          "vmstat": {
+            "pswpin": 939464,
+            "pswpout": 2174274,
+            "pgmajfault": 1114474
+          },
+          "stack_rss_mb": 3833.265625,
+          "available_mb": 1049.65625,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3848044544,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 61
+        },
+        {
+          "vmstat": {
+            "pswpin": 939464,
+            "pswpout": 2174274,
+            "pgmajfault": 1114480
+          },
+          "stack_rss_mb": 3793.44921875,
+          "available_mb": 989.078125,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3848044544,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 90
+        },
+        {
+          "vmstat": {
+            "pswpin": 939464,
+            "pswpout": 2174274,
+            "pgmajfault": 1114480
+          },
+          "stack_rss_mb": 3781.828125,
+          "available_mb": 1052.5625,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3848044544,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 45
+        },
+        {
+          "vmstat": {
+            "pswpin": 939464,
+            "pswpout": 2174274,
+            "pgmajfault": 1114480
+          },
+          "stack_rss_mb": 3781.828125,
+          "available_mb": 954.96875,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3848044544,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 49
+        },
+        {
+          "vmstat": {
+            "pswpin": 939474,
+            "pswpout": 2174274,
+            "pgmajfault": 1114500
+          },
+          "stack_rss_mb": 3781.828125,
+          "available_mb": 1055.32421875,
+          "swap_used_mb": 2225.296875,
+          "swap_in": 3848085504,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 51
+        },
+        {
+          "vmstat": {
+            "pswpin": 939515,
+            "pswpout": 2174274,
+            "pgmajfault": 1114550
+          },
+          "stack_rss_mb": 3781.828125,
+          "available_mb": 955.41015625,
+          "swap_used_mb": 2225.046875,
+          "swap_in": 3848253440,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 44
+        },
+        {
+          "vmstat": {
+            "pswpin": 939620,
+            "pswpout": 2174274,
+            "pgmajfault": 1114657
+          },
+          "stack_rss_mb": 3783.828125,
+          "available_mb": 1002.140625,
+          "swap_used_mb": 2224.546875,
+          "swap_in": 3848683520,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 57
+        },
+        {
+          "vmstat": {
+            "pswpin": 939624,
+            "pswpout": 2174274,
+            "pgmajfault": 1114665
+          },
+          "stack_rss_mb": 3814.23828125,
+          "available_mb": 1045.50390625,
+          "swap_used_mb": 2224.546875,
+          "swap_in": 3848699904,
+          "swap_out": 8905826304,
+          "threads": 44,
+          "gr3d": 1
+        },
+        {
+          "vmstat": {
+            "pswpin": 939695,
+            "pswpout": 2175213,
+            "pgmajfault": 1114743
+          },
+          "stack_rss_mb": 3881.98046875,
+          "available_mb": 997.64453125,
+          "swap_used_mb": 2228.07421875,
+          "swap_in": 3848990720,
+          "swap_out": 8909672448,
+          "threads": 44,
+          "gr3d": 30
+        },
+        {
+          "vmstat": {
+            "pswpin": 939718,
+            "pswpout": 2175213,
+            "pgmajfault": 1114772
+          },
+          "stack_rss_mb": 3779.92578125,
+          "available_mb": 1052.78515625,
+          "swap_used_mb": 2228.07421875,
+          "swap_in": 3849084928,
+          "swap_out": 8909672448,
+          "threads": 44,
+          "gr3d": 77
+        },
+        {
+          "vmstat": {
+            "pswpin": 939726,
+            "pswpout": 2175213,
+            "pgmajfault": 1114796
+          },
+          "stack_rss_mb": 3838.59765625,
+          "available_mb": 1049.28515625,
+          "swap_used_mb": 2228.07421875,
+          "swap_in": 3849117696,
+          "swap_out": 8909672448,
+          "threads": 44,
+          "gr3d": 74
+        },
+        {
+          "vmstat": {
+            "pswpin": 939831,
+            "pswpout": 2175421,
+            "pgmajfault": 1114912
+          },
+          "stack_rss_mb": 3779.15625,
+          "available_mb": 944.78515625,
+          "swap_used_mb": 2228.57421875,
+          "swap_in": 3849547776,
+          "swap_out": 8910524416,
+          "threads": 44,
+          "gr3d": 59
+        },
+        {
+          "vmstat": {
+            "pswpin": 939837,
+            "pswpout": 2175421,
+            "pgmajfault": 1114918
+          },
+          "stack_rss_mb": 3830.4921875,
+          "available_mb": 1058.4375,
+          "swap_used_mb": 2228.32421875,
+          "swap_in": 3849572352,
+          "swap_out": 8910524416,
+          "threads": 44,
+          "gr3d": 75
+        },
+        {
+          "vmstat": {
+            "pswpin": 939841,
+            "pswpout": 2175421,
+            "pgmajfault": 1114923
+          },
+          "stack_rss_mb": 3830.55078125,
+          "available_mb": 954.69140625,
+          "swap_used_mb": 2228.32421875,
+          "swap_in": 3849588736,
+          "swap_out": 8910524416,
+          "threads": 44,
+          "gr3d": 79
+        },
+        {
+          "vmstat": {
+            "pswpin": 939849,
+            "pswpout": 2175421,
+            "pgmajfault": 1114931
+          },
+          "stack_rss_mb": 3779.2265625,
+          "available_mb": 1051.05078125,
+          "swap_used_mb": 2228.32421875,
+          "swap_in": 3849621504,
+          "swap_out": 8910524416,
+          "threads": 44,
+          "gr3d": 61
+        },
+        {
+          "vmstat": {
+            "pswpin": 939886,
+            "pswpout": 2175421,
+            "pgmajfault": 1114968
+          },
+          "stack_rss_mb": 3882.09765625,
+          "available_mb": 978.125,
+          "swap_used_mb": 2228.07421875,
+          "swap_in": 3849773056,
+          "swap_out": 8910524416,
+          "threads": 44,
+          "gr3d": 82
+        },
+        {
+          "vmstat": {
+            "pswpin": 939916,
+            "pswpout": 2176361,
+            "pgmajfault": 1115022
+          },
+          "stack_rss_mb": 3775.13671875,
+          "available_mb": 1030.078125,
+          "swap_used_mb": 2231.69921875,
+          "swap_in": 3849895936,
+          "swap_out": 8914374656,
+          "threads": 44,
+          "gr3d": 64
+        },
+        {
+          "vmstat": {
+            "pswpin": 939917,
+            "pswpout": 2176500,
+            "pgmajfault": 1115105
+          },
+          "stack_rss_mb": 3834.79296875,
+          "available_mb": 1003.171875,
+          "swap_used_mb": 2232.125,
+          "swap_in": 3849900032,
+          "swap_out": 8914878464,
+          "threads": 44,
+          "gr3d": 0
+        },
+        {
+          "vmstat": {
+            "pswpin": 940029,
+            "pswpout": 2187319,
+            "pgmajfault": 1115297
+          },
+          "stack_rss_mb": 3842.17578125,
+          "available_mb": 1000.91015625,
+          "swap_used_mb": 2273.6875,
+          "swap_in": 3850358784,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 940063,
+            "pswpout": 2187319,
+            "pgmajfault": 1115331
+          },
+          "stack_rss_mb": 3739.36328125,
+          "available_mb": 1066.3203125,
+          "swap_used_mb": 2273.4375,
+          "swap_in": 3850498048,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 52
+        },
+        {
+          "vmstat": {
+            "pswpin": 940140,
+            "pswpout": 2187319,
+            "pgmajfault": 1115412
+          },
+          "stack_rss_mb": 3739.4453125,
+          "available_mb": 974.453125,
+          "swap_used_mb": 2273.1875,
+          "swap_in": 3850813440,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 27
+        },
+        {
+          "vmstat": {
+            "pswpin": 940141,
+            "pswpout": 2187319,
+            "pgmajfault": 1115413
+          },
+          "stack_rss_mb": 3739.26953125,
+          "available_mb": 1060.046875,
+          "swap_used_mb": 2273.1875,
+          "swap_in": 3850817536,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 31
+        },
+        {
+          "vmstat": {
+            "pswpin": 940142,
+            "pswpout": 2187319,
+            "pgmajfault": 1115414
+          },
+          "stack_rss_mb": 3739.49609375,
+          "available_mb": 970.02734375,
+          "swap_used_mb": 2273.1875,
+          "swap_in": 3850821632,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 0
+        },
+        {
+          "vmstat": {
+            "pswpin": 940143,
+            "pswpout": 2187319,
+            "pgmajfault": 1115416
+          },
+          "stack_rss_mb": 3842.203125,
+          "available_mb": 1017.6875,
+          "swap_used_mb": 2273.1875,
+          "swap_in": 3850825728,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 68
+        },
+        {
+          "vmstat": {
+            "pswpin": 940143,
+            "pswpout": 2187319,
+            "pgmajfault": 1115416
+          },
+          "stack_rss_mb": 3790.875,
+          "available_mb": 1068.71484375,
+          "swap_used_mb": 2273.1875,
+          "swap_in": 3850825728,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 940150,
+            "pswpout": 2187319,
+            "pgmajfault": 1115463
+          },
+          "stack_rss_mb": 3739.42578125,
+          "available_mb": 972.33203125,
+          "swap_used_mb": 2272.9375,
+          "swap_in": 3850854400,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 89
+        },
+        {
+          "vmstat": {
+            "pswpin": 940152,
+            "pswpout": 2187319,
+            "pgmajfault": 1115485
+          },
+          "stack_rss_mb": 3739.3359375,
+          "available_mb": 1065.546875,
+          "swap_used_mb": 2272.9375,
+          "swap_in": 3850862592,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 63
+        },
+        {
+          "vmstat": {
+            "pswpin": 940741,
+            "pswpout": 2187319,
+            "pgmajfault": 1116122
+          },
+          "stack_rss_mb": 3791.15234375,
+          "available_mb": 982.4296875,
+          "swap_used_mb": 2270.6875,
+          "swap_in": 3853275136,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 76
+        },
+        {
+          "vmstat": {
+            "pswpin": 941105,
+            "pswpout": 2187319,
+            "pgmajfault": 1116575
+          },
+          "stack_rss_mb": 3740.5625,
+          "available_mb": 1075.75,
+          "swap_used_mb": 2269.6875,
+          "swap_in": 3854766080,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 64
+        },
+        {
+          "vmstat": {
+            "pswpin": 941138,
+            "pswpout": 2187319,
+            "pgmajfault": 1116637
+          },
+          "stack_rss_mb": 3843.37109375,
+          "available_mb": 1007.8671875,
+          "swap_used_mb": 2269.4375,
+          "swap_in": 3854901248,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 8
+        },
+        {
+          "vmstat": {
+            "pswpin": 941140,
+            "pswpout": 2187319,
+            "pgmajfault": 1116646
+          },
+          "stack_rss_mb": 3843.359375,
+          "available_mb": 1076.953125,
+          "swap_used_mb": 2269.4375,
+          "swap_in": 3854909440,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 57
+        },
+        {
+          "vmstat": {
+            "pswpin": 941140,
+            "pswpout": 2187319,
+            "pgmajfault": 1116651
+          },
+          "stack_rss_mb": 3740.515625,
+          "available_mb": 1083.8828125,
+          "swap_used_mb": 2269.4375,
+          "swap_in": 3854909440,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 53
+        },
+        {
+          "vmstat": {
+            "pswpin": 941149,
+            "pswpout": 2187319,
+            "pgmajfault": 1116660
+          },
+          "stack_rss_mb": 3818.7265625,
+          "available_mb": 1056.421875,
+          "swap_used_mb": 2269.4375,
+          "swap_in": 3854946304,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 91
+        },
+        {
+          "vmstat": {
+            "pswpin": 941149,
+            "pswpout": 2187319,
+            "pgmajfault": 1116661
+          },
+          "stack_rss_mb": 3740.6171875,
+          "available_mb": 1079.33203125,
+          "swap_used_mb": 2269.4375,
+          "swap_in": 3854946304,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 35
+        },
+        {
+          "vmstat": {
+            "pswpin": 941152,
+            "pswpout": 2187319,
+            "pgmajfault": 1116664
+          },
+          "stack_rss_mb": 3843.37109375,
+          "available_mb": 1021.37890625,
+          "swap_used_mb": 2269.4375,
+          "swap_in": 3854958592,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 52
+        },
+        {
+          "vmstat": {
+            "pswpin": 941152,
+            "pswpout": 2187319,
+            "pgmajfault": 1116667
+          },
+          "stack_rss_mb": 3796.3828125,
+          "available_mb": 1106.01953125,
+          "swap_used_mb": 2269.4375,
+          "swap_in": 3854958592,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 16
+        },
+        {
+          "vmstat": {
+            "pswpin": 941163,
+            "pswpout": 2187319,
+            "pgmajfault": 1116679
+          },
+          "stack_rss_mb": 3760.06640625,
+          "available_mb": 1096.515625,
+          "swap_used_mb": 2269.1875,
+          "swap_in": 3855003648,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 0
+        },
+        {
+          "vmstat": {
+            "pswpin": 948813,
+            "pswpout": 2187319,
+            "pgmajfault": 1124594
+          },
+          "stack_rss_mb": 3740.83203125,
+          "available_mb": 1004.14453125,
+          "swap_used_mb": 2239.4375,
+          "swap_in": 3886333952,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 13
+        },
+        {
+          "vmstat": {
+            "pswpin": 951604,
+            "pswpout": 2187319,
+            "pgmajfault": 1127497
+          },
+          "stack_rss_mb": 3740.87109375,
+          "available_mb": 1083.546875,
+          "swap_used_mb": 2213.4375,
+          "swap_in": 3897769984,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 18
+        },
+        {
+          "vmstat": {
+            "pswpin": 951624,
+            "pswpout": 2187319,
+            "pgmajfault": 1127519
+          },
+          "stack_rss_mb": 3740.6484375,
+          "available_mb": 1000.9921875,
+          "swap_used_mb": 2213.1875,
+          "swap_in": 3897851904,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 47
+        },
+        {
+          "vmstat": {
+            "pswpin": 951642,
+            "pswpout": 2187319,
+            "pgmajfault": 1127556
+          },
+          "stack_rss_mb": 3828.3359375,
+          "available_mb": 1093.3515625,
+          "swap_used_mb": 2212.4375,
+          "swap_in": 3897925632,
+          "swap_out": 8959258624,
+          "threads": 44,
+          "gr3d": 73
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4665
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4665
+      }
+    },
+    {
+      "phase": "faceblur",
+      "operations": [],
+      "errors": [],
+      "duration_s": 30.15448942600051,
+      "ticks": 301,
+      "valid_depth": 301,
+      "timing": {
+        "tick_ms": {
+          "n": 301,
+          "median": 47.07874799896672,
+          "p95": 74.57147300010547,
+          "max": 106.72666400023445
+        },
+        "interval_ms": {
+          "n": 301,
+          "median": 100.1426029997674,
+          "p95": 101.9489579994115,
+          "max": 166.99949099893274
+        },
+        "capture_wait_ms": {
+          "n": 301,
+          "median": 0.16617800065432675,
+          "p95": 0.36717200055136345,
+          "max": 1.6890460010472452
+        },
+        "depth_ms": {
+          "n": 301,
+          "median": 19.664027000544593,
+          "p95": 31.539446999886422,
+          "max": 57.37551399943186
+        },
+        "hazards_ms": {
+          "n": 301,
+          "median": 0.020831999790971167,
+          "p95": 0.03968099917983636,
+          "max": 1.4951550001569558
+        },
+        "movers_ms": {
+          "n": 301,
+          "median": 25.678826999865123,
+          "p95": 47.07279400099651,
+          "max": 85.76495899978909
+        },
+        "publish_ms": {
+          "n": 301,
+          "median": 0.15568199887638912,
+          "p95": 0.3232359995308798,
+          "max": 7.243516000016825
+        },
+        "navigation_ms": {
+          "n": 301,
+          "median": 0.008799999704933725,
+          "p95": 0.015487999917240813,
+          "max": 0.05427300129667856
+        },
+        "alarms_health_ms": {
+          "n": 301,
+          "median": 0.01311999949393794,
+          "p95": 0.02985600076499395,
+          "max": 0.10797000140883029
+        },
+        "skew_ms": {
+          "n": 301,
+          "median": 0.8750830002099974,
+          "p95": 3.0927440002415096,
+          "max": 10.019520999776432
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 301,
+          "median": 0.0037760000850539654,
+          "p95": 0.005472000339068472,
+          "max": 0.0872330001584487
+        },
+        "disparity_ms": {
+          "n": 301,
+          "median": 16.623669000182417,
+          "p95": 27.72563899998204,
+          "max": 50.780421999661485
+        }
+      },
+      "depth_gaps": [],
+      "outages": [],
+      "heartbeat_interval_ms": {
+        "n": 300,
+        "median": 100.5249494992313,
+        "p95": 114.5077269504327,
+        "max": 141.4641359988309
+      },
+      "resources": [
+        {
+          "vmstat": {
+            "pswpin": 951796,
+            "pswpout": 2215626,
+            "pgmajfault": 1128022
+          },
+          "stack_rss_mb": 3616.83984375,
+          "available_mb": 1137.3046875,
+          "swap_used_mb": 2323.0078125,
+          "swap_in": 3898556416,
+          "swap_out": 9075204096,
+          "threads": 50,
+          "gr3d": 49
+        },
+        {
+          "vmstat": {
+            "pswpin": 951825,
+            "pswpout": 2215626,
+            "pgmajfault": 1129481
+          },
+          "stack_rss_mb": 3619.48046875,
+          "available_mb": 1147.6953125,
+          "swap_used_mb": 2322.7578125,
+          "swap_in": 3898675200,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 45
+        },
+        {
+          "vmstat": {
+            "pswpin": 952634,
+            "pswpout": 2215626,
+            "pgmajfault": 1130374
+          },
+          "stack_rss_mb": 3708.9296875,
+          "available_mb": 1037.63671875,
+          "swap_used_mb": 2319.2578125,
+          "swap_in": 3901988864,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 83
+        },
+        {
+          "vmstat": {
+            "pswpin": 952642,
+            "pswpout": 2215626,
+            "pgmajfault": 1130382
+          },
+          "stack_rss_mb": 3740.81640625,
+          "available_mb": 998.04296875,
+          "swap_used_mb": 2319.2578125,
+          "swap_in": 3902021632,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 54
+        },
+        {
+          "vmstat": {
+            "pswpin": 952648,
+            "pswpout": 2215626,
+            "pgmajfault": 1130394
+          },
+          "stack_rss_mb": 3747.80078125,
+          "available_mb": 991.33984375,
+          "swap_used_mb": 2319.2578125,
+          "swap_in": 3902046208,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 32
+        },
+        {
+          "vmstat": {
+            "pswpin": 952657,
+            "pswpout": 2215626,
+            "pgmajfault": 1130403
+          },
+          "stack_rss_mb": 3747.796875,
+          "available_mb": 990.65625,
+          "swap_used_mb": 2319.2578125,
+          "swap_in": 3902083072,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 22
+        },
+        {
+          "vmstat": {
+            "pswpin": 952661,
+            "pswpout": 2215626,
+            "pgmajfault": 1130408
+          },
+          "stack_rss_mb": 3747.78515625,
+          "available_mb": 990.82421875,
+          "swap_used_mb": 2319.2578125,
+          "swap_in": 3902099456,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 86
+        },
+        {
+          "vmstat": {
+            "pswpin": 952667,
+            "pswpout": 2215626,
+            "pgmajfault": 1130414
+          },
+          "stack_rss_mb": 3747.78125,
+          "available_mb": 990.27734375,
+          "swap_used_mb": 2319.2578125,
+          "swap_in": 3902124032,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 21
+        },
+        {
+          "vmstat": {
+            "pswpin": 952670,
+            "pswpout": 2215626,
+            "pgmajfault": 1130417
+          },
+          "stack_rss_mb": 3747.7734375,
+          "available_mb": 990.28125,
+          "swap_used_mb": 2319.2578125,
+          "swap_in": 3902136320,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 29
+        },
+        {
+          "vmstat": {
+            "pswpin": 952678,
+            "pswpout": 2215626,
+            "pgmajfault": 1130426
+          },
+          "stack_rss_mb": 3747.76953125,
+          "available_mb": 990.28125,
+          "swap_used_mb": 2319.0078125,
+          "swap_in": 3902169088,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 12
+        },
+        {
+          "vmstat": {
+            "pswpin": 952682,
+            "pswpout": 2215626,
+            "pgmajfault": 1130430
+          },
+          "stack_rss_mb": 3748.27734375,
+          "available_mb": 990.47265625,
+          "swap_used_mb": 2319.0078125,
+          "swap_in": 3902185472,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 62
+        },
+        {
+          "vmstat": {
+            "pswpin": 952688,
+            "pswpout": 2215626,
+            "pgmajfault": 1130436
+          },
+          "stack_rss_mb": 3748.26953125,
+          "available_mb": 990.234375,
+          "swap_used_mb": 2319.0078125,
+          "swap_in": 3902210048,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 72
+        },
+        {
+          "vmstat": {
+            "pswpin": 952694,
+            "pswpout": 2215626,
+            "pgmajfault": 1130442
+          },
+          "stack_rss_mb": 3748.265625,
+          "available_mb": 990.234375,
+          "swap_used_mb": 2318.7578125,
+          "swap_in": 3902234624,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 83
+        },
+        {
+          "vmstat": {
+            "pswpin": 952700,
+            "pswpout": 2215626,
+            "pgmajfault": 1130448
+          },
+          "stack_rss_mb": 3748.2578125,
+          "available_mb": 990.015625,
+          "swap_used_mb": 2318.7578125,
+          "swap_in": 3902259200,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 78
+        },
+        {
+          "vmstat": {
+            "pswpin": 952715,
+            "pswpout": 2215626,
+            "pgmajfault": 1130464
+          },
+          "stack_rss_mb": 3754.3046875,
+          "available_mb": 984.3515625,
+          "swap_used_mb": 2318.7578125,
+          "swap_in": 3902320640,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 78
+        },
+        {
+          "vmstat": {
+            "pswpin": 952722,
+            "pswpout": 2215626,
+            "pgmajfault": 1130471
+          },
+          "stack_rss_mb": 3754.296875,
+          "available_mb": 984.51953125,
+          "swap_used_mb": 2318.7578125,
+          "swap_in": 3902349312,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 95
+        },
+        {
+          "vmstat": {
+            "pswpin": 952729,
+            "pswpout": 2215626,
+            "pgmajfault": 1130479
+          },
+          "stack_rss_mb": 3754.29296875,
+          "available_mb": 984.6171875,
+          "swap_used_mb": 2318.7578125,
+          "swap_in": 3902377984,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 82
+        },
+        {
+          "vmstat": {
+            "pswpin": 952737,
+            "pswpout": 2215626,
+            "pgmajfault": 1130487
+          },
+          "stack_rss_mb": 3754.28515625,
+          "available_mb": 984.6171875,
+          "swap_used_mb": 2318.7578125,
+          "swap_in": 3902410752,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 94
+        },
+        {
+          "vmstat": {
+            "pswpin": 952745,
+            "pswpout": 2215626,
+            "pgmajfault": 1130495
+          },
+          "stack_rss_mb": 3754.27734375,
+          "available_mb": 984.6875,
+          "swap_used_mb": 2318.7578125,
+          "swap_in": 3902443520,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 51
+        },
+        {
+          "vmstat": {
+            "pswpin": 952752,
+            "pswpout": 2215626,
+            "pgmajfault": 1130502
+          },
+          "stack_rss_mb": 3754.2734375,
+          "available_mb": 984.25,
+          "swap_used_mb": 2318.7578125,
+          "swap_in": 3902472192,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 88
+        },
+        {
+          "vmstat": {
+            "pswpin": 952760,
+            "pswpout": 2215626,
+            "pgmajfault": 1130511
+          },
+          "stack_rss_mb": 3754.265625,
+          "available_mb": 984.26171875,
+          "swap_used_mb": 2318.5078125,
+          "swap_in": 3902504960,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 72
+        },
+        {
+          "vmstat": {
+            "pswpin": 952768,
+            "pswpout": 2215626,
+            "pgmajfault": 1130519
+          },
+          "stack_rss_mb": 3754.2578125,
+          "available_mb": 984.03125,
+          "swap_used_mb": 2318.5078125,
+          "swap_in": 3902537728,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 9
+        },
+        {
+          "vmstat": {
+            "pswpin": 952949,
+            "pswpout": 2215626,
+            "pgmajfault": 1130764
+          },
+          "stack_rss_mb": 3754.25,
+          "available_mb": 975.10546875,
+          "swap_used_mb": 2317.5078125,
+          "swap_in": 3903279104,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 0
+        },
+        {
+          "vmstat": {
+            "pswpin": 952966,
+            "pswpout": 2215626,
+            "pgmajfault": 1130783
+          },
+          "stack_rss_mb": 3754.24609375,
+          "available_mb": 971.46875,
+          "swap_used_mb": 2317.2578125,
+          "swap_in": 3903348736,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 6
+        },
+        {
+          "vmstat": {
+            "pswpin": 952968,
+            "pswpout": 2215626,
+            "pgmajfault": 1130788
+          },
+          "stack_rss_mb": 3754.4921875,
+          "available_mb": 971.3359375,
+          "swap_used_mb": 2317.2578125,
+          "swap_in": 3903356928,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 62
+        },
+        {
+          "vmstat": {
+            "pswpin": 953023,
+            "pswpout": 2215626,
+            "pgmajfault": 1130862
+          },
+          "stack_rss_mb": 3754.484375,
+          "available_mb": 971.52734375,
+          "swap_used_mb": 2317.2578125,
+          "swap_in": 3903582208,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 44
+        },
+        {
+          "vmstat": {
+            "pswpin": 953023,
+            "pswpout": 2215626,
+            "pgmajfault": 1130862
+          },
+          "stack_rss_mb": 3754.4765625,
+          "available_mb": 972.96484375,
+          "swap_used_mb": 2317.2578125,
+          "swap_in": 3903582208,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 18
+        },
+        {
+          "vmstat": {
+            "pswpin": 953023,
+            "pswpout": 2215626,
+            "pgmajfault": 1130862
+          },
+          "stack_rss_mb": 3754.47265625,
+          "available_mb": 973.02734375,
+          "swap_used_mb": 2317.2578125,
+          "swap_in": 3903582208,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 67
+        },
+        {
+          "vmstat": {
+            "pswpin": 953024,
+            "pswpout": 2215626,
+            "pgmajfault": 1130863
+          },
+          "stack_rss_mb": 3754.46484375,
+          "available_mb": 973.07421875,
+          "swap_used_mb": 2317.2578125,
+          "swap_in": 3903586304,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 45
+        },
+        {
+          "vmstat": {
+            "pswpin": 953058,
+            "pswpout": 2215626,
+            "pgmajfault": 1130918
+          },
+          "stack_rss_mb": 3754.45703125,
+          "available_mb": 975.859375,
+          "swap_used_mb": 2317.2578125,
+          "swap_in": 3903725568,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 59
+        },
+        {
+          "vmstat": {
+            "pswpin": 953102,
+            "pswpout": 2215626,
+            "pgmajfault": 1130968
+          },
+          "stack_rss_mb": 3754.44921875,
+          "available_mb": 975.71484375,
+          "swap_used_mb": 2316.7578125,
+          "swap_in": 3903905792,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 48
+        },
+        {
+          "vmstat": {
+            "pswpin": 953102,
+            "pswpout": 2215626,
+            "pgmajfault": 1130968
+          },
+          "stack_rss_mb": 3754.6953125,
+          "available_mb": 975.9921875,
+          "swap_used_mb": 2316.7578125,
+          "swap_in": 3903905792,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 37
+        },
+        {
+          "vmstat": {
+            "pswpin": 953103,
+            "pswpout": 2215626,
+            "pgmajfault": 1130969
+          },
+          "stack_rss_mb": 3754.69140625,
+          "available_mb": 975.74609375,
+          "swap_used_mb": 2316.7578125,
+          "swap_in": 3903909888,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 82
+        },
+        {
+          "vmstat": {
+            "pswpin": 955029,
+            "pswpout": 2215626,
+            "pgmajfault": 1132937
+          },
+          "stack_rss_mb": 3754.6796875,
+          "available_mb": 973.71484375,
+          "swap_used_mb": 2309.7578125,
+          "swap_in": 3911798784,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 65
+        },
+        {
+          "vmstat": {
+            "pswpin": 955046,
+            "pswpout": 2215626,
+            "pgmajfault": 1132957
+          },
+          "stack_rss_mb": 3754.671875,
+          "available_mb": 974.1171875,
+          "swap_used_mb": 2309.5078125,
+          "swap_in": 3911868416,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 97
+        },
+        {
+          "vmstat": {
+            "pswpin": 955046,
+            "pswpout": 2215626,
+            "pgmajfault": 1132960
+          },
+          "stack_rss_mb": 3754.66796875,
+          "available_mb": 974.24609375,
+          "swap_used_mb": 2309.5078125,
+          "swap_in": 3911868416,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 18
+        },
+        {
+          "vmstat": {
+            "pswpin": 956774,
+            "pswpout": 2215626,
+            "pgmajfault": 1134781
+          },
+          "stack_rss_mb": 3754.6640625,
+          "available_mb": 972.40234375,
+          "swap_used_mb": 2303.0078125,
+          "swap_in": 3918946304,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 24
+        },
+        {
+          "vmstat": {
+            "pswpin": 956892,
+            "pswpout": 2215626,
+            "pgmajfault": 1134949
+          },
+          "stack_rss_mb": 3754.65234375,
+          "available_mb": 970.91796875,
+          "swap_used_mb": 2302.2578125,
+          "swap_in": 3919429632,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 66
+        },
+        {
+          "vmstat": {
+            "pswpin": 957085,
+            "pswpout": 2215626,
+            "pgmajfault": 1135150
+          },
+          "stack_rss_mb": 3754.6484375,
+          "available_mb": 972.55859375,
+          "swap_used_mb": 2301.2578125,
+          "swap_in": 3920220160,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 35
+        },
+        {
+          "vmstat": {
+            "pswpin": 957222,
+            "pswpout": 2215626,
+            "pgmajfault": 1135295
+          },
+          "stack_rss_mb": 3754.640625,
+          "available_mb": 971.71875,
+          "swap_used_mb": 2300.7578125,
+          "swap_in": 3920781312,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 38
+        },
+        {
+          "vmstat": {
+            "pswpin": 957369,
+            "pswpout": 2215626,
+            "pgmajfault": 1135441
+          },
+          "stack_rss_mb": 3754.6328125,
+          "available_mb": 973.3046875,
+          "swap_used_mb": 2300.0078125,
+          "swap_in": 3921383424,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 70
+        },
+        {
+          "vmstat": {
+            "pswpin": 957438,
+            "pswpout": 2215626,
+            "pgmajfault": 1135532
+          },
+          "stack_rss_mb": 3754.625,
+          "available_mb": 971.77734375,
+          "swap_used_mb": 2300.0078125,
+          "swap_in": 3921666048,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 62
+        },
+        {
+          "vmstat": {
+            "pswpin": 957441,
+            "pswpout": 2215626,
+            "pgmajfault": 1135535
+          },
+          "stack_rss_mb": 3754.62109375,
+          "available_mb": 971.953125,
+          "swap_used_mb": 2300.0078125,
+          "swap_in": 3921678336,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 35
+        },
+        {
+          "vmstat": {
+            "pswpin": 957448,
+            "pswpout": 2215626,
+            "pgmajfault": 1135542
+          },
+          "stack_rss_mb": 3754.61328125,
+          "available_mb": 969.51953125,
+          "swap_used_mb": 2299.7578125,
+          "swap_in": 3921707008,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 67
+        },
+        {
+          "vmstat": {
+            "pswpin": 957449,
+            "pswpout": 2215626,
+            "pgmajfault": 1135545
+          },
+          "stack_rss_mb": 3754.60546875,
+          "available_mb": 969.04296875,
+          "swap_used_mb": 2299.7578125,
+          "swap_in": 3921711104,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 68
+        },
+        {
+          "vmstat": {
+            "pswpin": 957449,
+            "pswpout": 2215626,
+            "pgmajfault": 1135545
+          },
+          "stack_rss_mb": 3754.6015625,
+          "available_mb": 968.796875,
+          "swap_used_mb": 2299.7578125,
+          "swap_in": 3921711104,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 71
+        },
+        {
+          "vmstat": {
+            "pswpin": 957449,
+            "pswpout": 2215626,
+            "pgmajfault": 1135545
+          },
+          "stack_rss_mb": 3754.59375,
+          "available_mb": 968.796875,
+          "swap_used_mb": 2299.7578125,
+          "swap_in": 3921711104,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 0
+        },
+        {
+          "vmstat": {
+            "pswpin": 957477,
+            "pswpout": 2215626,
+            "pgmajfault": 1135575
+          },
+          "stack_rss_mb": 3754.58984375,
+          "available_mb": 969.55078125,
+          "swap_used_mb": 2299.7578125,
+          "swap_in": 3921825792,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 79
+        },
+        {
+          "vmstat": {
+            "pswpin": 957490,
+            "pswpout": 2215626,
+            "pgmajfault": 1135588
+          },
+          "stack_rss_mb": 3754.578125,
+          "available_mb": 964.203125,
+          "swap_used_mb": 2299.7578125,
+          "swap_in": 3921879040,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 56
+        },
+        {
+          "vmstat": {
+            "pswpin": 957516,
+            "pswpout": 2215626,
+            "pgmajfault": 1135614
+          },
+          "stack_rss_mb": 3754.57421875,
+          "available_mb": 963.3984375,
+          "swap_used_mb": 2299.7578125,
+          "swap_in": 3921985536,
+          "swap_out": 9075204096,
+          "threads": 51,
+          "gr3d": 45
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4665
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4665
+      }
+    },
+    {
+      "phase": "recorder",
+      "operations": [],
+      "errors": [],
+      "duration_s": 30.303769871999975,
+      "ticks": 303,
+      "valid_depth": 303,
+      "timing": {
+        "tick_ms": {
+          "n": 303,
+          "median": 51.31852600061393,
+          "p95": 68.61558079872339,
+          "max": 107.93820499930007
+        },
+        "interval_ms": {
+          "n": 303,
+          "median": 100.13981900010549,
+          "p95": 100.71143229888548,
+          "max": 107.99730899998394
+        },
+        "capture_wait_ms": {
+          "n": 303,
+          "median": 0.18121799985237885,
+          "p95": 0.2757768008450512,
+          "max": 0.7249059999594465
+        },
+        "depth_ms": {
+          "n": 303,
+          "median": 23.473302000638796,
+          "p95": 33.053176099565455,
+          "max": 52.01531599959708
+        },
+        "hazards_ms": {
+          "n": 303,
+          "median": 0.02470499930495862,
+          "p95": 0.040422499478154336,
+          "max": 0.9176120001939125
+        },
+        "movers_ms": {
+          "n": 303,
+          "median": 27.10704700075439,
+          "p95": 38.11788390048604,
+          "max": 72.76781399923493
+        },
+        "publish_ms": {
+          "n": 303,
+          "median": 0.16598699949099682,
+          "p95": 0.3058119995330344,
+          "max": 10.01517300028354
+        },
+        "navigation_ms": {
+          "n": 303,
+          "median": 0.010080000720336102,
+          "p95": 0.013984100587549605,
+          "max": 0.11769800039473921
+        },
+        "alarms_health_ms": {
+          "n": 303,
+          "median": 0.01462399995943997,
+          "p95": 0.017971300621866245,
+          "max": 0.0441919983131811
+        },
+        "skew_ms": {
+          "n": 303,
+          "median": 0.9820929990382865,
+          "p95": 2.696000699324939,
+          "max": 11.96809300017776
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 303,
+          "median": 0.0046080003812676296,
+          "p95": 0.006204799865372478,
+          "max": 0.02534400118747726
+        },
+        "disparity_ms": {
+          "n": 303,
+          "median": 19.17462399978831,
+          "p95": 28.638831600983387,
+          "max": 38.00319200126978
+        }
+      },
+      "depth_gaps": [],
+      "outages": [],
+      "heartbeat_interval_ms": {
+        "n": 301,
+        "median": 100.23650000039197,
+        "p95": 111.04028600129823,
+        "max": 123.51450399910391
+      },
+      "resources": [
+        {
+          "vmstat": {
+            "pswpin": 957643,
+            "pswpout": 2215626,
+            "pgmajfault": 1135879
+          },
+          "stack_rss_mb": 3720.3984375,
+          "available_mb": 988.9921875,
+          "swap_used_mb": 2299.5078125,
+          "swap_in": 3922505728,
+          "swap_out": 9075204096,
+          "threads": 46,
+          "gr3d": 30
+        },
+        {
+          "vmstat": {
+            "pswpin": 957695,
+            "pswpout": 2215731,
+            "pgmajfault": 1136115
+          },
+          "stack_rss_mb": 3761.25,
+          "available_mb": 997.609375,
+          "swap_used_mb": 2300.07421875,
+          "swap_in": 3922718720,
+          "swap_out": 9075634176,
+          "threads": 46,
+          "gr3d": 65
+        },
+        {
+          "vmstat": {
+            "pswpin": 957705,
+            "pswpout": 2215731,
+            "pgmajfault": 1136125
+          },
+          "stack_rss_mb": 3761.2421875,
+          "available_mb": 996.9609375,
+          "swap_used_mb": 2300.07421875,
+          "swap_in": 3922759680,
+          "swap_out": 9075634176,
+          "threads": 46,
+          "gr3d": 15
+        },
+        {
+          "vmstat": {
+            "pswpin": 957925,
+            "pswpout": 2215731,
+            "pgmajfault": 1136348
+          },
+          "stack_rss_mb": 3761.23828125,
+          "available_mb": 989.58984375,
+          "swap_used_mb": 2299.32421875,
+          "swap_in": 3923660800,
+          "swap_out": 9075634176,
+          "threads": 46,
+          "gr3d": 84
+        },
+        {
+          "vmstat": {
+            "pswpin": 958226,
+            "pswpout": 2215731,
+            "pgmajfault": 1136657
+          },
+          "stack_rss_mb": 3761.2265625,
+          "available_mb": 990.03515625,
+          "swap_used_mb": 2298.07421875,
+          "swap_in": 3924893696,
+          "swap_out": 9075634176,
+          "threads": 46,
+          "gr3d": 87
+        },
+        {
+          "vmstat": {
+            "pswpin": 958387,
+            "pswpout": 2216188,
+            "pgmajfault": 1136882
+          },
+          "stack_rss_mb": 3752.69140625,
+          "available_mb": 965.87109375,
+          "swap_used_mb": 2298.61328125,
+          "swap_in": 3925553152,
+          "swap_out": 9077506048,
+          "threads": 46,
+          "gr3d": 0
+        },
+        {
+          "vmstat": {
+            "pswpin": 958395,
+            "pswpout": 2216188,
+            "pgmajfault": 1136891
+          },
+          "stack_rss_mb": 3752.68359375,
+          "available_mb": 965.15625,
+          "swap_used_mb": 2298.61328125,
+          "swap_in": 3925585920,
+          "swap_out": 9077506048,
+          "threads": 46,
+          "gr3d": 61
+        },
+        {
+          "vmstat": {
+            "pswpin": 958404,
+            "pswpout": 2216188,
+            "pgmajfault": 1136900
+          },
+          "stack_rss_mb": 3752.6796875,
+          "available_mb": 962.8671875,
+          "swap_used_mb": 2298.61328125,
+          "swap_in": 3925622784,
+          "swap_out": 9077506048,
+          "threads": 46,
+          "gr3d": 37
+        },
+        {
+          "vmstat": {
+            "pswpin": 958412,
+            "pswpout": 2216188,
+            "pgmajfault": 1136908
+          },
+          "stack_rss_mb": 3752.671875,
+          "available_mb": 962.8671875,
+          "swap_used_mb": 2298.61328125,
+          "swap_in": 3925655552,
+          "swap_out": 9077506048,
+          "threads": 46,
+          "gr3d": 8
+        },
+        {
+          "vmstat": {
+            "pswpin": 958417,
+            "pswpout": 2216188,
+            "pgmajfault": 1136913
+          },
+          "stack_rss_mb": 3752.6640625,
+          "available_mb": 962.87890625,
+          "swap_used_mb": 2298.61328125,
+          "swap_in": 3925676032,
+          "swap_out": 9077506048,
+          "threads": 46,
+          "gr3d": 59
+        },
+        {
+          "vmstat": {
+            "pswpin": 958421,
+            "pswpout": 2216188,
+            "pgmajfault": 1136917
+          },
+          "stack_rss_mb": 3752.65625,
+          "available_mb": 962.88671875,
+          "swap_used_mb": 2298.61328125,
+          "swap_in": 3925692416,
+          "swap_out": 9077506048,
+          "threads": 46,
+          "gr3d": 0
+        },
+        {
+          "vmstat": {
+            "pswpin": 958423,
+            "pswpout": 2216855,
+            "pgmajfault": 1136919
+          },
+          "stack_rss_mb": 3746.7109375,
+          "available_mb": 962.88671875,
+          "swap_used_mb": 2301.21875,
+          "swap_in": 3925700608,
+          "swap_out": 9080238080,
+          "threads": 46,
+          "gr3d": 65
+        },
+        {
+          "vmstat": {
+            "pswpin": 958436,
+            "pswpout": 2218109,
+            "pgmajfault": 1136932
+          },
+          "stack_rss_mb": 3739.20703125,
+          "available_mb": 966.578125,
+          "swap_used_mb": 2306.28515625,
+          "swap_in": 3925753856,
+          "swap_out": 9085374464,
+          "threads": 46,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 958440,
+            "pswpout": 2218109,
+            "pgmajfault": 1136938
+          },
+          "stack_rss_mb": 3739.19921875,
+          "available_mb": 964.0703125,
+          "swap_used_mb": 2306.28515625,
+          "swap_in": 3925770240,
+          "swap_out": 9085374464,
+          "threads": 46,
+          "gr3d": 97
+        },
+        {
+          "vmstat": {
+            "pswpin": 958445,
+            "pswpout": 2218109,
+            "pgmajfault": 1136943
+          },
+          "stack_rss_mb": 3739.1953125,
+          "available_mb": 961.2578125,
+          "swap_used_mb": 2306.28515625,
+          "swap_in": 3925790720,
+          "swap_out": 9085374464,
+          "threads": 46,
+          "gr3d": 42
+        },
+        {
+          "vmstat": {
+            "pswpin": 958465,
+            "pswpout": 2218109,
+            "pgmajfault": 1136964
+          },
+          "stack_rss_mb": 3739.18359375,
+          "available_mb": 961.32421875,
+          "swap_used_mb": 2306.28515625,
+          "swap_in": 3925872640,
+          "swap_out": 9085374464,
+          "threads": 46,
+          "gr3d": 30
+        },
+        {
+          "vmstat": {
+            "pswpin": 958466,
+            "pswpout": 2218109,
+            "pgmajfault": 1136965
+          },
+          "stack_rss_mb": 3739.1796875,
+          "available_mb": 961.08984375,
+          "swap_used_mb": 2306.28515625,
+          "swap_in": 3925876736,
+          "swap_out": 9085374464,
+          "threads": 46,
+          "gr3d": 83
+        },
+        {
+          "vmstat": {
+            "pswpin": 958473,
+            "pswpout": 2218109,
+            "pgmajfault": 1136972
+          },
+          "stack_rss_mb": 3739.17578125,
+          "available_mb": 961.08984375,
+          "swap_used_mb": 2306.28515625,
+          "swap_in": 3925905408,
+          "swap_out": 9085374464,
+          "threads": 46,
+          "gr3d": 55
+        },
+        {
+          "vmstat": {
+            "pswpin": 958484,
+            "pswpout": 2218109,
+            "pgmajfault": 1136983
+          },
+          "stack_rss_mb": 3739.17578125,
+          "available_mb": 960.84765625,
+          "swap_used_mb": 2306.28515625,
+          "swap_in": 3925950464,
+          "swap_out": 9085374464,
+          "threads": 46,
+          "gr3d": 41
+        },
+        {
+          "vmstat": {
+            "pswpin": 958491,
+            "pswpout": 2218109,
+            "pgmajfault": 1136990
+          },
+          "stack_rss_mb": 3739.171875,
+          "available_mb": 960.84765625,
+          "swap_used_mb": 2306.28515625,
+          "swap_in": 3925979136,
+          "swap_out": 9085374464,
+          "threads": 46,
+          "gr3d": 50
+        },
+        {
+          "vmstat": {
+            "pswpin": 958500,
+            "pswpout": 2218109,
+            "pgmajfault": 1136999
+          },
+          "stack_rss_mb": 3739.171875,
+          "available_mb": 960.90234375,
+          "swap_used_mb": 2306.03515625,
+          "swap_in": 3926016000,
+          "swap_out": 9085374464,
+          "threads": 46,
+          "gr3d": 15
+        },
+        {
+          "vmstat": {
+            "pswpin": 958506,
+            "pswpout": 2218109,
+            "pgmajfault": 1137005
+          },
+          "stack_rss_mb": 3739.171875,
+          "available_mb": 960.90234375,
+          "swap_used_mb": 2306.03515625,
+          "swap_in": 3926040576,
+          "swap_out": 9085374464,
+          "threads": 46,
+          "gr3d": 70
+        },
+        {
+          "vmstat": {
+            "pswpin": 958514,
+            "pswpout": 2218109,
+            "pgmajfault": 1137013
+          },
+          "stack_rss_mb": 3739.16796875,
+          "available_mb": 962.43359375,
+          "swap_used_mb": 2306.03515625,
+          "swap_in": 3926073344,
+          "swap_out": 9085374464,
+          "threads": 46,
+          "gr3d": 35
+        },
+        {
+          "vmstat": {
+            "pswpin": 958553,
+            "pswpout": 2218109,
+            "pgmajfault": 1137058
+          },
+          "stack_rss_mb": 3739.16796875,
+          "available_mb": 963.9921875,
+          "swap_used_mb": 2306.03515625,
+          "swap_in": 3926233088,
+          "swap_out": 9085374464,
+          "threads": 46,
+          "gr3d": 9
+        },
+        {
+          "vmstat": {
+            "pswpin": 958570,
+            "pswpout": 2220333,
+            "pgmajfault": 1137089
+          },
+          "stack_rss_mb": 3730.453125,
+          "available_mb": 963.046875,
+          "swap_used_mb": 2314.40234375,
+          "swap_in": 3926302720,
+          "swap_out": 9094483968,
+          "threads": 46,
+          "gr3d": 24
+        },
+        {
+          "vmstat": {
+            "pswpin": 958652,
+            "pswpout": 2221351,
+            "pgmajfault": 1137189
+          },
+          "stack_rss_mb": 3724.34765625,
+          "available_mb": 956.3359375,
+          "swap_used_mb": 2317.80859375,
+          "swap_in": 3926638592,
+          "swap_out": 9098653696,
+          "threads": 46,
+          "gr3d": 58
+        },
+        {
+          "vmstat": {
+            "pswpin": 958658,
+            "pswpout": 2221351,
+            "pgmajfault": 1137199
+          },
+          "stack_rss_mb": 3724.34375,
+          "available_mb": 995.81640625,
+          "swap_used_mb": 2317.80859375,
+          "swap_in": 3926663168,
+          "swap_out": 9098653696,
+          "threads": 46,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 958693,
+            "pswpout": 2221351,
+            "pgmajfault": 1137237
+          },
+          "stack_rss_mb": 3724.34375,
+          "available_mb": 989.92578125,
+          "swap_used_mb": 2317.80859375,
+          "swap_in": 3926806528,
+          "swap_out": 9098653696,
+          "threads": 46,
+          "gr3d": 42
+        },
+        {
+          "vmstat": {
+            "pswpin": 958693,
+            "pswpout": 2221351,
+            "pgmajfault": 1137237
+          },
+          "stack_rss_mb": 3724.33984375,
+          "available_mb": 989.6796875,
+          "swap_used_mb": 2317.80859375,
+          "swap_in": 3926806528,
+          "swap_out": 9098653696,
+          "threads": 46,
+          "gr3d": 63
+        },
+        {
+          "vmstat": {
+            "pswpin": 958693,
+            "pswpout": 2221351,
+            "pgmajfault": 1137237
+          },
+          "stack_rss_mb": 3724.33984375,
+          "available_mb": 989.73828125,
+          "swap_used_mb": 2317.80859375,
+          "swap_in": 3926806528,
+          "swap_out": 9098653696,
+          "threads": 46,
+          "gr3d": 4
+        },
+        {
+          "vmstat": {
+            "pswpin": 958693,
+            "pswpout": 2221351,
+            "pgmajfault": 1137237
+          },
+          "stack_rss_mb": 3724.3359375,
+          "available_mb": 989.26953125,
+          "swap_used_mb": 2317.80859375,
+          "swap_in": 3926806528,
+          "swap_out": 9098653696,
+          "threads": 46,
+          "gr3d": 80
+        },
+        {
+          "vmstat": {
+            "pswpin": 958696,
+            "pswpout": 2221351,
+            "pgmajfault": 1137240
+          },
+          "stack_rss_mb": 3724.3359375,
+          "available_mb": 989.55078125,
+          "swap_used_mb": 2317.80859375,
+          "swap_in": 3926818816,
+          "swap_out": 9098653696,
+          "threads": 46,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 958706,
+            "pswpout": 2221351,
+            "pgmajfault": 1137250
+          },
+          "stack_rss_mb": 3724.33203125,
+          "available_mb": 988.1015625,
+          "swap_used_mb": 2317.80859375,
+          "swap_in": 3926859776,
+          "swap_out": 9098653696,
+          "threads": 46,
+          "gr3d": 40
+        },
+        {
+          "vmstat": {
+            "pswpin": 958720,
+            "pswpout": 2221351,
+            "pgmajfault": 1137264
+          },
+          "stack_rss_mb": 3724.33203125,
+          "available_mb": 987.375,
+          "swap_used_mb": 2317.80859375,
+          "swap_in": 3926917120,
+          "swap_out": 9098653696,
+          "threads": 46,
+          "gr3d": 59
+        },
+        {
+          "vmstat": {
+            "pswpin": 958730,
+            "pswpout": 2221351,
+            "pgmajfault": 1137274
+          },
+          "stack_rss_mb": 3724.33203125,
+          "available_mb": 986.66015625,
+          "swap_used_mb": 2317.55859375,
+          "swap_in": 3926958080,
+          "swap_out": 9098653696,
+          "threads": 46,
+          "gr3d": 69
+        },
+        {
+          "vmstat": {
+            "pswpin": 958756,
+            "pswpout": 2221351,
+            "pgmajfault": 1137323
+          },
+          "stack_rss_mb": 3724.328125,
+          "available_mb": 984.72265625,
+          "swap_used_mb": 2317.05859375,
+          "swap_in": 3927064576,
+          "swap_out": 9098653696,
+          "threads": 46,
+          "gr3d": 0
+        },
+        {
+          "vmstat": {
+            "pswpin": 961052,
+            "pswpout": 2221534,
+            "pgmajfault": 1139954
+          },
+          "stack_rss_mb": 3721.31640625,
+          "available_mb": 980.69921875,
+          "swap_used_mb": 2309.57421875,
+          "swap_in": 3936468992,
+          "swap_out": 9099403264,
+          "threads": 46,
+          "gr3d": 72
+        },
+        {
+          "vmstat": {
+            "pswpin": 961211,
+            "pswpout": 2228998,
+            "pgmajfault": 1140167
+          },
+          "stack_rss_mb": 3666.93359375,
+          "available_mb": 896.8203125,
+          "swap_used_mb": 2338.40234375,
+          "swap_in": 3937120256,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 47
+        },
+        {
+          "vmstat": {
+            "pswpin": 961403,
+            "pswpout": 2228998,
+            "pgmajfault": 1140367
+          },
+          "stack_rss_mb": 3666.93359375,
+          "available_mb": 933.7734375,
+          "swap_used_mb": 2337.90234375,
+          "swap_in": 3937906688,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 49
+        },
+        {
+          "vmstat": {
+            "pswpin": 961505,
+            "pswpout": 2228998,
+            "pgmajfault": 1140562
+          },
+          "stack_rss_mb": 3666.9296875,
+          "available_mb": 924.08203125,
+          "swap_used_mb": 2337.15234375,
+          "swap_in": 3938324480,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 33
+        },
+        {
+          "vmstat": {
+            "pswpin": 961506,
+            "pswpout": 2228998,
+            "pgmajfault": 1140563
+          },
+          "stack_rss_mb": 3666.9296875,
+          "available_mb": 924.4296875,
+          "swap_used_mb": 2337.15234375,
+          "swap_in": 3938328576,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 95
+        },
+        {
+          "vmstat": {
+            "pswpin": 961507,
+            "pswpout": 2228998,
+            "pgmajfault": 1140564
+          },
+          "stack_rss_mb": 3666.92578125,
+          "available_mb": 924.12890625,
+          "swap_used_mb": 2337.15234375,
+          "swap_in": 3938332672,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 80
+        },
+        {
+          "vmstat": {
+            "pswpin": 961507,
+            "pswpout": 2228998,
+            "pgmajfault": 1140564
+          },
+          "stack_rss_mb": 3666.92578125,
+          "available_mb": 924.09375,
+          "swap_used_mb": 2337.15234375,
+          "swap_in": 3938332672,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 93
+        },
+        {
+          "vmstat": {
+            "pswpin": 961574,
+            "pswpout": 2228998,
+            "pgmajfault": 1140659
+          },
+          "stack_rss_mb": 3666.921875,
+          "available_mb": 925.82421875,
+          "swap_used_mb": 2337.15234375,
+          "swap_in": 3938607104,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 28
+        },
+        {
+          "vmstat": {
+            "pswpin": 961575,
+            "pswpout": 2228998,
+            "pgmajfault": 1140660
+          },
+          "stack_rss_mb": 3666.921875,
+          "available_mb": 925.22265625,
+          "swap_used_mb": 2337.15234375,
+          "swap_in": 3938611200,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 70
+        },
+        {
+          "vmstat": {
+            "pswpin": 961575,
+            "pswpout": 2228998,
+            "pgmajfault": 1140660
+          },
+          "stack_rss_mb": 3666.91796875,
+          "available_mb": 925.48828125,
+          "swap_used_mb": 2337.15234375,
+          "swap_in": 3938611200,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 80
+        },
+        {
+          "vmstat": {
+            "pswpin": 961575,
+            "pswpout": 2228998,
+            "pgmajfault": 1140660
+          },
+          "stack_rss_mb": 3666.91796875,
+          "available_mb": 925.48828125,
+          "swap_used_mb": 2337.15234375,
+          "swap_in": 3938611200,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 72
+        },
+        {
+          "vmstat": {
+            "pswpin": 961575,
+            "pswpout": 2228998,
+            "pgmajfault": 1140660
+          },
+          "stack_rss_mb": 3666.91796875,
+          "available_mb": 925.48828125,
+          "swap_used_mb": 2337.15234375,
+          "swap_in": 3938611200,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 82
+        },
+        {
+          "vmstat": {
+            "pswpin": 961575,
+            "pswpout": 2228998,
+            "pgmajfault": 1140660
+          },
+          "stack_rss_mb": 3666.9140625,
+          "available_mb": 925.48828125,
+          "swap_used_mb": 2337.15234375,
+          "swap_in": 3938611200,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 37
+        },
+        {
+          "vmstat": {
+            "pswpin": 961577,
+            "pswpout": 2228998,
+            "pgmajfault": 1140662
+          },
+          "stack_rss_mb": 3666.9140625,
+          "available_mb": 925.48828125,
+          "swap_used_mb": 2337.15234375,
+          "swap_in": 3938619392,
+          "swap_out": 9129975808,
+          "threads": 46,
+          "gr3d": 38
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4665
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4665
+      }
+    },
+    {
+      "phase": "ocr",
+      "operations": [
+        {
+          "name": "ocr",
+          "ms": 20037.852449999264
+        },
+        {
+          "name": "ocr",
+          "ms": 19393.92665199921
+        }
+      ],
+      "errors": [],
+      "duration_s": 30.37416615300026,
+      "ticks": 302,
+      "valid_depth": 301,
+      "timing": {
+        "tick_ms": {
+          "n": 302,
+          "median": 48.193514499871526,
+          "p95": 65.08864020061083,
+          "max": 282.1737710000889
+        },
+        "interval_ms": {
+          "n": 302,
+          "median": 100.14249750020099,
+          "p95": 100.96634684914534,
+          "max": 282.2290670010261
+        },
+        "capture_wait_ms": {
+          "n": 302,
+          "median": 0.1741304995448445,
+          "p95": 0.308707999465696,
+          "max": 15.04385099906358
+        },
+        "depth_ms": {
+          "n": 301,
+          "median": 22.231275001104223,
+          "p95": 31.540010999378865,
+          "max": 242.5233180001669
+        },
+        "hazards_ms": {
+          "n": 301,
+          "median": 0.023168000552686863,
+          "p95": 0.03740799911611248,
+          "max": 0.11427299978095107
+        },
+        "movers_ms": {
+          "n": 301,
+          "median": 25.659648001237656,
+          "p95": 38.67486099989037,
+          "max": 63.719268999193446
+        },
+        "publish_ms": {
+          "n": 301,
+          "median": 0.16589000006206334,
+          "p95": 0.2969640008814167,
+          "max": 1.2565289998747176
+        },
+        "navigation_ms": {
+          "n": 301,
+          "median": 0.00960000033956021,
+          "p95": 0.013152000974514522,
+          "max": 0.0791689999459777
+        },
+        "alarms_health_ms": {
+          "n": 302,
+          "median": 0.01559999964229064,
+          "p95": 0.03119200073342653,
+          "max": 0.08899299973563757
+        },
+        "skew_ms": {
+          "n": 301,
+          "median": 0.9757890002219938,
+          "p95": 2.288511001097504,
+          "max": 5.0863100004789885
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 301,
+          "median": 0.004128000000491738,
+          "p95": 0.005952000719844364,
+          "max": 0.03641600051196292
+        },
+        "disparity_ms": {
+          "n": 301,
+          "median": 18.386617999567534,
+          "p95": 27.20212799977162,
+          "max": 235.66088999905332
+        }
+      },
+      "depth_gaps": [
+        {
+          "t": 9066.996733224,
+          "wall": 1792569186.845956,
+          "event": "depth_gap",
+          "gap_s": 0.26
+        },
+        {
+          "t": 9067.379478779,
+          "wall": 1792569187.228702,
+          "event": "depth_gap",
+          "gap_s": 0.318
+        }
+      ],
+      "outages": [
+        {
+          "start": 9067.015153535,
+          "end": 9067.346711266,
+          "gap_s": 0.33155773100043007,
+          "open": false
+        }
+      ],
+      "heartbeat_interval_ms": {
+        "n": 299,
+        "median": 100.57755800153245,
+        "p95": 112.5944233013797,
+        "max": 331.55773100043007
+      },
+      "resources": [
+        {
+          "vmstat": {
+            "pswpin": 961736,
+            "pswpout": 2229016,
+            "pgmajfault": 1141041
+          },
+          "stack_rss_mb": 3649.90625,
+          "available_mb": 950.6015625,
+          "swap_used_mb": 2336.65234375,
+          "swap_in": 3939270656,
+          "swap_out": 9130037248,
+          "threads": 47,
+          "gr3d": 60
+        },
+        {
+          "vmstat": {
+            "pswpin": 961737,
+            "pswpout": 2246487,
+            "pgmajfault": 1141045
+          },
+          "stack_rss_mb": 3600.3671875,
+          "available_mb": 869.8984375,
+          "swap_used_mb": 2404.94921875,
+          "swap_in": 3939274752,
+          "swap_out": 9201610752,
+          "threads": 46,
+          "gr3d": 53
+        },
+        {
+          "vmstat": {
+            "pswpin": 961805,
+            "pswpout": 2250221,
+            "pgmajfault": 1141116
+          },
+          "stack_rss_mb": 3685.26171875,
+          "available_mb": 818.33203125,
+          "swap_used_mb": 2418.8828125,
+          "swap_in": 3939553280,
+          "swap_out": 9216905216,
+          "threads": 46,
+          "gr3d": 73
+        },
+        {
+          "vmstat": {
+            "pswpin": 961805,
+            "pswpout": 2263183,
+            "pgmajfault": 1141116
+          },
+          "stack_rss_mb": 3683.8984375,
+          "available_mb": 650.9453125,
+          "swap_used_mb": 2468.8984375,
+          "swap_in": 3939553280,
+          "swap_out": 9269997568,
+          "threads": 46,
+          "gr3d": 22
+        },
+        {
+          "vmstat": {
+            "pswpin": 961806,
+            "pswpout": 2263234,
+            "pgmajfault": 1141117
+          },
+          "stack_rss_mb": 3592.08203125,
+          "available_mb": 806.515625,
+          "swap_used_mb": 2469.2421875,
+          "swap_in": 3939557376,
+          "swap_out": 9270206464,
+          "threads": 46,
+          "gr3d": 85
+        },
+        {
+          "vmstat": {
+            "pswpin": 961813,
+            "pswpout": 2263234,
+            "pgmajfault": 1141125
+          },
+          "stack_rss_mb": 3567.578125,
+          "available_mb": 799.6328125,
+          "swap_used_mb": 2468.2421875,
+          "swap_in": 3939586048,
+          "swap_out": 9270206464,
+          "threads": 46,
+          "gr3d": 71
+        },
+        {
+          "vmstat": {
+            "pswpin": 961813,
+            "pswpout": 2263234,
+            "pgmajfault": 1141127
+          },
+          "stack_rss_mb": 3589.8203125,
+          "available_mb": 812.70703125,
+          "swap_used_mb": 2468.2421875,
+          "swap_in": 3939586048,
+          "swap_out": 9270206464,
+          "threads": 46,
+          "gr3d": 68
+        },
+        {
+          "vmstat": {
+            "pswpin": 961813,
+            "pswpout": 2263234,
+            "pgmajfault": 1141131
+          },
+          "stack_rss_mb": 3634.71875,
+          "available_mb": 780.9375,
+          "swap_used_mb": 2468.2421875,
+          "swap_in": 3939586048,
+          "swap_out": 9270206464,
+          "threads": 46,
+          "gr3d": 95
+        },
+        {
+          "vmstat": {
+            "pswpin": 961814,
+            "pswpout": 2278690,
+            "pgmajfault": 1141134
+          },
+          "stack_rss_mb": 3657.8828125,
+          "available_mb": 632.90625,
+          "swap_used_mb": 2528.98046875,
+          "swap_in": 3939590144,
+          "swap_out": 9333510144,
+          "threads": 46,
+          "gr3d": 52
+        },
+        {
+          "vmstat": {
+            "pswpin": 961827,
+            "pswpout": 2278802,
+            "pgmajfault": 1141157
+          },
+          "stack_rss_mb": 3637.0078125,
+          "available_mb": 733.26953125,
+          "swap_used_mb": 2529.37109375,
+          "swap_in": 3939643392,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 49
+        },
+        {
+          "vmstat": {
+            "pswpin": 961828,
+            "pswpout": 2278802,
+            "pgmajfault": 1141161
+          },
+          "stack_rss_mb": 3705.14453125,
+          "available_mb": 776.3671875,
+          "swap_used_mb": 2529.37109375,
+          "swap_in": 3939647488,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 64
+        },
+        {
+          "vmstat": {
+            "pswpin": 961864,
+            "pswpout": 2278802,
+            "pgmajfault": 1141249
+          },
+          "stack_rss_mb": 3451.2734375,
+          "available_mb": 960.94140625,
+          "swap_used_mb": 2528.87109375,
+          "swap_in": 3939794944,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 61
+        },
+        {
+          "vmstat": {
+            "pswpin": 961864,
+            "pswpout": 2278802,
+            "pgmajfault": 1141250
+          },
+          "stack_rss_mb": 3451.2734375,
+          "available_mb": 960.75390625,
+          "swap_used_mb": 2528.87109375,
+          "swap_in": 3939794944,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 81
+        },
+        {
+          "vmstat": {
+            "pswpin": 961865,
+            "pswpout": 2278802,
+            "pgmajfault": 1141251
+          },
+          "stack_rss_mb": 3451.26953125,
+          "available_mb": 958.05078125,
+          "swap_used_mb": 2528.87109375,
+          "swap_in": 3939799040,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 53
+        },
+        {
+          "vmstat": {
+            "pswpin": 961865,
+            "pswpout": 2278802,
+            "pgmajfault": 1141254
+          },
+          "stack_rss_mb": 3496.3359375,
+          "available_mb": 931.84765625,
+          "swap_used_mb": 2528.87109375,
+          "swap_in": 3939799040,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 49
+        },
+        {
+          "vmstat": {
+            "pswpin": 961865,
+            "pswpout": 2278802,
+            "pgmajfault": 1141256
+          },
+          "stack_rss_mb": 3496.33203125,
+          "available_mb": 909.87109375,
+          "swap_used_mb": 2528.87109375,
+          "swap_in": 3939799040,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 7
+        },
+        {
+          "vmstat": {
+            "pswpin": 961865,
+            "pswpout": 2278802,
+            "pgmajfault": 1141256
+          },
+          "stack_rss_mb": 3496.33203125,
+          "available_mb": 909.87109375,
+          "swap_used_mb": 2528.87109375,
+          "swap_in": 3939799040,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 46
+        },
+        {
+          "vmstat": {
+            "pswpin": 961882,
+            "pswpout": 2278802,
+            "pgmajfault": 1141273
+          },
+          "stack_rss_mb": 3484.87109375,
+          "available_mb": 952.86328125,
+          "swap_used_mb": 2528.87109375,
+          "swap_in": 3939868672,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 37
+        },
+        {
+          "vmstat": {
+            "pswpin": 961915,
+            "pswpout": 2278802,
+            "pgmajfault": 1141342
+          },
+          "stack_rss_mb": 3467.35546875,
+          "available_mb": 950.26171875,
+          "swap_used_mb": 2528.87109375,
+          "swap_in": 3940003840,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 26
+        },
+        {
+          "vmstat": {
+            "pswpin": 961916,
+            "pswpout": 2278802,
+            "pgmajfault": 1141343
+          },
+          "stack_rss_mb": 3452.35546875,
+          "available_mb": 950.5859375,
+          "swap_used_mb": 2528.87109375,
+          "swap_in": 3940007936,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 34
+        },
+        {
+          "vmstat": {
+            "pswpin": 961916,
+            "pswpout": 2278802,
+            "pgmajfault": 1141347
+          },
+          "stack_rss_mb": 3452.609375,
+          "available_mb": 950.76953125,
+          "swap_used_mb": 2528.87109375,
+          "swap_in": 3940007936,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 23
+        },
+        {
+          "vmstat": {
+            "pswpin": 961995,
+            "pswpout": 2278802,
+            "pgmajfault": 1141449
+          },
+          "stack_rss_mb": 3452.609375,
+          "available_mb": 925.8984375,
+          "swap_used_mb": 2528.62109375,
+          "swap_in": 3940331520,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 97
+        },
+        {
+          "vmstat": {
+            "pswpin": 962004,
+            "pswpout": 2278802,
+            "pgmajfault": 1141530
+          },
+          "stack_rss_mb": 3467.60546875,
+          "available_mb": 937.08203125,
+          "swap_used_mb": 2528.62109375,
+          "swap_in": 3940368384,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 80
+        },
+        {
+          "vmstat": {
+            "pswpin": 962004,
+            "pswpout": 2278802,
+            "pgmajfault": 1141533
+          },
+          "stack_rss_mb": 3467.60546875,
+          "available_mb": 949.87109375,
+          "swap_used_mb": 2528.62109375,
+          "swap_in": 3940368384,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 85
+        },
+        {
+          "vmstat": {
+            "pswpin": 962024,
+            "pswpout": 2278802,
+            "pgmajfault": 1141583
+          },
+          "stack_rss_mb": 3533.953125,
+          "available_mb": 884.80859375,
+          "swap_used_mb": 2528.62109375,
+          "swap_in": 3940450304,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 66
+        },
+        {
+          "vmstat": {
+            "pswpin": 962027,
+            "pswpout": 2278802,
+            "pgmajfault": 1141616
+          },
+          "stack_rss_mb": 3533.953125,
+          "available_mb": 863.34765625,
+          "swap_used_mb": 2528.62109375,
+          "swap_in": 3940462592,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 87
+        },
+        {
+          "vmstat": {
+            "pswpin": 962032,
+            "pswpout": 2278802,
+            "pgmajfault": 1141627
+          },
+          "stack_rss_mb": 3533.94921875,
+          "available_mb": 863.09375,
+          "swap_used_mb": 2528.62109375,
+          "swap_in": 3940483072,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 67
+        },
+        {
+          "vmstat": {
+            "pswpin": 962035,
+            "pswpout": 2278802,
+            "pgmajfault": 1141630
+          },
+          "stack_rss_mb": 3477.33203125,
+          "available_mb": 863.00390625,
+          "swap_used_mb": 2528.62109375,
+          "swap_in": 3940495360,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 78
+        },
+        {
+          "vmstat": {
+            "pswpin": 962044,
+            "pswpout": 2278802,
+            "pgmajfault": 1141672
+          },
+          "stack_rss_mb": 3501.33203125,
+          "available_mb": 898.48828125,
+          "swap_used_mb": 2528.62109375,
+          "swap_in": 3940532224,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 58
+        },
+        {
+          "vmstat": {
+            "pswpin": 962074,
+            "pswpout": 2278802,
+            "pgmajfault": 1141732
+          },
+          "stack_rss_mb": 3501.328125,
+          "available_mb": 898.859375,
+          "swap_used_mb": 2528.62109375,
+          "swap_in": 3940655104,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 39
+        },
+        {
+          "vmstat": {
+            "pswpin": 962125,
+            "pswpout": 2278802,
+            "pgmajfault": 1141857
+          },
+          "stack_rss_mb": 3501.328125,
+          "available_mb": 883.83984375,
+          "swap_used_mb": 2528.37109375,
+          "swap_in": 3940864000,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 48
+        },
+        {
+          "vmstat": {
+            "pswpin": 962152,
+            "pswpout": 2278802,
+            "pgmajfault": 1142031
+          },
+          "stack_rss_mb": 3470.3671875,
+          "available_mb": 915.39453125,
+          "swap_used_mb": 2528.12109375,
+          "swap_in": 3940974592,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 28
+        },
+        {
+          "vmstat": {
+            "pswpin": 962202,
+            "pswpout": 2278802,
+            "pgmajfault": 1142101
+          },
+          "stack_rss_mb": 3468.109375,
+          "available_mb": 845.69140625,
+          "swap_used_mb": 2527.87109375,
+          "swap_in": 3941179392,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 39
+        },
+        {
+          "vmstat": {
+            "pswpin": 962205,
+            "pswpout": 2278802,
+            "pgmajfault": 1142333
+          },
+          "stack_rss_mb": 3452.58984375,
+          "available_mb": 753.2421875,
+          "swap_used_mb": 2527.87109375,
+          "swap_in": 3941191680,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 38
+        },
+        {
+          "vmstat": {
+            "pswpin": 962205,
+            "pswpout": 2278802,
+            "pgmajfault": 1142360
+          },
+          "stack_rss_mb": 3486.5859375,
+          "available_mb": 759.375,
+          "swap_used_mb": 2527.87109375,
+          "swap_in": 3941191680,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 42
+        },
+        {
+          "vmstat": {
+            "pswpin": 962206,
+            "pswpout": 2278802,
+            "pgmajfault": 1142367
+          },
+          "stack_rss_mb": 3702.8203125,
+          "available_mb": 578.875,
+          "swap_used_mb": 2527.87109375,
+          "swap_in": 3941195776,
+          "swap_out": 9333972992,
+          "threads": 46,
+          "gr3d": 47
+        },
+        {
+          "vmstat": {
+            "pswpin": 962206,
+            "pswpout": 2312900,
+            "pgmajfault": 1142371
+          },
+          "stack_rss_mb": 3638.8125,
+          "available_mb": 490.44140625,
+          "swap_used_mb": 2660.9140625,
+          "swap_in": 3941195776,
+          "swap_out": 9473556480,
+          "threads": 46,
+          "gr3d": 68
+        },
+        {
+          "vmstat": {
+            "pswpin": 962209,
+            "pswpout": 2317277,
+            "pgmajfault": 1142375
+          },
+          "stack_rss_mb": 3622.7734375,
+          "available_mb": 519.62890625,
+          "swap_used_mb": 2678.1171875,
+          "swap_in": 3941208064,
+          "swap_out": 9491566592,
+          "threads": 46,
+          "gr3d": 60
+        },
+        {
+          "vmstat": {
+            "pswpin": 962209,
+            "pswpout": 2317277,
+            "pgmajfault": 1142375
+          },
+          "stack_rss_mb": 3622.76953125,
+          "available_mb": 515.6796875,
+          "swap_used_mb": 2678.1171875,
+          "swap_in": 3941208064,
+          "swap_out": 9491566592,
+          "threads": 46,
+          "gr3d": 67
+        },
+        {
+          "vmstat": {
+            "pswpin": 962210,
+            "pswpout": 2324516,
+            "pgmajfault": 1142376
+          },
+          "stack_rss_mb": 3644.390625,
+          "available_mb": 497.95703125,
+          "swap_used_mb": 2706.21484375,
+          "swap_in": 3941212160,
+          "swap_out": 9521217536,
+          "threads": 46,
+          "gr3d": 64
+        },
+        {
+          "vmstat": {
+            "pswpin": 962210,
+            "pswpout": 2346069,
+            "pgmajfault": 1142376
+          },
+          "stack_rss_mb": 3618.21875,
+          "available_mb": 494.2890625,
+          "swap_used_mb": 2790.19921875,
+          "swap_in": 3941212160,
+          "swap_out": 9609428992,
+          "threads": 46,
+          "gr3d": 76
+        },
+        {
+          "vmstat": {
+            "pswpin": 962212,
+            "pswpout": 2356784,
+            "pgmajfault": 1142378
+          },
+          "stack_rss_mb": 3167.37890625,
+          "available_mb": 939.83984375,
+          "swap_used_mb": 2832.23828125,
+          "swap_in": 3941220352,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 65
+        },
+        {
+          "vmstat": {
+            "pswpin": 962220,
+            "pswpout": 2356784,
+            "pgmajfault": 1142386
+          },
+          "stack_rss_mb": 3167.375,
+          "available_mb": 915.40625,
+          "swap_used_mb": 2832.23828125,
+          "swap_in": 3941253120,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 64
+        },
+        {
+          "vmstat": {
+            "pswpin": 962231,
+            "pswpout": 2356784,
+            "pgmajfault": 1142397
+          },
+          "stack_rss_mb": 3167.375,
+          "available_mb": 913.265625,
+          "swap_used_mb": 2831.98828125,
+          "swap_in": 3941298176,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 48
+        },
+        {
+          "vmstat": {
+            "pswpin": 962232,
+            "pswpout": 2356784,
+            "pgmajfault": 1142398
+          },
+          "stack_rss_mb": 3167.69140625,
+          "available_mb": 907.3203125,
+          "swap_used_mb": 2831.98828125,
+          "swap_in": 3941302272,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 91
+        },
+        {
+          "vmstat": {
+            "pswpin": 962235,
+            "pswpout": 2356784,
+            "pgmajfault": 1142429
+          },
+          "stack_rss_mb": 3167.69140625,
+          "available_mb": 907.51171875,
+          "swap_used_mb": 2831.98828125,
+          "swap_in": 3941314560,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 29
+        },
+        {
+          "vmstat": {
+            "pswpin": 962302,
+            "pswpout": 2356784,
+            "pgmajfault": 1142500
+          },
+          "stack_rss_mb": 3167.6875,
+          "available_mb": 905.828125,
+          "swap_used_mb": 2831.73828125,
+          "swap_in": 3941588992,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 88
+        },
+        {
+          "vmstat": {
+            "pswpin": 962302,
+            "pswpout": 2356784,
+            "pgmajfault": 1142500
+          },
+          "stack_rss_mb": 3171.9609375,
+          "available_mb": 902.98828125,
+          "swap_used_mb": 2831.73828125,
+          "swap_in": 3941588992,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 36
+        },
+        {
+          "vmstat": {
+            "pswpin": 962302,
+            "pswpout": 2356784,
+            "pgmajfault": 1142500
+          },
+          "stack_rss_mb": 3171.95703125,
+          "available_mb": 902.98828125,
+          "swap_used_mb": 2831.73828125,
+          "swap_in": 3941588992,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 56
+        },
+        {
+          "vmstat": {
+            "pswpin": 962302,
+            "pswpout": 2356784,
+            "pgmajfault": 1142500
+          },
+          "stack_rss_mb": 3171.95703125,
+          "available_mb": 902.98828125,
+          "swap_used_mb": 2831.73828125,
+          "swap_in": 3941588992,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 19
+        },
+        {
+          "vmstat": {
+            "pswpin": 962303,
+            "pswpout": 2356784,
+            "pgmajfault": 1142503
+          },
+          "stack_rss_mb": 3172.1796875,
+          "available_mb": 899.93359375,
+          "swap_used_mb": 2831.73828125,
+          "swap_in": 3941593088,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 54
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4665
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4665
+      }
+    },
+    {
+      "phase": "still",
+      "operations": [
+        {
+          "name": "still",
+          "ms": 3288.5037169999123
+        },
+        {
+          "name": "still",
+          "ms": 3359.4825740001397
+        },
+        {
+          "name": "still",
+          "ms": 3788.3309030003147
+        },
+        {
+          "name": "still",
+          "ms": 3273.2522349997453
+        },
+        {
+          "name": "still",
+          "ms": 3290.0739520009665
+        },
+        {
+          "name": "still",
+          "ms": 3282.5173459987127
+        },
+        {
+          "name": "still",
+          "ms": 3283.479001998785
+        },
+        {
+          "name": "still",
+          "ms": 3279.2712379996374
+        },
+        {
+          "name": "still",
+          "ms": 2355.7080259997747
+        }
+      ],
+      "errors": [],
+      "duration_s": 30.001053516001775,
+      "ticks": 300,
+      "valid_depth": 300,
+      "timing": {
+        "tick_ms": {
+          "n": 300,
+          "median": 47.24327349958912,
+          "p95": 63.923503850128334,
+          "max": 85.74397200027306
+        },
+        "interval_ms": {
+          "n": 300,
+          "median": 100.14172699993651,
+          "p95": 100.40602644921819,
+          "max": 103.18705999998201
+        },
+        "capture_wait_ms": {
+          "n": 300,
+          "median": 0.17713850047584856,
+          "p95": 0.2494814004421642,
+          "max": 0.6954979999136413
+        },
+        "depth_ms": {
+          "n": 300,
+          "median": 21.569437500147615,
+          "p95": 32.549592650684644,
+          "max": 49.7044960011408
+        },
+        "hazards_ms": {
+          "n": 300,
+          "median": 0.024656000277900603,
+          "p95": 0.029043200447631538,
+          "max": 0.19606600108090788
+        },
+        "movers_ms": {
+          "n": 300,
+          "median": 25.243378500817926,
+          "p95": 34.07314340138328,
+          "max": 47.70350999933726
+        },
+        "publish_ms": {
+          "n": 300,
+          "median": 0.1645620004637749,
+          "p95": 0.22818860061306628,
+          "max": 16.247360999841476
+        },
+        "navigation_ms": {
+          "n": 300,
+          "median": 0.010032499631051905,
+          "p95": 0.0125200004731596,
+          "max": 0.057728999308892526
+        },
+        "alarms_health_ms": {
+          "n": 300,
+          "median": 0.01588849954714533,
+          "p95": 0.01917054969453602,
+          "max": 0.08300999979837798
+        },
+        "skew_ms": {
+          "n": 300,
+          "median": 0.9378854992974084,
+          "p95": 2.3612426499312287,
+          "max": 11.051929999666754
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 300,
+          "median": 0.004831999831367284,
+          "p95": 0.005989749024593039,
+          "max": 0.04361700121080503
+        },
+        "disparity_ms": {
+          "n": 300,
+          "median": 17.37662800042017,
+          "p95": 27.64510219949443,
+          "max": 35.576943000705796
+        }
+      },
+      "depth_gaps": [],
+      "outages": [],
+      "heartbeat_interval_ms": {
+        "n": 299,
+        "median": 100.25810099978116,
+        "p95": 108.31665049845469,
+        "max": 129.1193569995812
+      },
+      "resources": [
+        {
+          "vmstat": {
+            "pswpin": 962472,
+            "pswpout": 2356784,
+            "pgmajfault": 1142771
+          },
+          "stack_rss_mb": 3120.59765625,
+          "available_mb": 908.625,
+          "swap_used_mb": 2830.98828125,
+          "swap_in": 3942285312,
+          "swap_out": 9653387264,
+          "threads": 45,
+          "gr3d": 14
+        },
+        {
+          "vmstat": {
+            "pswpin": 962477,
+            "pswpout": 2356784,
+            "pgmajfault": 1142779
+          },
+          "stack_rss_mb": 3120.59765625,
+          "available_mb": 885.3828125,
+          "swap_used_mb": 2830.98828125,
+          "swap_in": 3942305792,
+          "swap_out": 9653387264,
+          "threads": 45,
+          "gr3d": 69
+        },
+        {
+          "vmstat": {
+            "pswpin": 962478,
+            "pswpout": 2356784,
+            "pgmajfault": 1142780
+          },
+          "stack_rss_mb": 3161.4921875,
+          "available_mb": 837.3515625,
+          "swap_used_mb": 2830.98828125,
+          "swap_in": 3942309888,
+          "swap_out": 9653387264,
+          "threads": 45,
+          "gr3d": 56
+        },
+        {
+          "vmstat": {
+            "pswpin": 962480,
+            "pswpout": 2356784,
+            "pgmajfault": 1142807
+          },
+          "stack_rss_mb": 3124.55078125,
+          "available_mb": 926.9921875,
+          "swap_used_mb": 2830.98828125,
+          "swap_in": 3942318080,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 46
+        },
+        {
+          "vmstat": {
+            "pswpin": 962480,
+            "pswpout": 2356784,
+            "pgmajfault": 1142908
+          },
+          "stack_rss_mb": 3124.546875,
+          "available_mb": 846.45703125,
+          "swap_used_mb": 2830.98828125,
+          "swap_in": 3942318080,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 16
+        },
+        {
+          "vmstat": {
+            "pswpin": 962481,
+            "pswpout": 2356784,
+            "pgmajfault": 1142909
+          },
+          "stack_rss_mb": 3124.546875,
+          "available_mb": 810.85546875,
+          "swap_used_mb": 2830.98828125,
+          "swap_in": 3942322176,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 35
+        },
+        {
+          "vmstat": {
+            "pswpin": 962483,
+            "pswpout": 2356784,
+            "pgmajfault": 1142910
+          },
+          "stack_rss_mb": 3120.5859375,
+          "available_mb": 795.71875,
+          "swap_used_mb": 2830.98828125,
+          "swap_in": 3942330368,
+          "swap_out": 9653387264,
+          "threads": 45,
+          "gr3d": 42
+        },
+        {
+          "vmstat": {
+            "pswpin": 962519,
+            "pswpout": 2356784,
+            "pgmajfault": 1142957
+          },
+          "stack_rss_mb": 3214.30859375,
+          "available_mb": 775.8046875,
+          "swap_used_mb": 2830.73828125,
+          "swap_in": 3942477824,
+          "swap_out": 9653387264,
+          "threads": 45,
+          "gr3d": 85
+        },
+        {
+          "vmstat": {
+            "pswpin": 962528,
+            "pswpout": 2356784,
+            "pgmajfault": 1143250
+          },
+          "stack_rss_mb": 3124.5390625,
+          "available_mb": 778.40234375,
+          "swap_used_mb": 2830.73828125,
+          "swap_in": 3942514688,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 83
+        },
+        {
+          "vmstat": {
+            "pswpin": 962540,
+            "pswpout": 2356784,
+            "pgmajfault": 1143714
+          },
+          "stack_rss_mb": 3124.5390625,
+          "available_mb": 695.4140625,
+          "swap_used_mb": 2830.73828125,
+          "swap_in": 3942563840,
+          "swap_out": 9653387264,
+          "threads": 46,
+          "gr3d": 86
+        },
+        {
+          "vmstat": {
+            "pswpin": 962540,
+            "pswpout": 2364052,
+            "pgmajfault": 1143987
+          },
+          "stack_rss_mb": 3098.8125,
+          "available_mb": 681.30859375,
+          "swap_used_mb": 2859.0546875,
+          "swap_in": 3942563840,
+          "swap_out": 9683070976,
+          "threads": 46,
+          "gr3d": 59
+        },
+        {
+          "vmstat": {
+            "pswpin": 962540,
+            "pswpout": 2373721,
+            "pgmajfault": 1143998
+          },
+          "stack_rss_mb": 3074.34375,
+          "available_mb": 676.8125,
+          "swap_used_mb": 2897.10546875,
+          "swap_in": 3942563840,
+          "swap_out": 9722761216,
+          "threads": 46,
+          "gr3d": 72
+        },
+        {
+          "vmstat": {
+            "pswpin": 962541,
+            "pswpout": 2415220,
+            "pgmajfault": 1144003
+          },
+          "stack_rss_mb": 2952.17578125,
+          "available_mb": 585.25,
+          "swap_used_mb": 3059.09375,
+          "swap_in": 3942567936,
+          "swap_out": 9892704256,
+          "threads": 45,
+          "gr3d": 40
+        },
+        {
+          "vmstat": {
+            "pswpin": 962547,
+            "pswpout": 2432798,
+            "pgmajfault": 1144013
+          },
+          "stack_rss_mb": 2899.109375,
+          "available_mb": 679.0078125,
+          "swap_used_mb": 3127.8359375,
+          "swap_in": 3942592512,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 85
+        },
+        {
+          "vmstat": {
+            "pswpin": 962547,
+            "pswpout": 2432798,
+            "pgmajfault": 1144040
+          },
+          "stack_rss_mb": 2993.00390625,
+          "available_mb": 591.3515625,
+          "swap_used_mb": 3127.8359375,
+          "swap_in": 3942592512,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 35
+        },
+        {
+          "vmstat": {
+            "pswpin": 962553,
+            "pswpout": 2432798,
+            "pgmajfault": 1144126
+          },
+          "stack_rss_mb": 2903.0625,
+          "available_mb": 640.90625,
+          "swap_used_mb": 3127.8359375,
+          "swap_in": 3942617088,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 60
+        },
+        {
+          "vmstat": {
+            "pswpin": 962563,
+            "pswpout": 2432798,
+            "pgmajfault": 1144151
+          },
+          "stack_rss_mb": 2903.0625,
+          "available_mb": 641.2734375,
+          "swap_used_mb": 3127.8359375,
+          "swap_in": 3942658048,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 23
+        },
+        {
+          "vmstat": {
+            "pswpin": 962830,
+            "pswpout": 2432798,
+            "pgmajfault": 1144798
+          },
+          "stack_rss_mb": 2903.05859375,
+          "available_mb": 632.06640625,
+          "swap_used_mb": 3126.8359375,
+          "swap_in": 3943751680,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 19
+        },
+        {
+          "vmstat": {
+            "pswpin": 962840,
+            "pswpout": 2432798,
+            "pgmajfault": 1145441
+          },
+          "stack_rss_mb": 2899.1015625,
+          "available_mb": 1032.2421875,
+          "swap_used_mb": 3126.8359375,
+          "swap_in": 3943792640,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 42
+        },
+        {
+          "vmstat": {
+            "pswpin": 962841,
+            "pswpout": 2432798,
+            "pgmajfault": 1145442
+          },
+          "stack_rss_mb": 2899.09765625,
+          "available_mb": 1032.59765625,
+          "swap_used_mb": 3126.8359375,
+          "swap_in": 3943796736,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 67
+        },
+        {
+          "vmstat": {
+            "pswpin": 962843,
+            "pswpout": 2432798,
+            "pgmajfault": 1145444
+          },
+          "stack_rss_mb": 2903.0546875,
+          "available_mb": 1052.7578125,
+          "swap_used_mb": 3126.8359375,
+          "swap_in": 3943804928,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 35
+        },
+        {
+          "vmstat": {
+            "pswpin": 962861,
+            "pswpout": 2432798,
+            "pgmajfault": 1145462
+          },
+          "stack_rss_mb": 2903.05078125,
+          "available_mb": 1052.609375,
+          "swap_used_mb": 3126.5859375,
+          "swap_in": 3943878656,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 13
+        },
+        {
+          "vmstat": {
+            "pswpin": 962862,
+            "pswpout": 2432798,
+            "pgmajfault": 1145463
+          },
+          "stack_rss_mb": 2903.05078125,
+          "available_mb": 1052.609375,
+          "swap_used_mb": 3126.5859375,
+          "swap_in": 3943882752,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 45
+        },
+        {
+          "vmstat": {
+            "pswpin": 962925,
+            "pswpout": 2432798,
+            "pgmajfault": 1145542
+          },
+          "stack_rss_mb": 2903.05078125,
+          "available_mb": 1052.82421875,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944140800,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 66
+        },
+        {
+          "vmstat": {
+            "pswpin": 962926,
+            "pswpout": 2432798,
+            "pgmajfault": 1145543
+          },
+          "stack_rss_mb": 2899.16015625,
+          "available_mb": 1034.82421875,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944144896,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 962926,
+            "pswpout": 2432798,
+            "pgmajfault": 1145543
+          },
+          "stack_rss_mb": 2992.8828125,
+          "available_mb": 962.69140625,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944144896,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 79
+        },
+        {
+          "vmstat": {
+            "pswpin": 962929,
+            "pswpout": 2432798,
+            "pgmajfault": 1145546
+          },
+          "stack_rss_mb": 2903.11328125,
+          "available_mb": 1057.203125,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944157184,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 83
+        },
+        {
+          "vmstat": {
+            "pswpin": 962929,
+            "pswpout": 2432798,
+            "pgmajfault": 1145546
+          },
+          "stack_rss_mb": 2903.11328125,
+          "available_mb": 1057.203125,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944157184,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 45
+        },
+        {
+          "vmstat": {
+            "pswpin": 962929,
+            "pswpout": 2432798,
+            "pgmajfault": 1145546
+          },
+          "stack_rss_mb": 2903.109375,
+          "available_mb": 1057.1953125,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944157184,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 83
+        },
+        {
+          "vmstat": {
+            "pswpin": 962929,
+            "pswpout": 2432798,
+            "pgmajfault": 1145546
+          },
+          "stack_rss_mb": 2903.109375,
+          "available_mb": 1057.1953125,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944157184,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 95
+        },
+        {
+          "vmstat": {
+            "pswpin": 962929,
+            "pswpout": 2432798,
+            "pgmajfault": 1145546
+          },
+          "stack_rss_mb": 2899.1484375,
+          "available_mb": 1037.55078125,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944157184,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 63
+        },
+        {
+          "vmstat": {
+            "pswpin": 962929,
+            "pswpout": 2432798,
+            "pgmajfault": 1145546
+          },
+          "stack_rss_mb": 2993.04296875,
+          "available_mb": 966.23046875,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944157184,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 50
+        },
+        {
+          "vmstat": {
+            "pswpin": 962931,
+            "pswpout": 2432798,
+            "pgmajfault": 1145548
+          },
+          "stack_rss_mb": 2903.10546875,
+          "available_mb": 1049.99609375,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944165376,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 48
+        },
+        {
+          "vmstat": {
+            "pswpin": 962948,
+            "pswpout": 2432798,
+            "pgmajfault": 1145569
+          },
+          "stack_rss_mb": 2903.1015625,
+          "available_mb": 1049.98828125,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944235008,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 51
+        },
+        {
+          "vmstat": {
+            "pswpin": 962949,
+            "pswpout": 2432798,
+            "pgmajfault": 1145570
+          },
+          "stack_rss_mb": 2903.1015625,
+          "available_mb": 1049.88671875,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944239104,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 25
+        },
+        {
+          "vmstat": {
+            "pswpin": 962949,
+            "pswpout": 2432798,
+            "pgmajfault": 1145570
+          },
+          "stack_rss_mb": 2899.140625,
+          "available_mb": 964.15234375,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944239104,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 63
+        },
+        {
+          "vmstat": {
+            "pswpin": 962980,
+            "pswpout": 2432798,
+            "pgmajfault": 1145601
+          },
+          "stack_rss_mb": 2923.3828125,
+          "available_mb": 1036.76953125,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944366080,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 70
+        },
+        {
+          "vmstat": {
+            "pswpin": 962980,
+            "pswpout": 2432798,
+            "pgmajfault": 1145601
+          },
+          "stack_rss_mb": 2903.09375,
+          "available_mb": 1053.68359375,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944366080,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 74
+        },
+        {
+          "vmstat": {
+            "pswpin": 962980,
+            "pswpout": 2432798,
+            "pgmajfault": 1145601
+          },
+          "stack_rss_mb": 2903.09375,
+          "available_mb": 1053.3984375,
+          "swap_used_mb": 3126.3359375,
+          "swap_in": 3944366080,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 963645,
+            "pswpout": 2432798,
+            "pgmajfault": 1146266
+          },
+          "stack_rss_mb": 2903.08984375,
+          "available_mb": 1053.1640625,
+          "swap_used_mb": 3123.3359375,
+          "swap_in": 3947089920,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 42
+        },
+        {
+          "vmstat": {
+            "pswpin": 963645,
+            "pswpout": 2432798,
+            "pgmajfault": 1146266
+          },
+          "stack_rss_mb": 2903.08984375,
+          "available_mb": 1051.7109375,
+          "swap_used_mb": 3123.3359375,
+          "swap_in": 3947089920,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 63
+        },
+        {
+          "vmstat": {
+            "pswpin": 963645,
+            "pswpout": 2432798,
+            "pgmajfault": 1146266
+          },
+          "stack_rss_mb": 2899.12890625,
+          "available_mb": 1030.6328125,
+          "swap_used_mb": 3123.3359375,
+          "swap_in": 3947089920,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 72
+        },
+        {
+          "vmstat": {
+            "pswpin": 963645,
+            "pswpout": 2432798,
+            "pgmajfault": 1146266
+          },
+          "stack_rss_mb": 2993.0234375,
+          "available_mb": 958.05859375,
+          "swap_used_mb": 3123.3359375,
+          "swap_in": 3947089920,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 49
+        },
+        {
+          "vmstat": {
+            "pswpin": 963651,
+            "pswpout": 2432798,
+            "pgmajfault": 1146273
+          },
+          "stack_rss_mb": 2903.08203125,
+          "available_mb": 1051.04296875,
+          "swap_used_mb": 3123.3359375,
+          "swap_in": 3947114496,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 44
+        },
+        {
+          "vmstat": {
+            "pswpin": 963814,
+            "pswpout": 2432798,
+            "pgmajfault": 1146472
+          },
+          "stack_rss_mb": 2903.08203125,
+          "available_mb": 1051.18359375,
+          "swap_used_mb": 3123.0859375,
+          "swap_in": 3947782144,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 45
+        },
+        {
+          "vmstat": {
+            "pswpin": 963841,
+            "pswpout": 2432798,
+            "pgmajfault": 1146507
+          },
+          "stack_rss_mb": 2903.08203125,
+          "available_mb": 1050.74609375,
+          "swap_used_mb": 3122.8359375,
+          "swap_in": 3947892736,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 8
+        },
+        {
+          "vmstat": {
+            "pswpin": 963897,
+            "pswpout": 2432798,
+            "pgmajfault": 1146568
+          },
+          "stack_rss_mb": 2899.12109375,
+          "available_mb": 1049.89453125,
+          "swap_used_mb": 3122.5859375,
+          "swap_in": 3948122112,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 24
+        },
+        {
+          "vmstat": {
+            "pswpin": 963905,
+            "pswpout": 2432798,
+            "pgmajfault": 1146588
+          },
+          "stack_rss_mb": 2899.12109375,
+          "available_mb": 1029.83203125,
+          "swap_used_mb": 3118.5859375,
+          "swap_in": 3948154880,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 31
+        },
+        {
+          "vmstat": {
+            "pswpin": 963905,
+            "pswpout": 2432798,
+            "pgmajfault": 1146592
+          },
+          "stack_rss_mb": 2934.328125,
+          "available_mb": 960.234375,
+          "swap_used_mb": 3118.5859375,
+          "swap_in": 3948154880,
+          "swap_out": 9964740608,
+          "threads": 45,
+          "gr3d": 63
+        },
+        {
+          "vmstat": {
+            "pswpin": 963909,
+            "pswpout": 2432798,
+            "pgmajfault": 1146597
+          },
+          "stack_rss_mb": 2903.07421875,
+          "available_mb": 1048.78515625,
+          "swap_used_mb": 3118.5859375,
+          "swap_in": 3948171264,
+          "swap_out": 9964740608,
+          "threads": 46,
+          "gr3d": 55
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4665
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4665
+      }
+    },
+    {
+      "phase": "combined",
+      "operations": [
+        {
+          "name": "whisper",
+          "ms": 2684.428818000015
+        },
+        {
+          "name": "gemma",
+          "ms": 4242.924113999834
+        },
+        {
+          "name": "whisper",
+          "ms": 1711.241274000713
+        },
+        {
+          "name": "whisper",
+          "ms": 1537.1753069994156
+        },
+        {
+          "name": "gemma",
+          "ms": 3166.094431999227
+        },
+        {
+          "name": "whisper",
+          "ms": 1617.8019819999463
+        },
+        {
+          "name": "whisper",
+          "ms": 1304.3921050011704
+        },
+        {
+          "name": "gemma",
+          "ms": 2897.715340999639
+        },
+        {
+          "name": "whisper",
+          "ms": 1438.4753120011737
+        },
+        {
+          "name": "whisper",
+          "ms": 1351.7992159995629
+        },
+        {
+          "name": "gemma",
+          "ms": 2719.3390499996895
+        },
+        {
+          "name": "whisper",
+          "ms": 1508.5787199986953
+        },
+        {
+          "name": "whisper",
+          "ms": 1294.147773000077
+        },
+        {
+          "name": "gemma",
+          "ms": 3210.122204000072
+        },
+        {
+          "name": "whisper",
+          "ms": 1333.3587180004542
+        },
+        {
+          "name": "whisper",
+          "ms": 1442.3968410010275
+        },
+        {
+          "name": "gemma",
+          "ms": 2806.862822999392
+        },
+        {
+          "name": "whisper",
+          "ms": 1457.723191999321
+        },
+        {
+          "name": "ocr",
+          "ms": 20647.74270700036
+        },
+        {
+          "name": "whisper",
+          "ms": 1493.8039550015674
+        },
+        {
+          "name": "gemma",
+          "ms": 3095.5680339993705
+        },
+        {
+          "name": "whisper",
+          "ms": 2083.906854999441
+        },
+        {
+          "name": "whisper",
+          "ms": 2271.531354999752
+        },
+        {
+          "name": "gemma",
+          "ms": 3283.0277159991965
+        },
+        {
+          "name": "whisper",
+          "ms": 1341.6605980000895
+        },
+        {
+          "name": "whisper",
+          "ms": 1340.8784580005886
+        },
+        {
+          "name": "gemma",
+          "ms": 2678.6287619997893
+        },
+        {
+          "name": "whisper",
+          "ms": 1253.0740100010007
+        },
+        {
+          "name": "whisper",
+          "ms": 1255.4402670011768
+        },
+        {
+          "name": "gemma",
+          "ms": 2728.8532339989615
+        },
+        {
+          "name": "whisper",
+          "ms": 1406.5796489994682
+        },
+        {
+          "name": "gemma",
+          "ms": 2761.9309319998138
+        },
+        {
+          "name": "ocr",
+          "ms": 17524.496779999026
+        }
+      ],
+      "errors": [],
+      "duration_s": 30.2997584069999,
+      "ticks": 302,
+      "valid_depth": 302,
+      "timing": {
+        "tick_ms": {
+          "n": 302,
+          "median": 34.454828999514575,
+          "p95": 56.71527964987035,
+          "max": 104.90537700025016
+        },
+        "interval_ms": {
+          "n": 302,
+          "median": 100.14051649977773,
+          "p95": 102.4835450509272,
+          "max": 111.14230000021053
+        },
+        "capture_wait_ms": {
+          "n": 302,
+          "median": 0.13592150025942829,
+          "p95": 0.24424945077043958,
+          "max": 0.8733239992579911
+        },
+        "depth_ms": {
+          "n": 302,
+          "median": 13.53829049912747,
+          "p95": 21.57176825003262,
+          "max": 43.47383400090621
+        },
+        "hazards_ms": {
+          "n": 302,
+          "median": 0.018128499505110085,
+          "p95": 0.038746599875594256,
+          "max": 0.8874689992808271
+        },
+        "movers_ms": {
+          "n": 302,
+          "median": 20.319188500252494,
+          "p95": 37.260229150797386,
+          "max": 90.04174000074272
+        },
+        "publish_ms": {
+          "n": 302,
+          "median": 0.14259400086302776,
+          "p95": 0.3054792502553025,
+          "max": 6.023541998729343
+        },
+        "navigation_ms": {
+          "n": 302,
+          "median": 0.007648500286450144,
+          "p95": 0.019192000308976265,
+          "max": 0.10397000005468726
+        },
+        "alarms_health_ms": {
+          "n": 302,
+          "median": 0.012640500244742725,
+          "p95": 0.030741749105800405,
+          "max": 2.728743000261602
+        },
+        "skew_ms": {
+          "n": 302,
+          "median": 0.9211335000145482,
+          "p95": 2.2284240002591105,
+          "max": 9.55748200067319
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 302,
+          "median": 0.0032640000426908955,
+          "p95": 0.00505439938933705,
+          "max": 0.03331199877720792
+        },
+        "disparity_ms": {
+          "n": 302,
+          "median": 10.562502500761184,
+          "p95": 16.880758200295528,
+          "max": 37.20248700119555
+        }
+      },
+      "depth_gaps": [],
+      "outages": [],
+      "heartbeat_interval_ms": {
+        "n": 301,
+        "median": 100.45228399940243,
+        "p95": 108.27494500153989,
+        "max": 133.0591710011504
+      },
+      "resources": [
+        {
+          "vmstat": {
+            "pswpin": 1024076,
+            "pswpout": 2496169,
+            "pgmajfault": 1207519
+          },
+          "stack_rss_mb": 3379.8828125,
+          "available_mb": 895.94921875,
+          "swap_used_mb": 3127.9921875,
+          "swap_in": 4194615296,
+          "swap_out": 10224308224,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1027023,
+            "pswpout": 2496169,
+            "pgmajfault": 1210839
+          },
+          "stack_rss_mb": 3643.16796875,
+          "available_mb": 705.01953125,
+          "swap_used_mb": 3116.2421875,
+          "swap_in": 4206686208,
+          "swap_out": 10224308224,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1032226,
+            "pswpout": 2499597,
+            "pgmajfault": 1216064
+          },
+          "stack_rss_mb": 3534.19921875,
+          "available_mb": 722.984375,
+          "swap_used_mb": 3109.44921875,
+          "swap_in": 4227997696,
+          "swap_out": 10238349312,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1033035,
+            "pswpout": 2499597,
+            "pgmajfault": 1216882
+          },
+          "stack_rss_mb": 3423.33203125,
+          "available_mb": 752.6328125,
+          "swap_used_mb": 3105.69921875,
+          "swap_in": 4231311360,
+          "swap_out": 10238349312,
+          "threads": 56,
+          "gr3d": 87
+        },
+        {
+          "vmstat": {
+            "pswpin": 1038767,
+            "pswpout": 2504574,
+            "pgmajfault": 1222615
+          },
+          "stack_rss_mb": 3747.9140625,
+          "available_mb": 527.01953125,
+          "swap_used_mb": 3102.84375,
+          "swap_in": 4254789632,
+          "swap_out": 10258735104,
+          "threads": 56,
+          "gr3d": 8
+        },
+        {
+          "vmstat": {
+            "pswpin": 1040042,
+            "pswpout": 2504574,
+            "pgmajfault": 1223895
+          },
+          "stack_rss_mb": 3638.78515625,
+          "available_mb": 554.11328125,
+          "swap_used_mb": 3098.09375,
+          "swap_in": 4260012032,
+          "swap_out": 10258735104,
+          "threads": 56,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 1042158,
+            "pswpout": 2507307,
+            "pgmajfault": 1226027
+          },
+          "stack_rss_mb": 3852.08203125,
+          "available_mb": 522.02734375,
+          "swap_used_mb": 3100.1796875,
+          "swap_in": 4268679168,
+          "swap_out": 10269929472,
+          "threads": 56,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 1043679,
+            "pswpout": 2520259,
+            "pgmajfault": 1227599
+          },
+          "stack_rss_mb": 3785.59375,
+          "available_mb": 566.234375,
+          "swap_used_mb": 3145.2109375,
+          "swap_in": 4274909184,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1043681,
+            "pswpout": 2520259,
+            "pgmajfault": 1227601
+          },
+          "stack_rss_mb": 3855.7265625,
+          "available_mb": 469.35546875,
+          "swap_used_mb": 3145.2109375,
+          "swap_in": 4274917376,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 96
+        },
+        {
+          "vmstat": {
+            "pswpin": 1049359,
+            "pswpout": 2520259,
+            "pgmajfault": 1233281
+          },
+          "stack_rss_mb": 3827.13671875,
+          "available_mb": 529.86328125,
+          "swap_used_mb": 3122.9609375,
+          "swap_in": 4298174464,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 23
+        },
+        {
+          "vmstat": {
+            "pswpin": 1049387,
+            "pswpout": 2520259,
+            "pgmajfault": 1233363
+          },
+          "stack_rss_mb": 3641.2734375,
+          "available_mb": 549.43359375,
+          "swap_used_mb": 3122.9609375,
+          "swap_in": 4298289152,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1050777,
+            "pswpout": 2520259,
+            "pgmajfault": 1234754
+          },
+          "stack_rss_mb": 3643.33984375,
+          "available_mb": 633.42578125,
+          "swap_used_mb": 3117.2109375,
+          "swap_in": 4303982592,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1051206,
+            "pswpout": 2520259,
+            "pgmajfault": 1235183
+          },
+          "stack_rss_mb": 3664.12890625,
+          "available_mb": 529.640625,
+          "swap_used_mb": 3115.4609375,
+          "swap_in": 4305739776,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1051319,
+            "pswpout": 2520259,
+            "pgmajfault": 1235695
+          },
+          "stack_rss_mb": 3645.77734375,
+          "available_mb": 562.90234375,
+          "swap_used_mb": 3115.2109375,
+          "swap_in": 4306202624,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1056967,
+            "pswpout": 2520259,
+            "pgmajfault": 1241350
+          },
+          "stack_rss_mb": 3667.71875,
+          "available_mb": 627.44921875,
+          "swap_used_mb": 3093.2109375,
+          "swap_in": 4329336832,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 8
+        },
+        {
+          "vmstat": {
+            "pswpin": 1056967,
+            "pswpout": 2520259,
+            "pgmajfault": 1241350
+          },
+          "stack_rss_mb": 3686.96484375,
+          "available_mb": 511.63671875,
+          "swap_used_mb": 3093.2109375,
+          "swap_in": 4329336832,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1057227,
+            "pswpout": 2520259,
+            "pgmajfault": 1241614
+          },
+          "stack_rss_mb": 3668.89453125,
+          "available_mb": 603.36328125,
+          "swap_used_mb": 3092.2109375,
+          "swap_in": 4330401792,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1057238,
+            "pswpout": 2520259,
+            "pgmajfault": 1241628
+          },
+          "stack_rss_mb": 3668.765625,
+          "available_mb": 516.4609375,
+          "swap_used_mb": 3092.2109375,
+          "swap_in": 4330446848,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 1057354,
+            "pswpout": 2520259,
+            "pgmajfault": 1241745
+          },
+          "stack_rss_mb": 3771.66015625,
+          "available_mb": 571.890625,
+          "swap_used_mb": 3091.7109375,
+          "swap_in": 4330921984,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1062996,
+            "pswpout": 2520259,
+            "pgmajfault": 1247387
+          },
+          "stack_rss_mb": 3691.078125,
+          "available_mb": 593.671875,
+          "swap_used_mb": 3069.7109375,
+          "swap_in": 4354031616,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 1063564,
+            "pswpout": 2520259,
+            "pgmajfault": 1247955
+          },
+          "stack_rss_mb": 3691.09765625,
+          "available_mb": 501.46484375,
+          "swap_used_mb": 3067.4609375,
+          "swap_in": 4356358144,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1064729,
+            "pswpout": 2520259,
+            "pgmajfault": 1249120
+          },
+          "stack_rss_mb": 3691.05078125,
+          "available_mb": 591.3515625,
+          "swap_used_mb": 3062.7109375,
+          "swap_in": 4361129984,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 1064739,
+            "pswpout": 2520259,
+            "pgmajfault": 1249130
+          },
+          "stack_rss_mb": 3691.10546875,
+          "available_mb": 502.62890625,
+          "swap_used_mb": 3062.7109375,
+          "swap_in": 4361170944,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 87
+        },
+        {
+          "vmstat": {
+            "pswpin": 1064745,
+            "pswpout": 2520259,
+            "pgmajfault": 1249138
+          },
+          "stack_rss_mb": 3785.75390625,
+          "available_mb": 589.6484375,
+          "swap_used_mb": 3062.7109375,
+          "swap_in": 4361195520,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 87
+        },
+        {
+          "vmstat": {
+            "pswpin": 1064762,
+            "pswpout": 2520259,
+            "pgmajfault": 1249160
+          },
+          "stack_rss_mb": 3691.63671875,
+          "available_mb": 596.28125,
+          "swap_used_mb": 3062.7109375,
+          "swap_in": 4361265152,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 27
+        },
+        {
+          "vmstat": {
+            "pswpin": 1064772,
+            "pswpout": 2520259,
+            "pgmajfault": 1249172
+          },
+          "stack_rss_mb": 3747.9296875,
+          "available_mb": 594.2109375,
+          "swap_used_mb": 3062.4609375,
+          "swap_in": 4361306112,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1064995,
+            "pswpout": 2520259,
+            "pgmajfault": 1249642
+          },
+          "stack_rss_mb": 3691.43359375,
+          "available_mb": 594.30078125,
+          "swap_used_mb": 3061.4609375,
+          "swap_in": 4362219520,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1065039,
+            "pswpout": 2520259,
+            "pgmajfault": 1249704
+          },
+          "stack_rss_mb": 3691.58984375,
+          "available_mb": 491.03515625,
+          "swap_used_mb": 3061.2109375,
+          "swap_in": 4362399744,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1065042,
+            "pswpout": 2520259,
+            "pgmajfault": 1249707
+          },
+          "stack_rss_mb": 3789.6484375,
+          "available_mb": 528.89453125,
+          "swap_used_mb": 3061.2109375,
+          "swap_in": 4362412032,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 95
+        },
+        {
+          "vmstat": {
+            "pswpin": 1065051,
+            "pswpout": 2520259,
+            "pgmajfault": 1249716
+          },
+          "stack_rss_mb": 3691.65625,
+          "available_mb": 549.953125,
+          "swap_used_mb": 3060.9609375,
+          "swap_in": 4362448896,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1065063,
+            "pswpout": 2520259,
+            "pgmajfault": 1249728
+          },
+          "stack_rss_mb": 3691.51953125,
+          "available_mb": 460.32421875,
+          "swap_used_mb": 3060.9609375,
+          "swap_in": 4362498048,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1065207,
+            "pswpout": 2520259,
+            "pgmajfault": 1249872
+          },
+          "stack_rss_mb": 3692.08984375,
+          "available_mb": 555.1640625,
+          "swap_used_mb": 3060.4609375,
+          "swap_in": 4363087872,
+          "swap_out": 10322980864,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1065215,
+            "pswpout": 2535639,
+            "pgmajfault": 1249880
+          },
+          "stack_rss_mb": 3799.5703125,
+          "available_mb": 541.82421875,
+          "swap_used_mb": 3120.4296875,
+          "swap_in": 4363120640,
+          "swap_out": 10385977344,
+          "threads": 56,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 1066009,
+            "pswpout": 2556451,
+            "pgmajfault": 1251028
+          },
+          "stack_rss_mb": 3854.55859375,
+          "available_mb": 439.984375,
+          "swap_used_mb": 3198.8828125,
+          "swap_in": 4366364672,
+          "swap_out": 10471223296,
+          "threads": 56,
+          "gr3d": 78
+        },
+        {
+          "vmstat": {
+            "pswpin": 1066410,
+            "pswpout": 2569548,
+            "pgmajfault": 1251911
+          },
+          "stack_rss_mb": 3812.53125,
+          "available_mb": 332.63671875,
+          "swap_used_mb": 3248.234375,
+          "swap_in": 4368015360,
+          "swap_out": 10524868608,
+          "threads": 56,
+          "gr3d": 37
+        },
+        {
+          "vmstat": {
+            "pswpin": 1066792,
+            "pswpout": 2569548,
+            "pgmajfault": 1252516
+          },
+          "stack_rss_mb": 3813.1796875,
+          "available_mb": 409.2265625,
+          "swap_used_mb": 3246.734375,
+          "swap_in": 4369580032,
+          "swap_out": 10524868608,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1068903,
+            "pswpout": 2600428,
+            "pgmajfault": 1255002
+          },
+          "stack_rss_mb": 3775.3984375,
+          "available_mb": 292.46875,
+          "swap_used_mb": 3359.14453125,
+          "swap_in": 4378222592,
+          "swap_out": 10651258880,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1069561,
+            "pswpout": 2637353,
+            "pgmajfault": 1255776
+          },
+          "stack_rss_mb": 3737.25,
+          "available_mb": 314.078125,
+          "swap_used_mb": 3500.609375,
+          "swap_in": 4380921856,
+          "swap_out": 10802597888,
+          "threads": 56,
+          "gr3d": 76
+        },
+        {
+          "vmstat": {
+            "pswpin": 1069635,
+            "pswpout": 2639684,
+            "pgmajfault": 1256058
+          },
+          "stack_rss_mb": 3331.9375,
+          "available_mb": 735.1171875,
+          "swap_used_mb": 3509.78515625,
+          "swap_in": 4381224960,
+          "swap_out": 10812145664,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1069772,
+            "pswpout": 2639684,
+            "pgmajfault": 1256283
+          },
+          "stack_rss_mb": 3418.85546875,
+          "available_mb": 718.2109375,
+          "swap_used_mb": 3509.28515625,
+          "swap_in": 4381786112,
+          "swap_out": 10812145664,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1069787,
+            "pswpout": 2639684,
+            "pgmajfault": 1256304
+          },
+          "stack_rss_mb": 3332.55078125,
+          "available_mb": 678.26953125,
+          "swap_used_mb": 3509.28515625,
+          "swap_in": 4381847552,
+          "swap_out": 10812145664,
+          "threads": 56,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 1069789,
+            "pswpout": 2639684,
+            "pgmajfault": 1256308
+          },
+          "stack_rss_mb": 3332.5859375,
+          "available_mb": 779.1484375,
+          "swap_used_mb": 3509.28515625,
+          "swap_in": 4381855744,
+          "swap_out": 10812145664,
+          "threads": 56,
+          "gr3d": 98
+        },
+        {
+          "vmstat": {
+            "pswpin": 1069822,
+            "pswpout": 2639684,
+            "pgmajfault": 1256405
+          },
+          "stack_rss_mb": 3386.60546875,
+          "available_mb": 723.02734375,
+          "swap_used_mb": 3509.28515625,
+          "swap_in": 4381990912,
+          "swap_out": 10812145664,
+          "threads": 56,
+          "gr3d": 82
+        },
+        {
+          "vmstat": {
+            "pswpin": 1070010,
+            "pswpout": 2639684,
+            "pgmajfault": 1256638
+          },
+          "stack_rss_mb": 3332.5859375,
+          "available_mb": 724.62109375,
+          "swap_used_mb": 3508.03515625,
+          "swap_in": 4382760960,
+          "swap_out": 10812145664,
+          "threads": 56,
+          "gr3d": 86
+        },
+        {
+          "vmstat": {
+            "pswpin": 1070974,
+            "pswpout": 2639684,
+            "pgmajfault": 1257606
+          },
+          "stack_rss_mb": 3333.12109375,
+          "available_mb": 627.93359375,
+          "swap_used_mb": 3504.28515625,
+          "swap_in": 4386709504,
+          "swap_out": 10812145664,
+          "threads": 56,
+          "gr3d": 27
+        },
+        {
+          "vmstat": {
+            "pswpin": 1071094,
+            "pswpout": 2639684,
+            "pgmajfault": 1257727
+          },
+          "stack_rss_mb": 3436.3203125,
+          "available_mb": 647.54296875,
+          "swap_used_mb": 3503.28515625,
+          "swap_in": 4387201024,
+          "swap_out": 10812145664,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1071097,
+            "pswpout": 2639684,
+            "pgmajfault": 1257730
+          },
+          "stack_rss_mb": 3432.140625,
+          "available_mb": 678.390625,
+          "swap_used_mb": 3503.28515625,
+          "swap_in": 4387213312,
+          "swap_out": 10812145664,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1071175,
+            "pswpout": 2639684,
+            "pgmajfault": 1257808
+          },
+          "stack_rss_mb": 3366.65234375,
+          "available_mb": 710.15625,
+          "swap_used_mb": 3503.03515625,
+          "swap_in": 4387532800,
+          "swap_out": 10812145664,
+          "threads": 56,
+          "gr3d": 99
+        },
+        {
+          "vmstat": {
+            "pswpin": 1071229,
+            "pswpout": 2639684,
+            "pgmajfault": 1257862
+          },
+          "stack_rss_mb": 3333.89453125,
+          "available_mb": 707.203125,
+          "swap_used_mb": 3502.78515625,
+          "swap_in": 4387753984,
+          "swap_out": 10812145664,
+          "threads": 56,
+          "gr3d": 90
+        },
+        {
+          "vmstat": {
+            "pswpin": 1071878,
+            "pswpout": 2639684,
+            "pgmajfault": 1258624
+          },
+          "stack_rss_mb": 3436.921875,
+          "available_mb": 650.5546875,
+          "swap_used_mb": 3499.78515625,
+          "swap_in": 4390412288,
+          "swap_out": 10812145664,
+          "threads": 56,
+          "gr3d": 95
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 4694
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 6348
+      }
+    }
+  ],
+  "backend": "cuda_sad",
+  "calibrated": false
+}

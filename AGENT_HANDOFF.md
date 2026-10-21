@@ -1,6 +1,6 @@
 # ARGUS agent handoff
 
-Last updated: 2026-10-21 (end of the JETSON_PROMPT_03 sessions, HEAD `5a3964f` + docs).
+Last updated: 2026-10-21 (Codex T1 continuation; see newest git commit).
 Read in this order: this file → `STATUS.md` → `docs/FINDINGS_2026-10.md` →
 `ARCHITECTURE.md` → the newest entries at the end of `DECISION_LOG.md`. Material
 under `historical/` is evidence, not instructions.
@@ -40,7 +40,7 @@ DISPLAY=:0 python3 -m argus run --demo --record reports/sessions/demo.mp4
 #   wake: "Argus, what's in front of me?" | "Argus" -> "Yes?" -> request
 #   close: Esc twice within 2 s, or "Argus, shut down" (saves recording + log)
 DISPLAY=:0 python3 -m argus run --dashboard --no-mic --ask-file /tmp/ask.txt   # typed questions
-python3 -m pytest -q tests/                            # 295 tests, ~22 s, all must pass
+python3 -m pytest -q tests/                            # 314 tests; all must pass
 python3 scripts/summarise_session.py reports/sessions/<log>.jsonl
 ```
 
@@ -110,7 +110,25 @@ and ends with DONE or FAILED):
 1. **Fast-loop starvation under the full stack** (safety-critical).
    `depth_gap` events of 0.26–0.73 s and 12–20 ms skew drops occur while
    Gemma, Whisper, the demo view, face blur and recording run.
-   - Profile per thread (py-spy if available, or timing records).
+   - Codex added scalar `fast_tick` stages and `depth_ready` events, bounded
+     fresh stereo pairing, 250 ms source/cached-depth expiry, CPU pool caps,
+     async latest-only previews, and llama batch/microbatch 256.
+   - Short final combined tick median/p95 34.5/56.7 ms, 3856 MiB peak RSS,
+     292 MiB minimum MemAvailable, peak GR3D 99%, OC3 +1654. A separate busy
+     OCR phase still failed >250 ms. T1 is not accepted.
+   - See `reports/t1-profile-final-2026-10-21.json` and
+     `reports/t1-failures-2026-10-21.json`. Earlier profiles include cached
+     Gemma, a no-server interrupted baseline, and a real USB outage; read caveats.
+   - Reproduce without stealing desktop focus:
+     `python3 scripts/profile_fast_loop.py --offscreen --phases combined --seconds 600 --out reports/soak-automated-offscreen-2026-10-21.json`.
+   - Human soak (Fardeen unavailable this session):
+     `DISPLAY=:0 python3 scripts/soak_fast_loop.py --seconds 600 --out reports/soak-2026-10-21.json`.
+     Stay seated, printed page/headset ready; Guide prompts every 45 s,
+     display/recording, final DONE/FAILED. Report never auto-claims T1 complete.
+   - The user requested NVMe swap. Root is NVMe/ext4, 399 GiB free; current
+     swap is only 3803 MiB zram, priority 5. Prepare an 8 GiB file, then Fardeen
+     must activate it with sudo, priority 0. No fstab edit before measurement.
+   - Profile per thread if remaining tails persist.
    - Candidate fixes:
      - give the fast loop its own process or raised priority;
      - move face blur and recording to lower priority or a lower rate;
@@ -160,6 +178,7 @@ and ends with DONE or FAILED):
 | `argus/reading.py`, `argus/ocr.py`, `argus/sensitive.py` | reading mode, OCR, masking |
 | `argus/hazards.py`, `argus/movers.py`, `argus/safety.py` | fast-loop rules (corridor, approach; legacy reflex) |
 | `argus/depth.py`, `argus/cuda_stereo.py`, `argus/vpi_stereo.py`, `argus/calib_health.py` | depth |
+| `argus/timing.py`, `argus/stereo_pairing.py`, `argus/depth_freshness.py`, `argus/cpu_budget.py`, `argus/depth_preview.py` | T1 timing, source age, pairing and resource bounds |
 | `argus/seat.py`, `argus/navigation.py`, `argus/slam.py` | guidance |
 | `argus/grounding.py`, `argus/vocab.py`, `argus/trt_runner.py` | detectors |
 | `argus/doctor.py`, `argus/align.py`, `argus/guide.py`, `argus/timecode.py` | rig tools; `Guide` = spoken + on-screen instructions |
@@ -197,3 +216,49 @@ and ends with DONE or FAILED):
   - T1 (fast-loop starvation) can start without the user;
   - the first [HUMAN] asks are `doctor --focus` (reading) and the calibration
     inputs: square size, baseline, flat board.
+
+### 2026-10-21 (Codex, JETSON_PROMPT_04 T1)
+
+- **Changes:** conventional T1 safety/resource commit in this session (see
+  `git log`): stage/heartbeat timings, fresh bounded pairing, old source/cached
+  depth rejection, CPU caps, latest-only previews, batch 256, matrix and guided
+  soak tools. No calibration/model/engine changes. 314 tests pass.
+- **Measured:** `reports/doctor-2026-10-21-1336.json`,
+  `reports/t1-profile-{default,budgeted,budgeted-live,final}-2026-10-21.json`,
+  `reports/t1-failures-2026-10-21.json`. Failed runs are retained with caveats.
+- **In progress:** automated offscreen stress completed (T1 failed);
+  NVMe swap trial requested by the user, prepared and awaiting activation. T1–T5 remain partial; no walking permitted by acceptance.
+- **Next [HUMAN] ask:** activate the prepared NVMe swap file using the exact
+  command below when available; then rerun paired measurements. Later, headset
+  plus printed page for the seated guided soak. Fardeen declined that soak this
+  session; don't silently treat synthetic speech/OCR as its replacement.
+
+#### Session outcome / exact resume point
+
+- 314 tests pass. Automated 600.6 s stress: CUDA SAD, 42.8/79.8 ms median/p95
+  tick, 4196 MiB peak stack RSS, 401 MiB minimum MemAvailable, GR3D 100%, OC3
+  +51587; two outages 519/262 ms. Server stayed alive. T1 is **not accepted**.
+  Reports: `reports/soak-2026-10-21-summary.json`,
+  `reports/soak-automated-offscreen-2026-10-21.json`.
+- The first automated GUI run was interrupted after its demo received double
+  Esc. Offscreen mode was added to avoid disturbing desktop use; do not count
+  `reports/soak-automated-2026-10-21.json` as evidence of a full run.
+- New source-age guard also suppresses hazard speech if mover detection blocks
+  long enough to make geometry old. It was added during the baseline; repeat
+  final code in the post-swap run. Four synthetic freshness tests cover it.
+- `/opt/argus/swapfile.nvme-8g` exists: 8589934592 bytes, mode 0600, 82 fully
+  allocated extents, swap UUID `bb6ee86b-f34c-4546-9d39-4c4b7341c424`.
+  No activation or fstab change by the agent. Preparation evidence:
+  `reports/nvme-swap-preparation-2026-10-21.json`.
+- **Exact next [HUMAN] ask (already sent):**
+  `sudo chown root:root /opt/argus/swapfile.nvme-8g && sudo swapon --priority 0 /opt/argus/swapfile.nvme-8g`
+  Reply activated or the error; never send a password. Check `/proc/swaps`
+  before assuming activation. Existing zram priority 5, swappiness 60.
+- After activation run the identical 600 s offscreen comparison from
+  `docs/operations/MEMORY_TRIAL.md`, save `reports/soak-nvme-swap-2026-10-21.json`,
+  compare paging/tails/latencies and update this log. If still failing,
+  evaluate safety-process isolation and reducing desktop memory pressure.
+- llama-server is running with production QAT model/projector on CUDA, batch
+  and microbatch 256 (now the script defaults), logging to
+  `/tmp/argus-t1-llama-256.log`. No ARGUS wearable runtime remains running
+  after the benches. Do not kill the server before the paired swap trial.

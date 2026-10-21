@@ -28,7 +28,7 @@ table, `AGENT_HANDOFF.md` the continuation plan, and
 - **Seat guidance**, closed loop with a corridor whitelist.
 - **Demo:** first-person view, MP4 recording with audio, JSONL study logs,
   `summarise_session.py`.
-- 295 tests pass.
+- 314 tests pass after the Codex T1 changes.
 
 ## Live results with the user (2026-10-21)
 
@@ -49,3 +49,27 @@ table, `AGENT_HANDOFF.md` the continuation plan, and
 3. **Wide-camera focus** for reading (`doctor --focus` with the user).
 4. Not yet tested with the user: reading by voice, seat by voice, walking
    hazards, wake-word false accepts per hour.
+
+## Codex continuation, 2026-10-21
+
+- Added per-stage fast-loop timings and completed/open-outage accounting.
+- Fresh bounded stereo pairing avoids the latest-frame phase mismatch; both
+  source sequences must advance. Stale source depth and cached depth expire.
+- CPU inference pools are bounded; display colourisation/sysfs reads are off
+  the safety thread; llama batch/microbatch reduced from 1024 to 256 after two
+  CUDA allocation failures.
+- Short combined synthetic load: 34.5/56.7 ms median/p95 tick, 3856 MiB RSS,
+  292 MiB minimum MemAvailable, GR3D peak 99%, OC3 +1654. Separate busy OCR
+  still caused one >250 ms outage. Reports: `t1-profile-final-2026-10-21.json`
+  and `t1-failures-2026-10-21.json` under `reports/`.
+- T1 remains partial. Fardeen is unavailable for the human soak; guided
+  `scripts/soak_fast_loop.py` is prepared. Automated offscreen stress completed; an
+  8 GiB NVMe swap trial awaits activation. Focus/calibration/walking pending.
+
+- Automated 600.6 s pre-swap stress: 42.8/79.8 ms median/p95 tick, two depth
+  outages (519/262 ms), 4196 MiB RSS peak, 401 MiB minimum available RAM,
+  GR3D 100%, OC3 +51587. Server survived; T1 failed. Summary:
+  `reports/soak-2026-10-21-summary.json`.
+- Prepared and verified `/opt/argus/swapfile.nvme-8g` (8 GiB, mode 0600,
+  swap signature, no holes). Waiting for Fardeen to activate at priority 0;
+  exact command and post-swap comparison in `docs/operations/MEMORY_TRIAL.md`.

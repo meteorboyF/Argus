@@ -18,7 +18,7 @@ implementation exists.
 | Corridor hazards | partial | `argus/hazards.py`: ground plane, body/head bands, head-level rule, drop-off, head-motion gate (deg/s), 3-frame persistence, refractory, hysteresis; 5 ms/tick; 12 ray-cast tests. Speech only with calibration. Test walk pending |
 | Approaching person/vehicle | partial | YOLO11n TRT (3.3 ms GPU, 14.4 ms end to end) + ByteTrack-style tracker + range Kalman + TTC hysteresis; 10 tests; live person detected. Speech only with calibration |
 | Legacy reflex / TTC zones | partial | `argus/safety.py`; now keeps only the approach-zone rule when the corridor engine is on |
-| Fast-loop timing | **broken under full stack** | Depth heartbeat gaps 0.26-0.73 s several times a minute and skew drops 12-20 ms with Gemma + Whisper + demo view + recording (`reports/sessions/2026-10-21-124310.jsonl`). Root cause not found. Must fix before walking tests |
+| Fast-loop timing | **partial — T1 not accepted** | Bounded fresh stereo pairing, source-age rejection, CPU thread caps, asynchronous depth previews and scalar stage timing. Short combined-load check: tick median/p95 34.5/56.7 ms, RSS peak 3856 MiB, GR3D peak 99%, OC3 +1654; separate busy OCR phase still had a >250 ms outage (`reports/t1-profile-final-2026-10-21.json`). Human 10-minute voice/reading soak unavailable; walking remains blocked |
 | Speech arbiter | done (unit) | P0-P4, preemption < 50 ms in test, answer resume / "repeat?" offer, user-speech hold, depth watchdog earcon (rate-limited). Legacy priority suite fixed and green |
 | Wake word | partial | "Argus" / "Hey Argus" via VAD + Whisper tiny with a glossary hint (9/9 synthetic, 0.78 s). Real voice: the name recognised every time; bare "Argus" -> "Yes?". False wakes/hour not measured. Trained openWakeWord model not built (`training/hey_argus/`) |
 | VAD / STT | partial | Silero endpointing (0.7 s, 15 s cap) works live; Whisper tiny English only; mishearings seen ("Read the" -> "I'm the") |
@@ -32,7 +32,7 @@ implementation exists.
 | SLAM / navigation | partial | Stereo VO + corridor guidance exist with synthetic tests; off until calibration |
 | Demo view / recording | done | `run --demo [--record]`: POV with display face blur, captions, hazard banner, insets, chips; x264 via ffmpeg thread (1.5 ms/frame); TTS audio muxed; closes only on Esc x2 or "shut down" |
 | Session logger / study metrics | done | JSONL with masking; `scripts/summarise_session.py` (alarms/min, lead, task times, latency percentiles, precision/recall vs annotated truth) |
-| Memory budget | partial | Per-component RSS measured; projected stack ~4.6 GB; 10-minute soak not done |
+| Memory budget | partial | Measured short combined stack RSS 3856 MiB, but only 292 MiB MemAvailable and active paging with the development desktop. 1024-token llama batches twice failed CUDA allocation; default batch/microbatch now 256. 8 GiB NVMe swap file prepared (activation pending); see `reports/t1-failures-2026-10-21.json` and `reports/t1-profile-final-2026-10-21.json` |
 | Headless service/soak/fault tests | not started | No systemd unit or long soak |
 
 ## Reproducibility pins
@@ -126,3 +126,17 @@ Gemma produced the final answer, and Piper/Pulse playback completed. Slow-path
 stages were 0.118 s privacy, 4.269 s visual Gemma, 15.545 s cold grounding, and
 1.141 s final Gemma. Peak RAM was 7,376 MB with substantial swap, so co-residency
 and cold-start latency remain explicit blockers to wearable acceptance.
+
+## 2026-10-21 Codex T1 audit
+
+314 synthetic tests pass. No model/engine artifacts changed; SHA-256 pins above remain unchanged. `config/argus.yaml` and `/opt/argus/config/argus.yaml` match. Stereo calibration is still absent. A result older than 250 ms from source capture cannot refresh the depth watchdog or drive rules; cached depth also expires. CPU work is bounded (OpenCV 1, face ONNX Runtime 1/1 without spinning, RapidOCR 1/1, Whisper 2 with one worker). These are mitigations, not T1 acceptance.
+
+Automated 10-minute pre-swap stress (`reports/soak-2026-10-21-summary.json`):
+CUDA SAD, tick 42.8/79.8 ms median/p95, 4196 MiB peak stack RSS, 401 MiB
+minimum MemAvailable, GR3D peak 100%, OC3 +51587; two outages (519/262 ms).
+248.5 MiB swap-in / 692.6 MiB swap-out were measured system-wide. The server
+survived with batch 256, but T1's zero-gap and no-thrash gates are not met.
+Fardeen declined the human soak. The 8 GiB file at
+`/opt/argus/swapfile.nvme-8g` is allocated and formatted, mode 0600; not active
+at preparation. See `reports/nvme-swap-preparation-2026-10-21.json` and
+`docs/operations/MEMORY_TRIAL.md`. Activation requires Fardeen's sudo command.

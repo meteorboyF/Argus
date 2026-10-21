@@ -57,6 +57,8 @@ done
 echo "Starting Gemma 4 E2B (vision) on :8080 ..."
 # --jinja enables the model's own chat template (needed for native tool calling
 # if agent.tool_protocol=native; harmless for the default prompt protocol).
+# T1: 1024-token batches failed a 234 MiB CUDA allocation under full load.
+# Bound transient prefill memory; see reports/t1-profile-final-2026-10-21.json.
 exec "$LLAMA_BIN" \
   --model "$MODEL" \
   --mmproj "$MMPROJ" \
@@ -70,6 +72,6 @@ exec "$LLAMA_BIN" \
   --ctx-size 2048 \
   --jinja \
   --image-max-tokens "${LLAMA_IMAGE_MAX_TOKENS:-560}" \
-  -ub 1024 -b 1024 \
+  -ub "${LLAMA_UBATCH:-256}" -b "${LLAMA_BATCH:-256}" \
   --host 127.0.0.1 \
   --port 8080

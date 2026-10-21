@@ -181,7 +181,7 @@ class OCREngine:
 
     def __init__(self, min_score: float = 0.5):
         from rapidocr_onnxruntime import RapidOCR
-        self._ocr = RapidOCR()
+        self._ocr = RapidOCR(intra_op_num_threads=1, inter_op_num_threads=1)
         self.min_score = min_score
 
     def read_robust(self, img_bgr: np.ndarray, locate=None,

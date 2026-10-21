@@ -45,4 +45,5 @@ Thumbs.db
 .claude/
 
 # Demo recordings stay on the device (large, may show the room/people)
-reports/sessions/*.mp4
+reports/**/*.mp4
+reports/*.mp4

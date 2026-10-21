@@ -250,6 +250,10 @@ class DemoView(Dashboard):
         if now < float(v.get("close_hint_until", 0.0)):
             _text(canvas, "Press Esc again to close ARGUS", (POV_W // 2 - 330, 110), 1.2,
                   WHITE, 3, bg=(0, 0, 160))
+        if v.get("study_instruction"):
+            from .guide import draw_banner
+            draw_banner(canvas, v["study_instruction"],
+                        progress=v.get("study_progress"))
         if self.recorder is not None:
             cv2.circle(canvas, (W - 40, 40), 14, (0, 0, 255), -1)
             self.recorder.write(canvas)

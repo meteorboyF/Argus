@@ -124,3 +124,40 @@ cameras on knob-and-bolt heads with the wide camera on a centre post.
 | Never use `pkill -f <pattern>` where the pattern appears in your own command line: it killed the agent's shell twice and lost a run's output and recording. Stop processes by PID (`pgrep -f "^python3 -m argus ..."` then `kill -INT`). | — |
 | The skew test once **OOM-killed** the board (and a VS Code process) by buffering 4000 raw frames per camera. Measurement tools must buffer results, not images. | `DECISION_LOG.md` 2026-10-02 |
 | **Open safety issue:** with the full demo stack (Gemma, Whisper, demo view, face blur, recording) the fast loop's depth heartbeat had gaps of 0.26–0.73 s several times a minute, and skew drops rose to 12–20 ms. The cause is not yet found: suspect CPU/GIL contention. Must be fixed before any walking test. | `reports/sessions/2026-10-21-124310.jsonl` (`depth_gap` events) |
+
+## 8. Codex T1 continuation, 2026-10-21 (acceptance incomplete)
+
+| Finding | Evidence |
+|---|---|
+| Doctor: stereo 59.8/59.9 fps, arrival skew median/p95 2.23/3.31 ms; all cameras on expected USB3 ports. RAM check failed: 1403 MiB available, 2156 MiB swap used. Snapshots were inspected: real room/ceiling, unsuitable for geometry acceptance. | `reports/doctor-2026-10-21-1336.json` |
+| Latest-only stereo selection rejected 67/202 baseline ticks through the unchanged skew gate. Three-frame pairing with both sequences advancing produced 301/301 fresh ticks in a later 30 s stationary check. This measures arrival-time pairing, not exposure sync or calibration accuracy. | `reports/t1-profile-default-2026-10-21.json`, `reports/t1-profile-budgeted-2026-10-21.json` (latter had no llama-server) |
+| Default CPU pools plus busy-page OCR: tick median/p95/max 80.9/138.0/365.6 ms; display publication reached 236 ms. Limiting pools reduced OCR-phase p95 to 78.0 ms, but did not establish absence of tails. | `reports/t1-profile-default-2026-10-21.json`, `reports/t1-profile-budgeted-live-2026-10-21.json` |
+| llama-server twice exited with failed compute-prefill buffer allocation. The second log names a 234.04 MiB `cudaMalloc` failure. No kernel OOM kill found. Reduce batch/microbatch 1024 to 256 to bound transient memory; this is distinct from changing models or allowing CPU depth. | `reports/t1-failures-2026-10-21.json` |
+| Moving previews off the fast thread reduced baseline publication median from 16.7 to 0.16 ms. With CPU caps, pairing, preview worker and batch 256, the short combined phase tick median/p95 was 34.5/56.7 ms; RSS peak 3856 MiB; MemAvailable minimum 292 MiB; GR3D peak 99%; OC3 +1654. A separate OCR phase still had an outage over 250 ms. | `reports/t1-profile-final-2026-10-21.json` |
+| USB `-71` errors and an OpenCV video2 select timeout occurred during the budgeted matrix. The left reader reopened. Freshness pairing withheld stale frames; recovery latency is still unacceptable for uninterrupted operation. | `reports/t1-failures-2026-10-21.json` |
+| A recovered `depth_gap` event is insufficient evidence: a camera can remain unavailable at the end of a phase. In the budgeted-live faceblur phase only 66/201 ticks had fresh depth. Reports must include open outages, not just completed heartbeat percentiles. | `reports/t1-profile-budgeted-live-2026-10-21.json`, `tests/test_timing.py` |
+| NVMe root is ext4, 399 GiB free. Initial swap is six zram devices, 3803 MiB total, priority 5; no NVMe swap. Zram data occupied about 2.8 GiB logical / 970 MiB physical during the inspection. Additional NVMe swap is a pending controlled trial, not a latency fix demonstrated yet. | `reports/memory-before-nvme-swap-2026-10-21.json` |
+
+**Do:** retain fail-closed gates and the real watchdog; count terminal outages;
+review swap-in/out and MemAvailable alongside RSS. The busy synthetic OCR page
+has roughly 42 lines and is deliberately heavier than the earlier synthetic
+sign, so their OCR latency numbers are not an accuracy or speed comparison.
+
+**Don't:** call the short matrix a 10-minute human soak, compare cached Gemma
+request speeds, or treat the interrupted/no-server runs as full-stack evidence.
+No reading CER, calibrated hazard, seat, or walking acceptance was completed.
+
+### Ten-minute automated pre-swap outcome
+
+`reports/soak-2026-10-21-summary.json` (details in
+`reports/soak-automated-offscreen-2026-10-21.json`): 600.6 s, CUDA SAD,
+5934 fresh depth results / 5935 ticks, tick median/p95 42.8/79.8 ms,
+peak stack RSS 4196 MiB, minimum MemAvailable 401 MiB, GR3D peak 100%,
+OC3 +51587. Two measured depth outages were 518.8 and 261.9 ms. No model
+request errors; llama batch 256 survived. System-wide paging: 248.5 MiB in,
+692.6 MiB out, 67065 major faults. T1 fails despite meeting the p95 and RSS
+subtargets. Synthetic speech/page, offscreen render/encode, uncalibrated rig;
+human voice/reading acceptance is still absent. A small synthetic test run
+overlapped the tail, and the final post-mover age guard needs validation in
+the post-swap run. The prepared NVMe swap file is not evidence of an
+improvement until activated and measured (`reports/nvme-swap-preparation-2026-10-21.json`).

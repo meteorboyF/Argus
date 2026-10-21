@@ -93,3 +93,20 @@ mic (USB headset, Pulse default forced) -> Silero VAD phrases
 | `doctor`, `align`, `guide`, `timecode` | rig tools; spoken + on-screen guidance for humans |
 | `telemetry`, `dashboard`, `demo_view` | bus + `SessionLogger`; monitor views; recording |
 | `orchestrator` | lifecycle and wiring only: new behaviour goes into modules |
+
+## T1 resource and freshness bounds (2026-10-21)
+
+Stereo readers retain at most three frames each. Pairing selects the newest
+compatible arrivals within the unchanged skew gate, advances both sequences,
+and rejects arrivals older than 100 ms. Arrival timestamps are not verified
+exposure synchronisation. A depth result must still be at most 250 ms old
+from source capture when it returns; cached depth expires on the same basis.
+Missing/stale depth reports UNKNOWN and cannot refresh the watchdog.
+
+The safety thread publishes only references to a latest-only preview worker;
+colourisation and USB sysfs reads are observational work off that thread.
+`fast_tick` and `depth_ready` events expose work time, start intervals and
+heartbeat intervals. Reports count open outages as well as recovered ones.
+CPU pools and llama prefill batches are bounded; model/geometry/privacy gates
+are unchanged. Physical calibration and full human workload acceptance remain
+required before wearable safety claims.
