@@ -203,7 +203,8 @@ def _yaw_words(cam: str, err_yaw: float) -> str:
 
 
 def advise(pair: Rotation, metrics: PairMetrics, left_w: Rotation | None,
-           right_w: Rotation | None, t: Targets = Targets()) -> tuple[str, bool]:
+           right_w: Rotation | None, t: Targets = Targets(),
+           f_px: float = 550.0) -> tuple[str, bool]:
     """One spoken instruction, worst error first (normalised by tolerance).
 
     The pair rotation decides *whether* the cameras are parallel. With the
@@ -232,9 +233,16 @@ def advise(pair: Rotation, metrics: PairMetrics, left_w: Rotation | None,
     if worst == "yaw":
         return f"Turn the {cam} camera {_yaw_words(cam, err)}, {_amount(err)}.", False
     if worst == "pitch":
-        if not have_ref:
+        # The size of a pitch error comes from the vertical pixel offset, which
+        # holds at any scene depth; the homography pitch does not when a near
+        # object dominates (70 px offset read as 1.4 deg on 2026-10-21).
+        size = math.degrees(math.atan(abs(metrics.vertical_px) / f_px))
+        if have_ref:
+            sign = 1.0 if err > 0 else -1.0
+        else:
             # right content lower (dy > 0) means the right camera points up
-            err = abs(err) if metrics.vertical_px > 0 else -abs(err)
+            sign = 1.0 if metrics.vertical_px > 0 else -1.0
+        err = sign * size
         direction = "down" if err > 0 else "up"
         return f"Tilt the {cam} camera {direction}, {_amount(err)}.", False
     direction = "anticlockwise" if err > 0 else "clockwise"
@@ -266,7 +274,8 @@ def assess(left: np.ndarray, right: np.ndarray, wide: np.ndarray | None,
                 r = rotation_from_homography(mw.H, K_w, K_s, estimate_scale=False)
                 r.inliers = len(mw.pts_a)
                 setattr(out, name, r)
-    out.advice, out.aligned = advise(pair, out.metrics, out.left_vs_wide, out.right_vs_wide, targets)
+    out.advice, out.aligned = advise(pair, out.metrics, out.left_vs_wide, out.right_vs_wide, targets,
+                                     f_stereo)
     return out
 
 
@@ -355,7 +364,7 @@ def run_align(cfg, scene_m: float = 4.0, baseline_m: float = 0.13, f_stereo: flo
                                 metrics=_median_metrics([h.metrics for h in history]),
                                 left_vs_wide=a.left_vs_wide, right_vs_wide=a.right_vs_wide)
                 sm.advice, sm.aligned = advise(sm.pair, sm.metrics, sm.left_vs_wide,
-                                               sm.right_vs_wide, targets)
+                                               sm.right_vs_wide, targets, f_stereo)
                 a = sm
                 log.append({"t": round(time.monotonic() - t0, 2), "yaw": a.pair.yaw,
                             "pitch": a.pair.pitch, "roll": a.pair.roll,

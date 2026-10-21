@@ -105,3 +105,10 @@ def test_assess_end_to_end_with_wide_reference():
     assert a.pair is not None and abs(a.pair.yaw - 12) < 0.7
     assert a.left_vs_wide is not None and abs(a.left_vs_wide.yaw + 10) < 1.0
     assert a.advice.startswith("Turn the left camera inward")
+
+
+def test_pitch_amount_comes_from_vertical_pixels():
+    """A near person corrupts homography pitch; 70 px at f=550 is ~7 degrees."""
+    msg, ok = align.advise(align.Rotation(0.2, 1.4, 0.0), _pm(vertical=-70.0), None, None)
+    assert not ok
+    assert msg == "Tilt the right camera up, about 7 degrees."
