@@ -111,4 +111,19 @@ def test_pitch_amount_comes_from_vertical_pixels():
     """A near person corrupts homography pitch; 70 px at f=550 is ~7 degrees."""
     msg, ok = align.advise(align.Rotation(0.2, 1.4, 0.0), _pm(vertical=-70.0), None, None)
     assert not ok
-    assert msg == "Tilt the right camera up, about 7 degrees."
+    assert msg == "Tilt the right camera up, about 7 degrees. 70 pixels to go."
+
+
+def test_camera_choice_is_sticky_until_the_error_is_fixed():
+    sticky = {}
+    pair = align.Rotation(0.2, 0.0, 0.0)
+    m1, _ = align.advise(pair, _pm(-70.0), align.Rotation(0, -1, 0), align.Rotation(0, -8, 0),
+                         sticky=sticky)
+    # Noisy reference now says the left camera is worse: keep the right one.
+    m2, _ = align.advise(pair, _pm(-60.0), align.Rotation(0, -9, 0), align.Rotation(0, -6, 0),
+                         sticky=sticky)
+    assert m1.startswith("Tilt the right camera") and m2.startswith("Tilt the right camera")
+    # Fixed: the choice is released.
+    _, ok = align.advise(pair, _pm(-1.0), align.Rotation(0, 0, 0), align.Rotation(0, 0, 0),
+                         sticky=sticky)
+    assert ok and sticky == {}

@@ -169,10 +169,20 @@ def pair_metrics(m: Match, shape: tuple[int, int]) -> PairMetrics:
 # ---------------------------------------------------------------------------
 @dataclass
 class Targets:
-    vertical_px: float = 3.0
-    roll_deg: float = 0.5
-    yaw_deg: float = 1.0
+    """Pre-calibration tolerances for hand-adjusted mounts (2026-10-21).
+
+    3 px / 0.5 deg / 1 deg could not be held by hand: tightening a knob moved
+    the camera past them, and the roll estimate itself scatters about
+    +/-0.8 deg, so the session never finished. These values are well inside
+    what rectification corrects exactly; the calibration gate (held-out row
+    error < 1 px) is the real acceptance test."""
+    vertical_px: float = 8.0
+    roll_deg: float = 1.0
+    yaw_deg: float = 2.0
     pitch_deg: float = 0.5
+
+    def scaled(self, k: float) -> "Targets":
+        return Targets(self.vertical_px * k, self.roll_deg * k, self.yaw_deg * k, self.pitch_deg * k)
 
 
 @dataclass
@@ -204,7 +214,7 @@ def _yaw_words(cam: str, err_yaw: float) -> str:
 
 def advise(pair: Rotation, metrics: PairMetrics, left_w: Rotation | None,
            right_w: Rotation | None, t: Targets = Targets(),
-           f_px: float = 550.0) -> tuple[str, bool]:
+           f_px: float = 550.0, sticky: dict | None = None) -> tuple[str, bool]:
     """One spoken instruction, worst error first (normalised by tolerance).
 
     The pair rotation decides *whether* the cameras are parallel. With the
@@ -214,6 +224,9 @@ def advise(pair: Rotation, metrics: PairMetrics, left_w: Rotation | None,
     errs = {"yaw": abs(pair.yaw) / t.yaw_deg,
             "pitch": abs(metrics.vertical_px) / t.vertical_px,
             "roll": abs(pair.roll) / t.roll_deg}
+    if sticky is not None:
+        for kind in [k for k in sticky if errs.get(k, 0) <= 1.0]:
+            del sticky[kind]
     if max(errs.values()) <= 1.0:
         return "Aligned. Lock the mounts now.", True
     worst = max(errs, key=errs.get)
@@ -221,6 +234,11 @@ def advise(pair: Rotation, metrics: PairMetrics, left_w: Rotation | None,
     have_ref = left_w is not None and right_w is not None
     if have_ref:
         cam = "left" if abs(getattr(left_w, worst)) > abs(getattr(right_w, worst)) else "right"
+        if sticky is not None:
+            # Once a camera is named for an error, keep naming it until that
+            # error is fixed: a noisy reference flipped "right" to "left"
+            # mid-adjustment on 2026-10-21.
+            cam = sticky.setdefault(worst, cam)
         err = getattr(left_w if cam == "left" else right_w, worst)
         # Never move a camera more than the pair needs: cap at the pair error.
         # Pitch is judged by vertical pixels, not pair.pitch, so it is not capped.
@@ -244,7 +262,11 @@ def advise(pair: Rotation, metrics: PairMetrics, left_w: Rotation | None,
             sign = 1.0 if metrics.vertical_px > 0 else -1.0
         err = sign * size
         direction = "down" if err > 0 else "up"
-        return f"Tilt the {cam} camera {direction}, {_amount(err)}.", False
+        # Live countdown in 5 px steps: the sentence changes as the knob turns,
+        # so the person hears progress instead of one repeated instruction.
+        left_px = int(round(abs(metrics.vertical_px) / 5.0) * 5)
+        return (f"Tilt the {cam} camera {direction}, {_amount(err)}. "
+                f"{left_px} pixels to go."), False
     direction = "anticlockwise" if err > 0 else "clockwise"
     return (f"Rotate the {cam} camera {direction}, as you look at it from behind, "
             f"{_amount(err)}."), False
@@ -350,6 +372,8 @@ def run_align(cfg, scene_m: float = 4.0, baseline_m: float = 0.13, f_stereo: flo
         t0 = time.monotonic()
         aligned_since = None
         locked_announced = False
+        sticky: dict[str, str] = {}
+        last_print = 0.0
         while time.monotonic() - t0 < max_s:
             L, R = probes["left"].snapshot(1.0), probes["right"].snapshot(1.0)
             W = probes["wide"].snapshot(1.0) if "wide" in probes else None
@@ -366,12 +390,24 @@ def run_align(cfg, scene_m: float = 4.0, baseline_m: float = 0.13, f_stereo: flo
             if a.pair is not None:
                 history.append(a)
                 history[:] = history[-5:]
+                lw = [h.left_vs_wide for h in history if h.left_vs_wide is not None]
+                rw = [h.right_vs_wide for h in history if h.right_vs_wide is not None]
                 sm = Assessment(pair=_median_rotation([h.pair for h in history]),
                                 metrics=_median_metrics([h.metrics for h in history]),
-                                left_vs_wide=a.left_vs_wide, right_vs_wide=a.right_vs_wide)
+                                left_vs_wide=_median_rotation(lw) if len(lw) >= 3 else None,
+                                right_vs_wide=_median_rotation(rw) if len(rw) >= 3 else None)
+                # Hysteresis: once aligned, only a clear excursion (1.5x the
+                # tolerance) counts as "moved"; noise alone must not send the
+                # person back to the knobs while they lock the mounts.
+                active = targets.scaled(1.5) if aligned_since is not None else targets
                 sm.advice, sm.aligned = advise(sm.pair, sm.metrics, sm.left_vs_wide,
-                                               sm.right_vs_wide, targets, f_stereo)
+                                               sm.right_vs_wide, active, f_stereo, sticky)
                 a = sm
+                if time.monotonic() - last_print >= 1.0:
+                    last_print = time.monotonic()
+                    print(f"[measure] yaw {a.pair.yaw:+.1f} vertical {a.metrics.vertical_px:+.0f}px "
+                          f"roll {a.pair.roll:+.1f} overlap {a.metrics.overlap:.0%} "
+                          f"matches {a.pair.inliers}", flush=True)
                 log.append({"t": round(time.monotonic() - t0, 2), "yaw": a.pair.yaw,
                             "pitch": a.pair.pitch, "roll": a.pair.roll,
                             "vertical_px": a.metrics.vertical_px, "overlap": a.metrics.overlap,

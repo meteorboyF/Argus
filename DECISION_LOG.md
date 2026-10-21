@@ -692,3 +692,35 @@ The spoken coach reads the first three reasons aloud.
 **Lesson / consequence.** Validate a calibration on data it was not fitted
 to. Evidence that was not used in the fit is the only kind that can show
 overfitting.
+
+## 2026-10-21 M2 — live alignment by hand: what the tool had to learn
+
+**Hurdle / problem.** The first full hand-guided alignment session on the
+printed bridge showed four tool failures.
+1. The camera to move flipped between left and right on noisy single-frame
+   comparisons with the wide camera.
+2. The pitch amount came from a homography that a nearby person corrupted:
+   "very slightly" was said for a 70 px (7°) error.
+3. 3 px / 0.5° / 1° tolerances could not be held by hand. Tightening a knob
+   moved the camera past them, and the roll estimate scatters about ±0.8°,
+   so the session cycled "Aligned → it moved" indefinitely.
+4. A post-session "clean" measurement was taken while the rig was being
+   handled (lens covered, phone in view). It reported a perfect 0 px and had
+   to be discarded.
+
+The person still corrected pitch from −71 px to within ±5–15 px and brought
+roll down to "very slightly" in a few minutes, with a live pixel countdown.
+
+**Resolution.**
+- The wide-camera references are median-smoothed, and the chosen camera
+  stays fixed until its error is fixed.
+- Pitch is sized from vertical pixels.
+- Spoken pitch advice counts down ("15 pixels to go").
+- Tolerances are 8 px / 1° / 2°; calibration's held-out row error < 1 px
+  remains the real acceptance test.
+- While locking, 1.5× hysteresis applies.
+- Every measurement is checked by eye (R1) before it is reported.
+
+**Lesson / consequence.** A guidance loop needs tolerances wider than its
+own measurement noise, and wider than what the person can physically hold.
+Otherwise it guides forever.
