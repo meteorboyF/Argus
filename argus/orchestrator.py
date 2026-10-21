@@ -635,16 +635,22 @@ class Orchestrator:
             t0 = time.perf_counter()
             heard = transcribe_hinted(self.stt, audio)
             m = match_wake(heard)
+            bus.record("heard", text=heard, woke=m.woke, stt_s=time.perf_counter() - t0)
             if not m.woke:
                 continue
             bus.record("wake", text=heard, stt_s=time.perf_counter() - t0)
             question = m.request
             if not question:
+                # A bare "Argus" is a call: answer it, like a person would. A
+                # beep alone went unnoticed in the first test (five wakes, no
+                # request, 2026-10-21).
+                self.speaker.speak("Yes?", Priority.NORMAL)
+                self.speaker.wait_until_idle(timeout=3.0)
                 earcons.play("listening")
                 bus.set(gemma="listening")
                 audio, state = record_utterance(
                     device=self.cfg.speech.input_device,
-                    cfg=EndpointConfig(max_s=15.0),
+                    cfg=EndpointConfig(max_s=15.0, start_timeout_s=8.0),
                     on_speech=self.speaker.arbiter.set_user_speaking)
                 self.speaker.arbiter.set_user_speaking(False)
                 if state == "timeout":
