@@ -46,6 +46,7 @@ Or pin things down explicitly:
 from __future__ import annotations
 
 import argparse
+from dataclasses import dataclass
 import os
 import sys
 import threading
@@ -392,9 +393,19 @@ def movement_instruction(view_count):
 # ---------------------------------------------------------------------------
 # Calibration
 # ---------------------------------------------------------------------------
+LAST_MONO_RMS: dict[str, float] = {}
+
+
 def calibrate(objpoints, ptsL, ptsR, size):
-    _, mtxL, distL, _, _ = cv2.calibrateCamera(objpoints, ptsL, size, None, None)
-    _, mtxR, distR, _, _ = cv2.calibrateCamera(objpoints, ptsR, size, None, None)
+    # k3 is fixed at 0: with free k3 a 0.1 px corner noise produced 2.3 px
+    # worst held-out row error on a synthetic rig (16 px at 0.2 px noise);
+    # fixed, 0.65 px. k1, k2 and tangential terms model the B0495 lens.
+    mono_flags = cv2.CALIB_FIX_K3
+    rmsL, mtxL, distL, _, _ = cv2.calibrateCamera(objpoints, ptsL, size, None, None,
+                                                  flags=mono_flags)
+    rmsR, mtxR, distR, _, _ = cv2.calibrateCamera(objpoints, ptsR, size, None, None,
+                                                  flags=mono_flags)
+    LAST_MONO_RMS.update(left=float(rmsL), right=float(rmsR))
     crit = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 1e-5)
     rms, mtxL, distL, mtxR, distR, R, T, _, _ = cv2.stereoCalibrate(
         objpoints, ptsL, ptsR, mtxL, distL, mtxR, distR, size,
@@ -411,15 +422,73 @@ def rectify(mtxL, distL, mtxR, distR, size, R, T):
     return R1, R2, P1, P2, Q, map1x, map1y, map2x, map2y
 
 
-def rectification_error(ptsL, ptsR, mtxL, distL, R1, P1, mtxR, distR, R2, P2):
-    """After rectification, matched points should share the same row. Returns the
-    mean absolute vertical disparity in pixels (lower = better; < ~1 px is good)."""
+def row_errors(ptsL, ptsR, mtxL, distL, R1, P1, mtxR, distR, R2, P2) -> np.ndarray:
+    """Absolute vertical disparity of every matched corner after rectification."""
     errs = []
     for cL, cR in zip(ptsL, ptsR):
         uL = cv2.undistortPoints(cL, mtxL, distL, R=R1, P=P1).reshape(-1, 2)
         uR = cv2.undistortPoints(cR, mtxR, distR, R=R2, P=P2).reshape(-1, 2)
         errs.append(np.abs(uL[:, 1] - uR[:, 1]))
-    return float(np.concatenate(errs).mean())
+    return np.concatenate(errs) if errs else np.array([])
+
+
+def rectification_error(ptsL, ptsR, mtxL, distL, R1, P1, mtxR, distR, R2, P2):
+    """After rectification, matched points should share the same row. Returns the
+    mean absolute vertical disparity in pixels (lower = better; < ~1 px is good)."""
+    return float(row_errors(ptsL, ptsR, mtxL, distL, R1, P1, mtxR, distR, R2, P2).mean())
+
+
+def held_out_row_error(objpoints, ptsL, ptsR, size, every: int = 5) -> tuple[float, float, int]:
+    """Fit on all views except every `every`-th one, rectify, and measure the
+    row error on the held-out views only (mean, max, n_held_out). A fit that
+    only explains its own views has learned the noise, not the rig."""
+    held = [i for i in range(len(objpoints)) if i % every == every - 1]
+    if len(held) < 2 or len(objpoints) - len(held) < 8:
+        return float("nan"), float("nan"), 0
+    fit = [i for i in range(len(objpoints)) if i not in held]
+    sel = lambda xs, ids: [xs[i] for i in ids]  # noqa: E731
+    _, mL, dL, mR, dR, R, T = calibrate(sel(objpoints, fit), sel(ptsL, fit), sel(ptsR, fit), size)
+    R1, R2, P1, P2, *_ = rectify(mL, dL, mR, dR, size, R, T)
+    e = row_errors(sel(ptsL, held), sel(ptsR, held), mL, dL, R1, P1, mR, dR, R2, P2)
+    return float(e.mean()), float(e.max()), len(held)
+
+
+@dataclass
+class GateLimits:
+    mono_rms_px: float = 0.5
+    stereo_rms_px: float = 0.7
+    row_mean_px: float = 0.5
+    row_max_px: float = 1.0
+    baseline_tolerance: float = 0.10
+    min_views: int = 15
+    min_coverage: float = 0.70
+
+
+def quality_gate(*, mono_rms: dict, stereo_rms: float, row_mean: float, row_max: float,
+                 baseline_m: float, tape_baseline_m: float | None, n_views: int,
+                 coverage: float, limits: GateLimits = GateLimits()) -> list[str]:
+    """Reasons the calibration must NOT be saved; empty means accepted.
+    Each reason is a short sentence that can be spoken to the person."""
+    why = []
+    for cam, v in mono_rms.items():
+        if not np.isfinite(v) or v > limits.mono_rms_px:
+            why.append(f"{cam} camera error {v:.2f} pixels is above {limits.mono_rms_px}")
+    if not np.isfinite(stereo_rms) or stereo_rms > limits.stereo_rms_px:
+        why.append(f"stereo error {stereo_rms:.2f} pixels is above {limits.stereo_rms_px}")
+    if not np.isfinite(row_mean) or row_mean >= limits.row_mean_px:
+        why.append(f"held-out row error {row_mean:.2f} pixels is not below {limits.row_mean_px}")
+    if not np.isfinite(row_max) or row_max >= limits.row_max_px:
+        why.append(f"worst held-out row error {row_max:.2f} pixels is not below {limits.row_max_px}")
+    if tape_baseline_m is None:
+        why.append("baseline not checked against a tape measurement")
+    elif abs(baseline_m - tape_baseline_m) > limits.baseline_tolerance * tape_baseline_m:
+        why.append(f"baseline {baseline_m * 100:.1f} centimetres differs from the measured "
+                   f"{tape_baseline_m * 100:.1f} by more than {limits.baseline_tolerance:.0%}")
+    if n_views < limits.min_views:
+        why.append(f"only {n_views} views, {limits.min_views} needed")
+    if coverage < limits.min_coverage:
+        why.append(f"board covered {coverage:.0%} of the picture, {limits.min_coverage:.0%} needed")
+    return why
 
 
 # ---------------------------------------------------------------------------
@@ -509,6 +578,8 @@ def main():
     ap.add_argument("--square-mm", type=float, default=None,
                     help="measured checkerboard square size in mm (required unless --verify)")
     ap.add_argument("--min-views", type=int, default=15, help="views required before solving")
+    ap.add_argument("--baseline-mm", type=float, default=None,
+                    help="tape-measured lens-centre distance; the gate requires it")
     ap.add_argument("--out", default=DEFAULT_OUT)
     ap.add_argument("--no-auto", action="store_true", help="manual capture (SPACE) only")
     ap.add_argument("--headless", action="store_true", help="no preview window (SSH-friendly)")
@@ -836,15 +907,21 @@ def main():
     print(f"  rectified focal length        : {focal_px:.1f} px")
     print(f"  inter-camera angle (toe)      : {angle:.2f} deg")
 
-    max_rms = 1.5
-    max_vertical = 2.0
-    if (not np.isfinite(rms) or not np.isfinite(v_err)
-            or rms > max_rms or v_err > max_vertical):
+    mono_rms = dict(LAST_MONO_RMS)
+    row_mean, row_max, n_held = held_out_row_error(objpoints, ptsL, ptsR, size)
+    tape_m = args.baseline_mm / 1000.0 if args.baseline_mm else None
+    reasons = quality_gate(mono_rms=mono_rms, stereo_rms=rms, row_mean=row_mean,
+                           row_max=row_max, baseline_m=baseline_m, tape_baseline_m=tape_m,
+                           n_views=len(objpoints), coverage=len(covered) / 9.0)
+    print(f"  per-camera RMS                : left {mono_rms.get('left', float('nan')):.3f}  "
+          f"right {mono_rms.get('right', float('nan')):.3f} px")
+    print(f"  held-out row error ({n_held} views): mean {row_mean:.3f}  max {row_max:.3f} px")
+    if reasons:
         rejected = f"{args.out}.rejected.npz"
-        print("\n  REJECTED: calibration exceeds the hard safety quality limits")
-        print(f"  (RMS <= {max_rms:.1f}px and vertical <= {max_vertical:.1f}px required).")
-        print("  The active calibration path was not changed; collect more diverse,")
-        print("  well-lit views of a rigid flat checkerboard and try again.")
+        print("\n  REJECTED by the quality gate:")
+        for r in reasons:
+            print(f"   - {r}")
+        print("  The active calibration path was not changed.")
         save_path = rejected
     else:
         save_path = args.out
@@ -860,6 +937,9 @@ def main():
         # convenience scalars + metadata
         baseline_m=baseline_m, focal_px=focal_px, image_size=np.array(size),
         rms=rms, vertical_error=v_err, toe_angle_deg=angle,
+        mono_rms_left=mono_rms.get("left", np.nan), mono_rms_right=mono_rms.get("right", np.nan),
+        heldout_row_mean=row_mean, heldout_row_max=row_max,
+        tape_baseline_m=np.nan if tape_m is None else tape_m,
         left_index=left_idx, right_index=right_idx, pattern=np.array(pattern),
         # stable physical identity so the runtime re-binds left/right correctly
         # across reboots however V4L2 renumbers the devices
@@ -870,12 +950,7 @@ def main():
             voice.done(f"Calibration accepted. Error {rms:.2f} pixels, baseline "
                        f"{baseline_m * 100:.1f} centimetres.")
         else:
-            why = []
-            if not np.isfinite(rms) or rms > max_rms:
-                why.append(f"reprojection error {rms:.2f} pixels is above {max_rms}")
-            if not np.isfinite(v_err) or v_err > max_vertical:
-                why.append(f"row error {v_err:.2f} pixels is above {max_vertical}")
-            voice.failed("Calibration rejected: " + " and ".join(why or ["quality limits"]) + ".")
+            voice.failed("Calibration rejected: " + "; ".join(reasons[:3]) + ".")
         voice.close()
     if coach is not None:
         ok = save_path == args.out

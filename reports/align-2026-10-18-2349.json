@@ -1,0 +1,26 @@
+{
+  "kind": "argus-align",
+  "result": "stopped",
+  "trace": [
+    {
+      "t": 1.34,
+      "yaw": -2.292930306326681,
+      "pitch": -6.817983488956899,
+      "roll": 0.48666084111178615,
+      "vertical_px": -62.62964630126953,
+      "overlap": 0.7898508029513889,
+      "inliers": 50,
+      "advice": "Tilt the right camera up, about 7 degrees."
+    },
+    {
+      "t": 2.03,
+      "yaw": 0.5840909337602034,
+      "pitch": -4.5087308826782895,
+      "roll": 2.6321774153711135,
+      "vertical_px": -65.25493240356445,
+      "overlap": 0.8110934516059027,
+      "inliers": 60,
+      "advice": "Tilt the left camera up, about 4 degrees."
+    }
+  ]
+}

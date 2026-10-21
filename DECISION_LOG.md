@@ -666,3 +666,29 @@ leaves no shared rows for the matcher. The feedback loop could have announced
 - A camera-measurement tool must not look at its own display.
 - Every physical rebuild invalidates the left/right binding: re-check it by
   parallax, not by cable labels.
+
+## 2026-10-21 M2 — calibration gate on held-out views exposed k3 overfitting
+
+**Hurdle / problem.** The M2 gate requires rectified row error mean < 0.5 px
+and max < 1 px on views held out of the fit. On a synthetic ideal rig with
+0.1 px corner noise, the default OpenCV model (k1, k2, p1, p2, k3 free) gave
+0.34 px mean and 2.34 px worst held-out row error; at 0.2 px noise, 1.71 /
+16.5 px. In-sample error, the only check before, cannot reveal this.
+
+**Impact.** A calibration that looks fine in-sample could put rows several
+pixels apart in parts of the picture the board never covered. Stereo
+matching along rows would then fail exactly there.
+
+**Options considered.** Loosen the gate; collect more views; constrain the
+distortion model.
+
+**Resolution.** Fix k3 = 0 in the per-camera fits: 0.14 / 0.65 px at 0.1 px
+noise, 0.29 / 1.37 px at 0.2 px. The gate now rejects, and names, each
+failure: per-camera RMS <= 0.5 px, stereo RMS <= 0.7 px, held-out row mean
+< 0.5 and max < 1 px (every 5th view held out), baseline within 10% of the
+tape measurement (required), >= 15 views covering >= 70% of the frame cells.
+The spoken coach reads the first three reasons aloud.
+
+**Lesson / consequence.** Validate a calibration on data it was not fitted
+to. Evidence that was not used in the fit is the only kind that can show
+overfitting.

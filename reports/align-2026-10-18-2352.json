@@ -1,0 +1,2006 @@
+{
+  "kind": "argus-align",
+  "result": "stopped",
+  "trace": [
+    {
+      "t": 19.77,
+      "yaw": 8.544737596978461,
+      "pitch": 0.26068542057799354,
+      "roll": -0.6593892945981452,
+      "vertical_px": -2.48834228515625,
+      "overlap": 0.8184473198784722,
+      "inliers": 175,
+      "advice": "Turn the right camera inward, about 4 degrees."
+    },
+    {
+      "t": 20.1,
+      "yaw": 8.544737596978461,
+      "pitch": -0.5448554180551698,
+      "roll": -0.7257999972268789,
+      "vertical_px": -3.600006103515625,
+      "overlap": 0.8184473198784722,
+      "inliers": 175,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 20.38,
+      "yaw": 8.479351800307452,
+      "pitch": -0.697818945262906,
+      "roll": -0.7257999972268789,
+      "vertical_px": -3.600006103515625,
+      "overlap": 0.8121750759548612,
+      "inliers": 175,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 20.68,
+      "yaw": 8.479351800307452,
+      "pitch": -0.697818945262906,
+      "roll": -0.7499790027260546,
+      "vertical_px": -3.600006103515625,
+      "overlap": 0.8108557400173612,
+      "inliers": 175,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 20.97,
+      "yaw": 9.22111750620498,
+      "pitch": -0.697818945262906,
+      "roll": -1.3339243824748541,
+      "vertical_px": -3.600006103515625,
+      "overlap": 0.8108557400173612,
+      "inliers": 171,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 21.27,
+      "yaw": 8.56205819353545,
+      "pitch": -1.5215767194393535,
+      "roll": -1.0411503509833353,
+      "vertical_px": -3.58319091796875,
+      "overlap": 0.8101882595486111,
+      "inliers": 170,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 21.55,
+      "yaw": 8.479351800307452,
+      "pitch": -1.6660614715221176,
+      "roll": -1.0411503509833353,
+      "vertical_px": -3.58319091796875,
+      "overlap": 0.8093683268229167,
+      "inliers": 164,
+      "advice": "Turn the right camera inward, about 5 degrees."
+    },
+    {
+      "t": 21.86,
+      "yaw": 8.188099596204268,
+      "pitch": -1.5215767194393535,
+      "roll": -1.1232900872421985,
+      "vertical_px": -3.600006103515625,
+      "overlap": 0.8108557400173612,
+      "inliers": 161,
+      "advice": "Turn the right camera inward, about 5 degrees."
+    },
+    {
+      "t": 22.16,
+      "yaw": 8.56205819353545,
+      "pitch": -1.5215767194393535,
+      "roll": -1.1232900872421985,
+      "vertical_px": -3.600006103515625,
+      "overlap": 0.8093683268229167,
+      "inliers": 161,
+      "advice": "Turn the right camera inward, about 4 degrees."
+    },
+    {
+      "t": 22.44,
+      "yaw": 7.533805237910321,
+      "pitch": -2.6808572230212357,
+      "roll": -1.1232900872421985,
+      "vertical_px": -5.1840057373046875,
+      "overlap": 0.8047696940104166,
+      "inliers": 161,
+      "advice": "Turn the right camera inward, about 5 degrees."
+    },
+    {
+      "t": 22.72,
+      "yaw": 7.203714753198301,
+      "pitch": -2.733942959706456,
+      "roll": -1.1232900872421985,
+      "vertical_px": -12.0,
+      "overlap": 0.8022913953993056,
+      "inliers": 161,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 23.37,
+      "yaw": 6.818505094186292,
+      "pitch": -2.733942959706456,
+      "roll": -1.306453372845492,
+      "vertical_px": -13.824005126953125,
+      "overlap": 0.7928198784722222,
+      "inliers": 161,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 23.73,
+      "yaw": 7.203714753198301,
+      "pitch": -3.39477407997958,
+      "roll": -1.1664217138134267,
+      "vertical_px": -18.662399291992188,
+      "overlap": 0.7900759006076389,
+      "inliers": 166,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 24.03,
+      "yaw": 7.203714753198301,
+      "pitch": -2.733942959706456,
+      "roll": -1.1664217138134267,
+      "vertical_px": -22.0,
+      "overlap": 0.7928198784722222,
+      "inliers": 154,
+      "advice": "Tilt the right camera down, very slightly."
+    },
+    {
+      "t": 24.33,
+      "yaw": 8.765565005631625,
+      "pitch": -2.5357748267312084,
+      "roll": -0.8312257826185812,
+      "vertical_px": -25.920013427734375,
+      "overlap": 0.7924308268229167,
+      "inliers": 154,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 24.63,
+      "yaw": 9.502178266880929,
+      "pitch": -2.417992385622028,
+      "roll": -1.1664217138134267,
+      "vertical_px": -25.920013427734375,
+      "overlap": 0.7924308268229167,
+      "inliers": 166,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 24.93,
+      "yaw": 9.831124012958124,
+      "pitch": -2.417992385622028,
+      "roll": -1.1664217138134267,
+      "vertical_px": -26.0,
+      "overlap": 0.7911328667534723,
+      "inliers": 166,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 25.23,
+      "yaw": 9.831124012958124,
+      "pitch": -2.417992385622028,
+      "roll": -1.3207427303064265,
+      "vertical_px": -25.920013427734375,
+      "overlap": 0.7911328667534723,
+      "inliers": 162,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 25.51,
+      "yaw": 9.831124012958124,
+      "pitch": -2.417992385622028,
+      "roll": -1.3207427303064265,
+      "vertical_px": -25.919998168945312,
+      "overlap": 0.7911328667534723,
+      "inliers": 162,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 25.78,
+      "yaw": 9.831124012958124,
+      "pitch": -2.5746988999204534,
+      "roll": -1.3207427303064265,
+      "vertical_px": -24.479995727539062,
+      "overlap": 0.7854072265625,
+      "inliers": 155,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 26.13,
+      "yaw": 9.286437751892564,
+      "pitch": -2.5746988999204534,
+      "roll": -1.3207427303064265,
+      "vertical_px": -24.0,
+      "overlap": 0.7854072265625,
+      "inliers": 154,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 26.46,
+      "yaw": 9.286437751892564,
+      "pitch": -2.285229625227418,
+      "roll": -1.1588451535551263,
+      "vertical_px": -24.0,
+      "overlap": 0.7929141710069444,
+      "inliers": 143,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 26.85,
+      "yaw": 9.286437751892564,
+      "pitch": -2.285229625227418,
+      "roll": -1.0014273276587897,
+      "vertical_px": -17.279998779296875,
+      "overlap": 0.7929141710069444,
+      "inliers": 143,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 27.54,
+      "yaw": 9.237744835142507,
+      "pitch": -2.285229625227418,
+      "roll": -1.1588451535551263,
+      "vertical_px": -14.929916381835938,
+      "overlap": 0.7929141710069444,
+      "inliers": 143,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 27.86,
+      "yaw": 8.733138091780699,
+      "pitch": -2.285229625227418,
+      "roll": -1.1588451535551263,
+      "vertical_px": -14.929916381835938,
+      "overlap": 0.7929141710069444,
+      "inliers": 147,
+      "advice": "Turn the left camera inward, about 6 degrees."
+    },
+    {
+      "t": 28.15,
+      "yaw": 8.673340345748766,
+      "pitch": -2.363707174010823,
+      "roll": -0.8189925243483462,
+      "vertical_px": -14.929916381835938,
+      "overlap": 0.7929141710069444,
+      "inliers": 151,
+      "advice": "Turn the left camera inward, about 6 degrees."
+    },
+    {
+      "t": 28.45,
+      "yaw": 8.673340345748766,
+      "pitch": -2.4958226982278857,
+      "roll": -0.7209761940338701,
+      "vertical_px": -15.600006103515625,
+      "overlap": 0.79270751953125,
+      "inliers": 151,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 28.74,
+      "yaw": 8.673340345748766,
+      "pitch": -2.363707174010823,
+      "roll": -0.8189925243483462,
+      "vertical_px": -15.600006103515625,
+      "overlap": 0.7950697157118055,
+      "inliers": 151,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 29.02,
+      "yaw": 8.919946019827503,
+      "pitch": -2.363707174010823,
+      "roll": -0.8189925243483462,
+      "vertical_px": -15.600006103515625,
+      "overlap": 0.7950697157118055,
+      "inliers": 152,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 29.36,
+      "yaw": 8.919946019827503,
+      "pitch": -2.483939452568766,
+      "roll": -1.00503816745391,
+      "vertical_px": -15.0,
+      "overlap": 0.8006746419270834,
+      "inliers": 152,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 29.67,
+      "yaw": 8.994888720298025,
+      "pitch": -1.3708363827595447,
+      "roll": -1.1668936341221514,
+      "vertical_px": -15.0,
+      "overlap": 0.8006746419270834,
+      "inliers": 152,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 29.94,
+      "yaw": 8.919946019827503,
+      "pitch": -0.3016656988504549,
+      "roll": -1.1962608725723702,
+      "vertical_px": -15.0,
+      "overlap": 0.8083328993055555,
+      "inliers": 152,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 30.28,
+      "yaw": 8.289756433561028,
+      "pitch": -1.3708363827595447,
+      "roll": -1.1962608725723702,
+      "vertical_px": -15.600006103515625,
+      "overlap": 0.8006746419270834,
+      "inliers": 149,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 30.58,
+      "yaw": 8.094463869698586,
+      "pitch": -2.483939452568766,
+      "roll": -1.1962608725723702,
+      "vertical_px": -15.839996337890625,
+      "overlap": 0.798103515625,
+      "inliers": 147,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 30.87,
+      "yaw": 8.289756433561028,
+      "pitch": -3.3815757564358346,
+      "roll": -0.9584410195108533,
+      "vertical_px": -22.096298217773438,
+      "overlap": 0.7968327365451389,
+      "inliers": 149,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 31.16,
+      "yaw": 8.094463869698586,
+      "pitch": -3.3815757564358346,
+      "roll": -0.760945151500525,
+      "vertical_px": -24.0,
+      "overlap": 0.7912842881944444,
+      "inliers": 147,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 31.79,
+      "yaw": 7.710166164418735,
+      "pitch": -3.3815757564358346,
+      "roll": -0.760945151500525,
+      "vertical_px": -24.0,
+      "overlap": 0.7912842881944444,
+      "inliers": 149,
+      "advice": "Tilt the left camera down, very slightly."
+    },
+    {
+      "t": 32.25,
+      "yaw": 7.710166164418735,
+      "pitch": -3.2706068780193958,
+      "roll": -0.9584410195108533,
+      "vertical_px": -24.0,
+      "overlap": 0.798103515625,
+      "inliers": 152,
+      "advice": "Tilt the left camera up, very slightly."
+    },
+    {
+      "t": 32.53,
+      "yaw": 7.710166164418735,
+      "pitch": -2.6567413360492984,
+      "roll": -1.0197693587867203,
+      "vertical_px": -17.0,
+      "overlap": 0.7987604166666666,
+      "inliers": 152,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 32.83,
+      "yaw": 7.710166164418735,
+      "pitch": -2.6567413360492984,
+      "roll": -1.0197693587867203,
+      "vertical_px": -15.600006103515625,
+      "overlap": 0.7987604166666666,
+      "inliers": 152,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 33.17,
+      "yaw": 8.924531632662177,
+      "pitch": -1.2810358996944398,
+      "roll": -1.0341755562435582,
+      "vertical_px": -14.51519775390625,
+      "overlap": 0.8010083550347222,
+      "inliers": 152,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 33.44,
+      "yaw": 8.924531632662177,
+      "pitch": -1.2810358996944398,
+      "roll": -1.3075155521333257,
+      "vertical_px": -14.399993896484375,
+      "overlap": 0.8025014105902778,
+      "inliers": 148,
+      "advice": "Turn the right camera inward, about 8 degrees."
+    },
+    {
+      "t": 33.73,
+      "yaw": 8.924531632662177,
+      "pitch": -1.2708424516972163,
+      "roll": -1.3395977668170964,
+      "vertical_px": -14.399993896484375,
+      "overlap": 0.8054356553819444,
+      "inliers": 145,
+      "advice": "Turn the right camera inward, about 5 degrees."
+    },
+    {
+      "t": 34.05,
+      "yaw": 8.924531632662177,
+      "pitch": -2.1702225659185657,
+      "roll": -1.3075155521333257,
+      "vertical_px": -14.399993896484375,
+      "overlap": 0.8025014105902778,
+      "inliers": 148,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 34.34,
+      "yaw": 9.199202737957545,
+      "pitch": -1.2708424516972163,
+      "roll": -1.3395977668170964,
+      "vertical_px": -14.399993896484375,
+      "overlap": 0.8054356553819444,
+      "inliers": 145,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 34.64,
+      "yaw": 8.75300282184589,
+      "pitch": -2.1702225659185657,
+      "roll": -1.3258580391104382,
+      "vertical_px": -14.399993896484375,
+      "overlap": 0.8025014105902778,
+      "inliers": 148,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 34.95,
+      "yaw": 8.746650064470408,
+      "pitch": -0.8918335552916473,
+      "roll": -1.3258580391104382,
+      "vertical_px": -14.400001525878906,
+      "overlap": 0.8142643771701389,
+      "inliers": 145,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 35.29,
+      "yaw": 8.12733908983921,
+      "pitch": -2.8581215476551134,
+      "roll": -0.9773572452535704,
+      "vertical_px": -14.929931640625,
+      "overlap": 0.8070130208333334,
+      "inliers": 144,
+      "advice": "Turn the right camera inward, about 5 degrees."
+    },
+    {
+      "t": 35.9,
+      "yaw": 8.746650064470408,
+      "pitch": -0.8918335552916473,
+      "roll": -1.3258580391104382,
+      "vertical_px": -15.57598876953125,
+      "overlap": 0.8119812282986111,
+      "inliers": 144,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 36.31,
+      "yaw": 7.3722974367046,
+      "pitch": -2.8581215476551134,
+      "roll": -0.5736562207080386,
+      "vertical_px": -15.600006103515625,
+      "overlap": 0.8070130208333334,
+      "inliers": 142,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 36.63,
+      "yaw": 7.3722974367046,
+      "pitch": -2.8581215476551134,
+      "roll": -0.5736562207080386,
+      "vertical_px": -15.839996337890625,
+      "overlap": 0.8070130208333334,
+      "inliers": 136,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 36.97,
+      "yaw": 7.3722974367046,
+      "pitch": -3.0658357009699535,
+      "roll": -1.0678945512391107,
+      "vertical_px": -53.74772644042969,
+      "overlap": 0.7748368598090277,
+      "inliers": 136,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 37.27,
+      "yaw": 6.03614312570978,
+      "pitch": -4.856159799231222,
+      "roll": -1.0678945512391107,
+      "vertical_px": -53.74772644042969,
+      "overlap": 0.7614638671875,
+      "inliers": 131,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 37.57,
+      "yaw": 6.03614312570978,
+      "pitch": -4.856159799231222,
+      "roll": -1.0678945512391107,
+      "vertical_px": -53.74772644042969,
+      "overlap": 0.7614638671875,
+      "inliers": 130,
+      "advice": "Tilt the right camera up, about 5 degrees."
+    },
+    {
+      "t": 37.87,
+      "yaw": 6.03614312570978,
+      "pitch": -5.169747341999253,
+      "roll": -1.1883314728732073,
+      "vertical_px": -53.74772644042969,
+      "overlap": 0.7609287651909722,
+      "inliers": 125,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 38.18,
+      "yaw": 5.9969829801974255,
+      "pitch": -5.169747341999253,
+      "roll": -1.0678945512391107,
+      "vertical_px": -53.279998779296875,
+      "overlap": 0.7609287651909722,
+      "inliers": 125,
+      "advice": "Tilt the right camera up, about 5 degrees."
+    },
+    {
+      "t": 38.52,
+      "yaw": 5.9969829801974255,
+      "pitch": -5.085437681970491,
+      "roll": -1.1883314728732073,
+      "vertical_px": -53.279998779296875,
+      "overlap": 0.7633662651909722,
+      "inliers": 126,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 38.86,
+      "yaw": 8.416370312174028,
+      "pitch": -4.163514251040008,
+      "roll": -1.2219905600596,
+      "vertical_px": -53.56800842285156,
+      "overlap": 0.7661536458333333,
+      "inliers": 126,
+      "advice": "Tilt the right camera up, very slightly."
+    },
+    {
+      "t": 39.16,
+      "yaw": 8.416370312174028,
+      "pitch": -4.163514251040008,
+      "roll": -1.2219905600596,
+      "vertical_px": -53.56800842285156,
+      "overlap": 0.7662749565972222,
+      "inliers": 131,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 39.53,
+      "yaw": 8.843699468771579,
+      "pitch": -3.0825387861119773,
+      "roll": -1.5022046191861023,
+      "vertical_px": -53.56800842285156,
+      "overlap": 0.7681717122395834,
+      "inliers": 131,
+      "advice": "Tilt the right camera up, about 5 degrees."
+    },
+    {
+      "t": 40.07,
+      "yaw": 10.368508647646824,
+      "pitch": -3.065315767915827,
+      "roll": -1.507149248579064,
+      "vertical_px": -53.56800842285156,
+      "overlap": 0.7720846896701389,
+      "inliers": 126,
+      "advice": "Tilt the right camera up, about 4 degrees."
+    },
+    {
+      "t": 40.54,
+      "yaw": 10.368508647646824,
+      "pitch": -3.065315767915827,
+      "roll": -1.7805839231056722,
+      "vertical_px": -52.79999542236328,
+      "overlap": 0.7720846896701389,
+      "inliers": 121,
+      "advice": "Tilt the right camera up, about 4 degrees."
+    },
+    {
+      "t": 40.85,
+      "yaw": 10.316614892129088,
+      "pitch": -3.065315767915827,
+      "roll": -1.7805839231056722,
+      "vertical_px": -52.0,
+      "overlap": 0.7720846896701389,
+      "inliers": 121,
+      "advice": "Tilt the right camera up, about 4 degrees."
+    },
+    {
+      "t": 41.22,
+      "yaw": 8.843699468771579,
+      "pitch": -4.376436428155894,
+      "roll": -1.7805839231056722,
+      "vertical_px": -51.600006103515625,
+      "overlap": 0.76047314453125,
+      "inliers": 120,
+      "advice": "Tilt the right camera up, about 4 degrees."
+    },
+    {
+      "t": 41.51,
+      "yaw": 8.723659176079533,
+      "pitch": -4.863357519291118,
+      "roll": -1.5817857666753883,
+      "vertical_px": -50.40000915527344,
+      "overlap": 0.7562750108506945,
+      "inliers": 121,
+      "advice": "Tilt the right camera up, about 4 degrees."
+    },
+    {
+      "t": 41.81,
+      "yaw": 8.529987464240058,
+      "pitch": -4.863357519291118,
+      "roll": -1.5817857666753883,
+      "vertical_px": -50.399993896484375,
+      "overlap": 0.7562750108506945,
+      "inliers": 120,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 42.1,
+      "yaw": 8.529987464240058,
+      "pitch": -4.863357519291118,
+      "roll": -1.266319823357385,
+      "vertical_px": -50.399993896484375,
+      "overlap": 0.7562750108506945,
+      "inliers": 118,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 42.53,
+      "yaw": 8.723659176079533,
+      "pitch": -4.540051515677533,
+      "roll": -1.5817857666753883,
+      "vertical_px": -50.399993896484375,
+      "overlap": 0.7562750108506945,
+      "inliers": 120,
+      "advice": "Tilt the right camera up, about 5 degrees."
+    },
+    {
+      "t": 42.87,
+      "yaw": 8.529987464240058,
+      "pitch": -3.306192035052802,
+      "roll": -1.323162769086276,
+      "vertical_px": -50.399993896484375,
+      "overlap": 0.7766497938368055,
+      "inliers": 121,
+      "advice": "Tilt the right camera up, about 5 degrees."
+    },
+    {
+      "t": 43.17,
+      "yaw": 8.847391327285678,
+      "pitch": -2.186237421424022,
+      "roll": -2.3132673808196125,
+      "vertical_px": -42.30145263671875,
+      "overlap": 0.7776612413194445,
+      "inliers": 130,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 43.46,
+      "yaw": 8.847391327285678,
+      "pitch": -3.306192035052802,
+      "roll": -1.6643547101506557,
+      "vertical_px": -36.80000305175781,
+      "overlap": 0.7766497938368055,
+      "inliers": 130,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 43.89,
+      "yaw": 8.606144744992513,
+      "pitch": -3.306192035052802,
+      "roll": -1.6643547101506557,
+      "vertical_px": -32.0,
+      "overlap": 0.7849249131944445,
+      "inliers": 130,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 44.33,
+      "yaw": 8.606144744992513,
+      "pitch": -3.306192035052802,
+      "roll": -1.6643547101506557,
+      "vertical_px": -26.956802368164062,
+      "overlap": 0.7849249131944445,
+      "inliers": 125,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 44.73,
+      "yaw": 8.606144744992513,
+      "pitch": -2.202237615221241,
+      "roll": -1.6643547101506557,
+      "vertical_px": -18.720001220703125,
+      "overlap": 0.7917238498263889,
+      "inliers": 113,
+      "advice": "Turn the left camera inward, about 6 degrees."
+    },
+    {
+      "t": 45.11,
+      "yaw": 8.606144744992513,
+      "pitch": -3.533481838195456,
+      "roll": -1.6643547101506557,
+      "vertical_px": -18.720001220703125,
+      "overlap": 0.7849249131944445,
+      "inliers": 107,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 45.44,
+      "yaw": 9.025537950727632,
+      "pitch": -2.2823714309630962,
+      "roll": -1.4150671181952124,
+      "vertical_px": -18.720001220703125,
+      "overlap": 0.7849249131944445,
+      "inliers": 113,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 45.74,
+      "yaw": 9.083215164148438,
+      "pitch": -2.2823714309630962,
+      "roll": -1.550148906917035,
+      "vertical_px": -18.720001220703125,
+      "overlap": 0.7845934244791667,
+      "inliers": 111,
+      "advice": "Turn the left camera inward, about 6 degrees."
+    },
+    {
+      "t": 46.03,
+      "yaw": 9.083215164148438,
+      "pitch": -2.2823714309630962,
+      "roll": -1.550148906917035,
+      "vertical_px": -18.720001220703125,
+      "overlap": 0.7845934244791667,
+      "inliers": 111,
+      "advice": "Turn the left camera inward, about 6 degrees."
+    },
+    {
+      "t": 46.38,
+      "yaw": 9.823186641588254,
+      "pitch": -2.2823714309630962,
+      "roll": -1.8665343664730467,
+      "vertical_px": -18.79998779296875,
+      "overlap": 0.7807539605034722,
+      "inliers": 121,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 47.06,
+      "yaw": 10.966797756444297,
+      "pitch": -2.2823714309630962,
+      "roll": -1.8665343664730467,
+      "vertical_px": -19.10400390625,
+      "overlap": 0.7807539605034722,
+      "inliers": 122,
+      "advice": "Turn the right camera inward, about 9 degrees."
+    },
+    {
+      "t": 47.38,
+      "yaw": 10.966797756444297,
+      "pitch": -2.6565732817553425,
+      "roll": -2.1496956460532504,
+      "vertical_px": -19.20001220703125,
+      "overlap": 0.77829443359375,
+      "inliers": 122,
+      "advice": "Turn the left camera inward, about 7 degrees."
+    },
+    {
+      "t": 47.69,
+      "yaw": 11.187932745170897,
+      "pitch": -1.0860616543692647,
+      "roll": -2.1496956460532504,
+      "vertical_px": -19.800003051757812,
+      "overlap": 0.7735604383680555,
+      "inliers": 122,
+      "advice": "Turn the left camera inward, about 8 degrees."
+    },
+    {
+      "t": 48.05,
+      "yaw": 10.966797756444297,
+      "pitch": -2.668274893294324,
+      "roll": -1.8930932306504655,
+      "vertical_px": -20.0,
+      "overlap": 0.7695580512152778,
+      "inliers": 122,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 48.41,
+      "yaw": 10.966797756444297,
+      "pitch": -2.914711416230142,
+      "roll": -1.8930932306504655,
+      "vertical_px": -20.0,
+      "overlap": 0.7666478949652777,
+      "inliers": 116,
+      "advice": "Turn the left camera inward, about 7 degrees."
+    },
+    {
+      "t": 48.72,
+      "yaw": 10.99397177259321,
+      "pitch": -3.036334711817336,
+      "roll": -1.8930932306504655,
+      "vertical_px": -20.160003662109375,
+      "overlap": 0.7614765082465278,
+      "inliers": 116,
+      "advice": "Turn the left camera inward, about 7 degrees."
+    },
+    {
+      "t": 49.03,
+      "yaw": 10.99397177259321,
+      "pitch": -3.036334711817336,
+      "roll": -1.8311454763477384,
+      "vertical_px": -21.5999755859375,
+      "overlap": 0.7614765082465278,
+      "inliers": 116,
+      "advice": "Turn the left camera inward, about 7 degrees."
+    },
+    {
+      "t": 49.33,
+      "yaw": 10.542442334041219,
+      "pitch": -3.036334711817336,
+      "roll": -1.8311454763477384,
+      "vertical_px": -21.599998474121094,
+      "overlap": 0.7614765082465278,
+      "inliers": 125,
+      "advice": "Turn the left camera inward, about 9 degrees."
+    },
+    {
+      "t": 49.63,
+      "yaw": 10.542442334041219,
+      "pitch": -2.633872774385975,
+      "roll": -1.8311454763477384,
+      "vertical_px": -22.080001831054688,
+      "overlap": 0.7672511935763889,
+      "inliers": 125,
+      "advice": "Turn the left camera inward, about 7 degrees."
+    },
+    {
+      "t": 49.94,
+      "yaw": 10.542442334041219,
+      "pitch": -2.633872774385975,
+      "roll": -2.375189898034292,
+      "vertical_px": -22.4639892578125,
+      "overlap": 0.7672511935763889,
+      "inliers": 125,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 50.25,
+      "yaw": 10.542442334041219,
+      "pitch": -2.0833328640245616,
+      "roll": -2.2048886182953815,
+      "vertical_px": -22.4639892578125,
+      "overlap": 0.7821451822916666,
+      "inliers": 124,
+      "advice": "Turn the left camera inward, about 7 degrees."
+    },
+    {
+      "t": 50.88,
+      "yaw": 11.400649675478487,
+      "pitch": -1.7452491646192025,
+      "roll": -2.375189898034292,
+      "vertical_px": -22.4639892578125,
+      "overlap": 0.7821451822916666,
+      "inliers": 122,
+      "advice": "Turn the left camera inward, about 6 degrees."
+    },
+    {
+      "t": 51.32,
+      "yaw": 11.400649675478487,
+      "pitch": -2.0833328640245616,
+      "roll": -2.5441653778975253,
+      "vertical_px": -20.735992431640625,
+      "overlap": 0.7785585394965278,
+      "inliers": 122,
+      "advice": "Turn the left camera inward, about 6 degrees."
+    },
+    {
+      "t": 51.68,
+      "yaw": 12.293223648429564,
+      "pitch": -0.7730116967355543,
+      "roll": -3.1041653626481445,
+      "vertical_px": -16.3814697265625,
+      "overlap": 0.7785585394965278,
+      "inliers": 122,
+      "advice": "Turn the left camera inward, about 6 degrees."
+    },
+    {
+      "t": 52.01,
+      "yaw": 11.400649675478487,
+      "pitch": -0.7730116967355543,
+      "roll": -3.1041653626481445,
+      "vertical_px": -16.199996948242188,
+      "overlap": 0.7785585394965278,
+      "inliers": 124,
+      "advice": "Turn the left camera inward, about 6 degrees."
+    },
+    {
+      "t": 52.34,
+      "yaw": 11.085760466952802,
+      "pitch": -0.3775437626991756,
+      "roll": -3.8824431956700853,
+      "vertical_px": -16.199996948242188,
+      "overlap": 0.7785585394965278,
+      "inliers": 122,
+      "advice": "Turn the left camera inward, about 6 degrees."
+    },
+    {
+      "t": 52.71,
+      "yaw": 11.085760466952802,
+      "pitch": -1.178197205282662,
+      "roll": -3.1041653626481445,
+      "vertical_px": -16.3814697265625,
+      "overlap": 0.7743005642361112,
+      "inliers": 119,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 53.01,
+      "yaw": 11.668973355518641,
+      "pitch": -1.178197205282662,
+      "roll": -3.470016716250221,
+      "vertical_px": -16.58880615234375,
+      "overlap": 0.7743005642361112,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 53.33,
+      "yaw": 11.085760466952802,
+      "pitch": -2.2431492680297183,
+      "roll": -2.9073180077262557,
+      "vertical_px": -17.280014038085938,
+      "overlap": 0.7701519097222222,
+      "inliers": 106,
+      "advice": "Turn the left camera inward, about 6 degrees."
+    },
+    {
+      "t": 53.68,
+      "yaw": 11.085760466952802,
+      "pitch": -1.4330890415641213,
+      "roll": -3.4491859037231607,
+      "vertical_px": -17.915916442871094,
+      "overlap": 0.7743005642361112,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 53.97,
+      "yaw": 9.49594399168409,
+      "pitch": -2.2431492680297183,
+      "roll": -3.0956537781803446,
+      "vertical_px": -18.662399291992188,
+      "overlap": 0.7743005642361112,
+      "inliers": 110,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 54.33,
+      "yaw": 9.49594399168409,
+      "pitch": -3.148864669207767,
+      "roll": -3.0956537781803446,
+      "vertical_px": -23.040008544921875,
+      "overlap": 0.7701519097222222,
+      "inliers": 110,
+      "advice": "Turn the left camera inward, about 6 degrees."
+    },
+    {
+      "t": 54.63,
+      "yaw": 9.268590304940247,
+      "pitch": -3.148864669207767,
+      "roll": -2.9073180077262557,
+      "vertical_px": -36.384002685546875,
+      "overlap": 0.7765602213541667,
+      "inliers": 110,
+      "advice": "Tilt the right camera up, about 4 degrees."
+    },
+    {
+      "t": 55.25,
+      "yaw": 9.268590304940247,
+      "pitch": -2.3665004403091885,
+      "roll": -2.365069186270763,
+      "vertical_px": -38.50000762939453,
+      "overlap": 0.7797006293402777,
+      "inliers": 105,
+      "advice": "Tilt the left camera down, about 5 degrees."
+    },
+    {
+      "t": 55.72,
+      "yaw": 9.861478662711772,
+      "pitch": -3.148864669207767,
+      "roll": -2.365069186270763,
+      "vertical_px": -42.30145263671875,
+      "overlap": 0.7765602213541667,
+      "inliers": 105,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 56.04,
+      "yaw": 9.861478662711772,
+      "pitch": -3.185292751937513,
+      "roll": -2.1451733944074785,
+      "vertical_px": -42.30145263671875,
+      "overlap": 0.7777432725694444,
+      "inliers": 105,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 56.38,
+      "yaw": 8.564599810803067,
+      "pitch": -3.185292751937513,
+      "roll": -2.365069186270763,
+      "vertical_px": -43.0,
+      "overlap": 0.7777432725694444,
+      "inliers": 107,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 56.7,
+      "yaw": 9.25343564182593,
+      "pitch": -3.2926331874567056,
+      "roll": -2.1451733944074785,
+      "vertical_px": -43.0,
+      "overlap": 0.7690775824652778,
+      "inliers": 107,
+      "advice": "Tilt the right camera up, about 4 degrees."
+    },
+    {
+      "t": 57.02,
+      "yaw": 9.25343564182593,
+      "pitch": -3.2926331874567056,
+      "roll": -2.2183196454468455,
+      "vertical_px": -43.0,
+      "overlap": 0.7690775824652778,
+      "inliers": 107,
+      "advice": "Tilt the left camera down, very slightly."
+    },
+    {
+      "t": 57.32,
+      "yaw": 7.497080893103743,
+      "pitch": -3.8508941860130106,
+      "roll": -2.2183196454468455,
+      "vertical_px": -43.199981689453125,
+      "overlap": 0.7688193359375,
+      "inliers": 107,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 57.62,
+      "yaw": 9.25343564182593,
+      "pitch": -3.8508941860130106,
+      "roll": -2.4431964749170767,
+      "vertical_px": -43.199981689453125,
+      "overlap": 0.7670635308159722,
+      "inliers": 109,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 57.92,
+      "yaw": 10.82347963783382,
+      "pitch": -3.0655692106139054,
+      "roll": -2.4431964749170767,
+      "vertical_px": -43.199981689453125,
+      "overlap": 0.7688193359375,
+      "inliers": 109,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 58.27,
+      "yaw": 11.18565496966822,
+      "pitch": -3.0655692106139054,
+      "roll": -2.478332577086695,
+      "vertical_px": -42.30145263671875,
+      "overlap": 0.7688193359375,
+      "inliers": 122,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 58.64,
+      "yaw": 11.18565496966822,
+      "pitch": -3.0655692106139054,
+      "roll": -2.6782133871815526,
+      "vertical_px": -42.30145263671875,
+      "overlap": 0.7688193359375,
+      "inliers": 110,
+      "advice": "Tilt the right camera up, about 4 degrees."
+    },
+    {
+      "t": 59.15,
+      "yaw": 11.18565496966822,
+      "pitch": -3.0655692106139054,
+      "roll": -2.6782133871815526,
+      "vertical_px": -42.30145263671875,
+      "overlap": 0.7687572157118056,
+      "inliers": 113,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 59.47,
+      "yaw": 10.584845679208755,
+      "pitch": -3.4006850685235284,
+      "roll": -2.6782133871815526,
+      "vertical_px": -42.30145263671875,
+      "overlap": 0.7689928927951389,
+      "inliers": 110,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 59.76,
+      "yaw": 10.584845679208755,
+      "pitch": -3.4006850685235284,
+      "roll": -2.4730428411390637,
+      "vertical_px": -42.47998046875,
+      "overlap": 0.7689928927951389,
+      "inliers": 110,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 60.07,
+      "yaw": 8.810874652627142,
+      "pitch": -2.5918961263099094,
+      "roll": -2.4730428411390637,
+      "vertical_px": -43.19999694824219,
+      "overlap": 0.7767210286458334,
+      "inliers": 107,
+      "advice": "Tilt the right camera up, about 4 degrees."
+    },
+    {
+      "t": 60.43,
+      "yaw": 10.401370415647115,
+      "pitch": -2.5918961263099094,
+      "roll": -2.4730428411390637,
+      "vertical_px": -43.19999694824219,
+      "overlap": 0.7767210286458334,
+      "inliers": 107,
+      "advice": "Tilt the right camera up, about 5 degrees."
+    },
+    {
+      "t": 60.73,
+      "yaw": 10.401370415647115,
+      "pitch": -1.85625215135531,
+      "roll": -2.7315653381962317,
+      "vertical_px": -43.19999694824219,
+      "overlap": 0.78066455078125,
+      "inliers": 107,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 61.05,
+      "yaw": 9.847165083833382,
+      "pitch": -1.578029106621089,
+      "roll": -2.8220157350676107,
+      "vertical_px": -43.20001220703125,
+      "overlap": 0.7831773546006945,
+      "inliers": 107,
+      "advice": "Tilt the right camera up, about 6 degrees."
+    },
+    {
+      "t": 61.36,
+      "yaw": 9.847165083833382,
+      "pitch": -1.578029106621089,
+      "roll": -3.0762365306286465,
+      "vertical_px": -43.20001220703125,
+      "overlap": 0.7831773546006945,
+      "inliers": 100,
+      "advice": "Tilt the right camera up, about 5 degrees."
+    },
+    {
+      "t": 62.06,
+      "yaw": 10.401370415647115,
+      "pitch": -1.578029106621089,
+      "roll": -3.0762365306286465,
+      "vertical_px": -43.19999694824219,
+      "overlap": 0.78066455078125,
+      "inliers": 107,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 62.43,
+      "yaw": 10.80765578300564,
+      "pitch": -3.703407449898718,
+      "roll": -3.012935011446281,
+      "vertical_px": -41.803802490234375,
+      "overlap": 0.75750439453125,
+      "inliers": 104,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 62.74,
+      "yaw": 10.80765578300564,
+      "pitch": -3.703407449898718,
+      "roll": -2.948392480837677,
+      "vertical_px": -41.760009765625,
+      "overlap": 0.75750439453125,
+      "inliers": 104,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 63.06,
+      "yaw": 11.43267530950165,
+      "pitch": -3.988150328488088,
+      "roll": -2.948392480837677,
+      "vertical_px": -41.75999450683594,
+      "overlap": 0.7457834743923611,
+      "inliers": 104,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 63.35,
+      "yaw": 11.038572506192306,
+      "pitch": -3.9478206419366546,
+      "roll": -2.3250165367228766,
+      "vertical_px": -41.75999450683594,
+      "overlap": 0.7516644965277778,
+      "inliers": 104,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 63.65,
+      "yaw": 11.038572506192306,
+      "pitch": -3.9478206419366546,
+      "roll": -1.9916375047357573,
+      "vertical_px": -41.760009765625,
+      "overlap": 0.7516644965277778,
+      "inliers": 102,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 63.96,
+      "yaw": 11.038572506192306,
+      "pitch": -3.6136426079550326,
+      "roll": -1.6275338073061683,
+      "vertical_px": -44.6400146484375,
+      "overlap": 0.7525085177951389,
+      "inliers": 97,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 64.27,
+      "yaw": 11.038572506192306,
+      "pitch": -3.9478206419366546,
+      "roll": -1.6275338073061683,
+      "vertical_px": -44.6400146484375,
+      "overlap": 0.7525085177951389,
+      "inliers": 97,
+      "advice": "Tilt the right camera up, a little."
+    },
+    {
+      "t": 64.57,
+      "yaw": 11.038572506192306,
+      "pitch": -3.6136426079550326,
+      "roll": -1.690571631799626,
+      "vertical_px": -44.6400146484375,
+      "overlap": 0.7541732855902777,
+      "inliers": 97,
+      "advice": "Tilt the left camera down, about 5 degrees."
+    },
+    {
+      "t": 64.92,
+      "yaw": 10.847160021586244,
+      "pitch": -3.6136426079550326,
+      "roll": -1.664962568635005,
+      "vertical_px": -40.55999755859375,
+      "overlap": 0.7557279188368056,
+      "inliers": 102,
+      "advice": "Tilt the left camera down, about 4 degrees."
+    },
+    {
+      "t": 65.27,
+      "yaw": 10.670898259036264,
+      "pitch": -3.190056614833999,
+      "roll": -1.690571631799626,
+      "vertical_px": -40.32000732421875,
+      "overlap": 0.7622212456597223,
+      "inliers": 103,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 65.9,
+      "yaw": 10.670898259036264,
+      "pitch": -1.0095411278286488,
+      "roll": -2.0414976326558274,
+      "vertical_px": -39.39839172363281,
+      "overlap": 0.7697441948784722,
+      "inliers": 111,
+      "advice": "Tilt the left camera up, very slightly."
+    },
+    {
+      "t": 66.24,
+      "yaw": 10.670898259036264,
+      "pitch": -0.7086135391778745,
+      "roll": -2.1071552662579576,
+      "vertical_px": 5.1840057373046875,
+      "overlap": 0.8002427842881944,
+      "inliers": 111,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 66.6,
+      "yaw": 9.014782622475177,
+      "pitch": -0.6979299927612677,
+      "roll": -2.133609404247504,
+      "vertical_px": 5.279998779296875,
+      "overlap": 0.8022917751736112,
+      "inliers": 111,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 66.97,
+      "yaw": 10.670898259036264,
+      "pitch": 0.8468050162212397,
+      "roll": -2.133609404247504,
+      "vertical_px": 6.0,
+      "overlap": 0.8022917751736112,
+      "inliers": 111,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 67.35,
+      "yaw": 9.014782622475177,
+      "pitch": 0.8468050162212397,
+      "roll": -2.3490072412012983,
+      "vertical_px": 6.0,
+      "overlap": 0.8050375434027778,
+      "inliers": 111,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 67.69,
+      "yaw": 9.014782622475177,
+      "pitch": 1.1284047000599386,
+      "roll": -2.3874547478890022,
+      "vertical_px": 6.0,
+      "overlap": 0.8050375434027778,
+      "inliers": 107,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 68.09,
+      "yaw": 10.97815893348347,
+      "pitch": 1.1284047000599386,
+      "roll": -2.3874547478890022,
+      "vertical_px": 6.0,
+      "overlap": 0.7988506401909722,
+      "inliers": 107,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 68.6,
+      "yaw": 10.97815893348347,
+      "pitch": 1.1284047000599386,
+      "roll": -2.3874547478890022,
+      "vertical_px": 6.0,
+      "overlap": 0.7988506401909722,
+      "inliers": 109,
+      "advice": "Turn the right camera inward, about 5 degrees."
+    },
+    {
+      "t": 69.07,
+      "yaw": 10.816885277488556,
+      "pitch": 0.6852999184141855,
+      "roll": -2.3874547478890022,
+      "vertical_px": 6.0,
+      "overlap": 0.8010381944444445,
+      "inliers": 109,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 69.38,
+      "yaw": 10.816885277488556,
+      "pitch": 0.6632269501767193,
+      "roll": -1.6316463101667384,
+      "vertical_px": 5.1999969482421875,
+      "overlap": 0.8010381944444445,
+      "inliers": 109,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 69.7,
+      "yaw": 10.816885277488556,
+      "pitch": 0.6632269501767193,
+      "roll": -1.5357360293327917,
+      "vertical_px": 5.1999969482421875,
+      "overlap": 0.8010381944444445,
+      "inliers": 109,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 70.04,
+      "yaw": 8.792941558519786,
+      "pitch": 0.14471846073770092,
+      "roll": -1.5357360293327917,
+      "vertical_px": 5.1999969482421875,
+      "overlap": 0.8099975043402777,
+      "inliers": 109,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 70.36,
+      "yaw": 8.792941558519786,
+      "pitch": 0.14471846073770092,
+      "roll": -1.5279897862926666,
+      "vertical_px": 5.335670471191406,
+      "overlap": 0.8144862196180556,
+      "inliers": 114,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 70.68,
+      "yaw": 8.792941558519786,
+      "pitch": -0.11414269279968343,
+      "roll": -1.5357360293327917,
+      "vertical_px": 5.52960205078125,
+      "overlap": 0.8144862196180556,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 71.05,
+      "yaw": 8.792941558519786,
+      "pitch": -0.11414269279968343,
+      "roll": -1.600537547979516,
+      "vertical_px": 6.0,
+      "overlap": 0.8169314778645833,
+      "inliers": 105,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 71.41,
+      "yaw": 6.583745296480383,
+      "pitch": -1.2665205165101079,
+      "roll": -1.6062729616410207,
+      "vertical_px": 6.0,
+      "overlap": 0.8272313368055556,
+      "inliers": 101,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 71.75,
+      "yaw": 5.811578034561157,
+      "pitch": -1.4954106263021782,
+      "roll": -1.600537547979516,
+      "vertical_px": 6.0,
+      "overlap": 0.8336729058159722,
+      "inliers": 101,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 72.07,
+      "yaw": 5.811578034561157,
+      "pitch": -1.2665205165101079,
+      "roll": -1.6062729616410207,
+      "vertical_px": 6.0,
+      "overlap": 0.8336729058159722,
+      "inliers": 101,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 72.6,
+      "yaw": 5.811578034561157,
+      "pitch": -1.2665205165101079,
+      "roll": -1.7582337697090915,
+      "vertical_px": 5.759979248046875,
+      "overlap": 0.8336729058159722,
+      "inliers": 108,
+      "advice": "Turn the right camera inward, about 5 degrees."
+    },
+    {
+      "t": 73.09,
+      "yaw": 10.566916604665849,
+      "pitch": -1.6862477931856954,
+      "roll": -1.6062729616410207,
+      "vertical_px": 3.1839828491210938,
+      "overlap": 0.7974084743923611,
+      "inliers": 111,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 73.41,
+      "yaw": 10.566916604665849,
+      "pitch": -1.6862477931856954,
+      "roll": -1.7857389140476079,
+      "vertical_px": -1.727996826171875,
+      "overlap": 0.7974084743923611,
+      "inliers": 111,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 73.74,
+      "yaw": 10.566916604665849,
+      "pitch": -1.6856068195668,
+      "roll": -1.8234155754455474,
+      "vertical_px": -10.08001708984375,
+      "overlap": 0.7974084743923611,
+      "inliers": 110,
+      "advice": "Turn the right camera inward, about 5 degrees."
+    },
+    {
+      "t": 74.06,
+      "yaw": 10.566916604665849,
+      "pitch": -1.6856068195668,
+      "roll": -1.8061990048113512,
+      "vertical_px": -10.08001708984375,
+      "overlap": 0.7998197157118055,
+      "inliers": 111,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 74.42,
+      "yaw": 8.947235591643679,
+      "pitch": -1.6856068195668,
+      "roll": -1.8061990048113512,
+      "vertical_px": -10.08001708984375,
+      "overlap": 0.8116099175347222,
+      "inliers": 110,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 74.79,
+      "yaw": 8.947235591643679,
+      "pitch": -0.22441084225930286,
+      "roll": -2.0500647785228634,
+      "vertical_px": -8.0,
+      "overlap": 0.8116099175347222,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 75.18,
+      "yaw": 11.261132434890417,
+      "pitch": -0.22441084225930286,
+      "roll": -2.274879922489725,
+      "vertical_px": -6.220794677734375,
+      "overlap": 0.7998197157118055,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 75.6,
+      "yaw": 11.261132434890417,
+      "pitch": -0.22441084225930286,
+      "roll": -2.4988450948409198,
+      "vertical_px": -4.9883270263671875,
+      "overlap": 0.7981810438368055,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 75.98,
+      "yaw": 9.182599617093611,
+      "pitch": -1.7142276414522466,
+      "roll": -2.4988450948409198,
+      "vertical_px": -4.9883270263671875,
+      "overlap": 0.7981810438368055,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 76.42,
+      "yaw": 9.392185530150343,
+      "pitch": -0.961458358522635,
+      "roll": -2.274879922489725,
+      "vertical_px": -4.9883270263671875,
+      "overlap": 0.7981810438368055,
+      "inliers": 106,
+      "advice": "Turn the left camera inward, about 5 degrees."
+    },
+    {
+      "t": 76.86,
+      "yaw": 9.182599617093611,
+      "pitch": -1.9765981657578815,
+      "roll": -2.274879922489725,
+      "vertical_px": -6.0,
+      "overlap": 0.7981810438368055,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 8 degrees."
+    },
+    {
+      "t": 77.7,
+      "yaw": 9.127512230428792,
+      "pitch": -1.9765981657578815,
+      "roll": -2.0999225679406694,
+      "vertical_px": -6.0,
+      "overlap": 0.8001197916666667,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 78.19,
+      "yaw": 7.261015265239068,
+      "pitch": -1.9765981657578815,
+      "roll": -2.0999225679406694,
+      "vertical_px": -6.0,
+      "overlap": 0.8048068033854167,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 78.56,
+      "yaw": 7.261015265239068,
+      "pitch": -1.1900724423851052,
+      "roll": -2.148347944300804,
+      "vertical_px": -5.295677185058594,
+      "overlap": 0.8048068033854167,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 78.96,
+      "yaw": 6.864872942004003,
+      "pitch": -2.6134111130338855,
+      "roll": -2.148347944300804,
+      "vertical_px": -5.295677185058594,
+      "overlap": 0.8048068033854167,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 5 degrees."
+    },
+    {
+      "t": 79.42,
+      "yaw": 7.261015265239068,
+      "pitch": -1.1900724423851052,
+      "roll": -2.0999225679406694,
+      "vertical_px": -5.11199951171875,
+      "overlap": 0.8129561089409723,
+      "inliers": 106,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 80.06,
+      "yaw": 6.864872942004003,
+      "pitch": -0.5888473427723642,
+      "roll": -2.0497023232195373,
+      "vertical_px": -4.7904052734375,
+      "overlap": 0.8115445421006945,
+      "inliers": 109,
+      "advice": "Turn the right camera inward, about 7 degrees."
+    },
+    {
+      "t": 80.75,
+      "yaw": 7.763119405069205,
+      "pitch": 0.019541569028245977,
+      "roll": -1.8735919514148407,
+      "vertical_px": 3.20001220703125,
+      "overlap": 0.8115445421006945,
+      "inliers": 112,
+      "advice": "Turn the right camera inward, about 8 degrees."
+    },
+    {
+      "t": 81.87,
+      "yaw": 6.864872942004003,
+      "pitch": 0.019541569028245977,
+      "roll": -1.8735919514148407,
+      "vertical_px": 19.78974151611328,
+      "overlap": 0.8115445421006945,
+      "inliers": 112,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 82.66,
+      "yaw": 7.763119405069205,
+      "pitch": 0.3641302652699745,
+      "roll": -2.0497023232195373,
+      "vertical_px": 20.279998779296875,
+      "overlap": 0.7971640082465278,
+      "inliers": 110,
+      "advice": "Turn the right camera inward, about 8 degrees."
+    },
+    {
+      "t": 83.42,
+      "yaw": 6.306640359374772,
+      "pitch": 0.9269322260789236,
+      "roll": -2.05330957127723,
+      "vertical_px": 20.279998779296875,
+      "overlap": 0.7971640082465278,
+      "inliers": 110,
+      "advice": "Tilt the right camera down, a little."
+    },
+    {
+      "t": 84.13,
+      "yaw": 7.442476368702272,
+      "pitch": 0.9269322260789236,
+      "roll": -2.301483206119306,
+      "vertical_px": 20.279998779296875,
+      "overlap": 0.7971640082465278,
+      "inliers": 105,
+      "advice": "Turn the right camera inward, about 5 degrees."
+    },
+    {
+      "t": 84.46,
+      "yaw": 7.442476368702272,
+      "pitch": 0.21131327911665393,
+      "roll": -2.3057460613609284,
+      "vertical_px": 20.279998779296875,
+      "overlap": 0.7971640082465278,
+      "inliers": 102,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 84.84,
+      "yaw": 7.712531329457222,
+      "pitch": 0.9269322260789236,
+      "roll": -2.583643719851232,
+      "vertical_px": 20.400009155273438,
+      "overlap": 0.7971640082465278,
+      "inliers": 102,
+      "advice": "Turn the right camera inward, about 6 degrees."
+    },
+    {
+      "t": 85.2,
+      "yaw": 7.712531329457222,
+      "pitch": 0.33525644207861927,
+      "roll": -2.583643719851232,
+      "vertical_px": 31.399993896484375,
+      "overlap": 0.7966685655381944,
+      "inliers": 100,
+      "advice": "Tilt the right camera down, a little."
+    },
+    {
+      "t": 85.59,
+      "yaw": 7.964255821188904,
+      "pitch": 0.21131327911665393,
+      "roll": -2.583643719851232,
+      "vertical_px": 32.248634338378906,
+      "overlap": 0.79177099609375,
+      "inliers": 100,
+      "advice": "Tilt the left camera down, about 4 degrees."
+    },
+    {
+      "t": 85.91,
+      "yaw": 9.775126004875858,
+      "pitch": 0.33525644207861927,
+      "roll": -2.2303177215998593,
+      "vertical_px": 32.248634338378906,
+      "overlap": 0.7861182725694444,
+      "inliers": 100,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 86.26,
+      "yaw": 9.775126004875858,
+      "pitch": 0.33525644207861927,
+      "roll": -1.9893406633703763,
+      "vertical_px": 32.0,
+      "overlap": 0.7861182725694444,
+      "inliers": 100,
+      "advice": "Tilt the right camera down, a little."
+    },
+    {
+      "t": 86.86,
+      "yaw": 9.775126004875858,
+      "pitch": -0.05476791161529448,
+      "roll": -1.7816613157746213,
+      "vertical_px": 31.399993896484375,
+      "overlap": 0.7861182725694444,
+      "inliers": 100,
+      "advice": "Tilt the right camera down, very slightly."
+    },
+    {
+      "t": 87.6,
+      "yaw": 0.9789090377911505,
+      "pitch": -0.06630389930751449,
+      "roll": -1.5342574327789713,
+      "vertical_px": 24.480010986328125,
+      "overlap": 0.8992539605034722,
+      "inliers": 47,
+      "advice": "Tilt the right camera down, very slightly."
+    },
+    {
+      "t": 87.89,
+      "yaw": 0.6556510388112005,
+      "pitch": -0.2894968464554074,
+      "roll": -1.2011541945767439,
+      "vertical_px": 24.240005493164062,
+      "overlap": 0.9035664876302083,
+      "inliers": 45,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 88.19,
+      "yaw": 0.9789090377911505,
+      "pitch": -0.06630389930751449,
+      "roll": -1.1394779311841843,
+      "vertical_px": 24.09601593017578,
+      "overlap": 0.8992539605034722,
+      "inliers": 44,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 88.5,
+      "yaw": 0.9020901575797271,
+      "pitch": 0.0007374775439641448,
+      "roll": -1.3278662027594703,
+      "vertical_px": 24.288013458251953,
+      "overlap": 0.9001674262152777,
+      "inliers": 45,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 88.8,
+      "yaw": 0.8252712773683037,
+      "pitch": -0.06630389930751449,
+      "roll": -1.5162544743347561,
+      "vertical_px": 24.480003356933594,
+      "overlap": 0.9010808919270833,
+      "inliers": 44,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 89.42,
+      "yaw": 0.8252712773683037,
+      "pitch": 0.06777885439544278,
+      "roll": -1.5162544743347561,
+      "vertical_px": 24.480003356933594,
+      "overlap": 0.9010808919270833,
+      "inliers": 44,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 89.75,
+      "yaw": 0.8252712773683037,
+      "pitch": 0.06777885439544278,
+      "roll": -1.5162544743347561,
+      "vertical_px": 24.480003356933594,
+      "overlap": 0.9010808919270833,
+      "inliers": 44,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 90.27,
+      "yaw": 0.937384081705428,
+      "pitch": 0.7325472479627063,
+      "roll": -1.4348490133959357,
+      "vertical_px": 24.480003356933594,
+      "overlap": 0.8904004991319444,
+      "inliers": 40,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 90.88,
+      "yaw": 0.8399368712517696,
+      "pitch": 0.6008143346013513,
+      "roll": -1.2890854291543148,
+      "vertical_px": 24.68160057067871,
+      "overlap": 0.8924352213541666,
+      "inliers": 41,
+      "advice": "Tilt the left camera down, a little."
+    },
+    {
+      "t": 101.18,
+      "yaw": -0.13192841211743334,
+      "pitch": -2.4283233149383463,
+      "roll": -2.213747798275038,
+      "vertical_px": 24.0,
+      "overlap": 0.9060755208333333,
+      "inliers": 41,
+      "advice": "Tilt the right camera down, a little."
+    },
+    {
+      "t": 101.72,
+      "yaw": 0.30823431345673424,
+      "pitch": -2.1268612745550146,
+      "roll": -2.4113452145962415,
+      "vertical_px": 24.04800033569336,
+      "overlap": 0.8941191677517362,
+      "inliers": 40,
+      "advice": "Tilt the right camera down, a little."
+    },
+    {
+      "t": 102.09,
+      "yaw": 0.7231551885528793,
+      "pitch": -1.8253992341716827,
+      "roll": -2.4195447927843983,
+      "vertical_px": 24.000030517578125,
+      "overlap": 0.8852698567708334,
+      "inliers": 41,
+      "advice": "Tilt the right camera down, a little."
+    },
+    {
+      "t": 102.58,
+      "yaw": 1.9512767538408449,
+      "pitch": -0.5184076709408321,
+      "roll": -1.426739335072082,
+      "vertical_px": 24.192001342773438,
+      "overlap": 0.8784650065104167,
+      "inliers": 43,
+      "advice": "Tilt the right camera down, very slightly."
+    },
+    {
+      "t": 102.95,
+      "yaw": 1.7316099605042368,
+      "pitch": -0.7714488517594431,
+      "roll": -1.656164841792616,
+      "vertical_px": 24.194000244140625,
+      "overlap": 0.8868231336805557,
+      "inliers": 42,
+      "advice": "Tilt the right camera down, very slightly."
+    },
+    {
+      "t": 103.47,
+      "yaw": 2.3029983977175403,
+      "pitch": 0.6696342890517333,
+      "roll": -0.7003982623524609,
+      "vertical_px": 24.09600067138672,
+      "overlap": 0.8604708658854167,
+      "inliers": 42,
+      "advice": "Tilt the right camera down, very slightly."
+    },
+    {
+      "t": 103.81,
+      "yaw": 2.083841537300859,
+      "pitch": 0.15600047273748283,
+      "roll": -1.0741035311262053,
+      "vertical_px": 24.09600067138672,
+      "overlap": 0.8698231608072917,
+      "inliers": 41,
+      "advice": "Tilt the right camera down, very slightly."
+    },
+    {
+      "t": 108.73,
+      "yaw": 2.3548225441558284,
+      "pitch": 0.6540101519423849,
+      "roll": -0.7023744008464148,
+      "vertical_px": 24.0,
+      "overlap": 0.8599723307291667,
+      "inliers": 44,
+      "advice": "Tilt the right camera down, very slightly."
+    },
+    {
+      "t": 111.13,
+      "yaw": 2.4936521827479456,
+      "pitch": 0.9505137700314875,
+      "roll": -0.5352013330730923,
+      "vertical_px": 24.88320541381836,
+      "overlap": 0.8540648871527777,
+      "inliers": 40,
+      "advice": "Tilt the right camera down, very slightly."
+    },
+    {
+      "t": 112.51,
+      "yaw": 2.4227007578270703,
+      "pitch": 1.291913712819483,
+      "roll": -0.33807416903202503,
+      "vertical_px": 24.0,
+      "overlap": 0.8540738389756944,
+      "inliers": 44,
+      "advice": "Tilt the right camera down, very slightly."
+    },
+    {
+      "t": 114.5,
+      "yaw": 2.5906411096863673,
+      "pitch": 2.046303509597149,
+      "roll": 0.025555203467444755,
+      "vertical_px": 24.0,
+      "overlap": 0.8462057291666667,
+      "inliers": 41,
+      "advice": "Tilt the right camera down, a little."
+    }
+  ]
+}

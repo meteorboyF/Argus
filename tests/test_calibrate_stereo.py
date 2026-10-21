@@ -1,4 +1,5 @@
 import importlib.util
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -7,6 +8,7 @@ import time
 _SPEC = importlib.util.spec_from_file_location(
     "calibrate_stereo", Path(__file__).parents[1] / "scripts" / "calibrate_stereo.py")
 _MODULE = importlib.util.module_from_spec(_SPEC)
+sys.modules[_SPEC.name] = _MODULE  # @dataclass needs the module registered
 _SPEC.loader.exec_module(_MODULE)
 is_diverse_pose = _MODULE.is_diverse_pose
 pose_signature = _MODULE.pose_signature
