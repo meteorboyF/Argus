@@ -779,3 +779,32 @@ fixed command grammar; a hybrid.
 
 **Lesson / consequence.** A small model is a good conversational surface and
 a poor decision-maker. Give it the words and keep the decisions in code.
+
+## 2026-10-21 Wake word — "Hey Argus" / "Argus" without a trained model
+
+**Hurdle / problem.** The user wants to wake ARGUS with "Hey Argus" and later
+just "Argus". A custom openWakeWord model needs hours of off-device GPU
+training. The built-in alternative, `hey_jarvis`, is the wrong name and is
+non-commercially licensed.
+
+**Resolution.** `argus/wake_stt.py`:
+- Silero VAD cuts each phrase.
+- Whisper tiny transcribes it with a glossary hint.
+- A phrase that *starts* with the name (or a common mishearing) wakes ARGUS.
+- The rest of the phrase is the request, so "Argus, what's in front of me?"
+  works in one breath.
+
+On Piper-synthesised phrases:
+- A prefix-style hint ("Argus, hey Argus.") made Whisper drop the name from
+  longer phrases.
+- A glossary hint ("Names: Argus.") scored 9/9, including no wake on
+  "Hey guys, come here" or "Arguments about art", at 0.78 s per phrase.
+- Whisper base was not better and slower (1.40 s, 41 s load).
+
+While ARGUS speaks it does not listen, so it never wakes itself.
+
+**Lesson / consequence.** The cost is CPU: Whisper runs on every nearby
+phrase, and false wakes from "Argus" said mid-conversation are possible.
+The trained openWakeWord model (training kit committed) remains the
+low-power target. Real-voice recall and false accepts per hour must be
+measured with the user.

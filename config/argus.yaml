@@ -84,7 +84,7 @@ agent:
   fast_locate: true      # explicit "find X" skips the first Gemma turn (deterministic tool policy)
 
 speech:
-  wake_model: "hey_jarvis"  # openWakeWord built-in; replace with custom "ARGUS" .onnx later
+  wake_model: "argus"       # wake on "Argus" / "Hey Argus" (VAD + Whisper); or hey_jarvis / custom .onnx
   wake_threshold: 0.5
   whisper_model: "tiny"
   whisper_compute: "int8"

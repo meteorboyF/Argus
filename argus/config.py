@@ -206,7 +206,9 @@ class AgentConfig:
 @dataclass
 class SpeechConfig:
     # All speech runs on CPU.
-    wake_model: str = "hey_jarvis"     # openWakeWord model name or custom .onnx path
+    # "argus": wake on the spoken name via VAD + Whisper (argus/wake_stt.py),
+    # no trained model needed. Or an openWakeWord name / custom .onnx path.
+    wake_model: str = "argus"
     wake_threshold: float = 0.5
     sample_rate: int = 16000
     whisper_model: str = "tiny"        # faster-whisper

@@ -93,12 +93,19 @@ def record_utterance(device=None, cfg: EndpointConfig = EndpointConfig(),
     chunks: list[np.ndarray] = []
     with sd.InputStream(samplerate=SR, channels=1, dtype="float32", blocksize=WINDOW,
                         device=_resolve_device(device, "input")) as stream:
+        keep = max(1, int(pre_roll_s * SR / WINDOW) + 2)
+        dropped = 0
         while ep.state in ("waiting", "speaking"):
             data, _ = stream.read(WINDOW)
             chunks.append(data[:, 0].copy())
             ep.feed(data[:, 0])
+            if ep.state == "waiting" and len(chunks) > keep:
+                # Listening for minutes must not grow memory: before speech
+                # starts only the pre-roll is kept.
+                dropped += len(chunks) - keep
+                del chunks[:-keep]
     audio = np.concatenate(chunks) if chunks else np.zeros(0, np.float32)
     if ep.speech_start is not None:
-        start = max(0, int((ep.speech_start - pre_roll_s) * SR))
+        start = max(0, int((ep.speech_start - pre_roll_s) * SR) - dropped * WINDOW)
         audio = audio[start:]
     return audio, ep.state

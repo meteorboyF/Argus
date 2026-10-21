@@ -612,7 +612,58 @@ class Orchestrator:
                 logger.close()
                 print(f"[session] log saved: {session_log}")
 
+    def _listen_loop_name(self):
+        """Wake on the spoken name: "Hey Argus" / "Argus, <request>"
+        (argus/wake_stt.py). No trained model needed."""
+        from . import earcons
+        from .vad import EndpointConfig, record_utterance
+        from .wake_stt import match_wake, transcribe_hinted
+        if self.stt is None:
+            self.stt = Transcriber(self.cfg.speech)
+        bus.log("system", 'listening for "Argus"')
+        ambient = EndpointConfig(start_timeout_s=5.0, max_s=8.0, silence_s=0.6)
+        while not self._stop.is_set() and not getattr(self, "_exit_requested", False):
+            if self._dashboard is not None and self._dashboard.closed.is_set():
+                break
+            # While ARGUS itself is talking the mic would hear it: wait.
+            if self.speaker.busy:
+                time.sleep(0.1)
+                continue
+            audio, state = record_utterance(device=self.cfg.speech.input_device, cfg=ambient)
+            if state != "done" or len(audio) < int(0.3 * 16000):
+                continue
+            t0 = time.perf_counter()
+            heard = transcribe_hinted(self.stt, audio)
+            m = match_wake(heard)
+            if not m.woke:
+                continue
+            bus.record("wake", text=heard, stt_s=time.perf_counter() - t0)
+            question = m.request
+            if not question:
+                earcons.play("listening")
+                bus.set(gemma="listening")
+                audio, state = record_utterance(
+                    device=self.cfg.speech.input_device,
+                    cfg=EndpointConfig(max_s=15.0),
+                    on_speech=self.speaker.arbiter.set_user_speaking)
+                self.speaker.arbiter.set_user_speaking(False)
+                if state == "timeout":
+                    bus.set(gemma="idle (no speech heard)")
+                    continue
+                t1 = time.perf_counter()
+                question = transcribe_hinted(self.stt, audio)
+                bus.set(stt_latency=f"stt {time.perf_counter() - t1:.2f}s")
+            else:
+                earcons.play("capturing")      # short tick: heard you
+                bus.set(stt_latency=f"wake+request stt {time.perf_counter() - t0:.2f}s")
+            if question:
+                self.handle_query(question)
+            self.speaker.wait_until_idle(timeout=30.0)
+            self._follow_ups()
+
     def _listen_loop(self):
+        if str(self.cfg.speech.wake_model).lower() in ("argus", "hey_argus_stt"):
+            return self._listen_loop_name()
         from .speech import mic_stream
         if self.wake is None:
             self.wake = WakeWord(self.cfg.speech)
@@ -692,7 +743,11 @@ class Orchestrator:
             if state == "timeout":
                 self.dialogue.expect_reply = False
                 return
-            text = self.stt.transcribe(audio)
+            from .wake_stt import match_wake, transcribe_hinted
+            text = transcribe_hinted(self.stt, audio)
+            m = match_wake(text)
+            if m.woke:                      # "Argus, next page" is fine in a follow-up too
+                text = m.request or ""
             if not text:
                 return
             self.handle_query(text)
