@@ -174,7 +174,7 @@ class ReadingSession:
     # -------------------------------------------------------------- read
     def read(self, coach: bool = True, intro: str | None = "Reading mode. Hold the page "
              "in front of you, about arm's length away.",
-             on_finished=None) -> Reading | None:
+             on_finished=None, play: bool = True) -> Reading | None:
         """Coach, capture, OCR, then speak. `on_finished` runs once the whole
         page has been spoken (not when it was stopped)."""
         self.stop()
@@ -204,7 +204,8 @@ class ReadingSession:
         self.last, self.last_at = reading, time.monotonic()
         self._chunks = speakable_chunks(reading.lines)
         self._pos = 0
-        self._start_playback()
+        if play:
+            self._start_playback()
         return reading
 
     # -------------------------------------------------------------- playback

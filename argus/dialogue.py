@@ -49,7 +49,9 @@ ROUTER_INSTRUCTIONS = (
     "Skills:\n"
     "- describe: anything about what is around or in front of them, what something "
     "looks like, colours, people present, whether a path is clear\n"
-    "- read: read a book, page, label, sign, letter, screen or any text\n"
+    "- read: read a book, page, label, sign, letter, screen or any text, or answer "
+    "a question about printed text that has not been read yet (the title, the "
+    "author, a price, a date)\n"
     "- next_page: they turned the page and want it read\n"
     "- find: locate a named object; put the object in name\n"
     "- seat: find a place to sit\n"
@@ -64,6 +66,9 @@ _EXIT = re.compile(r"\b(shut ?down|switch off|turn (yourself )?off|power off|"
                    r"close (the )?(first[- ]person )?(view|window|screen|demo)|exit argus|"
                    r"quit argus|goodbye argus)\b", re.I)
 _FILLER = re.compile(r"^\s*(u+m+|u+h+|hmm+|ah+|er+|okay|ok|yeah|hm)[\s.,!?]*$", re.I)
+_TEXT_QUESTION = re.compile(
+    r"\b(book|title|author|writer|wrote|cover|page|label|letter|sign|menu|packet|"
+    r"medicine|bottle|text|written|says?|expiry|price)\b", re.I)
 _STOP = re.compile(r"^\s*(stop|cancel|quiet|be quiet|shut up|enough)\b", re.I)
 _PAUSE = re.compile(r"^\s*(pause|wait|hold on)\b", re.I)
 _CONTINUE = re.compile(r"^\s*(continue|resume|go on|carry on|keep going)\b", re.I)
@@ -112,10 +117,20 @@ def rule_route(text: str, reading_active: bool, reading_playing: bool) -> Intent
         return Intent("control", "repeat")
     if _NEXT_PAGE.search(t):
         return Intent("next_page", say="Okay. Hold the next page up.")
-    if is_read_request(t) or re.search(
-            r"\b(help me|need to|want to|have to|can you|could you|would you|please)\s+"
-            r"(?:\w+\s+){0,2}read\b", t, re.I):
+    generic_read = is_read_request(t) or re.search(
+        r"\b(help me|need to|want to|have to|can you|could you|would you|please)\s+"
+        r"(?:\w+\s+){0,2}read\b", t, re.I)
+    if generic_read and not re.search(r"\b(title|author|writer|name of)\b", t, re.I):
         return Intent("read", say="Sure. Hold it up in front of you, about arm's length away.")
+    if reading_active and is_page_question(t):
+        return Intent("page_question")
+    if generic_read or re.search(r"\b(title|author|writer)\b", t, re.I) or (
+            _TEXT_QUESTION.search(t) and re.search(
+                r"\b(what|who|which|when|how much|tell me|read)\b", t, re.I)):
+        # "What is the name of the book?", "who wrote this?", "read the title
+        # and the author": read the text, then answer only that. Chat answered
+        # "I cannot find the book title" without looking (2026-10-21).
+        return Intent("read", name=t, say="Let me read it.")
     if is_seat_request(t):
         return Intent("seat", say="Okay, let me find you a seat.")
     name = requested_object(t)
@@ -123,8 +138,6 @@ def rule_route(text: str, reading_active: bool, reading_playing: bool) -> Intent
         return Intent("find", name=name, say="")
     if _DESCRIBE.search(t):
         return Intent("describe", say="")
-    if reading_active and is_page_question(t):
-        return Intent("page_question")
     return None
 
 
@@ -246,10 +259,18 @@ class DialogueManager:
         if intent.skill in ("read", "next_page"):
             if intent.say:
                 self._say(intent.say)
-            reading = o.reader.read(intro=None,
+            question = intent.name if intent.skill == "read" else ""
+            reading = o.reader.read(intro=None, play=not question,
                                     on_finished=self._page_finished)
             if reading is None:
                 return "I couldn't read it."
+            if question:
+                # Answer just what was asked, from the OCR text (masked).
+                answer = o.agent.ask_text(question, o.reader.page_context(), max_tokens=64)
+                self._say(answer or "I couldn't find that in the text.")
+                self.expect_reply = True
+                self.page_no = 1
+                return answer
             self.page_no = self.page_no + 1 if intent.skill == "next_page" else 1
             return f"(read page {self.page_no}: {len(reading.lines)} lines)"
         if intent.skill == "seat":

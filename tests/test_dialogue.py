@@ -23,8 +23,11 @@ def test_rule_route(text, skill, name):
     assert i is not None and i.skill == skill and i.name == name
 
 
-def test_page_question_only_while_reading():
-    assert rule_route("what's the expiry date?", False, False) is None
+def test_text_question_reads_first_unless_a_page_is_active():
+    # Nothing read yet: read the label, then answer just that question.
+    i = rule_route("what's the expiry date?", False, False)
+    assert i.skill == "read" and i.name == "what's the expiry date?"
+    # A page is active: answer from it without re-reading.
     assert rule_route("what's the expiry date?", True, False).skill == "page_question"
 
 
@@ -74,7 +77,7 @@ class FakeReader:
         self.active = False
         self._thread = None
 
-    def read(self, coach=True, intro=None, on_finished=None):
+    def read(self, coach=True, intro=None, on_finished=None, play=True):
         self.reads += 1
         self.active = True
         on_finished()                         # the whole page was spoken
@@ -178,3 +181,27 @@ def test_exit_speaks_and_requests_exit():
     o.request_exit = lambda: setattr(o, "exited", True)
     DialogueManager(o).handle("shut down")
     assert o.speaker.said == ["Closing.", "Goodbye."] and o.exited
+
+
+@pytest.mark.parametrize("text", ["What is the name of the book?", "who wrote this book",
+                                  "what does the label say about the dose",
+                                  "read the title of the book and the name of the writer",
+                                  "I'm the title of the book and the name of the writer"])
+def test_questions_about_printed_text_go_to_reading(text):
+    i = rule_route(text, False, False)
+    assert i.skill == "read"
+
+
+def test_title_question_answers_only_that():
+    o = FakeOrch(FakeAgent())
+    calls = {}
+
+    def read(coach=True, intro=None, on_finished=None, play=True):
+        calls["play"] = play
+        o.reader.active = True
+        return FakeReading()
+    o.reader.read = read
+    o.agent.ask_text = lambda q, ctx, max_tokens=None: "The book is called The Little Prince."
+    DialogueManager(o).handle("What is the name of the book?")
+    assert calls["play"] is False
+    assert o.speaker.said == ["Let me read it.", "The book is called The Little Prince."]

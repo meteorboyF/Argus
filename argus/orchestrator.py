@@ -644,9 +644,10 @@ class Orchestrator:
                 # A bare "Argus" is a call: answer it, like a person would. A
                 # beep alone went unnoticed in the first test (five wakes, no
                 # request, 2026-10-21).
+                # Listen WHILE saying "Yes?": people answer straight away and
+                # a request spoken over it was lost (2026-10-21). The headset
+                # keeps ARGUS's own voice out of the mic.
                 self.speaker.speak("Yes?", Priority.NORMAL)
-                self.speaker.wait_until_idle(timeout=3.0)
-                earcons.play("listening")
                 bus.set(gemma="listening")
                 audio, state = record_utterance(
                     device=self.cfg.speech.input_device,
