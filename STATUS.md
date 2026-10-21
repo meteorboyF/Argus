@@ -22,14 +22,14 @@ implementation exists.
 | Speech arbiter | done (unit) | P0-P4, preemption < 50 ms in test, answer resume / "repeat?" offer, user-speech hold, depth watchdog earcon (rate-limited). Legacy priority suite fixed and green |
 | Wake word | partial | "Argus" / "Hey Argus" via VAD + Whisper tiny with a glossary hint (9/9 synthetic, 0.78 s). Real voice: the name recognised every time; bare "Argus" -> "Yes?". False wakes/hour not measured. Trained openWakeWord model not built (`training/hey_argus/`) |
 | VAD / STT | partial | Silero endpointing (0.7 s, 15 s cap) works live; Whisper tiny English only; mishearings seen ("Read the" -> "I'm the") |
-| Conversation layer | partial | `argus/dialogue.py`: rule routing + Gemma JSON routing (13/14, 0.99 s), context, follow-ups without the wake word, exit, filler, persona. Live voice: chat 1.6 s, describe 2.4-3.0 s. Reading/seat flows not yet voice-tested end to end |
+| Conversation layer | partial | Session memory/preferences/recap, deterministic assistant tools, 20 s follow-ups, bounded background task/cancellation and truthful outcome history built; see `docs/COMPANION.md`. Live conversation/acoustic acceptance pending.  `argus/dialogue.py`: rule routing + Gemma JSON routing (13/14, 0.99 s), context, follow-ups without the wake word, exit, filler, persona. Live voice: chat 1.6 s, describe 2.4-3.0 s. Reading/seat flows not yet voice-tested end to end |
 | Reading / OCR | partial | Software additions: bounded best-of-N still option, 180-degree poor-result retry, clear-gutter column order, cancellable coaching/OCR playback. Synthetic checks only; see `docs/ACCEPTANCE.md`.  RapidOCR CPU; locate document -> CLAHE crop -> OCR (1.5 s); light/glare/blur-aware coach; diagnose and retry. Synthetic sign perfect; real book cover failed on optics (fixed-focus lens, backlight). Needs `doctor --focus` + CER test. Bangla not evaluated |
 | Sensitive-text privacy | done (unit) | Luhn cards, BD mobiles, OTP/PIN codes masked before logs, screen and Gemma; demo face blur display-only |
 | Face privacy gate | partial | InsightFace, threshold 0.25 after a 0.27 miss; fail-closed. Adversarial set still needed |
 | Gemma 4 agent | partial | QAT UD-Q4_K_XL + vision-only mmproj on GPU, 280-token images; describe ~2.2 s; text-only routing/answers. Qwen3.5-2B bake-off not done |
 | YOLO-World grounding | partial | TRT FP16 + 401-label precomputed vocabulary (no torch at runtime); optional conf override (reading uses 0.12) |
 | Seat guidance | partial | Occupied-seat overlap rejection, matched image/depth snapshots, immediate lost-target range/arrival reset and exception-safe whitelist cleanup built with synthetic checks.  Closed loop on YOLO11n chair/couch/bench; corridor whitelist; direction only until calibration. Live voice test pending (seen when the user stood up) |
-| SLAM / navigation | partial | Stereo VO + corridor guidance exist with synthetic tests; off until calibration |
+| SLAM / navigation | partial | Stereo VO + bounded sparse keyframes/geometric relocalisation; matched depth/pose occupancy mapping, inflated A*, place memory and guarded route follower built with synthetic tests. Walking routes default off; calibration, real drift/relocalisation and walk acceptance pending. No global pose-graph/GPS claim. `reports/companion-build-2026-10-21.json` |
 | Demo view / recording | done | `run --demo [--record]`: POV with display face blur, captions, hazard banner, insets, chips; x264 via ffmpeg thread (1.5 ms/frame); TTS audio muxed; closes only on Esc x2 or "shut down" |
 | Session logger / study metrics | done | JSONL with masking; `scripts/summarise_session.py` (alarms/min, lead, task times, latency percentiles, precision/recall vs annotated truth) |
 | Memory budget | partial | Production excludes optional torch conversion imports (fresh STT worker peak RSS 690.5 -> 360.0 MiB); final combined peak RSS 4123 MiB. 8 GiB NVMe swap active temporarily, no demonstrated benefit in its isolated comparison. System-wide paging still measured; no blanket no-thrashing claim. `reports/stt-import-memory-2026-10-21.json`, `reports/nvme-swap-comparison-2026-10-21.json` |
@@ -186,3 +186,24 @@ optional local Tesseract Bangla evaluator. No package/model download, service
 activation, calibration bypass, or live walking claim. PaddleOCR-VL GGUF mode,
 optional trained wake model and any model switch remain evaluation-dependent.
 All prototype acceptance requirements remain partial until measured on device.
+
+
+## Conversational companion / local mapping build — 2026-10-21
+
+386 synthetic tests pass. `reports/companion-build-2026-10-21.json` records build
+verification; `docs/COMPANION.md` lists commands and limits. Fardeen asked for
+Jarvis-style conversation plus detection, SLAM and assistance. Added bounded
+session memory, preferences/name/recap, timers, follow-up listening during
+background computation, cancellation-effect suppression, deterministic object
+inventory/search answers, local sparse keyframe relocalisation, occupancy/map
+planning and place commands. Added bounded masked document excerpts and OCR
+redaction of sensitive numbers before visual model requests. All telemetry text
+boundaries mask private numbers. Insufficient depth now reports UNKNOWN rather
+than CLEAR, and wide frames older than 500 ms are unavailable.
+
+`speech.barge_in_enabled: false` and `navigation.guided_routes_enabled: false`
+are explicit in both identical config copies. Both features have software paths
+but require acoustic/walk acceptance before enabling. Existing model/engine
+pins are unchanged. No new live backend latency, RSS/MemAvailable, GR3D or OC
+measurement was taken. The prior T1 soak predates these changes; repeat it,
+including calibrated map/VO workloads. All live prototype DoDs remain partial.

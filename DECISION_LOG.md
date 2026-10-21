@@ -966,3 +966,45 @@ automatic model switch or service activation. **Lesson / consequence.**
 latency/RAM/GR3D/OC evidence is deliberately absent because physical testing
 was deferred. Prior soak numbers do not certify this build. Conservative
 seat overlap and column heuristics require real scenes/pages before acceptance.
+
+
+## 2026-10-21 M7/M8 — Conversational companion with bounded local mapping
+
+**Hurdle / problem.** Fardeen clarified the goal as Jarvis-style conversation
+and assistance, including detection/SLAM/navigation, with physical tests deferred.
+Existing history contained placeholders rather than actual visual outcomes;
+the microphone waited for slow tasks, object finding was one-shot, and VO had
+no sparse place map/relocalisation or route planner. Inspection also found the
+legacy reflex calling insufficient depth CLEAR. **Impact.** Conversation could
+imply unobserved actions/locations, controls could wait behind inference, and
+UNKNOWN geometry could be exposed as reassuring state.
+
+**Options considered.** Add a large agent framework/model; treat generic visual
+chat as navigation; or build bounded local tools using the installed engines.
+**Resolution.** Bounded session memory/preferences/recap and timers; explicit
+companion commands; one asynchronous slow task, immediate controls, suppress
+cancelled replies even if an HTTP request finishes late; bounded follow-ups.
+Find results are phrased from detector facts without a second model call;
+inventory reuses the existing YOLO11 engine with a separate class set, and
+stationary search requires consecutive hits. Model/router failures now ask for
+clarification: the old test expecting an unsolicited camera fallback is changed
+because that was inappropriate for ordinary conversation. Mask actual outcomes
+and bound document excerpts; OCR-redact sensitive text after face gating.
+
+Add bounded ORB/3D keyframes, RANSAC/PnP relocalisation, pose expiration and
+loss handling. A separate worker integrates matched calibrated pose/depth into
+an expiring grid; A* inflates unknown/occupied space and refuses unobserved
+routes. Named places remain session-only. Route speech requires explicit
+acceptance enablement plus current calibration health, pose, depth, ground and
+hazard state. Optional headset barge-in is control-only and defaults off pending
+acoustic evidence. Insufficient depth now returns UNKNOWN and clears obsolete
+approach history; the old CLEAR expectation is updated to match the stated
+fail-closed rule, without removing the test.
+
+**Lesson / consequence.** 386 synthetic tests pass; build report
+`reports/companion-build-2026-10-21.json`, runbook `docs/COMPANION.md`. This is
+local sparse mapping/relocalisation, not a globally optimised or surveyed map.
+CPU contention, acoustic echo, drift/aliasing and real navigation still need
+measurement. Both new enable flags remain false and both YAML copies match;
+no models/packages added. No new device performance claim is made. The prior
+soak is not evidence for this changed workload. All live DoDs stay partial.

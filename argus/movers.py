@@ -53,10 +53,11 @@ def letterbox(img: np.ndarray, size=(640, 416)):
 
 
 def decode(raw: np.ndarray, scale: float, px: int, py: int, frame_shape,
-           conf: float = 0.25, iou: float = 0.5) -> list[Det]:
+           conf: float = 0.25, iou: float = 0.5, classes=None) -> list[Det]:
     """raw: (84, N) YOLO11 head (cx, cy, w, h, 80 class scores)."""
     cls_scores = raw[4:]
-    keep_cls = np.array(sorted(MOVER_CLASSES))
+    labels = MOVER_CLASSES if classes is None else classes
+    keep_cls = np.array(sorted(labels))
     sub = cls_scores[keep_cls]
     best = sub.argmax(axis=0)
     score = sub.max(axis=0)
@@ -75,7 +76,7 @@ def decode(raw: np.ndarray, scale: float, px: int, py: int, frame_shape,
                       (x + bw - px) / scale, (y + bh - py) / scale], np.float32)
         b[[0, 2]] = np.clip(b[[0, 2]], 0, W - 1)
         b[[1, 3]] = np.clip(b[[1, 3]], 0, H - 1)
-        out.append(Det(b, float(sc[i]), MOVER_CLASSES[int(cl[i])]))
+        out.append(Det(b, float(sc[i]), labels[int(cl[i])]))
     return out
 
 

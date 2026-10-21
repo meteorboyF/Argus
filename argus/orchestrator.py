@@ -70,6 +70,10 @@ class Orchestrator:
         self.agent = GemmaAgent(cfg.agent)
         self.seat_cancel = threading.Event()
         from .dialogue import DialogueManager
+        from .companion import SessionMemory
+        from .tasks import TaskRunner
+        self.memory = SessionMemory()
+        self.tasks = TaskRunner()
         self.dialogue = DialogueManager(self)
         self.corridor_whitelist = None     # (range_m, until) set by seat guidance
         # P0-P4 arbitration over Piper: hazards cut answers, answers resume,
@@ -81,6 +85,8 @@ class Orchestrator:
             if chosen:
                 print(f"[speech] USB audio selected: {chosen}")
         self.speaker = ArbitratedSpeaker(Speaker(cfg.speech, enabled=enable_audio))
+        from .reminders import Reminders
+        self.reminders = Reminders(lambda text: self.speaker.speak(text,Priority.SYSTEM))
         self.enable_audio = enable_audio
 
         self._latest_depth: np.ndarray | None = None
@@ -112,6 +118,10 @@ class Orchestrator:
             if cfg.navigation.enabled:
                 from .navigation import Navigator
                 self.navigator = Navigator(cfg.navigation, intr["fx"], intr["cx"])
+        self.mapping = None
+        if self.slam is not None:
+            from .local_map import MappingWorker
+            self.mapping = MappingWorker(self)
         bus.set(slam="off (needs stereo calibration)" if self.slam is None else "starting")
         bus.set(depth_backend=self.depth.backend,
                 calibration="loaded" if self.depth.calibrated else "absent",
@@ -294,13 +304,14 @@ class Orchestrator:
         gray = cv2.cvtColor(left_bgr, cv2.COLOR_BGR2GRAY)
         alerts = self._hazards.tick(depth_m, gray)
         obs = self._hazards.last
+        self._hazards_ts = self._latest_depth_ts
         wl = getattr(self, "corridor_whitelist", None)
         if wl is not None and time.monotonic() < wl[1] and np.isfinite(obs.body_m) \
                 and abs(obs.body_m - wl[0]) < 0.6:
             # The obstacle ahead is the seat being approached (M7 whitelist).
             alerts = [a for a in alerts if a.key != "body"]
         bus.set(corridor_body=f"{obs.body_m:.1f} m {obs.body_side}" if np.isfinite(obs.body_m)
-                else "clear",
+                else ("no obstacle observed" if obs.valid else "UNKNOWN"),
                 corridor_head=f"{obs.head_m:.1f} m" if np.isfinite(obs.head_m) else "clear",
                 corridor_drop=obs.drop, head_turn_deg_s=round(self._hazards.gate.deg_s))
         return alerts
@@ -427,10 +438,45 @@ class Orchestrator:
                                               n, im, conf=0.12))
         return self._reader
 
+    def _query_cancelled(self):
+        tasks = getattr(self,'tasks',None)
+        stop = getattr(self,'_stop',None)
+        return bool((tasks and tasks.cancelled()) or (stop and stop.is_set()))
+
+    def submit_query(self, question: str):
+        """Accept a bounded background task or handle controls immediately."""
+        from .companion import companion_route
+        quick = companion_route(question,self.memory)
+        if quick is not None and quick[0] in ('status','safety_status','answer','clear_reminders'):
+            from .dialogue import Intent
+            self.dialogue.run(Intent(quick[0],quick[1],quick[2]),question)
+            return True
+        from .dialogue import rule_route
+        intent = rule_route(question, False, False)
+        if intent is not None and intent.skill in ('control', 'exit'):
+            if intent.skill == 'exit':
+                self.tasks.cancel()
+                self.seat_cancel.set()
+                self.speaker.cancel_normal()
+                self.dialogue.run(intent,question)
+            else:
+                self.handle_query(question)
+            return True
+        if not self.tasks.submit(question, lambda: self.handle_query(question)):
+            self.speaker.speak('I am still working on your request. Say Argus, stop to cancel it, then ask again.')
+            return False
+        return True
+
     def handle_query(self, question: str):
         """Run one full slow-path interaction for an already-transcribed query."""
         # Playback controls must work while a long read is being spoken, so
         # they are handled before waiting for the query lock.
+        from .companion import companion_route
+        from .dialogue import Intent
+        quick = companion_route(question,getattr(self,'memory',None))
+        if quick is not None and quick[0] == 'clear_reminders':
+            self.dialogue.run(Intent(quick[0],quick[1],quick[2]),question)
+            return
         from .dialogue import rule_route
         intent = rule_route(question, False, False)
         if intent is not None and intent.skill == "control":
@@ -438,16 +484,20 @@ class Orchestrator:
             self.dialogue.run(intent, question)
             return
         with self._query_lock:
+            if self._query_cancelled():
+                return
             bus.log("user", question)
             started = time.perf_counter()
             bus.record("query_start", text=question)
             try:
                 self.dialogue.handle(question)
             except UnsupportedObjectError:
-                self.speaker.speak("I can't identify that object yet. Try another object.")
+                if not self._query_cancelled():
+                    self.speaker.speak("I can't identify that object yet. Try another object.")
             except Exception as exc:  # noqa: BLE001 — a query must never kill the process
                 bus.log("system", f"query failed: {exc}")
-                self.speaker.speak("Sorry, something went wrong with that question.")
+                if not self._query_cancelled():
+                    self.speaker.speak("Sorry, something went wrong with that question.")
             finally:
                 bus.record("query_end", text=question, total_s=time.perf_counter() - started,
                            latency=bus.get("query_latency", ""))
@@ -504,7 +554,14 @@ class Orchestrator:
                 tool_result = self._fuse_detection(name, det, gated)
                 stage_started = time.perf_counter()
                 bus.set(gemma="phrasing the answer")
-                reply = self.agent.with_tool_result(question, tool_result)
+                if self._query_cancelled():
+                    return ''
+                self.memory.observe(name, tool_result.get('found',False), tool_result.get('direction',''))
+                from .agent import AgentReply
+                where = {"left":"to your left", "right":"to your right", "center":"straight ahead"}.get(tool_result.get("direction"),"in view")
+                reply = AgentReply(text=(f"I found the {name} {where}."
+                                         if tool_result.get('found') else
+                                         f"I could not find the {name} in this view."))
                 final_agent_s = time.perf_counter() - stage_started
                 total_s = time.perf_counter() - query_started
                 print(
@@ -521,16 +578,25 @@ class Orchestrator:
                 bus.set(query_latency=f"{total_s:.1f}s (privacy {privacy_s:.2f}, gemma {visual_agent_s:.1f})")
         except AgentError as e:
             print(f"[agent] {e}")
-            self.speaker.speak("Sorry, my reasoning engine is not responding.")
+            if not self._query_cancelled():
+                self.speaker.speak("Sorry, my reasoning engine is not responding.")
             return
 
-        self.speaker.speak(reply.text or "I'm not sure.")
+        if self._query_cancelled():
+            return ''
+        answer = reply.text or "I'm not sure."
+        self.speaker.speak(answer)
+        return answer
 
     def _apply_privacy(self, frame: np.ndarray) -> np.ndarray | None:
         """Fail closed: a privacy exception cancels the image query."""
         try:
             gated, _ = self.privacy.apply(frame)
-            return gated
+            from .ocr import OCREngine
+            from .visual_privacy import redact_text
+            if getattr(self, '_privacy_ocr', None) is None:
+                self._privacy_ocr = OCREngine()
+            return redact_text(gated,self._privacy_ocr)
         except Exception as e:  # noqa: BLE001 — privacy failure is a safe refusal
             print(f"[privacy] gate failed; image query cancelled: {e}")
             self.speaker.speak("Privacy filter failed. I can't answer that image question.")
@@ -612,13 +678,13 @@ class Orchestrator:
             bus.log("system", f"questions can be appended to {ask_file}")
         if demo:
             from .demo_view import DemoView
-            self._dashboard = DemoView(on_question=self.handle_query,
+            self._dashboard = DemoView(on_question=self.submit_query,
                                        privacy_cfg=self.cfg.privacy,
                                        fullscreen=fullscreen, record_path=record)
             self._dashboard.start()
         elif dashboard:
             from .dashboard import Dashboard
-            self._dashboard = Dashboard(on_question=self.handle_query, fullscreen=fullscreen)
+            self._dashboard = Dashboard(on_question=self.submit_query, fullscreen=fullscreen)
             self._dashboard.start()
         self.start_fast_loop()
         self.speaker.speak("ARGUS ready.", Priority.SYSTEM)
@@ -670,7 +736,8 @@ class Orchestrator:
             if self._dashboard is not None and self._dashboard.closed.is_set():
                 break
             # While ARGUS itself is talking the mic would hear it: wait.
-            if self.speaker.busy:
+            talking = self.speaker.busy
+            if talking and not self.cfg.speech.barge_in_enabled:
                 time.sleep(0.1)
                 continue
             audio, state = record_utterance(device=self.cfg.speech.input_device, cfg=ambient)
@@ -678,9 +745,17 @@ class Orchestrator:
                 continue
             t0 = time.perf_counter()
             heard = transcribe_hinted(self.stt, audio)
+            if talking or self.speaker.busy:
+                from .voice_policy import barge_in_command
+                control = barge_in_command(heard) if self.cfg.speech.barge_in_enabled else None
+                if control:
+                    self.submit_query(control)
+                continue
             m = match_wake(heard)
             bus.record("heard", text=heard, woke=m.woke, stt_s=time.perf_counter() - t0)
             if not m.woke:
+                if self.dialogue.expect_reply and not self.tasks.busy:
+                    self.submit_query(heard)
                 continue
             bus.record("wake", text=heard, stt_s=time.perf_counter() - t0)
             question = m.request
@@ -708,9 +783,7 @@ class Orchestrator:
                 earcons.play("capturing")      # short tick: heard you
                 bus.set(stt_latency=f"wake+request stt {time.perf_counter() - t0:.2f}s")
             if question:
-                self.handle_query(question)
-            self.speaker.wait_until_idle(timeout=30.0)
-            self._follow_ups()
+                self.submit_query(question)
 
     def _listen_loop(self):
         if str(self.cfg.speech.wake_model).lower() in ("argus", "hey_argus_stt"):
@@ -754,13 +827,11 @@ class Orchestrator:
                 bus.set(stt_latency=f"listen {t_stt - t_listen:.1f}s, "
                                     f"stt {time.perf_counter() - t_stt:.2f}s")
                 if question:
-                    self.handle_query(question)
+                    self.submit_query(question)
                 # speak() is non-blocking now, so wait for the answer to finish
                 # before listening again — otherwise the mic hears ARGUS talking
                 # and the user gets answered over. The fast loop is unaffected;
                 # it has its own thread and never waits here.
-                self.speaker.wait_until_idle(timeout=30.0)
-                self._follow_ups()
                 self.wake.reset()
 
     def request_exit(self) -> None:
@@ -806,6 +877,13 @@ class Orchestrator:
 
     def stop(self):
         self._stop.set()
+        self.seat_cancel.set()
+        if getattr(self,"_reader",None) is not None:
+            self._reader.stop()
+        self.tasks.close()
+        self.reminders.stop()
+        if self.mapping is not None:
+            self.mapping.stop()
         self._depth_preview.stop()
         self.rig.release()
         if (self._fast_thread is not None and self._fast_thread.is_alive()

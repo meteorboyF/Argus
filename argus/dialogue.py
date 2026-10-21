@@ -33,11 +33,12 @@ from .telemetry import bus
 
 PERSONA = (
     "You are ARGUS, a calm, warm and capable assistant built into smart glasses "
-    "worn by a blind person, in the spirit of a trusted butler. Speak naturally, "
+    "worn by a blind person, in the spirit of a trusted butler. Be attentive and "
+    "conversational, with gentle dry humour only when invited. Speak naturally, "
     "in at most two short sentences. Use plain words, no lists, no markdown, no "
     "emoji. Confirm what you are doing. Never pretend to see something you have "
-    "not been shown; never guess private numbers; for anything about safety, say "
-    "you will watch and that the safety system warns automatically. Never say you "
+    "not been shown; never guess private numbers. Never promise protection or "
+    "safe walking. Missing calibration means metric warnings are unavailable. Never say you "
     "are doing or have done something you were not given a tool for (opening apps, "
     "closing windows, calling people, changing settings); say you can't do that yet.")
 
@@ -153,6 +154,8 @@ def parse_router(text: str) -> Intent | None:
         obj = json.loads(m.group(0))
     except json.JSONDecodeError:
         return None
+    if not isinstance(obj, dict):
+        return None
     skill = str(obj.get("skill", "")).strip().lower()
     if skill not in SKILLS:
         return None
@@ -177,27 +180,61 @@ class DialogueManager:
     def __init__(self, orch, history_turns: int = 4):
         self.o = orch
         self.history: collections.deque[Turn] = collections.deque(maxlen=history_turns)
-        self.expect_reply = False      # ARGUS asked something: listen without wake word
+        from .companion import SessionMemory
+        self.memory = getattr(orch, 'memory', None) or SessionMemory()
+        self._reply_deadline = 0.0
+        self.expect_reply = False      # bounded conversational follow-up window
         self.page_no = 0
+
+    @property
+    def expect_reply(self):
+        return time.monotonic() < self._reply_deadline
+
+    @expect_reply.setter
+    def expect_reply(self, enabled):
+        self._reply_deadline = time.monotonic()+20 if enabled else 0.0
+
+    def _cancelled(self):
+        tasks = getattr(self.o, 'tasks', None)
+        return bool(tasks and tasks.cancelled())
 
     # ------------------------------------------------------------ context
     def _context_lines(self) -> str:
         lines = []
+        depth = getattr(self.o,'depth',None)
+        if depth is not None:
+            lines.append('(Runtime: stereo calibration '+('loaded' if depth.calibrated else
+                         'MISSING; metric warnings and navigation unavailable')+
+                         '; wide-camera object distances are unverified.)')
         for t in self.history:
             lines.append(f"User: {t.user}\nARGUS: {t.argus}")
         r = getattr(self.o, "_reader", None)
         if r is not None and r.active:
             lines.append(f"(Active task: reading page {self.page_no}; the page text is "
                          "available for questions.)")
-        return "\n".join(lines)
+        observations = self.memory.context()
+        if observations:
+            lines.append("Tool observations (past views, not current safety):\n"+observations)
+        from .sensitive import mask_text
+        return mask_text("\n".join(lines))
 
     def _say(self, text: str) -> None:
         from .speech import Priority
         for s in sentences(text):
+            if self._cancelled():
+                break
             self.o.speaker.speak(s, Priority.NORMAL)
 
     # ------------------------------------------------------------ routing
     def route(self, text: str) -> Intent:
+        from .companion import companion_route
+        from .wake_stt import match_wake
+        wake = match_wake(text)
+        if wake.woke and wake.request:
+            text = wake.request
+        companion = companion_route(text, self.memory)
+        if companion is not None:
+            return Intent(companion[0], companion[1], companion[2])
         r = getattr(self.o, "_reader", None)
         intent = rule_route(text, bool(r and r.active), bool(r and r._thread
                                                              and r._thread.is_alive()))
@@ -206,6 +243,8 @@ class DialogueManager:
         return self.gemma_route(text)
 
     def gemma_route(self, text: str) -> Intent:
+        from .sensitive import mask_text
+        text = mask_text(text)
         ctx = self._context_lines()
         messages = [
             {"role": "system", "content": PERSONA + "\n\n" + ROUTER_INSTRUCTIONS},
@@ -221,8 +260,7 @@ class DialogueManager:
             print(f"[dialogue] router failed: {e}")
             intent = None
         if intent is None:
-            # Unusable routing: a visual question is the safest useful default.
-            return Intent("describe", say="", source="fallback")
+            return Intent("answer", say="Could you say that another way? You can ask me to talk, find an object, or read a page.", source="fallback")
         return intent
 
     # ------------------------------------------------------------ handle
@@ -232,12 +270,64 @@ class DialogueManager:
                    source=intent.source)
         bus.set(intent=f"{intent.skill} ({intent.source})")
         reply = self.run(intent, text)
-        if intent.skill not in ("control", "ignore", "exit"):
-            self.history.append(Turn(text, reply, intent.skill))
+        if self._cancelled():
+            return
+        if intent.skill not in ("control", "ignore", "exit", "forget"):
+            from .sensitive import mask_text
+            self.history.append(Turn(mask_text(text)[:600], mask_text(reply or '')[:900], intent.skill))
+            self.expect_reply = True
 
     def run(self, intent: Intent, text: str) -> str:
         o = self.o
         self.expect_reply = False
+        if self._cancelled():
+            return ''
+        if intent.skill == 'preference_name':
+            self.memory.preferences['name'] = intent.name
+            answer = f'I will call you {intent.name} for this session.'
+            self._say(answer)
+            return answer
+        if intent.skill == 'recap':
+            turns = list(self.history)[-3:]
+            answer = ('Recent requests: '+ '; '.join(t.user for t in turns)+'.'
+                      if turns else 'We have no completed conversation turns in this session yet.')
+            self._say(answer)
+            return answer
+        if intent.skill == 'preference':
+            self.memory.preferences['detail'] = intent.name
+            self._say(intent.say)
+            return intent.say
+        if intent.skill == 'reminder':
+            seconds,message = json.loads(intent.name)
+            reminders = getattr(o,'reminders',None)
+            answer = ('Reminder set for this session.' if reminders and reminders.add(seconds,message)
+                      else 'I could not set that reminder.')
+            self._say(answer)
+            return answer
+        if intent.skill == 'clear_reminders':
+            reminders = getattr(o,'reminders',None)
+            if reminders:
+                reminders.clear()
+            self._say('Session timers and reminders cleared.')
+            return 'Session timers and reminders cleared.'
+        if intent.skill == 'answer':
+            self._say(intent.say)
+            return intent.say
+        if intent.skill == 'forget':
+            self.memory.forget()
+            if getattr(o,'reminders',None):
+                o.reminders.clear()
+            self.history.clear()
+            mapping = getattr(o,'mapping',None)
+            if mapping is not None:
+                mapping.map.reset(mapping.map.epoch)
+            self._say('I cleared this session conversation, object observations and marked places. Existing study logs are unchanged.')
+            return ''
+        if intent.skill in ('inventory','watch','mark_place','places','navigate','location','status','safety_status'):
+            from .assistance import run
+            answer = run(o,intent.skill,intent.name)
+            self._say(answer)
+            return answer
         if intent.skill == "ignore":
             return ""
         if intent.skill == "exit":
@@ -248,6 +338,9 @@ class DialogueManager:
         if intent.skill == "control":
             if intent.name == "stop":
                 o.seat_cancel.set()
+                tasks = getattr(o,'tasks',None)
+                if tasks is not None:
+                    tasks.cancel()
             r = getattr(o, "_reader", None)
             if r is not None:
                 r.control(intent.name)
@@ -280,13 +373,12 @@ class DialogueManager:
             ok = SeatSession(o).run()
             return "Guided to a seat." if ok else "Could not find a seat."
         if intent.skill == "find":
-            o._handle_query(f"find the {intent.name}")
-            return f"(looked for {intent.name})"
+            answer = o._handle_query(f"find the {intent.name}")
+            return answer or f"(looked for {intent.name}; outcome unavailable)"
         if intent.skill == "describe":
             if intent.say:
                 self._say(intent.say)
-            o._handle_query(text)
-            return "(described the scene)"
+            return o._handle_query(text) or "(scene response unavailable)"
         if intent.skill == "page_question":
             r = getattr(o, "_reader", None)
             if r is None or not r.active:
@@ -301,11 +393,13 @@ class DialogueManager:
         return self.chat(text)
 
     def chat(self, text: str) -> str:
+        from .sensitive import mask_text
+        text = mask_text(text)
         ctx = self._context_lines()
         messages = [{"role": "system", "content": PERSONA},
                     {"role": "user", "content": (f"Conversation so far:\n{ctx}\n\n" if ctx else "")
                      + text}]
-        answer = (self.o.agent._post_text(messages, max_tokens=80) or "").strip()
+        answer = (self.o.agent._post_text(messages, max_tokens=120 if self.memory.preferences.get("detail") == "detail" else 80) or "").strip()
         self._say(answer or "Sorry, I didn't catch that.")
         return answer
 

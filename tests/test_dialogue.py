@@ -150,11 +150,12 @@ def test_gemma_routes_a_visual_question_to_the_camera():
     assert o.queries == ["is the table clear?"] and o.speaker.said == ["Let me look."]
 
 
-def test_unusable_router_output_falls_back_to_looking():
+def test_unusable_router_output_asks_for_clarification():
     o = FakeOrch(FakeAgent(router_reply="hmm"))
     o._reader = None
     DialogueManager(o).handle("anything interesting nearby")
-    assert o.queries == ["anything interesting nearby"]
+    assert o.queries == []
+    assert o.speaker.said[0] == "Could you say that another way?"
 
 
 def test_find_uses_grounding_path():

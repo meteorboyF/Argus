@@ -213,3 +213,16 @@ Seat stale-range/arrival cleanup and reading stop behavior are also covered.
 Evidence: `reports/build-2026-10-21.json`; procedures: `docs/ACCEPTANCE.md`.
 No new backend latency, RSS/MemAvailable, GR3D or OC measurements were taken.
 The previous soak must be repeated on the new build; all live DoDs stay partial.
+
+
+## 2026-10-21 — Companion/map build scope (no new live findings)
+
+Code inspection found insufficient legacy depth returned CLEAR despite the
+comment describing uncertainty. It now returns UNKNOWN, with a synthetic
+regression retaining the original scenario. Wide frames also expire. New
+session assistant, sparse keyframe/map and OCR privacy workloads are built;
+`reports/companion-build-2026-10-21.json` records synthetic checks only. There
+are no new device latency/RSS/MemAvailable/GR3D/OC or acoustic measurements.
+Repeat the full-stack soak on this build, especially after calibration enables
+mapping, before attributing any reliability to these additions. Commands and
+limitations: `docs/COMPANION.md`. Do not infer global SLAM/walking acceptance.

@@ -69,7 +69,7 @@ def test_too_few_valid_pixels_stays_quiet_rather_than_guessing(cfg):
     depth = depth_filled(np.inf)
     depth[0:5, 0:5] = 0.3          # a handful of very close pixels, under the floor
     state = SafetyReflex(cfg).evaluate(depth)
-    assert state.level is Level.CLEAR
+    assert state.level is Level.UNKNOWN
     assert state.message == ""
 
 

@@ -52,6 +52,13 @@ class SlamState:
     rate_hz: float = 0.0
     trail: list[tuple[float, float]] = field(default_factory=list)
     reason: str = "not started"
+    timestamp: float = 0.0
+    updated_at: float = 0.0
+    pose_valid: bool = False
+    epoch: int = 0
+    keyframes: int = 0
+    map_points: int = 0
+    relocalized: bool = False
 
 
 class StereoVisualOdometry:
@@ -63,6 +70,11 @@ class StereoVisualOdometry:
         self.baseline_m = baseline_m
         self._orb = cv2.ORB_create(nfeatures=cfg.max_features, fastThreshold=12)
         self._matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+        from .keyframes import KeyframeMap
+        self._keyframes = KeyframeMap(self.K, min_inliers=cfg.min_inliers)
+        self._pose_valid = False
+        self._stereo_des = None
+        self._last_source_ts = None
         self._pose = np.eye(4)            # camera-to-world
         self._prev_gray: np.ndarray | None = None
         self._prev_pts: np.ndarray | None = None
@@ -88,7 +100,12 @@ class StereoVisualOdometry:
     @property
     def state(self) -> SlamState:
         with self._lock:
-            return SlamState(**{**self._state.__dict__, "trail": list(self._trail)})
+            result = SlamState(**{**self._state.__dict__, "trail": list(self._trail)})
+            if result.updated_at and time.monotonic()-result.updated_at > .75:
+                result.tracking = result.pose_valid = False
+                result.speed_mps = 0.0
+                result.reason = "tracking stale"
+            return result
 
     def stop(self):
         self._stop.set()
@@ -109,17 +126,19 @@ class StereoVisualOdometry:
                 self._step(*job)
             except Exception as exc:  # noqa: BLE001 — SLAM must never take the loop down
                 with self._lock:
-                    self._state.tracking = False
+                    self._state.tracking = self._state.pose_valid = False
+                    self._pose_valid = False
                     self._state.reason = f"error: {exc}"
             self._proc_times.append(time.perf_counter() - started)
 
     def _triangulate(self, gray_l: np.ndarray, gray_r: np.ndarray):
         """Sparse stereo: ORB on both images, row-constrained matching."""
+        self._stereo_des = None
         kp_l, des_l = self._orb.detectAndCompute(gray_l, None)
         kp_r, des_r = self._orb.detectAndCompute(gray_r, None)
         if des_l is None or des_r is None or len(kp_l) < 8 or len(kp_r) < 8:
             return None, None
-        pts, xyz = [], []
+        pts, xyz, descriptors = [], [], []
         for m in self._matcher.match(des_l, des_r):
             (xl, yl), (xr, yr) = kp_l[m.queryIdx].pt, kp_r[m.trainIdx].pt
             d = xl - xr
@@ -128,19 +147,27 @@ class StereoVisualOdometry:
             z = self.fx * self.baseline_m / d
             if z > self.cfg.max_depth_m:
                 continue
+            descriptors.append(des_l[m.queryIdx])
             pts.append((xl, yl))
             xyz.append(((xl - self.cx) * z / self.fx, (yl - self.cy) * z / self.fy, z))
         if len(pts) < 8:
             return None, None
+        self._stereo_des = np.asarray(descriptors, np.uint8)
         return (np.array(pts, dtype=np.float32).reshape(-1, 1, 2),
                 np.array(xyz, dtype=np.float32))
 
     def _step(self, left_bgr: np.ndarray, right_bgr: np.ndarray, ts: float):
+        if self._last_source_ts is not None and ts <= self._last_source_ts:
+            return
+        source_gap = self._last_source_ts is not None and ts-self._last_source_ts > .75
+        self._last_source_ts = ts
+        if source_gap:
+            self._pose_valid = False
         gray_l = cv2.cvtColor(left_bgr, cv2.COLOR_BGR2GRAY)
         gray_r = cv2.cvtColor(right_bgr, cv2.COLOR_BGR2GRAY)
         tracking, quality, inliers, n_feat = False, 0.0, 0, 0
 
-        if self._prev_gray is not None and self._prev_pts is not None and len(self._prev_pts) >= 8:
+        if self._pose_valid and self._prev_gray is not None and self._prev_pts is not None and len(self._prev_pts) >= 8:
             nxt, status, _ = cv2.calcOpticalFlowPyrLK(
                 self._prev_gray, gray_l, self._prev_pts, None, winSize=(21, 21), maxLevel=3)
             ok = status.reshape(-1) == 1
@@ -165,8 +192,25 @@ class StereoVisualOdometry:
                         self._pose = self._pose @ motion
                         tracking = True
 
+        relocalized = False
+        if not tracking and self._keyframes.frames:
+            kp, descriptors = self._orb.detectAndCompute(gray_l, None)
+            result = self._keyframes.relocalize([p.pt for p in kp],descriptors,ts)
+            if result is not None:
+                self._pose, inliers, n_feat = result
+                quality = inliers/max(1,n_feat)
+                tracking = relocalized = True
         pts, xyz = self._triangulate(gray_l, gray_r)
+        if not self._keyframes.frames and pts is not None:
+            # The first valid stereo frame defines this session's origin.
+            self._pose_valid = True
+        elif self._keyframes.frames:
+            self._pose_valid = tracking
+        if self._pose_valid and pts is not None:
+            self._keyframes.add(xyz,self._stereo_des,self._pose,ts)
         self._prev_gray, self._prev_pts, self._prev_xyz = gray_l, pts, xyz
+        if not tracking:
+            self._positions.clear()
 
         x, z = float(self._pose[0, 3]), float(self._pose[2, 3])
         yaw = math.degrees(math.atan2(self._pose[0, 2], self._pose[2, 2]))
@@ -183,6 +227,10 @@ class StereoVisualOdometry:
         with self._lock:
             self._state = SlamState(
                 tracking=tracking, quality=quality, features=n_feat, inliers=inliers,
+                timestamp=ts, updated_at=time.monotonic(), pose_valid=self._pose_valid,
+                keyframes=len(self._keyframes.frames),
+                map_points=sum(len(k['xyz']) for k in self._keyframes.frames),
+                relocalized=relocalized,
                 x_m=x, z_m=z, yaw_deg=yaw, speed_mps=speed, rate_hz=rate,
-                reason="tracking" if tracking else
+                reason=("relocalized" if relocalized else "tracking") if tracking else
                        ("initialising" if pts is not None else "too few stereo features"))

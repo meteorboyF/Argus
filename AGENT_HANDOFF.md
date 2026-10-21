@@ -1,6 +1,6 @@
 # ARGUS agent handoff
 
-Last updated: 2026-10-21 (Codex deferred-acceptance build; see newest git commit).
+Last updated: 2026-10-21 (Codex companion/local-mapping build; see newest git commit).
 Read in this order: this file → `STATUS.md` → `docs/FINDINGS_2026-10.md` →
 `ARCHITECTURE.md` → the newest entries at the end of `DECISION_LOG.md`. Material
 under `historical/` is evidence, not instructions.
@@ -32,6 +32,11 @@ as two loops:
 
 ## 2. Run it
 
+New conversational commands and local mapping details: `docs/COMPANION.md`.
+Use the existing “Argus” wake name. Session memory/timers and background queries
+are built; no new assets or cloud services. Walking routes and acoustic
+barge-in default **off** in both config copies. No new device acceptance yet.
+
 ```bash
 cd ~/Argus/Argus
 scripts/run_llama_server.sh &                         # Gemma 4 E2B QAT on :8080 (~10 s)
@@ -40,7 +45,7 @@ DISPLAY=:0 python3 -m argus run --demo --record reports/sessions/demo.mp4
 #   wake: "Argus, what's in front of me?" | "Argus" -> "Yes?" -> request
 #   close: Esc twice within 2 s, or "Argus, shut down" (saves recording + log)
 DISPLAY=:0 python3 -m argus run --dashboard --no-mic --ask-file /tmp/ask.txt   # typed questions
-python3 -m pytest -q tests/                            # 343 tests; all must pass
+python3 -m pytest -q tests/                            # 386 tests; all must pass
 python3 scripts/summarise_session.py reports/sessions/<log>.jsonl
 ```
 
@@ -107,7 +112,13 @@ and ends with DONE or FAILED):
 
 ## 5. Open work, in priority order
 
-**Latest user steering:** build software now, physical testing later. Do not
+**Latest user steering:** Jarvis-style conversation plus object detection,
+SLAM/navigation/assistance; build software now, physical testing later.
+Companion build: `reports/companion-build-2026-10-21.json` (386 synthetic tests),
+`docs/COMPANION.md` (commands/limits). New background listening, OCR visual privacy,
+sparse keyframe relocalisation and map integration require a fresh full-stack
+soak. Do not reuse older performance numbers as evidence for this build.
+ Do not
 repeat the seated-soak ask until Fardeen resumes testing. New code is synthetic
 verified only; the previous T1 timing evidence predates it. Read
 `docs/ACCEPTANCE.md` for the built headless service, acceptance scorers, guided
@@ -192,6 +203,11 @@ build report: `reports/build-2026-10-21.json`. All live DoDs remain pending.
     user lingering or use sudo. No service is currently enabled by this session.
 
 ## 6. Where things live
+
+Additional modules: `companion`, `tasks`, `reminders` (bounded session assistant);
+`object_inventory`, `object_search` (local detections); `keyframes`, `local_map`,
+`assistance` (relocalisation, map/planner, guarded route skills);
+`document_context`, `visual_privacy`, `voice_policy` (boundaries/policy).
 
 | Path | What |
 |---|---|
@@ -359,3 +375,30 @@ build report: `reports/build-2026-10-21.json`. All live DoDs remain pending.
   about every 45 seconds and ends DONE/FAILED. For ten minutes ask room questions
   and try read this, stop, repeat and next page. Then report missed speech,
   failed reads and interruptions.” No human action is requested now.
+
+
+### Session log — 2026-10-21, conversational companion and sparse local mapping
+
+- **Changes (see latest conventional commit):** Jarvis-style session conversation,
+  preferences/name/recap, time-limited follow-ups, single async task and cancelled
+  reply suppression; timers; on-demand essential-object inventory and stationary
+  search; truthful find phrasing/history; sparse keyframe mapping/geometric
+  relocalisation; expiring occupancy grid/inflated A*, named places and guarded
+  route execution; default-off acoustic control barge-in. OCR text redaction
+  now precedes image model calls; log/model text masking is centralized. Invalid
+  depth is UNKNOWN, stale wide-camera views are unavailable.
+- **Verification:** 386 tests pass; compile/config/command checks.
+  `reports/companion-build-2026-10-21.json`. No new GPU/RAM/latency/OC/live-audio
+  evidence. `docs/COMPANION.md` contains commands, interfaces and explicit limits.
+- **Resume:** perform deferred device checks on this build. In particular repeat
+  T1 with background voice/STT, visual-privacy OCR, inventory, calibrated VO
+  relocalisation/map worker, reading and recording. Test tracking loss/recovery,
+  changed obstacles/unknown map space, cancellation during model timeouts,
+  timers under hazard preemption and echo before enabling optional barge-in.
+  Keep `navigation.guided_routes_enabled` false until calibrated walking
+  acceptance; this is local sparse mapping, not a global pose-graph/GPS system.
+- **Exact next [HUMAN] ask (when testing resumes):** same seated ten-minute
+  headset/page soak command in the preceding session block; no walking. After
+  that request measured board square size (four squares / four), lens baseline
+  in mm and confirmation of flat board for the guided calibration. No new
+  physical action or sudo operation is requested in this build session.

@@ -32,6 +32,7 @@ from .config import SafetyConfig
 
 
 class Level(IntEnum):
+    UNKNOWN = -1
     CLEAR = 0
     WARN = 1
     DANGER = 2
@@ -78,7 +79,7 @@ class SafetyReflex:
         """
         h = depth_m.shape[0]
         roi = depth_m[int(h * self.cfg.approach_band[0]):int(h * self.cfg.approach_band[1]), :]
-        finite = np.isfinite(roi)
+        finite = np.isfinite(roi) & (roi > 0)
         w = roi.shape[1]
         bounds = {"left": (0, int(w * 0.35)), "center": (int(w * 0.35), int(w * 0.65)),
                   "right": (int(w * 0.65), w)}
@@ -129,7 +130,10 @@ class SafetyReflex:
         n_valid = int(finite.sum())
         if n_valid < self.cfg.min_valid_pixels:
             # Not enough signal to judge — stay quiet rather than guess.
-            return SafetyState(Level.CLEAR, float("inf"), "center", False, "")
+            self._drop_ticks = 0
+            for history in self._history.values():
+                history.clear()
+            return SafetyState(Level.UNKNOWN, float("nan"), "center", False, "")
 
         valid_depths = roi[finite]
         min_dist = float(np.percentile(valid_depths, self.cfg.obstacle_percentile))

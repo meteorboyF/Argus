@@ -79,3 +79,29 @@ def test_textureless_scene_reports_no_tracking():
         assert "features" in st.reason or "initialising" in st.reason
     finally:
         vo.stop()
+
+
+def test_lost_tracking_cannot_chain_across_a_blank_scene():
+    vo = StereoVisualOdometry(SlamConfig(min_inliers=10), FX, FY, CX, CY, B)
+    try:
+        for i in range(2):
+            vo._step(*scene_pair(i * STEP_M),ts=i*.1)
+        assert vo.state.tracking
+        blank=np.full((H,W,3),90,np.uint8)
+        vo._step(blank,blank,ts=.2)
+        assert not vo.state.tracking and not vo.state.pose_valid
+        vo._step(*scene_pair(STEP_M),ts=.3)
+        assert vo.state.tracking and vo.state.relocalized
+    finally:
+        vo.stop()
+
+
+def test_stale_state_is_not_a_current_pose():
+    vo = StereoVisualOdometry(SlamConfig(min_inliers=10), FX, FY, CX, CY, B)
+    try:
+        vo._state.updated_at=time.monotonic()-1
+        vo._state.tracking=vo._state.pose_valid=True
+        assert not vo.state.tracking and not vo.state.pose_valid
+        assert vo.state.reason=='tracking stale'
+    finally:
+        vo.stop()

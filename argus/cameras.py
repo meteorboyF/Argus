@@ -405,8 +405,10 @@ class CameraRig:
     # ------------------------------------------------------------------ wide
     def get_wide_frame(self) -> np.ndarray | None:
         """Latest scene-camera frame (BGR), or None if not ready yet."""
-        frame, _, _ = self.wide.latest()
-        return None if frame is None else frame.copy()
+        frame, timestamp, _ = self.wide.latest()
+        if frame is None or not 0 <= time.perf_counter()-timestamp <= .5:
+            return None
+        return frame.copy()
 
     # ------------------------------------------------------------------ stereo
     def get_stereo_pair(self) -> StereoFrame | None:

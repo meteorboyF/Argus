@@ -1,0 +1,46 @@
+{
+  "kind": "argus-companion-local-mapping-build",
+  "date": "2026-10-21",
+  "status": "partial",
+  "base_commit": "e5745f18e6adf6aef651f28cd01d4951592433fd",
+  "tests": {
+    "passed": 386,
+    "failures": 0,
+    "errors": 0,
+    "elapsed_s": 30.873
+  },
+  "features_built": [
+    "session conversation/preferences/recap and actual tool history",
+    "bounded async tasks and cancellation-effect suppression",
+    "object inventory with existing TensorRT engine and bounded watch/search",
+    "session timers/reminders",
+    "bounded masked OCR document context",
+    "sparse keyframe map and geometric relocalization",
+    "fresh pose/depth occupancy grid and inflated A-star",
+    "place memory and default-disabled guarded route follower",
+    "default-disabled control-only headset barge-in",
+    "UNKNOWN for invalid depth; stale wide-frame rejection",
+    "recursive log/model text masking and OCR image redaction"
+  ],
+  "checks": {
+    "compileall": true,
+    "yaml_copies_identical": true,
+    "new_voice_command_smoke": true
+  },
+  "model_engine_assets_changed": false,
+  "configuration_changes": {
+    "speech.barge_in_enabled": false,
+    "navigation.guided_routes_enabled": false
+  },
+  "new_device_measurements": null,
+  "device_acceptance_run": false,
+  "limitations": [
+    "No calibrated rig/device navigation acceptance yet",
+    "No new performance/peak RAM/GR3D/OC measurements; repeat full-stack soak",
+    "Sparse local map is not a globally optimized pose graph or outdoor navigation",
+    "Acoustic full-duplex and privacy adversarial tests remain pending",
+    "HTTP computation may finish after cancellation; late reply effects suppressed",
+    "All new memory and timers are session-only"
+  ],
+  "runbook": "docs/COMPANION.md"
+}

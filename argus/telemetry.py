@@ -50,12 +50,15 @@ class Telemetry:
             self._frames[name] = frame
 
     def set(self, **values) -> None:
+        from .sensitive import scrub
         with self._lock:
-            self._values.update(values)
+            self._values.update(scrub(values))
 
     def log(self, kind: str, text: str) -> None:
         if not text:
             return
+        from .sensitive import mask_text
+        text = mask_text(text)
         with self._lock:
             self._events.append(Event(time.monotonic(), kind, text))
         print(f"[{kind}] {text}", flush=True)
@@ -66,7 +69,8 @@ class Telemetry:
         """Structured study event for every attached sink (never raises)."""
         if not self.sinks:
             return
-        item = {"t": time.monotonic(), "wall": time.time(), "event": event, **fields}
+        from .sensitive import scrub
+        item = scrub({"t": time.monotonic(), "wall": time.time(), "event": event, **fields})
         for sink in list(self.sinks):
             try:
                 sink(item)
@@ -104,9 +108,8 @@ class SessionLogger:
         self._lock = threading.Lock()
 
     def __call__(self, item: dict) -> None:
-        if "text" in item and isinstance(item["text"], str):
-            from .sensitive import mask_text
-            item = dict(item, text=mask_text(item["text"]))
+        from .sensitive import scrub
+        item = scrub(item)
         line = self._json.dumps(item, default=float)
         with self._lock:
             self._f.write(line + "\n")

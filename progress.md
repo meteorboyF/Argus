@@ -106,3 +106,17 @@ table, `AGENT_HANDOFF.md` the continuation plan, and
 - Resume human testing only when requested. Repeat T1 on this build, then focus,
   calibration, reading, walk, seat, wake and demo. Optional PaddleOCR-VL/wake
   training/model selection still depend on evaluation, not guessed compatibility.
+
+
+## Companion and local mapping software — 2026-10-21
+
+- Built session conversation/memory/preferences/recap, 20 s follow-ups, bounded
+  async tasks/cancellation, timers, detector-backed object inventory/search,
+  sparse keyframe relocalisation, expiring occupancy map/A*, named places and
+  guarded routes. Text/model privacy boundaries tightened; invalid depth is
+  UNKNOWN; stale wide frames rejected. `docs/COMPANION.md` lists commands.
+- 386 synthetic tests pass; `reports/companion-build-2026-10-21.json`. Both YAML
+  copies match; no new models/engines. Barge-in and walking routes default off.
+- Live tests remain deferred. Repeat T1 including new CPU/mapping work, then
+  focus/calibration/walk/seat/wake acceptance. No new timing/RAM/GR3D/OC claims,
+  no surveyed/global SLAM or outdoor-navigation claim. Physical DoDs partial.

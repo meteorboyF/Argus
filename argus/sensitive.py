@@ -88,3 +88,14 @@ def blur_boxes(img: np.ndarray, boxes, kernel: int = 51) -> np.ndarray:
         if roi.size:
             out[y:y + h + 8, x:x + w + 8] = cv2.GaussianBlur(roi, (k, k), 0)
     return out
+
+
+def scrub(value):
+    """Mask text recursively at log/model boundaries without touching images."""
+    if isinstance(value, str):
+        return mask_text(value)
+    if isinstance(value, dict):
+        return {k: scrub(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [scrub(v) for v in value]
+    return value

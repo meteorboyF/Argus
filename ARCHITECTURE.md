@@ -119,3 +119,25 @@ unload a live framework. Diagnostic/conversion commands run in separate
 processes; the explicit diagnostic torch override does not install this policy.
 Unknown production labels cannot start live CLIP and receive an unsupported
 object response. Installed vocabulary embeddings and TRT execution are unchanged.
+
+
+## Conversational companion and sparse local mapping (2026-10-21 build)
+
+`companion` keeps bounded session observations/preferences and handles explicit
+assistant commands; `tasks` permits one cancellable slow worker while the
+name-based listener remains available during computation. `reminders` owns
+session-only timers. `object_inventory` reuses YOLO11n TRT; `object_search` uses
+bounded repeated local grounding. Both remain separate from geometric safety.
+Find replies come directly from tool outcomes; masked actual outcomes populate
+conversation history. `document_context` bounds OCR excerpts. `visual_privacy`
+adds OCR number redaction after the mandatory face gate. `voice_policy` provides
+opt-in control-only barge-in; default is off pending acoustic tests.
+
+`keyframes` retains bounded sparse world points/descriptors for geometric
+relocalisation; `slam` invalidates poses across loss and expiration. `local_map`
+integrates matched depth/pose on a separate latest-only worker and plans only
+through fresh observed space with obstacle inflation. `assistance` owns place
+memory, route/status responses and the opt-in guarded route follower. Walking
+routes default off pending device acceptance. This does not implement global
+pose-graph optimisation, surveyed room semantics or outdoor GPS navigation.
+See `docs/COMPANION.md` for commands, limits and required measurements.

@@ -205,6 +205,7 @@ class AgentConfig:
 
 @dataclass
 class SpeechConfig:
+    barge_in_enabled: bool = False  # enable only after headset echo/false-control trials
     # All speech runs on CPU.
     # "argus": wake on the spoken name via VAD + Whisper (argus/wake_stt.py),
     # no trained model needed. Or an openWakeWord name / custom .onnx path.
@@ -255,6 +256,7 @@ class SlamConfig:
 
 @dataclass
 class NavigationConfig:
+    guided_routes_enabled: bool = False  # enable only after calibrated walk acceptance
     # Corridor guidance (argus/navigation.py). Needs stereo calibration.
     enabled: bool = True
     bins: int = 24
