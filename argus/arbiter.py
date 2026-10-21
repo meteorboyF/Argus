@@ -175,10 +175,12 @@ class Arbiter:
             self.log.append(("start", item.text, self._clock()))
             bus.record("speech_start", text=item.text, priority=int(item.priority),
                        queued_s=self._clock() - item.queued_at)
+            bus.set(speaking=item.text)
             try:
                 self._play_fn(item.text)
             except Exception as e:  # noqa: BLE001 — never kill the arbiter thread
                 print(f"[arbiter] playback failed: {e}")
+            bus.set(speaking="")
             with self._cv:
                 aborted = self._aborted_current
                 self._current = None

@@ -41,6 +41,8 @@ def samples(name: str) -> np.ndarray:
 
 def play(name: str, block: bool = False) -> None:
     data = CUES[name]
+    from .demo_view import tap_audio
+    tap_audio(data, SR)
 
     def _run():
         try:

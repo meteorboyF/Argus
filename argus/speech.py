@@ -263,6 +263,8 @@ class Speaker:
         sr = chunks[0].sample_rate
         data = (chunks[0].audio_float_array if len(chunks) == 1
                 else np.concatenate([c.audio_float_array for c in chunks]))
+        from .demo_view import tap_audio
+        tap_audio(data, sr)        # demo recording: the exact PCM that is played
         # The device default is a PulseAudio USB sink on the Jetson. PortAudio's
         # Pulse bridge repeatedly underruns it, while paplay is clean. Raw float
         # stdin avoids temporary files and the child remains terminable for a

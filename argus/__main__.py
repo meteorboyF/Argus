@@ -21,7 +21,8 @@ def _cmd_run(args):
     orch = Orchestrator(cfg, enable_audio=not args.no_audio,
                         enable_mic=not (args.no_audio or args.no_mic))
     orch.run(dashboard=args.dashboard, fullscreen=not args.windowed,
-             ask_file=args.ask_file)
+             ask_file=args.ask_file, demo=args.demo, record=args.record,
+             session_log=args.session_log)
 
 
 def _cmd_query(args):
@@ -106,6 +107,12 @@ def main(argv=None):
     pr.add_argument("--ask-file", default=None, metavar="PATH",
                     help="also accept questions appended as lines to this file "
                          "(e.g. echo 'find the monitor' >> PATH)")
+    pr.add_argument("--demo", action="store_true",
+                    help="first-person demo view (POV, captions, hazard banner) + session log")
+    pr.add_argument("--record", default=None, metavar="OUT.mp4",
+                    help="with --demo: record the composed view and spoken audio")
+    pr.add_argument("--session-log", default=None, metavar="PATH.jsonl",
+                    help="study event log (default under reports/sessions/ with --demo)")
     pr.set_defaults(func=_cmd_run)
 
     pq = sub.add_parser("query", help="run one slow-path interaction")

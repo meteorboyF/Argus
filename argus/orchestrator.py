@@ -14,6 +14,7 @@ never on a frame that has not passed through it.
 from __future__ import annotations
 
 import threading
+from pathlib import Path
 import time
 
 import cv2
@@ -568,20 +569,40 @@ class Orchestrator:
             bus.log("system", f"ask file unavailable: {exc}")
 
     def run(self, dashboard: bool = False, fullscreen: bool = True,
-            ask_file: str | None = None):
-        from .telemetry import TegraStats
+            ask_file: str | None = None, demo: bool = False,
+            record: str | None = None, session_log: str | None = None,
+            startup_summary: bool | None = None):
+        from .telemetry import SessionLogger, TegraStats
         stats = TegraStats()
         stats.start()
+        if session_log is None and demo:
+            session_log = str(Path(__file__).resolve().parents[1] / "reports" / "sessions" /
+                              f"{time.strftime('%Y-%m-%d-%H%M%S')}.jsonl")
+        logger = None
+        if session_log:
+            logger = SessionLogger(session_log)
+            bus.sinks.append(logger)
+            bus.log("system", f"session log: {session_log}")
         if ask_file:
             threading.Thread(target=self._ask_file_loop, args=(ask_file,),
                              name="ask-file", daemon=True).start()
             bus.log("system", f"questions can be appended to {ask_file}")
-        if dashboard:
+        if demo:
+            from .demo_view import DemoView
+            self._dashboard = DemoView(on_question=self.handle_query,
+                                       privacy_cfg=self.cfg.privacy,
+                                       fullscreen=fullscreen, record_path=record)
+            self._dashboard.start()
+        elif dashboard:
             from .dashboard import Dashboard
             self._dashboard = Dashboard(on_question=self.handle_query, fullscreen=fullscreen)
             self._dashboard.start()
         self.start_fast_loop()
         self.speaker.speak("ARGUS ready.", Priority.SYSTEM)
+        if startup_summary if startup_summary is not None else demo:
+            # One short, privacy-gated sentence about the scene on start-up.
+            threading.Thread(target=self.handle_query, name="startup-summary", daemon=True,
+                             args=("In one short sentence, what is in front of me?",)).start()
         try:
             if not self.enable_mic:
                 # No wake word / STT: questions arrive typed from the dashboard
@@ -598,7 +619,19 @@ class Orchestrator:
             stats.stop()
             if self._dashboard is not None:
                 self._dashboard.stop()
+                if hasattr(self._dashboard, "finish"):
+                    self._dashboard.join(timeout=3.0)
+                    try:
+                        path = self._dashboard.finish()
+                        if path:
+                            print(f"[demo] recording saved: {path}")
+                    except Exception as exc:  # noqa: BLE001
+                        print(f"[demo] recording failed: {exc}")
             self.stop()
+            if logger is not None:
+                bus.sinks.remove(logger)
+                logger.close()
+                print(f"[session] log saved: {session_log}")
 
     def _listen_loop(self):
         from .speech import mic_stream
