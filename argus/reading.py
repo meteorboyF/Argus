@@ -177,7 +177,10 @@ class ReadingSession:
         if still is None:
             self.speaker.speak("The camera did not give me a picture.")
             return None
+        capture_s = time.perf_counter() - t0
         reading = self.ocr.read(still)
+        bus.record("reading", capture_s=capture_s, ocr_s=reading.elapsed_s,
+                   lines=len(reading.lines), sensitive=reading.sensitive)
         bus.set(reading=f"{len(reading.lines)} lines in {time.perf_counter() - t0:.1f}s "
                         "(capture + OCR)")
         # Only the masked text ever reaches logs or the screen.

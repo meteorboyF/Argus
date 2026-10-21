@@ -40,6 +40,7 @@ class Telemetry:
         self._events: collections.deque[Event] = collections.deque(maxlen=max_events)
         self._detections: list = []
         self._detections_at = 0.0
+        self.sinks: list = []          # callables(dict) — e.g. SessionLogger
 
     # ------------------------------------------------------------ publish
     def frame(self, name: str, frame: np.ndarray | None) -> None:
@@ -58,6 +59,19 @@ class Telemetry:
         with self._lock:
             self._events.append(Event(time.monotonic(), kind, text))
         print(f"[{kind}] {text}", flush=True)
+        self.record("say" if kind in ("argus", "safety") else kind, text=text,
+                    channel=kind)
+
+    def record(self, event: str, **fields) -> None:
+        """Structured study event for every attached sink (never raises)."""
+        if not self.sinks:
+            return
+        item = {"t": time.monotonic(), "wall": time.time(), "event": event, **fields}
+        for sink in list(self.sinks):
+            try:
+                sink(item)
+            except Exception:  # noqa: BLE001 — logging must never break a loop
+                pass
 
     def detections(self, dets: list) -> None:
         with self._lock:
@@ -73,6 +87,33 @@ class Telemetry:
     def get(self, key: str, default=None):
         with self._lock:
             return self._values.get(key, default)
+
+
+class SessionLogger:
+    """Append-only JSONL study log: one event per line, flushed immediately
+    so a crash loses nothing. Sensitive OCR text is masked before it is
+    written (argus.sensitive)."""
+
+    def __init__(self, path):
+        import json
+        from pathlib import Path
+        self._json = json
+        self.path = Path(path)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self._f = open(self.path, "a", buffering=1)
+        self._lock = threading.Lock()
+
+    def __call__(self, item: dict) -> None:
+        if "text" in item and isinstance(item["text"], str):
+            from .sensitive import mask_text
+            item = dict(item, text=mask_text(item["text"]))
+        line = self._json.dumps(item, default=float)
+        with self._lock:
+            self._f.write(line + "\n")
+
+    def close(self) -> None:
+        with self._lock:
+            self._f.close()
 
 
 # One bus per process. Modules import this instead of threading a reference

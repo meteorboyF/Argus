@@ -87,6 +87,8 @@ class Arbiter:
                 self._aborted_current = True
                 self._abort_fn()
                 self.log.append(("preempt", cur.text, now))
+                bus.record("speech_preempted", text=cur.text, by=text,
+                           priority=int(priority))
             self._cv.notify_all()
 
     @staticmethod
@@ -144,6 +146,7 @@ class Arbiter:
         for it in self._queue:
             if it.priority >= Priority.WARN and now - it.queued_at > SAFETY_MAX_AGE_S:
                 self.log.append(("stale_drop", it.text, now))
+                bus.record("speech_stale_drop", text=it.text)
                 continue
             keep.append(it)
         self._queue = keep
@@ -170,6 +173,8 @@ class Arbiter:
                 self._current, self._aborted_current = item, False
                 self._current_started = self._clock()
             self.log.append(("start", item.text, self._clock()))
+            bus.record("speech_start", text=item.text, priority=int(item.priority),
+                       queued_s=self._clock() - item.queued_at)
             try:
                 self._play_fn(item.text)
             except Exception as e:  # noqa: BLE001 — never kill the arbiter thread
@@ -211,6 +216,7 @@ class Arbiter:
                 self._paused_announced = True
                 self._earcon("safety_paused")
                 bus.log("system", "safety paused: no fresh depth")
+                bus.record("safety_paused")
                 self.log.append(("safety_paused", "", self._clock()))
             elif not stale and self._paused_announced:
                 self._paused_announced = False

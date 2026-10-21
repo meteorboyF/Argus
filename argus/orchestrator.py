@@ -144,12 +144,17 @@ class Orchestrator:
                     now = time.perf_counter()
                     corridor = self._corridor_alerts(depth_m, pair.left)
                     for alert in self._mover_alerts(depth_m, pair.left):
+                        bus.record("approach_announced", level=alert.level, ttc_s=alert.ttc_s,
+                                   range_m=alert.range_m, closing_mps=alert.closing_mps,
+                                   track=alert.track_id, text=alert.text)
                         from . import earcons
                         earcons.play("alert")
                         self.speaker.speak(alert.text, Priority.DANGER
                                            if alert.level == "DANGER" else Priority.WARN)
                     if corridor is not None:
                         for alert in corridor:
+                            bus.record("hazard_announced", rule=alert.key, level=alert.level,
+                                       distance_m=alert.distance_m, text=alert.text)
                             # Earcon first: faster to perceive than words.
                             from . import earcons
                             earcons.play("alert")
@@ -331,6 +336,7 @@ class Orchestrator:
         self._skew_drops += 1
         now = time.perf_counter()
         bus.set(skew_drops=self._skew_drops)
+        bus.record("skew_drop", total=self._skew_drops)
         if now - self._last_skew_report > 5.0:
             print(f"[cameras] dropped {self._skew_drops} stereo pairs over the "
                   f"{limit:.0f} ms skew limit (latest {pair.skew_ms:.1f} ms)")
@@ -405,6 +411,8 @@ class Orchestrator:
             return
         with self._query_lock:
             bus.log("user", question)
+            started = time.perf_counter()
+            bus.record("query_start", text=question)
             try:
                 if self._route_reading(question):
                     return
@@ -417,6 +425,8 @@ class Orchestrator:
                 bus.log("system", f"query failed: {exc}")
                 self.speaker.speak("Sorry, something went wrong with that question.")
             finally:
+                bus.record("query_end", text=question, total_s=time.perf_counter() - started,
+                           latency=bus.get("query_latency", ""))
                 bus.set(gemma="idle")
 
     def _handle_query(self, question: str):

@@ -158,6 +158,7 @@ class SeatSession:
         f_px = o.depth.intrinsics()["fx"] if o.depth.calibrated else o.cfg.depth.focal_px
         guide = SeatGuide(f_px)
         o.speaker.speak("Looking for a seat.", Priority.GUIDANCE)
+        bus.record("seat_start")
         said, said_at = "", 0.0
         t0 = time.monotonic()
         o.seat_cancel.clear()
@@ -192,11 +193,13 @@ class SeatSession:
                 o.speaker.speak(phrase, Priority.GUIDANCE)
                 said, said_at = phrase, now
             if guide.state.arrived:
+                bus.record("seat_arrived", duration_s=time.monotonic() - t0)
                 o.corridor_whitelist = None
                 o.speaker.wait_until_idle(timeout=5.0)
                 return True
             time.sleep(self.period_s)
         o.corridor_whitelist = None
+        bus.record("seat_abandoned", duration_s=time.monotonic() - t0)
         o.speaker.speak("I stopped looking for a seat.", Priority.GUIDANCE)
         return False
 
