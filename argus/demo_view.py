@@ -162,6 +162,10 @@ class DemoView(Dashboard):
                  record_path: str | None = None, fps: float = 15.0):
         super().__init__(on_question=on_question, width=W, height=H, fullscreen=fullscreen,
                          fps=fps, window="ARGUS demo")
+        # A stray Esc/q while switching windows ended two voice tests on
+        # 2026-10-21. In the demo nobody at the keyboard should be able to end
+        # the wearer's session by accident: stop it with Ctrl+C instead.
+        self.allow_key_quit = False
         self.blur = FaceBlurCache(privacy_cfg) if privacy_cfg is not None else None
         if self.blur is not None:
             self.blur.start()

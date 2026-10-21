@@ -196,6 +196,7 @@ class Dashboard(threading.Thread):
         self.period = 1.0 / fps
         self.window = window
         self.typed = ""
+        self.allow_key_quit = True      # the demo view turns this off
         self.closed = threading.Event()
         self._halt = threading.Event()   # not _stop: that shadows Thread._stop() and breaks join()
 
@@ -298,14 +299,16 @@ class Dashboard(threading.Thread):
                                  name="dashboard-question", daemon=True).start()
             return True
         if key == 27:
-            if not self.typed:
+            if not self.typed and self.allow_key_quit:
+                bus.log("system", "window closed: Esc pressed")
                 return False
             self.typed = ""
             return True
         if key in (8, 127):
             self.typed = self.typed[:-1]
             return True
-        if key == ord("q") and not self.typed:
+        if key == ord("q") and not self.typed and self.allow_key_quit:
+            bus.log("system", "window closed: q pressed")
             return False
         if 32 <= key < 127 and self.on_question:
             self.typed += chr(key)
