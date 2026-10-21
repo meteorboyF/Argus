@@ -808,3 +808,33 @@ phrase, and false wakes from "Argus" said mid-conversation are possible.
 The trained openWakeWord model (training kit committed) remains the
 low-power target. Real-voice recall and false accepts per hour must be
 measured with the user.
+
+## 2026-10-21 Reading — guide the person like a sighted helper when ARGUS cannot see
+
+**Hurdle / problem.** Holding *Crime and Punishment* up, the user got "I
+cannot find the book title". Two causes:
+- Routing: the title question went to find / chat. Fixed by the
+  text-question rule.
+- Optics: at full resolution the cover was out of focus (fixed-focus lens)
+  and backlit by a window (page brightness 46 vs background 126). OCR read
+  nothing, then "Ght and Pnishment" once crop+CLAHE were added. Both PP-OCR
+  recognisers misread it.
+
+The user asked that ARGUS say what to do, e.g. "move it a bit back so I can
+see it properly", instead of failing silently.
+
+**Resolution.**
+- The coach now checks light before framing (backlit → "turn around so the
+  light is behind you"; dark → "turn toward a light"; glare → "tilt it a
+  little").
+- It uses the book finder when no words are detected yet ("I can see it, but
+  it's blurry. Move it a bit back so I can see it properly"), and never
+  captures until words are seen.
+- A failed read is diagnosed and retried up to twice, with the reason spoken.
+- On the real failed still the diagnosis is exactly the backlight.
+- Reading locates the book first and reads a contrast-enhanced crop (1.5 s).
+- `doctor --focus` guides a one-time lens refocus to arm's length.
+
+**Lesson / consequence.** For a blind user, "I couldn't read it" is not an
+answer. The useful output of a failed perception is the instruction that
+fixes it.

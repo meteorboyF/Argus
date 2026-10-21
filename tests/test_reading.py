@@ -97,11 +97,11 @@ def _box(x0, y0, x1, y1):
 
 
 @pytest.mark.parametrize("boxes,cue,ready", [
-    ([], "I can't see any text", False),
+    ([], "I can't see the page yet", False),
     ([_box(0, 200, 500, 240)], "Move the page to your right.", False),
     ([_box(400, 200, 960, 240)], "Move the page to your left.", False),
     ([_box(200, 0, 700, 40)], "Move the page down", False),
-    ([_box(420, 250, 520, 280)], "Bring the page closer.", False),
+    ([_box(420, 250, 520, 280)], "Bring the page a little closer.", False),
     ([_box(200, 150, 760, 190), _box(200, 220, 700, 260)], "Hold still. Capturing.", True),
 ])
 def test_framing_advice(boxes, cue, ready):
@@ -119,7 +119,44 @@ def test_motion_and_blur_block_capture():
 
 def test_large_but_blurry_page_is_too_close_for_the_fixed_focus_lens():
     msg, ok = framing_advice(FrameCheck([_box(100, 100, 860, 400)], 960, 540, 10.0, 1.0))
-    assert msg.startswith("Move the page a little farther away") and not ok
+    assert msg == ("I can see it, but it's blurry. Move it a bit back "
+                   "so I can see it properly.") and not ok
+
+
+def _page(**kw):
+    base = dict(boxes=[], width=960, height=540, sharpness=200.0, motion=1.0,
+                page_box=(300, 150, 650, 480), region_mean=120.0, background_mean=130.0,
+                glare_frac=0.0)
+    base.update(kw)
+    return FrameCheck(**base)
+
+
+def test_backlit_page_asks_to_turn_around():
+    msg, ok = framing_advice(_page(region_mean=40.0, background_mean=190.0))
+    assert "bright light behind the page" in msg and "Turn around" in msg and not ok
+
+
+def test_dark_room_asks_for_light():
+    msg, _ = framing_advice(_page(region_mean=30.0, background_mean=35.0))
+    assert msg.startswith("It's too dark for me to read.")
+
+
+def test_glare_asks_to_tilt():
+    assert framing_advice(_page(glare_frac=0.1))[0] == "There's a reflection on the page. Tilt it a little."
+
+
+def test_book_seen_without_text_never_captures():
+    msg, ok = framing_advice(_page())
+    assert not ok and msg.startswith("I can see the page")
+    msg, ok = framing_advice(_page(sharpness=10.0, page_box=(100, 60, 860, 500)))
+    assert msg.startswith("I can see it, but it's blurry. Move it a bit back") and not ok
+
+
+def test_light_is_checked_before_framing():
+    # Cut off at the left AND backlit: the light problem is said first.
+    msg, _ = framing_advice(_page(page_box=(0, 150, 400, 480), region_mean=40.0,
+                                  background_mean=200.0))
+    assert "bright light behind the page" in msg
 
 
 def test_cjk_noise_is_dropped_but_bangla_and_latin_kept():
