@@ -56,6 +56,13 @@ class DepthEstimator:
                         f"is disabled: {e}") from e
                 print(f"[depth] diagnostic fallback after CUDA failure ({e})")
                 self.backend = "sgbm"
+        elif self.backend == "vpi_sgm":
+            try:
+                from .vpi_stereo import VpiSgmMatcher
+                self._vpi_matcher = VpiSgmMatcher()
+            except Exception as e:  # noqa: BLE001
+                self.health.stop()
+                raise RuntimeError(f"VPI SGM depth failed to initialise: {e}") from e
         elif self.backend == "raft_trt":
             if not os.path.exists(cfg.raft_engine):
                 if not cfg.allow_cpu_fallback:
@@ -188,6 +195,8 @@ class DepthEstimator:
             return self._raft_disparity(left_bgr, right_bgr)
         if self.backend == "cuda_sad" and self._cuda_matcher is not None:
             return self._cuda_disparity(left_bgr, right_bgr)
+        if self.backend == "vpi_sgm":
+            return self._vpi_disparity(left_bgr, right_bgr)
         gl = cv2.cvtColor(left_bgr, cv2.COLOR_BGR2GRAY)
         gr = cv2.cvtColor(right_bgr, cv2.COLOR_BGR2GRAY)
         s = max(1, int(self.cfg.fast_downscale))
@@ -221,6 +230,23 @@ class DepthEstimator:
             disparity = cv2.resize(
                 disparity, (full_w, full_h), interpolation=cv2.INTER_NEAREST) * scale
         return disparity.astype(np.float32, copy=False)
+
+    def _vpi_disparity(self, left_bgr, right_bgr) -> np.ndarray:
+        gl = cv2.cvtColor(left_bgr, cv2.COLOR_BGR2GRAY)
+        gr = cv2.cvtColor(right_bgr, cv2.COLOR_BGR2GRAY)
+        scale = max(1, int(self.cfg.fast_downscale))
+        full_h, full_w = gl.shape
+        if scale > 1:
+            size = (full_w // scale, full_h // scale)
+            gl = cv2.resize(gl, size, interpolation=cv2.INTER_AREA)
+            gr = cv2.resize(gr, size, interpolation=cv2.INTER_AREA)
+        disparity = self._vpi_matcher.compute(
+            gl, gr, max_disparity=max(16, int(self.cfg.num_disparities) // scale))
+        if scale > 1:
+            disparity = cv2.resize(disparity, (full_w, full_h),
+                                   interpolation=cv2.INTER_NEAREST)
+            disparity[disparity > 0] *= scale
+        return disparity
 
     def _raft_disparity(self, left_bgr, right_bgr) -> np.ndarray:
         h, w = 480, 640

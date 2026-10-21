@@ -724,3 +724,29 @@ roll down to "very slightly" in a few minutes, with a live pixel countdown.
 **Lesson / consequence.** A guidance loop needs tolerances wider than its
 own measurement noise, and wider than what the person can physically hold.
 Otherwise it guides forever.
+
+## 2026-10-21 M4 — VPI SGM vs CUDA SAD: keep SAD by default, SGM selectable
+
+**Hurdle / problem.** The research expected VPI SGM (CUDA) to replace the
+custom SAD matcher. Without a calibration, only speed and GPU load can be
+judged on live pairs; accuracy needs rectified pairs and the tape test.
+
+**Measurements** (`reports/depth-backends-2026-10-21.json`, 40 live pairs):
+- SAD 480x300/64: 7.6 ms median, 19 ms p95.
+- SGM 480x300/64: 13.0 / 21 ms.
+- SGM 480x300/128: 17.9 / 32 ms.
+- SGM 960x600/128: 29.7 / 48 ms, GR3D 99%.
+
+On known synthetic shifts both are exact (5/10/20/40 px). SGM marks 94-98%
+of pixels valid against SAD's 85%. A first check reported SGM wrong (51 px
+for 20 px): the test pair had the wrong sign convention. In real stereo a
+point appears further left in the right image.
+
+**Resolution.** CUDA SAD remains the default. VPI SGM is
+`depth.backend: vpi_sgm`, with its confidence map turning low-confidence
+pixels into invalid (UNKNOWN), never free space. 960x600 SGM is too heavy
+next to Gemma on a shared GPU. The final choice is made on calibrated pairs
+against the tape distances.
+
+**Lesson / consequence.** A synthetic test is only as right as its geometry
+convention. Check the sign before trusting the number.

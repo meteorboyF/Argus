@@ -1,0 +1,57 @@
+{
+  "kind": "argus-depth-backends",
+  "time": "2026-10-21T12:00:58",
+  "frames": 40,
+  "rectified": false,
+  "note": "uncalibrated: latency/GR3D valid; valid_fraction only indicative",
+  "results": [
+    {
+      "backend": "cuda_sad 480x300 maxdisp 64",
+      "median_ms": 7.6,
+      "p95_ms": 19.15,
+      "valid_fraction": 0.193,
+      "gr3d_peak": 92,
+      "gr3d_mean": 55.4
+    },
+    {
+      "backend": "cuda_sad 480x300 maxdisp 128",
+      "median_ms": 9.85,
+      "p95_ms": 15.36,
+      "valid_fraction": 0.183,
+      "gr3d_peak": 91,
+      "gr3d_mean": 73.0
+    },
+    {
+      "backend": "vpi_sgm 480x300 maxdisp 64",
+      "median_ms": 13.0,
+      "p95_ms": 21.34,
+      "valid_fraction": 0.837,
+      "gr3d_peak": 79,
+      "gr3d_mean": 55.1
+    },
+    {
+      "backend": "vpi_sgm 480x300 maxdisp 128",
+      "median_ms": 17.87,
+      "p95_ms": 31.6,
+      "valid_fraction": 0.798,
+      "gr3d_peak": 98,
+      "gr3d_mean": 74.7
+    },
+    {
+      "backend": "vpi_sgm 960x600 maxdisp 128",
+      "median_ms": 29.74,
+      "p95_ms": 47.63,
+      "valid_fraction": 0.856,
+      "gr3d_peak": 99,
+      "gr3d_mean": 77.1
+    },
+    {
+      "backend": "vpi_sgm 960x600 maxdisp 256",
+      "median_ms": 37.0,
+      "p95_ms": 47.48,
+      "valid_fraction": 0.841,
+      "gr3d_peak": 99,
+      "gr3d_mean": 69.5
+    }
+  ]
+}
