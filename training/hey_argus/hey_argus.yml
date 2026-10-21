@@ -1,0 +1,52 @@
+# openWakeWord training config for the custom "Hey Argus" wake word.
+# Used by openwakeword/train.py (see README.md). Runs off-device on a CUDA PC
+# or Colab; the Jetson only loads the exported hey_argus.onnx.
+model_name: "hey_argus"
+target_phrase:
+  - "hey argus"
+# Near-miss phrases the model must NOT accept (Bangla and English
+# confusables included; the users are in Dhaka).
+custom_negative_phrases:
+  - "hey august"
+  - "hey arguments"
+  - "hey argue"
+  - "hey angus"
+  - "hey marcus"
+  - "a gust"
+  - "hey are you"
+  - "hey augustus"
+  - "argue us"
+  - "hey ar goose"
+  - "hey jarvis"
+  - "hey arjun"
+  - "hey abbas"
+  - "ei argus"
+  - "argus"            # bare word without "hey" should not fire
+n_samples: 30000          # synthetic positives
+n_samples_val: 3000
+tts_batch_size: 50
+augmentation_batch_size: 16
+piper_sample_generator_path: "./piper-sample-generator"
+output_dir: "./hey_argus_model"
+rir_paths:
+  - "./mit_rirs"
+background_paths:
+  - "./audioset_16k"
+  - "./fma"
+background_paths_duplication_rate:
+  - 1
+  - 1
+false_positive_validation_data_path: "./validation_set_features.npy"
+augmentation_rounds: 1
+feature_data_files:
+  "ACAV100M_sample": "./openwakeword_features_ACAV100M_2000_hrs_16bit.npy"
+batch_n_per_class:
+  "ACAV100M_sample": 1024
+  "adversarial_negative": 50
+  "positive": 50
+model_type: "dnn"
+layer_size: 32
+steps: 50000
+max_negative_weight: 1500
+# Research target: <= 0.5 false accepts per hour at >= 80% recall.
+target_false_positives_per_hour: 0.2
