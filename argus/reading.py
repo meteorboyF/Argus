@@ -172,9 +172,15 @@ class ReadingSession:
         return False
 
     # -------------------------------------------------------------- read
-    def read(self, coach: bool = True) -> Reading | None:
+    def read(self, coach: bool = True, intro: str | None = "Reading mode. Hold the page "
+             "in front of you, about arm's length away.",
+             on_finished=None) -> Reading | None:
+        """Coach, capture, OCR, then speak. `on_finished` runs once the whole
+        page has been spoken (not when it was stopped)."""
         self.stop()
-        self.speaker.speak("Reading mode. Hold the page in front of you.")
+        self._on_finished = on_finished
+        if intro:
+            self.speaker.speak(intro)
         if coach and not self.coach():
             self.speaker.speak("I couldn't frame the text. Try again with more light.")
             return None
@@ -216,8 +222,14 @@ class ReadingSession:
             self.speaker.wait_until_idle(timeout=30.0)
             if self._playing.is_set() and not self._stop.is_set():
                 self._pos += 1
-        if self._pos >= len(self._chunks):
+        if self._pos >= len(self._chunks) and not self._stop.is_set():
             earcons.play("done")
+            cb = getattr(self, "_on_finished", None)
+            if cb is not None:
+                try:
+                    cb()
+                except Exception as e:  # noqa: BLE001
+                    print(f"[reading] on_finished failed: {e}")
 
     def control(self, word: str) -> None:
         if word == "stop":

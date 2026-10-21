@@ -61,6 +61,8 @@ class Orchestrator:
         self.safety = SafetyReflex(cfg.safety)
         self.agent = GemmaAgent(cfg.agent)
         self.seat_cancel = threading.Event()
+        from .dialogue import DialogueManager
+        self.dialogue = DialogueManager(self)
         self.corridor_whitelist = None     # (range_m, until) set by seat guidance
         # P0-P4 arbitration over Piper: hazards cut answers, answers resume,
         # the user talking holds non-safety speech (argus/arbiter.py).
@@ -378,53 +380,22 @@ class Orchestrator:
             self._reader = ReadingSession(self.rig, self.speaker)
         return self._reader
 
-    def _route_reading(self, question: str) -> bool:
-        """Reading-mode commands and page questions. True if handled."""
-        from .reading import control_word, is_page_question, is_read_request
-        word = control_word(question)
-        if word is not None and getattr(self, "_reader", None) is not None:
-            self._reader.control(word)
-            return True
-        if is_read_request(question):
-            self.reader.read()
-            return True
-        if getattr(self, "_reader", None) is not None and self._reader.active \
-                and is_page_question(question):
-            started = time.perf_counter()
-            bus.set(gemma="answering about the page (text only)")
-            answer = self.agent.ask_text(question, self._reader.page_context(), max_tokens=64)
-            bus.set(query_latency=f"{time.perf_counter() - started:.1f}s (page question)")
-            self.speaker.speak(answer or "I couldn't find that on the page.")
-            return True
-        return False
-
     def handle_query(self, question: str):
         """Run one full slow-path interaction for an already-transcribed query."""
         # Playback controls must work while a long read is being spoken, so
         # they are handled before waiting for the query lock.
-        from .reading import control_word
-        word = control_word(question)
-        if word == "stop":
-            self.seat_cancel.set()
-        if word is not None:
+        from .dialogue import rule_route
+        intent = rule_route(question, False, False)
+        if intent is not None and intent.skill == "control":
             bus.log("user", question)
-            if getattr(self, "_reader", None) is not None:
-                self._reader.control(word)
-            elif word in ("stop", "pause"):
-                self.speaker.cancel_normal()     # nothing to control: just be quiet
+            self.dialogue.run(intent, question)
             return
         with self._query_lock:
             bus.log("user", question)
             started = time.perf_counter()
             bus.record("query_start", text=question)
             try:
-                if self._route_reading(question):
-                    return
-                from .seat import SeatSession, is_seat_request
-                if is_seat_request(question):
-                    SeatSession(self).run()
-                    return
-                self._handle_query(question)
+                self.dialogue.handle(question)
             except Exception as exc:  # noqa: BLE001 — a query must never kill the process
                 bus.log("system", f"query failed: {exc}")
                 self.speaker.speak("Sorry, something went wrong with that question.")
@@ -680,7 +651,37 @@ class Orchestrator:
                 # and the user gets answered over. The fast loop is unaffected;
                 # it has its own thread and never waits here.
                 self.speaker.wait_until_idle(timeout=30.0)
+                self._follow_ups()
                 self.wake.reset()
+
+    def _follow_ups(self, window_s: float = 6.0, max_turns: int = 4):
+        """After ARGUS asks something (e.g. "say next page when you've turned
+        it"), listen again without the wake word, like a conversation."""
+        from . import earcons
+        from .vad import EndpointConfig, record_utterance
+        for _ in range(max_turns):
+            reading = getattr(self, "_reader", None)
+            waiting_page = reading is not None and reading._thread is not None \
+                and reading._thread.is_alive()
+            if waiting_page:
+                # Long read in progress: wait for it to finish (or be stopped).
+                self.speaker.wait_until_idle(timeout=120.0)
+            if not self.dialogue.expect_reply or self._stop.is_set():
+                return
+            earcons.play("listening")
+            audio, state = record_utterance(
+                device=self.cfg.speech.input_device,
+                cfg=EndpointConfig(start_timeout_s=window_s),
+                on_speech=self.speaker.arbiter.set_user_speaking)
+            self.speaker.arbiter.set_user_speaking(False)
+            if state == "timeout":
+                self.dialogue.expect_reply = False
+                return
+            text = self.stt.transcribe(audio)
+            if not text:
+                return
+            self.handle_query(text)
+            self.speaker.wait_until_idle(timeout=30.0)
 
     def stop(self):
         self._stop.set()

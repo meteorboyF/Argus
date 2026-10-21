@@ -750,3 +750,32 @@ against the tape distances.
 
 **Lesson / consequence.** A synthetic test is only as right as its geometry
 convention. Check the sign before trusting the number.
+
+## 2026-10-21 Conversation layer — Gemma talks, the skills do the work
+
+**Hurdle / problem.** The user asked for a "Jarvis for blind people": an
+assistant that holds a conversation and gets tasks done ("Argus, help me
+read this book", then "hold the page still", "next page", "what did it say
+about X"). Earlier evidence argues against letting Gemma 4 E2B act alone: it
+misreads text in images, and it ignored instructions to call the grounding
+tool.
+
+**Options considered.** Gemma as an autonomous agent with tool calls; a
+fixed command grammar; a hybrid.
+
+**Resolution.** Hybrid (`argus/dialogue.py`).
+- Rules route everything that must be certain and instant (stop, pause,
+  repeat, next page, read, seat, find, describe, page questions while
+  reading). They never wait for a model.
+- Everything else goes to Gemma in one text-only call that returns
+  `{skill, name, say}`, validated against a whitelist. For small talk `say`
+  is the answer; for a skill it is a short acknowledgement.
+- The last exchanges and the active task go into every prompt.
+- After ARGUS asks something ("say next page when you've turned it") the mic
+  stays open 6 s without the wake word.
+- Live routing test (`reports/dialogue-routing-2026-10-21.json`): 13/14
+  correct, router median 0.99 s. The miss ("I need to read my medicine box"
+  → find) became a rule.
+
+**Lesson / consequence.** A small model is a good conversational surface and
+a poor decision-maker. Give it the words and keep the decisions in code.

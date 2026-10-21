@@ -1,0 +1,12 @@
+{
+  "kind": "argus-dialogue-routing",
+  "time": "2026-10-21T13:00",
+  "model": "gemma-4-E2B-it-qat-UD-Q4_K_XL + vision-only mmproj, llama.cpp ef8268fe, text-only router call",
+  "cases": 14,
+  "rule_routed": 2,
+  "gemma_routed": 12,
+  "correct": 13,
+  "miss": "'I need to read my medicine box' -> find(medicine box); fixed by a rule for mid-sentence read requests",
+  "gemma_router_latency_s": {"median": 0.99, "max": 1.57},
+  "note": "chat answers come back inside the router call (no second model turn)"
+}

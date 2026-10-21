@@ -154,6 +154,17 @@ class GemmaAgent:
         ]
         return self._parse(self._post(messages, [FIND_OBJECT_TOOL]))
 
+    def _post_text(self, messages: list[dict], max_tokens: int = 80,
+                   temperature: float = 0.2) -> str:
+        """Text-only chat completion; returns the reply text."""
+        saved = (self.cfg.max_tokens, self.cfg.temperature)
+        try:
+            self.cfg.max_tokens, self.cfg.temperature = max_tokens, temperature
+            data = self._post(messages, None)
+        finally:
+            self.cfg.max_tokens, self.cfg.temperature = saved
+        return (data["choices"][0]["message"].get("content") or "").strip()
+
     def ask_text(self, question: str, context: str, max_tokens: int | None = None) -> str:
         """Text-only question about OCR'd text (no image is sent). Small VLMs
         misread text in images; the OCR engine reads, Gemma only reasons."""
