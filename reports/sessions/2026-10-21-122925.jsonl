@@ -1,0 +1,419 @@
+{"t": 4045.89597008, "wall": 1792564165.745194, "event": "system", "text": "session log: /home/argus/Argus/Argus/reports/sessions/2026-10-21-122925.jsonl", "channel": "system"}
+{"t": 4045.900322124, "wall": 1792564165.7495458, "event": "system", "text": "questions can be appended to /tmp/argus_ask.txt", "channel": "system"}
+{"t": 4046.88316118, "wall": 1792564166.7323844, "event": "say", "text": "ARGUS ready.", "channel": "argus"}
+{"t": 4046.884275184, "wall": 1792564166.7334974, "event": "speech_start", "text": "ARGUS ready.", "priority": 0, "queued_s": 0.0007065289996717183}
+{"t": 4046.915584626, "wall": 1792564166.7648077, "event": "system", "text": "stereo uncalibrated: hazard speech suppressed until scripts/calibrate_stereo.py has run", "channel": "system"}
+{"t": 4046.951769561, "wall": 1792564166.8009927, "event": "user", "text": "In one short sentence, what is in front of me?", "channel": "user"}
+{"t": 4046.961454113, "wall": 1792564166.8106768, "event": "query_start", "text": "In one short sentence, what is in front of me?"}
+{"t": 4047.196539962, "wall": 1792564167.0457637, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4047.391973931, "wall": 1792564167.2411964, "event": "skew_drop", "total": 1}
+{"t": 4047.492339296, "wall": 1792564167.3415618, "event": "skew_drop", "total": 1}
+{"t": 4047.592457065, "wall": 1792564167.4416797, "event": "skew_drop", "total": 2}
+{"t": 4047.729188334, "wall": 1792564167.5784118, "event": "depth_gap", "gap_s": 0.798}
+{"t": 4049.628434698, "wall": 1792564169.4776573, "event": "skew_drop", "total": 3}
+{"t": 4049.828739717, "wall": 1792564169.6779625, "event": "skew_drop", "total": 4}
+{"t": 4049.909882163, "wall": 1792564169.759105, "event": "say", "text": "There are a doorway and a window with curtains in front of you.", "channel": "argus"}
+{"t": 4049.910126559, "wall": 1792564169.7593482, "event": "query_end", "text": "In one short sentence, what is in front of me?", "total_s": 2.9486786859997665, "latency": "2.9s (privacy 0.50, gemma 2.4)"}
+{"t": 4049.920111157, "wall": 1792564169.7693338, "event": "speech_start", "text": "There are a doorway and a window with curtains in front of you.", "priority": 1, "queued_s": 0.010031768000317243}
+{"t": 4051.954918775, "wall": 1792564171.8041434, "event": "skew_drop", "total": 5}
+{"t": 4052.468883287, "wall": 1792564172.3181062, "event": "skew_drop", "total": 6}
+{"t": 4052.569061993, "wall": 1792564172.4182851, "event": "skew_drop", "total": 1}
+{"t": 4052.696719019, "wall": 1792564172.5459425, "event": "depth_gap", "gap_s": 0.291}
+{"t": 4053.074198156, "wall": 1792564172.9234211, "event": "skew_drop", "total": 2}
+{"t": 4053.674908462, "wall": 1792564173.5241315, "event": "skew_drop", "total": 3}
+{"t": 4053.975291649, "wall": 1792564173.8245149, "event": "skew_drop", "total": 4}
+{"t": 4054.17553005, "wall": 1792564174.024753, "event": "skew_drop", "total": 5}
+{"t": 4054.376850104, "wall": 1792564174.226073, "event": "skew_drop", "total": 6}
+{"t": 4054.877647226, "wall": 1792564174.7268703, "event": "skew_drop", "total": 7}
+{"t": 4055.278203238, "wall": 1792564175.1274261, "event": "skew_drop", "total": 8}
+{"t": 4055.578613889, "wall": 1792564175.427837, "event": "skew_drop", "total": 9}
+{"t": 4056.18001093, "wall": 1792564176.029234, "event": "skew_drop", "total": 10}
+{"t": 4056.380307837, "wall": 1792564176.2295308, "event": "skew_drop", "total": 11}
+{"t": 4056.480421329, "wall": 1792564176.3296442, "event": "skew_drop", "total": 12}
+{"t": 4056.608866717, "wall": 1792564176.4580898, "event": "depth_gap", "gap_s": 0.291}
+{"t": 4056.680914565, "wall": 1792564176.5301375, "event": "skew_drop", "total": 13}
+{"t": 4056.781094332, "wall": 1792564176.6303172, "event": "skew_drop", "total": 14}
+{"t": 4056.881225584, "wall": 1792564176.7304487, "event": "skew_drop", "total": 15}
+{"t": 4056.981392199, "wall": 1792564176.8306153, "event": "skew_drop", "total": 16}
+{"t": 4057.081536092, "wall": 1792564176.930759, "event": "skew_drop", "total": 17}
+{"t": 4057.181664144, "wall": 1792564177.0308871, "event": "skew_drop", "total": 18}
+{"t": 4057.281938125, "wall": 1792564177.1311615, "event": "skew_drop", "total": 19}
+{"t": 4057.382042689, "wall": 1792564177.2312658, "event": "skew_drop", "total": 20}
+{"t": 4057.482183864, "wall": 1792564177.3314068, "event": "skew_drop", "total": 21}
+{"t": 4057.611572626, "wall": 1792564177.4607959, "event": "depth_gap", "gap_s": 0.988}
+{"t": 4057.682951867, "wall": 1792564177.5321746, "event": "skew_drop", "total": 1}
+{"t": 4058.398817559, "wall": 1792564178.2480404, "event": "skew_drop", "total": 2}
+{"t": 4058.499020274, "wall": 1792564178.3482432, "event": "skew_drop", "total": 3}
+{"t": 4058.570710378, "wall": 1792564178.4199338, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4058.671193297, "wall": 1792564178.520416, "event": "depth_gap", "gap_s": 0.308}
+{"t": 4058.69988134, "wall": 1792564178.5491042, "event": "skew_drop", "total": 4}
+{"t": 4059.000725974, "wall": 1792564178.849949, "event": "skew_drop", "total": 5}
+{"t": 4059.10084574, "wall": 1792564178.950069, "event": "skew_drop", "total": 6}
+{"t": 4059.200993412, "wall": 1792564179.0502164, "event": "skew_drop", "total": 7}
+{"t": 4059.301176223, "wall": 1792564179.1503992, "event": "skew_drop", "total": 8}
+{"t": 4059.401316375, "wall": 1792564179.2505395, "event": "skew_drop", "total": 9}
+{"t": 4059.526871904, "wall": 1792564179.3760953, "event": "depth_gap", "gap_s": 0.597}
+{"t": 4059.701778403, "wall": 1792564179.5510013, "event": "skew_drop", "total": 10}
+{"t": 4059.801924987, "wall": 1792564179.6511476, "event": "skew_drop", "total": 11}
+{"t": 4059.93907972, "wall": 1792564179.7883031, "event": "depth_gap", "gap_s": 0.285}
+{"t": 4060.103268048, "wall": 1792564179.952491, "event": "skew_drop", "total": 12}
+{"t": 4060.203425546, "wall": 1792564180.0526485, "event": "skew_drop", "total": 13}
+{"t": 4060.303563108, "wall": 1792564180.1527863, "event": "skew_drop", "total": 14}
+{"t": 4060.441226954, "wall": 1792564180.29045, "event": "depth_gap", "gap_s": 0.381}
+{"t": 4060.503858872, "wall": 1792564180.353082, "event": "skew_drop", "total": 15}
+{"t": 4060.604026259, "wall": 1792564180.4532492, "event": "skew_drop", "total": 16}
+{"t": 4060.704257905, "wall": 1792564180.5534804, "event": "skew_drop", "total": 17}
+{"t": 4060.804402954, "wall": 1792564180.6536262, "event": "skew_drop", "total": 18}
+{"t": 4060.942832436, "wall": 1792564180.7920556, "event": "depth_gap", "gap_s": 0.48}
+{"t": 4061.204997747, "wall": 1792564181.054221, "event": "skew_drop", "total": 19}
+{"t": 4061.405638234, "wall": 1792564181.2548609, "event": "skew_drop", "total": 20}
+{"t": 4061.505773524, "wall": 1792564181.3549962, "event": "skew_drop", "total": 21}
+{"t": 4061.605931216, "wall": 1792564181.4551542, "event": "skew_drop", "total": 22}
+{"t": 4061.746187154, "wall": 1792564181.5954099, "event": "depth_gap", "gap_s": 0.383}
+{"t": 4061.80672035, "wall": 1792564181.6559434, "event": "skew_drop", "total": 23}
+{"t": 4061.919335526, "wall": 1792564181.7685585, "event": "skew_drop", "total": 24}
+{"t": 4062.047312548, "wall": 1792564181.8965356, "event": "depth_gap", "gap_s": 0.295}
+{"t": 4066.434708906, "wall": 1792564186.283932, "event": "skew_drop", "total": 25}
+{"t": 4066.535420326, "wall": 1792564186.3846433, "event": "skew_drop", "total": 1}
+{"t": 4066.635607561, "wall": 1792564186.4848301, "event": "skew_drop", "total": 2}
+{"t": 4066.735771914, "wall": 1792564186.5849948, "event": "skew_drop", "total": 3}
+{"t": 4066.835924075, "wall": 1792564186.6851468, "event": "skew_drop", "total": 4}
+{"t": 4066.936080813, "wall": 1792564186.7853038, "event": "skew_drop", "total": 5}
+{"t": 4067.036132201, "wall": 1792564186.885355, "event": "skew_drop", "total": 6}
+{"t": 4067.167491918, "wall": 1792564187.0167148, "event": "depth_gap", "gap_s": 0.786}
+{"t": 4067.236367593, "wall": 1792564187.0855906, "event": "skew_drop", "total": 7}
+{"t": 4071.944245116, "wall": 1792564191.7934682, "event": "user", "text": "what is in front of me?", "channel": "user"}
+{"t": 4071.944459814, "wall": 1792564191.7936816, "event": "query_start", "text": "what is in front of me?"}
+{"t": 4072.116075813, "wall": 1792564191.9652984, "event": "skew_drop", "total": 8}
+{"t": 4072.216563132, "wall": 1792564192.065786, "event": "skew_drop", "total": 1}
+{"t": 4072.304396349, "wall": 1792564192.15362, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4072.354922614, "wall": 1792564192.204146, "event": "depth_gap", "gap_s": 0.297}
+{"t": 4072.720777351, "wall": 1792564192.5700006, "event": "skew_drop", "total": 2}
+{"t": 4073.22462077, "wall": 1792564193.0738437, "event": "skew_drop", "total": 3}
+{"t": 4074.366423093, "wall": 1792564194.2156456, "event": "say", "text": "There are some electrical outlets and a door in front of you.", "channel": "argus"}
+{"t": 4074.366644415, "wall": 1792564194.215866, "event": "query_end", "text": "what is in front of me?", "total_s": 2.4221812730002057, "latency": "2.4s (privacy 0.30, gemma 2.1)"}
+{"t": 4074.366763077, "wall": 1792564194.215985, "event": "speech_start", "text": "There are some electrical outlets and a door in front of you.", "priority": 1, "queued_s": 0.00016535199983991333}
+{"t": 4074.842184807, "wall": 1792564194.6914082, "event": "skew_drop", "total": 4}
+{"t": 4075.35726397, "wall": 1792564195.206487, "event": "skew_drop", "total": 5}
+{"t": 4075.457429774, "wall": 1792564195.3066528, "event": "skew_drop", "total": 6}
+{"t": 4075.557605659, "wall": 1792564195.4068286, "event": "skew_drop", "total": 7}
+{"t": 4075.657727428, "wall": 1792564195.5069504, "event": "skew_drop", "total": 8}
+{"t": 4075.757867727, "wall": 1792564195.6070907, "event": "skew_drop", "total": 9}
+{"t": 4075.85801577, "wall": 1792564195.7072387, "event": "skew_drop", "total": 10}
+{"t": 4075.958314092, "wall": 1792564195.8075366, "event": "skew_drop", "total": 11}
+{"t": 4076.058473336, "wall": 1792564195.9076965, "event": "skew_drop", "total": 12}
+{"t": 4076.158558336, "wall": 1792564196.0077808, "event": "skew_drop", "total": 13}
+{"t": 4076.258700972, "wall": 1792564196.1079242, "event": "skew_drop", "total": 14}
+{"t": 4076.358966878, "wall": 1792564196.2081897, "event": "skew_drop", "total": 15}
+{"t": 4076.459222607, "wall": 1792564196.3084457, "event": "skew_drop", "total": 16}
+{"t": 4076.559401373, "wall": 1792564196.4086244, "event": "skew_drop", "total": 17}
+{"t": 4076.65974581, "wall": 1792564196.5089684, "event": "skew_drop", "total": 18}
+{"t": 4076.759881918, "wall": 1792564196.6091049, "event": "skew_drop", "total": 19}
+{"t": 4076.860174865, "wall": 1792564196.7093976, "event": "skew_drop", "total": 20}
+{"t": 4076.960331294, "wall": 1792564196.809554, "event": "skew_drop", "total": 21}
+{"t": 4077.060531948, "wall": 1792564196.909755, "event": "skew_drop", "total": 22}
+{"t": 4077.160600341, "wall": 1792564197.0098233, "event": "skew_drop", "total": 23}
+{"t": 4077.260730593, "wall": 1792564197.1099536, "event": "skew_drop", "total": 1}
+{"t": 4077.403071744, "wall": 1792564197.252295, "event": "depth_gap", "gap_s": 2.089}
+{"t": 4077.46097513, "wall": 1792564197.310198, "event": "skew_drop", "total": 2}
+{"t": 4077.56114068, "wall": 1792564197.4103634, "event": "skew_drop", "total": 3}
+{"t": 4077.661279573, "wall": 1792564197.5105026, "event": "skew_drop", "total": 4}
+{"t": 4077.761505734, "wall": 1792564197.610729, "event": "skew_drop", "total": 5}
+{"t": 4077.906511714, "wall": 1792564197.7557352, "event": "depth_gap", "gap_s": 0.482}
+{"t": 4077.961896389, "wall": 1792564197.8111196, "event": "skew_drop", "total": 6}
+{"t": 4078.062036338, "wall": 1792564197.9112597, "event": "skew_drop", "total": 7}
+{"t": 4078.207388127, "wall": 1792564198.056611, "event": "depth_gap", "gap_s": 0.279}
+{"t": 4078.262385552, "wall": 1792564198.111609, "event": "skew_drop", "total": 8}
+{"t": 4078.462642027, "wall": 1792564198.311865, "event": "skew_drop", "total": 9}
+{"t": 4078.562798554, "wall": 1792564198.4120219, "event": "skew_drop", "total": 10}
+{"t": 4078.662928168, "wall": 1792564198.512151, "event": "skew_drop", "total": 11}
+{"t": 4078.809188993, "wall": 1792564198.6584122, "event": "depth_gap", "gap_s": 0.371}
+{"t": 4078.863813248, "wall": 1792564198.7130358, "event": "skew_drop", "total": 12}
+{"t": 4078.963964143, "wall": 1792564198.813187, "event": "skew_drop", "total": 13}
+{"t": 4079.064246372, "wall": 1792564198.913469, "event": "skew_drop", "total": 14}
+{"t": 4079.164309006, "wall": 1792564199.0135322, "event": "skew_drop", "total": 15}
+{"t": 4079.264444317, "wall": 1792564199.1136672, "event": "skew_drop", "total": 16}
+{"t": 4079.364646479, "wall": 1792564199.2138696, "event": "skew_drop", "total": 17}
+{"t": 4079.464931973, "wall": 1792564199.314155, "event": "skew_drop", "total": 18}
+{"t": 4079.565583117, "wall": 1792564199.4148057, "event": "skew_drop", "total": 19}
+{"t": 4079.665882083, "wall": 1792564199.5151052, "event": "skew_drop", "total": 20}
+{"t": 4079.765978993, "wall": 1792564199.615202, "event": "skew_drop", "total": 21}
+{"t": 4079.866137473, "wall": 1792564199.7153609, "event": "skew_drop", "total": 22}
+{"t": 4079.966289616, "wall": 1792564199.815535, "event": "skew_drop", "total": 23}
+{"t": 4080.066519428, "wall": 1792564199.9157424, "event": "skew_drop", "total": 24}
+{"t": 4080.213282008, "wall": 1792564200.062505, "event": "depth_gap", "gap_s": 1.376}
+{"t": 4080.266785763, "wall": 1792564200.1160088, "event": "skew_drop", "total": 25}
+{"t": 4080.366929939, "wall": 1792564200.2161531, "event": "skew_drop", "total": 26}
+{"t": 4080.467193065, "wall": 1792564200.3164165, "event": "skew_drop", "total": 27}
+{"t": 4080.567281559, "wall": 1792564200.4165046, "event": "skew_drop", "total": 28}
+{"t": 4080.667425832, "wall": 1792564200.516649, "event": "skew_drop", "total": 29}
+{"t": 4080.767558584, "wall": 1792564200.6167812, "event": "skew_drop", "total": 30}
+{"t": 4080.916294954, "wall": 1792564200.7655182, "event": "depth_gap", "gap_s": 0.673}
+{"t": 4080.967812919, "wall": 1792564200.817036, "event": "skew_drop", "total": 31}
+{"t": 4081.368470527, "wall": 1792564201.217693, "event": "skew_drop", "total": 32}
+{"t": 4081.468623089, "wall": 1792564201.3178463, "event": "skew_drop", "total": 33}
+{"t": 4081.568792196, "wall": 1792564201.4180148, "event": "skew_drop", "total": 34}
+{"t": 4081.668935541, "wall": 1792564201.5181582, "event": "skew_drop", "total": 35}
+{"t": 4081.819185521, "wall": 1792564201.6684089, "event": "depth_gap", "gap_s": 0.469}
+{"t": 4090.953774665, "wall": 1792564210.8029976, "event": "skew_drop", "total": 36}
+{"t": 4092.025466355, "wall": 1792564211.8746896, "event": "user", "text": "find me a seat", "channel": "user"}
+{"t": 4092.025698014, "wall": 1792564211.8749197, "event": "query_start", "text": "find me a seat"}
+{"t": 4092.025946729, "wall": 1792564211.8751686, "event": "say", "text": "Looking for a seat.", "channel": "argus"}
+{"t": 4092.02608872, "wall": 1792564211.8753107, "event": "seat_start"}
+{"t": 4092.027367181, "wall": 1792564211.8765895, "event": "speech_start", "text": "Looking for a seat.", "priority": 2, "queued_s": 0.0013380800000959425}
+{"t": 4092.882833618, "wall": 1792564212.7320578, "event": "skew_drop", "total": 1}
+{"t": 4093.284567681, "wall": 1792564213.1337912, "event": "skew_drop", "total": 2}
+{"t": 4093.383689199, "wall": 1792564213.2329125, "event": "skew_drop", "total": 3}
+{"t": 4093.485245041, "wall": 1792564213.3344681, "event": "skew_drop", "total": 4}
+{"t": 4093.489700229, "wall": 1792564213.3389235, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4093.640343655, "wall": 1792564213.4895668, "event": "depth_gap", "gap_s": 0.366}
+{"t": 4094.186945001, "wall": 1792564214.0361679, "event": "skew_drop", "total": 5}
+{"t": 4094.22602555, "wall": 1792564214.0752487, "event": "say", "text": "Seat, to your right.", "channel": "argus"}
+{"t": 4094.226468931, "wall": 1792564214.075691, "event": "speech_start", "text": "Seat, to your right.", "priority": 2, "queued_s": 0.00018829700002243044}
+{"t": 4094.687524962, "wall": 1792564214.5367491, "event": "skew_drop", "total": 6}
+{"t": 4095.192732439, "wall": 1792564215.041955, "event": "skew_drop", "total": 7}
+{"t": 4097.097369933, "wall": 1792564216.9465928, "event": "say", "text": "Turn slowly right. I am looking for a seat.", "channel": "argus"}
+{"t": 4097.097754303, "wall": 1792564216.946976, "event": "speech_start", "text": "Turn slowly right. I am looking for a seat.", "priority": 2, "queued_s": 9.907700041367207e-05}
+{"t": 4097.658213324, "wall": 1792564217.5074363, "event": "skew_drop", "total": 8}
+{"t": 4097.758391888, "wall": 1792564217.6076148, "event": "skew_drop", "total": 1}
+{"t": 4097.858530195, "wall": 1792564217.7077532, "event": "skew_drop", "total": 2}
+{"t": 4097.958699063, "wall": 1792564217.8079221, "event": "skew_drop", "total": 3}
+{"t": 4098.058826458, "wall": 1792564217.9080493, "event": "skew_drop", "total": 4}
+{"t": 4098.158979133, "wall": 1792564218.0082018, "event": "skew_drop", "total": 5}
+{"t": 4098.259149602, "wall": 1792564218.1083722, "event": "skew_drop", "total": 6}
+{"t": 4098.359292423, "wall": 1792564218.208516, "event": "skew_drop", "total": 7}
+{"t": 4098.459425866, "wall": 1792564218.3086493, "event": "skew_drop", "total": 8}
+{"t": 4098.613123526, "wall": 1792564218.4623468, "event": "depth_gap", "gap_s": 0.978}
+{"t": 4098.660435477, "wall": 1792564218.5096586, "event": "skew_drop", "total": 9}
+{"t": 4098.760583513, "wall": 1792564218.6098063, "event": "skew_drop", "total": 10}
+{"t": 4098.860722493, "wall": 1792564218.7099457, "event": "skew_drop", "total": 11}
+{"t": 4098.960904323, "wall": 1792564218.8101273, "event": "skew_drop", "total": 12}
+{"t": 4099.061056103, "wall": 1792564218.9102788, "event": "skew_drop", "total": 13}
+{"t": 4099.21546695, "wall": 1792564219.0646899, "event": "depth_gap", "gap_s": 0.569}
+{"t": 4099.264086836, "wall": 1792564219.1133099, "event": "skew_drop", "total": 14}
+{"t": 4099.46430313, "wall": 1792564219.3135262, "event": "skew_drop", "total": 15}
+{"t": 4099.865721559, "wall": 1792564219.7149446, "event": "skew_drop", "total": 16}
+{"t": 4099.966067526, "wall": 1792564219.8152902, "event": "skew_drop", "total": 17}
+{"t": 4100.120782068, "wall": 1792564219.9700048, "event": "depth_gap", "gap_s": 0.262}
+{"t": 4100.567124531, "wall": 1792564220.4163475, "event": "skew_drop", "total": 18}
+{"t": 4100.667237272, "wall": 1792564220.51646, "event": "skew_drop", "total": 19}
+{"t": 4100.767443425, "wall": 1792564220.6166663, "event": "skew_drop", "total": 20}
+{"t": 4100.867604392, "wall": 1792564220.7168272, "event": "skew_drop", "total": 21}
+{"t": 4101.024476095, "wall": 1792564220.8736994, "event": "depth_gap", "gap_s": 0.467}
+{"t": 4101.067996602, "wall": 1792564220.9172196, "event": "skew_drop", "total": 22}
+{"t": 4101.268251942, "wall": 1792564221.1174748, "event": "skew_drop", "total": 23}
+{"t": 4101.484262498, "wall": 1792564221.3334856, "event": "say", "text": "Turn slowly right. I am looking for a seat.", "channel": "argus"}
+{"t": 4101.486683446, "wall": 1792564221.335906, "event": "speech_start", "text": "Turn slowly right. I am looking for a seat.", "priority": 2, "queued_s": 0.00033432000054745004}
+{"t": 4104.111423581, "wall": 1792564223.9606476, "event": "skew_drop", "total": 24}
+{"t": 4105.907507627, "wall": 1792564225.7567303, "event": "say", "text": "Turn slowly right. I am looking for a seat.", "channel": "argus"}
+{"t": 4105.907936031, "wall": 1792564225.7571578, "event": "speech_start", "text": "Turn slowly right. I am looking for a seat.", "priority": 2, "queued_s": 0.0001312060003328952}
+{"t": 4106.128036648, "wall": 1792564225.9772604, "event": "skew_drop", "total": 1}
+{"t": 4106.230741103, "wall": 1792564226.0799642, "event": "skew_drop", "total": 2}
+{"t": 4106.244431676, "wall": 1792564226.0936549, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4106.395011089, "wall": 1792564226.2442346, "event": "depth_gap", "gap_s": 0.365}
+{"t": 4110.285585524, "wall": 1792564230.1348085, "event": "say", "text": "Turn slowly right. I am looking for a seat.", "channel": "argus"}
+{"t": 4110.296940467, "wall": 1792564230.146163, "event": "speech_start", "text": "Turn slowly right. I am looking for a seat.", "priority": 2, "queued_s": 0.00038296200000331737}
+{"t": 4111.090108732, "wall": 1792564230.9393318, "event": "skew_drop", "total": 3}
+{"t": 4111.90677768, "wall": 1792564231.756001, "event": "skew_drop", "total": 1}
+{"t": 4112.00691341, "wall": 1792564231.856136, "event": "skew_drop", "total": 2}
+{"t": 4112.107053651, "wall": 1792564231.9562764, "event": "skew_drop", "total": 3}
+{"t": 4112.244478652, "wall": 1792564232.0937016, "event": "depth_gap", "gap_s": 0.38}
+{"t": 4112.508257405, "wall": 1792564232.3574805, "event": "skew_drop", "total": 4}
+{"t": 4112.608458482, "wall": 1792564232.4576814, "event": "skew_drop", "total": 5}
+{"t": 4112.708603333, "wall": 1792564232.5578263, "event": "skew_drop", "total": 6}
+{"t": 4112.849384751, "wall": 1792564232.6986074, "event": "depth_gap", "gap_s": 0.378}
+{"t": 4113.008929593, "wall": 1792564232.8581526, "event": "skew_drop", "total": 7}
+{"t": 4113.10907486, "wall": 1792564232.958298, "event": "skew_drop", "total": 8}
+{"t": 4113.250478708, "wall": 1792564233.0997016, "event": "depth_gap", "gap_s": 0.283}
+{"t": 4113.309357299, "wall": 1792564233.1585803, "event": "skew_drop", "total": 9}
+{"t": 4113.409602028, "wall": 1792564233.2588253, "event": "skew_drop", "total": 10}
+{"t": 4113.551354181, "wall": 1792564233.400577, "event": "depth_gap", "gap_s": 0.281}
+{"t": 4114.632364078, "wall": 1792564234.4815872, "event": "say", "text": "Turn slowly right. I am looking for a seat.", "channel": "argus"}
+{"t": 4114.632844453, "wall": 1792564234.4820664, "event": "speech_start", "text": "Turn slowly right. I am looking for a seat.", "priority": 2, "queued_s": 0.00016816799961816287}
+{"t": 4116.16750307, "wall": 1792564236.0167267, "event": "skew_drop", "total": 11}
+{"t": 4116.267642901, "wall": 1792564236.116866, "event": "skew_drop", "total": 1}
+{"t": 4116.350051771, "wall": 1792564236.1992748, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4116.367805965, "wall": 1792564236.2170289, "event": "skew_drop", "total": 2}
+{"t": 4116.500778598, "wall": 1792564236.3500013, "event": "depth_gap", "gap_s": 0.391}
+{"t": 4116.668169615, "wall": 1792564236.5173926, "event": "skew_drop", "total": 3}
+{"t": 4116.868694344, "wall": 1792564236.7179172, "event": "skew_drop", "total": 4}
+{"t": 4116.968823614, "wall": 1792564236.8180468, "event": "skew_drop", "total": 5}
+{"t": 4117.103419654, "wall": 1792564236.952643, "event": "depth_gap", "gap_s": 0.492}
+{"t": 4117.169119693, "wall": 1792564237.0183427, "event": "skew_drop", "total": 6}
+{"t": 4117.369356283, "wall": 1792564237.2185793, "event": "skew_drop", "total": 7}
+{"t": 4117.569683885, "wall": 1792564237.418907, "event": "skew_drop", "total": 8}
+{"t": 4117.769923259, "wall": 1792564237.6191463, "event": "skew_drop", "total": 9}
+{"t": 4117.970290191, "wall": 1792564237.8195133, "event": "skew_drop", "total": 10}
+{"t": 4118.224979307, "wall": 1792564238.0742023, "event": "say", "text": "Seat, slightly left.", "channel": "argus"}
+{"t": 4118.225801171, "wall": 1792564238.0750232, "event": "speech_start", "text": "Seat, slightly left.", "priority": 2, "queued_s": 0.00011879000066983281}
+{"t": 4119.956160863, "wall": 1792564239.805385, "event": "skew_drop", "total": 11}
+{"t": 4121.100280093, "wall": 1792564240.9495032, "event": "say", "text": "Seat, straight ahead.", "channel": "argus"}
+{"t": 4121.100621197, "wall": 1792564240.949843, "event": "speech_start", "text": "Seat, straight ahead.", "priority": 2, "queued_s": 0.0001157810002041515}
+{"t": 4121.262241929, "wall": 1792564241.111466, "event": "skew_drop", "total": 12}
+{"t": 4122.097634387, "wall": 1792564241.9468575, "event": "skew_drop", "total": 1}
+{"t": 4122.297902348, "wall": 1792564242.1471255, "event": "skew_drop", "total": 2}
+{"t": 4122.498271883, "wall": 1792564242.3474948, "event": "skew_drop", "total": 3}
+{"t": 4122.598423528, "wall": 1792564242.4476466, "event": "skew_drop", "total": 4}
+{"t": 4122.736251379, "wall": 1792564242.5854745, "event": "depth_gap", "gap_s": 0.289}
+{"t": 4122.798724579, "wall": 1792564242.6479475, "event": "skew_drop", "total": 5}
+{"t": 4122.900787069, "wall": 1792564242.75001, "event": "skew_drop", "total": 6}
+{"t": 4123.037428142, "wall": 1792564242.8866508, "event": "depth_gap", "gap_s": 0.281}
+{"t": 4123.20131801, "wall": 1792564243.0505404, "event": "skew_drop", "total": 7}
+{"t": 4123.401558772, "wall": 1792564243.2507818, "event": "skew_drop", "total": 8}
+{"t": 4123.501863194, "wall": 1792564243.351086, "event": "skew_drop", "total": 9}
+{"t": 4123.601890963, "wall": 1792564243.4511137, "event": "skew_drop", "total": 10}
+{"t": 4123.739211462, "wall": 1792564243.5884345, "event": "depth_gap", "gap_s": 0.387}
+{"t": 4123.802229714, "wall": 1792564243.6514523, "event": "skew_drop", "total": 11}
+{"t": 4123.902407474, "wall": 1792564243.75163, "event": "skew_drop", "total": 12}
+{"t": 4123.986003767, "wall": 1792564243.8352273, "event": "say", "text": "Seat, slightly right.", "channel": "argus"}
+{"t": 4123.986507503, "wall": 1792564243.8357298, "event": "speech_start", "text": "Seat, slightly right.", "priority": 2, "queued_s": 0.00021809000008943258}
+{"t": 4124.042397733, "wall": 1792564243.8916209, "event": "depth_gap", "gap_s": 0.275}
+{"t": 4124.102640044, "wall": 1792564243.951863, "event": "skew_drop", "total": 13}
+{"t": 4124.202798955, "wall": 1792564244.052022, "event": "skew_drop", "total": 14}
+{"t": 4124.302931306, "wall": 1792564244.1521544, "event": "skew_drop", "total": 15}
+{"t": 4124.403069097, "wall": 1792564244.2522922, "event": "skew_drop", "total": 16}
+{"t": 4124.503247306, "wall": 1792564244.35247, "event": "skew_drop", "total": 17}
+{"t": 4124.603372872, "wall": 1792564244.4525957, "event": "skew_drop", "total": 18}
+{"t": 4124.748710462, "wall": 1792564244.597933, "event": "depth_gap", "gap_s": 0.685}
+{"t": 4124.903737891, "wall": 1792564244.7529604, "event": "skew_drop", "total": 19}
+{"t": 4125.004025769, "wall": 1792564244.8532486, "event": "skew_drop", "total": 20}
+{"t": 4125.149988028, "wall": 1792564244.9992113, "event": "depth_gap", "gap_s": 0.277}
+{"t": 4125.20426375, "wall": 1792564245.0534866, "event": "skew_drop", "total": 21}
+{"t": 4125.404477251, "wall": 1792564245.2537003, "event": "skew_drop", "total": 22}
+{"t": 4125.604847496, "wall": 1792564245.4540706, "event": "skew_drop", "total": 23}
+{"t": 4126.14687959, "wall": 1792564245.9961026, "event": "say", "text": "Seat, straight ahead.", "channel": "argus"}
+{"t": 4126.147550406, "wall": 1792564245.9967723, "event": "speech_start", "text": "Seat, straight ahead.", "priority": 2, "queued_s": 0.00012947800041729352}
+{"t": 4126.975770691, "wall": 1792564246.8249946, "event": "skew_drop", "total": 24}
+{"t": 4127.075934693, "wall": 1792564246.9251835, "event": "skew_drop", "total": 1}
+{"t": 4127.173569422, "wall": 1792564247.0227923, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4127.223970111, "wall": 1792564247.0731936, "event": "depth_gap", "gap_s": 0.289}
+{"t": 4127.276226633, "wall": 1792564247.1254497, "event": "skew_drop", "total": 2}
+{"t": 4127.47647438, "wall": 1792564247.3256974, "event": "skew_drop", "total": 3}
+{"t": 4127.727372908, "wall": 1792564247.576596, "event": "depth_gap", "gap_s": 0.268}
+{"t": 4127.776907283, "wall": 1792564247.6261303, "event": "skew_drop", "total": 4}
+{"t": 4127.87722787, "wall": 1792564247.7264504, "event": "skew_drop", "total": 5}
+{"t": 4127.977348191, "wall": 1792564247.8265712, "event": "skew_drop", "total": 6}
+{"t": 4128.077653033, "wall": 1792564247.9268756, "event": "skew_drop", "total": 7}
+{"t": 4128.229270161, "wall": 1792564248.0784926, "event": "depth_gap", "gap_s": 0.465}
+{"t": 4128.309305488, "wall": 1792564248.158528, "event": "say", "text": "Seat, slightly right.", "channel": "argus"}
+{"t": 4128.315412692, "wall": 1792564248.1646354, "event": "speech_start", "text": "Seat, slightly right.", "priority": 2, "queued_s": 0.005560139000408526}
+{"t": 4128.378258587, "wall": 1792564248.2274828, "event": "skew_drop", "total": 8}
+{"t": 4128.478394846, "wall": 1792564248.3276176, "event": "skew_drop", "total": 9}
+{"t": 4128.578550306, "wall": 1792564248.427773, "event": "skew_drop", "total": 10}
+{"t": 4128.679319075, "wall": 1792564248.528542, "event": "skew_drop", "total": 11}
+{"t": 4128.779765717, "wall": 1792564248.6289887, "event": "skew_drop", "total": 12}
+{"t": 4128.879923257, "wall": 1792564248.7291458, "event": "skew_drop", "total": 13}
+{"t": 4128.980168449, "wall": 1792564248.829391, "event": "skew_drop", "total": 14}
+{"t": 4129.080326629, "wall": 1792564248.9295495, "event": "skew_drop", "total": 15}
+{"t": 4129.241060388, "wall": 1792564249.0902832, "event": "depth_gap", "gap_s": 0.875}
+{"t": 4129.280575724, "wall": 1792564249.1297987, "event": "skew_drop", "total": 16}
+{"t": 4129.680982293, "wall": 1792564249.5302052, "event": "skew_drop", "total": 17}
+{"t": 4130.382906626, "wall": 1792564250.2321293, "event": "skew_drop", "total": 18}
+{"t": 4130.48301367, "wall": 1792564250.3322365, "event": "skew_drop", "total": 19}
+{"t": 4130.583271889, "wall": 1792564250.4324949, "event": "skew_drop", "total": 20}
+{"t": 4130.747585917, "wall": 1792564250.5968087, "event": "depth_gap", "gap_s": 0.354}
+{"t": 4130.884613356, "wall": 1792564250.7338362, "event": "skew_drop", "total": 21}
+{"t": 4130.984737905, "wall": 1792564250.8339605, "event": "skew_drop", "total": 22}
+{"t": 4131.084872598, "wall": 1792564250.9340956, "event": "skew_drop", "total": 23}
+{"t": 4131.185173219, "wall": 1792564251.034396, "event": "skew_drop", "total": 24}
+{"t": 4131.20611592, "wall": 1792564251.055339, "event": "say", "text": "Turn slowly right. I am looking for a seat.", "channel": "argus"}
+{"t": 4131.206581095, "wall": 1792564251.0558033, "event": "speech_start", "text": "Turn slowly right. I am looking for a seat.", "priority": 2, "queued_s": 0.00020100100027775625}
+{"t": 4131.285319146, "wall": 1792564251.1345432, "event": "skew_drop", "total": 25}
+{"t": 4131.385463984, "wall": 1792564251.2346864, "event": "skew_drop", "total": 26}
+{"t": 4131.488962391, "wall": 1792564251.3381853, "event": "skew_drop", "total": 27}
+{"t": 4131.589108318, "wall": 1792564251.4383314, "event": "skew_drop", "total": 28}
+{"t": 4131.74975846, "wall": 1792564251.5989816, "event": "depth_gap", "gap_s": 0.861}
+{"t": 4131.799737051, "wall": 1792564251.6489596, "event": "skew_drop", "total": 29}
+{"t": 4132.505078588, "wall": 1792564252.3543012, "event": "skew_drop", "total": 30}
+{"t": 4132.605246884, "wall": 1792564252.4544697, "event": "skew_drop", "total": 1}
+{"t": 4132.75319469, "wall": 1792564252.6024177, "event": "depth_gap", "gap_s": 0.277}
+{"t": 4132.805481968, "wall": 1792564252.6547046, "event": "skew_drop", "total": 2}
+{"t": 4133.20613253, "wall": 1792564253.0553555, "event": "skew_drop", "total": 3}
+{"t": 4133.506611278, "wall": 1792564253.355834, "event": "skew_drop", "total": 4}
+{"t": 4133.606738421, "wall": 1792564253.4559612, "event": "skew_drop", "total": 5}
+{"t": 4133.707600224, "wall": 1792564253.556823, "event": "skew_drop", "total": 6}
+{"t": 4133.807734312, "wall": 1792564253.6569571, "event": "skew_drop", "total": 7}
+{"t": 4133.970173536, "wall": 1792564253.8193965, "event": "depth_gap", "gap_s": 0.456}
+{"t": 4134.208237223, "wall": 1792564254.05746, "event": "skew_drop", "total": 8}
+{"t": 4134.609628212, "wall": 1792564254.4588513, "event": "skew_drop", "total": 9}
+{"t": 4134.709842624, "wall": 1792564254.5590656, "event": "skew_drop", "total": 10}
+{"t": 4134.809947528, "wall": 1792564254.6591706, "event": "skew_drop", "total": 11}
+{"t": 4134.910472548, "wall": 1792564254.7596955, "event": "skew_drop", "total": 12}
+{"t": 4135.073823753, "wall": 1792564254.923047, "event": "depth_gap", "gap_s": 0.461}
+{"t": 4135.110675058, "wall": 1792564254.959898, "event": "skew_drop", "total": 13}
+{"t": 4135.310988616, "wall": 1792564255.160212, "event": "skew_drop", "total": 14}
+{"t": 4135.527604013, "wall": 1792564255.376828, "event": "say", "text": "Turn slowly right. I am looking for a seat.", "channel": "argus"}
+{"t": 4135.528383891, "wall": 1792564255.3776057, "event": "speech_start", "text": "Turn slowly right. I am looking for a seat.", "priority": 2, "queued_s": 0.00039592299981450196}
+{"t": 4135.533620814, "wall": 1792564255.3828435, "event": "skew_drop", "total": 15}
+{"t": 4136.330778371, "wall": 1792564256.1800013, "event": "skew_drop", "total": 16}
+{"t": 4136.478992628, "wall": 1792564256.3282156, "event": "depth_gap", "gap_s": 0.329}
+{"t": 4136.532575363, "wall": 1792564256.3817985, "event": "skew_drop", "total": 17}
+{"t": 4137.63847186, "wall": 1792564257.4876947, "event": "skew_drop", "total": 18}
+{"t": 4139.141731885, "wall": 1792564258.9909546, "event": "skew_drop", "total": 1}
+{"t": 4139.946776763, "wall": 1792564259.796, "event": "say", "text": "Turn slowly right. I am looking for a seat.", "channel": "argus"}
+{"t": 4139.947208176, "wall": 1792564259.7964303, "event": "speech_start", "text": "Turn slowly right. I am looking for a seat.", "priority": 2, "queued_s": 0.00015264800003933487}
+{"t": 4140.575926406, "wall": 1792564260.4251494, "event": "skew_drop", "total": 2}
+{"t": 4140.676110007, "wall": 1792564260.5253327, "event": "skew_drop", "total": 3}
+{"t": 4140.744485455, "wall": 1792564260.5937092, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4140.860865483, "wall": 1792564260.7100887, "event": "depth_gap", "gap_s": 0.324}
+{"t": 4140.9913187, "wall": 1792564260.8405414, "event": "skew_drop", "total": 4}
+{"t": 4141.091503869, "wall": 1792564260.940727, "event": "skew_drop", "total": 5}
+{"t": 4141.214122886, "wall": 1792564261.0633454, "event": "depth_gap", "gap_s": 0.299}
+{"t": 4141.39186529, "wall": 1792564261.2410886, "event": "skew_drop", "total": 6}
+{"t": 4141.492068573, "wall": 1792564261.3412912, "event": "skew_drop", "total": 7}
+{"t": 4141.615492077, "wall": 1792564261.4647148, "event": "depth_gap", "gap_s": 0.295}
+{"t": 4143.500906452, "wall": 1792564263.3501296, "event": "skew_drop", "total": 8}
+{"t": 4144.293077784, "wall": 1792564264.1423004, "event": "say", "text": "Turn slowly right. I am looking for a seat.", "channel": "argus"}
+{"t": 4144.293435241, "wall": 1792564264.142657, "event": "speech_start", "text": "Turn slowly right. I am looking for a seat.", "priority": 2, "queued_s": 0.00011299699963274179}
+{"t": 4144.302780043, "wall": 1792564264.1520042, "event": "skew_drop", "total": 1}
+{"t": 4144.402955168, "wall": 1792564264.252178, "event": "skew_drop", "total": 2}
+{"t": 4144.5031133, "wall": 1792564264.3523364, "event": "skew_drop", "total": 3}
+{"t": 4144.603439696, "wall": 1792564264.4526625, "event": "skew_drop", "total": 4}
+{"t": 4144.731989498, "wall": 1792564264.5812128, "event": "depth_gap", "gap_s": 0.449}
+{"t": 4145.451464605, "wall": 1792564265.3006876, "event": "skew_drop", "total": 5}
+{"t": 4145.554019141, "wall": 1792564265.4032423, "event": "skew_drop", "total": 6}
+{"t": 4145.654187579, "wall": 1792564265.50341, "event": "skew_drop", "total": 7}
+{"t": 4145.754575771, "wall": 1792564265.6037986, "event": "skew_drop", "total": 8}
+{"t": 4145.854729008, "wall": 1792564265.7039518, "event": "skew_drop", "total": 9}
+{"t": 4145.954850627, "wall": 1792564265.8040738, "event": "skew_drop", "total": 10}
+{"t": 4146.054981687, "wall": 1792564265.9042046, "event": "skew_drop", "total": 11}
+{"t": 4146.155130635, "wall": 1792564266.0043533, "event": "skew_drop", "total": 12}
+{"t": 4146.320246648, "wall": 1792564266.1694696, "event": "depth_gap", "gap_s": 0.913}
+{"t": 4146.355417078, "wall": 1792564266.20464, "event": "skew_drop", "total": 13}
+{"t": 4146.455549514, "wall": 1792564266.3047721, "event": "skew_drop", "total": 14}
+{"t": 4146.555787524, "wall": 1792564266.4050102, "event": "skew_drop", "total": 15}
+{"t": 4146.655888439, "wall": 1792564266.5051112, "event": "skew_drop", "total": 16}
+{"t": 4146.756061582, "wall": 1792564266.6052847, "event": "skew_drop", "total": 17}
+{"t": 4146.856161345, "wall": 1792564266.705384, "event": "skew_drop", "total": 18}
+{"t": 4146.956289206, "wall": 1792564266.8055122, "event": "skew_drop", "total": 19}
+{"t": 4147.122807398, "wall": 1792564266.9720304, "event": "depth_gap", "gap_s": 0.752}
+{"t": 4147.156556127, "wall": 1792564267.0057793, "event": "skew_drop", "total": 20}
+{"t": 4147.356804202, "wall": 1792564267.206027, "event": "skew_drop", "total": 21}
+{"t": 4147.456929311, "wall": 1792564267.3061523, "event": "skew_drop", "total": 22}
+{"t": 4147.55708175, "wall": 1792564267.4063048, "event": "skew_drop", "total": 23}
+{"t": 4147.674111193, "wall": 1792564267.5233345, "event": "depth_gap", "gap_s": 0.349}
+{"t": 4147.75733008, "wall": 1792564267.6065528, "event": "skew_drop", "total": 24}
+{"t": 4147.857465142, "wall": 1792564267.706688, "event": "skew_drop", "total": 25}
+{"t": 4147.899771083, "wall": 1792564267.7489939, "event": "say", "text": "Turn slowly left. I am looking for a seat.", "channel": "argus"}
+{"t": 4147.900275172, "wall": 1792564267.7494972, "event": "speech_start", "text": "Turn slowly left. I am looking for a seat.", "priority": 2, "queued_s": 0.00013869400027033407}
+{"t": 4147.957618989, "wall": 1792564267.8068433, "event": "skew_drop", "total": 26}
+{"t": 4148.125338329, "wall": 1792564267.9745612, "event": "depth_gap", "gap_s": 0.405}
+{"t": 4149.684861477, "wall": 1792564269.5340843, "event": "skew_drop", "total": 27}
+{"t": 4149.88515631, "wall": 1792564269.7343793, "event": "skew_drop", "total": 1}
+{"t": 4151.08652552, "wall": 1792564270.9357483, "event": "skew_drop", "total": 2}
+{"t": 4151.500324661, "wall": 1792564271.3495476, "event": "skew_drop", "total": 3}
+{"t": 4151.600463887, "wall": 1792564271.4496868, "event": "skew_drop", "total": 4}
+{"t": 4151.666631428, "wall": 1792564271.5158544, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4151.700788882, "wall": 1792564271.5500119, "event": "skew_drop", "total": 5}
+{"t": 4151.800963918, "wall": 1792564271.6501868, "event": "skew_drop", "total": 6}
+{"t": 4151.967507944, "wall": 1792564271.8167312, "event": "depth_gap", "gap_s": 0.51}
+{"t": 4152.001230337, "wall": 1792564271.850453, "event": "skew_drop", "total": 7}
+{"t": 4152.101388796, "wall": 1792564271.950612, "event": "skew_drop", "total": 8}
+{"t": 4152.201524086, "wall": 1792564272.050747, "event": "skew_drop", "total": 9}
+{"t": 4152.225260174, "wall": 1792564272.0744832, "event": "say", "text": "Turn slowly left. I am looking for a seat.", "channel": "argus"}
+{"t": 4152.225698979, "wall": 1792564272.074921, "event": "speech_start", "text": "Turn slowly left. I am looking for a seat.", "priority": 2, "queued_s": 0.000113989999590558}
+{"t": 4152.308141705, "wall": 1792564272.1573656, "event": "skew_drop", "total": 10}
+{"t": 4152.469376101, "wall": 1792564272.3185992, "event": "depth_gap", "gap_s": 0.462}
+{"t": 4152.621455463, "wall": 1792564272.4706786, "event": "skew_drop", "total": 11}
+{"t": 4152.722077625, "wall": 1792564272.5713003, "event": "skew_drop", "total": 12}
+{"t": 4152.870766136, "wall": 1792564272.719989, "event": "depth_gap", "gap_s": 0.274}

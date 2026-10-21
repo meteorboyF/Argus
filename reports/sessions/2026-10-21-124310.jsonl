@@ -1,0 +1,286 @@
+{"t": 4870.860336497, "wall": 1792564990.7095592, "event": "system", "text": "session log: /home/argus/Argus/Argus/reports/sessions/2026-10-21-124310.jsonl", "channel": "system"}
+{"t": 4871.700302254, "wall": 1792564991.5495253, "event": "say", "text": "ARGUS ready.", "channel": "argus"}
+{"t": 4871.701350244, "wall": 1792564991.5505729, "event": "speech_start", "text": "ARGUS ready.", "priority": 0, "queued_s": 0.00064992199986591}
+{"t": 4871.780834691, "wall": 1792564991.6300576, "event": "user", "text": "In one short sentence, what is in front of me?", "channel": "user"}
+{"t": 4871.78107192, "wall": 1792564991.6302938, "event": "query_start", "text": "In one short sentence, what is in front of me?"}
+{"t": 4871.781234136, "wall": 1792564991.6304557, "event": "intent", "text": "In one short sentence, what is in front of me?", "skill": "describe", "name": "", "source": "rule"}
+{"t": 4871.796258692, "wall": 1792564991.6454823, "event": "system", "text": "stereo uncalibrated: hazard speech suppressed until scripts/calibrate_stereo.py has run", "channel": "system"}
+{"t": 4872.018572539, "wall": 1792564991.8677952, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4872.52621285, "wall": 1792564992.3754358, "event": "depth_gap", "gap_s": 0.734}
+{"t": 4873.531479706, "wall": 1792564993.3807027, "event": "skew_drop", "total": 1}
+{"t": 4873.682668357, "wall": 1792564993.5318906, "event": "depth_gap", "gap_s": 0.262}
+{"t": 4873.731758714, "wall": 1792564993.5809815, "event": "skew_drop", "total": 1}
+{"t": 4874.058941336, "wall": 1792564993.9081635, "event": "skew_drop", "total": 2}
+{"t": 4874.71086383, "wall": 1792564994.5600855, "event": "say", "text": "There are windows and curtains in front of you.", "channel": "argus"}
+{"t": 4874.711417779, "wall": 1792564994.5606399, "event": "query_end", "text": "In one short sentence, what is in front of me?", "total_s": 2.9303400990002046, "latency": "2.9s (privacy 0.60, gemma 2.3)"}
+{"t": 4874.711788934, "wall": 1792564994.5610106, "event": "speech_start", "text": "There are windows and curtains in front of you.", "priority": 1, "queued_s": 0.00045144799969421}
+{"t": 4877.661240157, "wall": 1792564997.5104637, "event": "skew_drop", "total": 3}
+{"t": 4878.937577104, "wall": 1792564998.7868006, "event": "skew_drop", "total": 4}
+{"t": 4879.146971724, "wall": 1792564998.9961948, "event": "skew_drop", "total": 1}
+{"t": 4879.304193202, "wall": 1792564999.1534166, "event": "depth_gap", "gap_s": 0.563}
+{"t": 4879.453098921, "wall": 1792564999.3023217, "event": "skew_drop", "total": 2}
+{"t": 4879.854235308, "wall": 1792564999.703459, "event": "skew_drop", "total": 3}
+{"t": 4879.954359293, "wall": 1792564999.803583, "event": "skew_drop", "total": 4}
+{"t": 4880.131591315, "wall": 1792564999.9808142, "event": "depth_gap", "gap_s": 0.302}
+{"t": 4880.156921654, "wall": 1792565000.0061448, "event": "skew_drop", "total": 5}
+{"t": 4880.691883106, "wall": 1792565000.5411062, "event": "skew_drop", "total": 6}
+{"t": 4880.897410518, "wall": 1792565000.7466333, "event": "skew_drop", "total": 7}
+{"t": 4881.054077216, "wall": 1792565000.9033, "event": "depth_gap", "gap_s": 0.363}
+{"t": 4882.461053056, "wall": 1792565002.3102765, "event": "skew_drop", "total": 8}
+{"t": 4882.56684524, "wall": 1792565002.416068, "event": "skew_drop", "total": 9}
+{"t": 4882.640557613, "wall": 1792565002.4897811, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4882.748052925, "wall": 1792565002.597276, "event": "depth_gap", "gap_s": 0.331}
+{"t": 4882.777790886, "wall": 1792565002.6270137, "event": "skew_drop", "total": 10}
+{"t": 4882.881982282, "wall": 1792565002.7312057, "event": "skew_drop", "total": 11}
+{"t": 4882.983623051, "wall": 1792565002.8328454, "event": "skew_drop", "total": 12}
+{"t": 4883.158227353, "wall": 1792565003.0074503, "event": "depth_gap", "gap_s": 0.413}
+{"t": 4883.507748519, "wall": 1792565003.3569717, "event": "skew_drop", "total": 13}
+{"t": 4883.82911075, "wall": 1792565003.6783342, "event": "depth_gap", "gap_s": 0.277}
+{"t": 4884.418061667, "wall": 1792565004.2672846, "event": "skew_drop", "total": 14}
+{"t": 4886.224434781, "wall": 1792565006.073659, "event": "skew_drop", "total": 1}
+{"t": 4888.14502062, "wall": 1792565007.9942439, "event": "skew_drop", "total": 2}
+{"t": 4890.452074808, "wall": 1792565010.3012998, "event": "skew_drop", "total": 3}
+{"t": 4895.497122514, "wall": 1792565015.346347, "event": "skew_drop", "total": 1}
+{"t": 4898.513328709, "wall": 1792565018.362553, "event": "skew_drop", "total": 1}
+{"t": 4898.613847886, "wall": 1792565018.4630713, "event": "skew_drop", "total": 2}
+{"t": 4898.708618925, "wall": 1792565018.5578427, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4898.759001448, "wall": 1792565018.6082246, "event": "depth_gap", "gap_s": 0.313}
+{"t": 4901.353010578, "wall": 1792565021.202235, "event": "skew_drop", "total": 3}
+{"t": 4905.6446215, "wall": 1792565025.493845, "event": "skew_drop", "total": 1}
+{"t": 4905.945064291, "wall": 1792565025.794288, "event": "skew_drop", "total": 2}
+{"t": 4912.21676263, "wall": 1792565032.0659876, "event": "skew_drop", "total": 3}
+{"t": 4913.522445843, "wall": 1792565033.3716688, "event": "skew_drop", "total": 1}
+{"t": 4916.248902268, "wall": 1792565036.0981247, "event": "user", "text": "Hello Jarvis.", "channel": "user"}
+{"t": 4916.249114375, "wall": 1792565036.0983362, "event": "query_start", "text": "Hello Jarvis."}
+{"t": 4917.859308066, "wall": 1792565037.70853, "event": "intent", "text": "Hello Jarvis.", "skill": "chat", "name": "", "source": "gemma"}
+{"t": 4917.859811356, "wall": 1792565037.7090333, "event": "say", "text": "Hello.", "channel": "argus"}
+{"t": 4917.86107187, "wall": 1792565037.7102938, "event": "speech_start", "text": "Hello.", "priority": 1, "queued_s": 0.0011721889995897072}
+{"t": 4917.865779219, "wall": 1792565037.7150016, "event": "say", "text": "How may I assist you today?", "channel": "argus"}
+{"t": 4917.866097955, "wall": 1792565037.7153199, "event": "query_end", "text": "Hello Jarvis.", "total_s": 1.6169762200006517, "latency": "2.9s (privacy 0.60, gemma 2.3)"}
+{"t": 4918.742655113, "wall": 1792565038.5918777, "event": "speech_start", "text": "How may I assist you today?", "priority": 1, "queued_s": 0.8766139290000865}
+{"t": 4920.366643131, "wall": 1792565040.2158659, "event": "skew_drop", "total": 2}
+{"t": 4920.468439116, "wall": 1792565040.317662, "event": "skew_drop", "total": 1}
+{"t": 4920.576022153, "wall": 1792565040.4252453, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4920.626463242, "wall": 1792565040.475736, "event": "depth_gap", "gap_s": 0.263}
+{"t": 4921.169937249, "wall": 1792565041.0191603, "event": "skew_drop", "total": 2}
+{"t": 4921.270113758, "wall": 1792565041.1193366, "event": "skew_drop", "total": 3}
+{"t": 4921.370298907, "wall": 1792565041.2195218, "event": "skew_drop", "total": 4}
+{"t": 4921.537671648, "wall": 1792565041.3868947, "event": "depth_gap", "gap_s": 0.36}
+{"t": 4926.528183101, "wall": 1792565046.3774073, "event": "skew_drop", "total": 5}
+{"t": 4926.728438995, "wall": 1792565046.577662, "event": "skew_drop", "total": 1}
+{"t": 4926.928713195, "wall": 1792565046.7779362, "event": "skew_drop", "total": 2}
+{"t": 4929.136261984, "wall": 1792565048.985485, "event": "skew_drop", "total": 3}
+{"t": 4930.842850209, "wall": 1792565050.692073, "event": "skew_drop", "total": 4}
+{"t": 4930.94314871, "wall": 1792565050.7923715, "event": "skew_drop", "total": 5}
+{"t": 4931.029712672, "wall": 1792565050.8789363, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4931.043259617, "wall": 1792565050.8924825, "event": "skew_drop", "total": 6}
+{"t": 4931.137434696, "wall": 1792565050.9866574, "event": "user", "text": "Jarvis, what is in front of me?", "channel": "user"}
+{"t": 4931.137657715, "wall": 1792565050.9868796, "event": "query_start", "text": "Jarvis, what is in front of me?"}
+{"t": 4931.137783898, "wall": 1792565050.9870057, "event": "intent", "text": "Jarvis, what is in front of me?", "skill": "describe", "name": "", "source": "rule"}
+{"t": 4931.245225747, "wall": 1792565051.0944483, "event": "depth_gap", "gap_s": 0.431}
+{"t": 4933.599492306, "wall": 1792565053.448714, "event": "say", "text": "There are windows and curtains in front of you.", "channel": "argus"}
+{"t": 4933.599712318, "wall": 1792565053.4489338, "event": "query_end", "text": "Jarvis, what is in front of me?", "total_s": 2.4620511780003653, "latency": "2.5s (privacy 0.26, gemma 2.2)"}
+{"t": 4933.599890983, "wall": 1792565053.449113, "event": "speech_start", "text": "There are windows and curtains in front of you.", "priority": 1, "queued_s": 0.00023652499930904014}
+{"t": 4933.704793084, "wall": 1792565053.5540156, "event": "skew_drop", "total": 7}
+{"t": 4935.566279375, "wall": 1792565055.4155025, "event": "skew_drop", "total": 1}
+{"t": 4936.268286389, "wall": 1792565056.1175094, "event": "skew_drop", "total": 2}
+{"t": 4936.468890018, "wall": 1792565056.318113, "event": "skew_drop", "total": 3}
+{"t": 4936.569121028, "wall": 1792565056.418344, "event": "skew_drop", "total": 4}
+{"t": 4936.691666801, "wall": 1792565056.5408895, "event": "depth_gap", "gap_s": 0.292}
+{"t": 4936.869454042, "wall": 1792565056.718677, "event": "skew_drop", "total": 5}
+{"t": 4937.171315647, "wall": 1792565057.0205386, "event": "skew_drop", "total": 6}
+{"t": 4937.271436636, "wall": 1792565057.1206594, "event": "skew_drop", "total": 7}
+{"t": 4937.37156169, "wall": 1792565057.2207859, "event": "skew_drop", "total": 8}
+{"t": 4937.502188267, "wall": 1792565057.3514113, "event": "depth_gap", "gap_s": 0.398}
+{"t": 4937.597421642, "wall": 1792565057.446645, "event": "skew_drop", "total": 9}
+{"t": 4938.425640671, "wall": 1792565058.2748647, "event": "skew_drop", "total": 10}
+{"t": 4939.245998685, "wall": 1792565059.0952225, "event": "skew_drop", "total": 11}
+{"t": 4940.911095665, "wall": 1792565060.7603188, "event": "skew_drop", "total": 1}
+{"t": 4946.200800792, "wall": 1792565066.050024, "event": "skew_drop", "total": 2}
+{"t": 4949.890644935, "wall": 1792565069.7398684, "event": "skew_drop", "total": 1}
+{"t": 4951.822831066, "wall": 1792565071.6720557, "event": "skew_drop", "total": 2}
+{"t": 4958.072376792, "wall": 1792565077.9216008, "event": "skew_drop", "total": 1}
+{"t": 4960.275125152, "wall": 1792565080.12435, "event": "skew_drop", "total": 1}
+{"t": 4960.375271587, "wall": 1792565080.2244947, "event": "skew_drop", "total": 2}
+{"t": 4960.454249015, "wall": 1792565080.3034716, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4960.504642137, "wall": 1792565080.353865, "event": "depth_gap", "gap_s": 0.29}
+{"t": 4960.575540296, "wall": 1792565080.4247632, "event": "skew_drop", "total": 3}
+{"t": 4960.976417764, "wall": 1792565080.8256407, "event": "skew_drop", "total": 4}
+{"t": 4961.077483543, "wall": 1792565080.9267063, "event": "skew_drop", "total": 5}
+{"t": 4961.177918634, "wall": 1792565081.0271416, "event": "skew_drop", "total": 6}
+{"t": 4961.30717769, "wall": 1792565081.1564007, "event": "depth_gap", "gap_s": 0.389}
+{"t": 4961.378313494, "wall": 1792565081.2275362, "event": "skew_drop", "total": 7}
+{"t": 4961.679130772, "wall": 1792565081.5283535, "event": "skew_drop", "total": 8}
+{"t": 4962.280087565, "wall": 1792565082.1293104, "event": "skew_drop", "total": 9}
+{"t": 4962.88323084, "wall": 1792565082.7324536, "event": "skew_drop", "total": 10}
+{"t": 4962.983397085, "wall": 1792565082.8326201, "event": "skew_drop", "total": 11}
+{"t": 4963.118243025, "wall": 1792565082.9674656, "event": "depth_gap", "gap_s": 0.285}
+{"t": 4965.80441043, "wall": 1792565085.6536345, "event": "skew_drop", "total": 12}
+{"t": 4966.004659492, "wall": 1792565085.8538826, "event": "skew_drop", "total": 1}
+{"t": 4966.105261888, "wall": 1792565085.954485, "event": "skew_drop", "total": 2}
+{"t": 4966.205388867, "wall": 1792565086.054612, "event": "skew_drop", "total": 3}
+{"t": 4966.328893033, "wall": 1792565086.178116, "event": "user", "text": "What is in front of me now?", "channel": "user"}
+{"t": 4966.329099572, "wall": 1792565086.1783214, "event": "query_start", "text": "What is in front of me now?"}
+{"t": 4966.329283101, "wall": 1792565086.1785047, "event": "intent", "text": "What is in front of me now?", "skill": "describe", "name": "", "source": "rule"}
+{"t": 4966.336105857, "wall": 1792565086.1853285, "event": "depth_gap", "gap_s": 0.385}
+{"t": 4966.405630473, "wall": 1792565086.2548535, "event": "skew_drop", "total": 4}
+{"t": 4966.606107516, "wall": 1792565086.4553304, "event": "skew_drop", "total": 5}
+{"t": 4966.70624576, "wall": 1792565086.5554688, "event": "skew_drop", "total": 6}
+{"t": 4966.849946018, "wall": 1792565086.699169, "event": "depth_gap", "gap_s": 0.272}
+{"t": 4967.108279933, "wall": 1792565086.9575026, "event": "skew_drop", "total": 7}
+{"t": 4967.208432834, "wall": 1792565087.0576563, "event": "skew_drop", "total": 8}
+{"t": 4967.353909313, "wall": 1792565087.2031317, "event": "depth_gap", "gap_s": 0.266}
+{"t": 4967.810142249, "wall": 1792565087.6593652, "event": "skew_drop", "total": 9}
+{"t": 4968.511645795, "wall": 1792565088.3608685, "event": "skew_drop", "total": 10}
+{"t": 4968.611794695, "wall": 1792565088.4610174, "event": "skew_drop", "total": 11}
+{"t": 4968.732518013, "wall": 1792565088.5817401, "event": "say", "text": "There are some items on the floor to the left and a picture on the wall to the right.", "channel": "argus"}
+{"t": 4968.73276593, "wall": 1792565088.5819876, "event": "query_end", "text": "What is in front of me now?", "total_s": 2.4036645980004323, "latency": "2.4s (privacy 0.32, gemma 2.1)"}
+{"t": 4968.732876784, "wall": 1792565088.5820987, "event": "speech_start", "text": "There are some items on the floor to the left and a picture on the wall to the right.", "priority": 1, "queued_s": 0.00016528800006199162}
+{"t": 4968.762492344, "wall": 1792565088.611715, "event": "depth_gap", "gap_s": 0.26}
+{"t": 4969.813248883, "wall": 1792565089.662475, "event": "skew_drop", "total": 12}
+{"t": 4972.552743455, "wall": 1792565092.4019663, "event": "skew_drop", "total": 13}
+{"t": 4977.200520591, "wall": 1792565097.0497441, "event": "skew_drop", "total": 1}
+{"t": 4977.405904518, "wall": 1792565097.2551281, "event": "skew_drop", "total": 2}
+{"t": 4979.120118106, "wall": 1792565098.9693432, "event": "skew_drop", "total": 3}
+{"t": 4979.420580656, "wall": 1792565099.2698038, "event": "skew_drop", "total": 1}
+{"t": 4980.843504883, "wall": 1792565100.6927278, "event": "user", "text": "Um...", "channel": "user"}
+{"t": 4980.843700829, "wall": 1792565100.6929226, "event": "query_start", "text": "Um..."}
+{"t": 4980.856076899, "wall": 1792565100.7052991, "event": "skew_drop", "total": 2}
+{"t": 4981.056285357, "wall": 1792565100.9055083, "event": "skew_drop", "total": 3}
+{"t": 4981.356623293, "wall": 1792565101.2058458, "event": "skew_drop", "total": 4}
+{"t": 4981.456773829, "wall": 1792565101.3059967, "event": "skew_drop", "total": 5}
+{"t": 4981.539957143, "wall": 1792565101.3891802, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4981.590441472, "wall": 1792565101.4396641, "event": "depth_gap", "gap_s": 0.291}
+{"t": 4981.857808858, "wall": 1792565101.7070317, "event": "skew_drop", "total": 6}
+{"t": 4981.957877629, "wall": 1792565101.8071, "event": "skew_drop", "total": 7}
+{"t": 4982.058324052, "wall": 1792565101.9075465, "event": "skew_drop", "total": 8}
+{"t": 4982.158459866, "wall": 1792565102.0076826, "event": "skew_drop", "total": 9}
+{"t": 4982.258550175, "wall": 1792565102.1077726, "event": "skew_drop", "total": 10}
+{"t": 4982.393514719, "wall": 1792565102.2427373, "event": "depth_gap", "gap_s": 0.577}
+{"t": 4982.459332456, "wall": 1792565102.3085554, "event": "skew_drop", "total": 11}
+{"t": 4982.498620137, "wall": 1792565102.347842, "event": "intent", "text": "Um...", "skill": "chat", "name": "", "source": "gemma"}
+{"t": 4982.498853077, "wall": 1792565102.3480747, "event": "say", "text": "I am here to help you.", "channel": "argus"}
+{"t": 4982.499014013, "wall": 1792565102.3482358, "event": "speech_start", "text": "I am here to help you.", "priority": 1, "queued_s": 8.240399984060787e-05}
+{"t": 4982.5011371, "wall": 1792565102.3503592, "event": "say", "text": "What can I do for you now?", "channel": "argus"}
+{"t": 4982.501352055, "wall": 1792565102.3505738, "event": "query_end", "text": "Um...", "total_s": 1.6576452740000605, "latency": "2.4s (privacy 0.32, gemma 2.1)"}
+{"t": 4982.559476047, "wall": 1792565102.4086983, "event": "skew_drop", "total": 12}
+{"t": 4982.659623191, "wall": 1792565102.5088458, "event": "skew_drop", "total": 13}
+{"t": 4982.759745181, "wall": 1792565102.6089678, "event": "skew_drop", "total": 14}
+{"t": 4982.859886468, "wall": 1792565102.709109, "event": "skew_drop", "total": 15}
+{"t": 4982.994782464, "wall": 1792565102.844005, "event": "depth_gap", "gap_s": 0.576}
+{"t": 4983.062287489, "wall": 1792565102.91151, "event": "skew_drop", "total": 16}
+{"t": 4984.408819965, "wall": 1792565104.2580428, "event": "speech_start", "text": "What can I do for you now?", "priority": 1, "queued_s": 1.907517929000278}
+{"t": 4984.48072186, "wall": 1792565104.3299448, "event": "skew_drop", "total": 17}
+{"t": 4984.899753414, "wall": 1792565104.7489765, "event": "skew_drop", "total": 1}
+{"t": 4985.100084599, "wall": 1792565104.9493077, "event": "skew_drop", "total": 2}
+{"t": 4985.200138042, "wall": 1792565105.049361, "event": "skew_drop", "total": 3}
+{"t": 4985.404666728, "wall": 1792565105.2538896, "event": "skew_drop", "total": 4}
+{"t": 4988.096840001, "wall": 1792565107.946063, "event": "skew_drop", "total": 5}
+{"t": 4988.504096607, "wall": 1792565108.3533196, "event": "skew_drop", "total": 6}
+{"t": 4995.708758025, "wall": 1792565115.5579827, "event": "skew_drop", "total": 7}
+{"t": 4996.843345105, "wall": 1792565116.6925712, "event": "skew_drop", "total": 1}
+{"t": 4996.943497595, "wall": 1792565116.792721, "event": "skew_drop", "total": 2}
+{"t": 4997.053497127, "wall": 1792565116.9027205, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4997.10386958, "wall": 1792565116.9530928, "event": "depth_gap", "gap_s": 0.273}
+{"t": 4999.852971323, "wall": 1792565119.7021954, "event": "skew_drop", "total": 3}
+{"t": 5004.109833701, "wall": 1792565123.9590578, "event": "skew_drop", "total": 4}
+{"t": 5013.268589004, "wall": 1792565133.1178355, "event": "skew_drop", "total": 1}
+{"t": 5014.810798685, "wall": 1792565134.6600218, "event": "user", "text": "What can you see now?", "channel": "user"}
+{"t": 5014.811158096, "wall": 1792565134.6603801, "event": "query_start", "text": "What can you see now?"}
+{"t": 5014.811330265, "wall": 1792565134.660552, "event": "intent", "text": "What can you see now?", "skill": "describe", "name": "", "source": "rule"}
+{"t": 5014.95215445, "wall": 1792565134.8013773, "event": "skew_drop", "total": 1}
+{"t": 5015.0523112, "wall": 1792565134.9015343, "event": "skew_drop", "total": 2}
+{"t": 5015.14396293, "wall": 1792565134.9931865, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 5015.1943943, "wall": 1792565135.0436172, "event": "depth_gap", "gap_s": 0.305}
+{"t": 5015.970782042, "wall": 1792565135.8200045, "event": "skew_drop", "total": 3}
+{"t": 5016.171569455, "wall": 1792565136.0207922, "event": "skew_drop", "total": 4}
+{"t": 5016.372128441, "wall": 1792565136.221351, "event": "skew_drop", "total": 5}
+{"t": 5016.773487736, "wall": 1792565136.6227105, "event": "skew_drop", "total": 6}
+{"t": 5016.973840247, "wall": 1792565136.8230624, "event": "skew_drop", "total": 7}
+{"t": 5017.074010982, "wall": 1792565136.9232335, "event": "skew_drop", "total": 8}
+{"t": 5017.174212887, "wall": 1792565137.0234356, "event": "skew_drop", "total": 9}
+{"t": 5017.274395047, "wall": 1792565137.123618, "event": "skew_drop", "total": 10}
+{"t": 5017.400717195, "wall": 1792565137.24994, "event": "depth_gap", "gap_s": 0.492}
+{"t": 5017.7765838, "wall": 1792565137.6258063, "event": "say", "text": "There are no immediate safety hazards visible. I see a room with curtains, some clothing hanging, and a wooden box on the floor.", "channel": "argus"}
+{"t": 5017.776928138, "wall": 1792565137.62615, "event": "query_end", "text": "What can you see now?", "total_s": 2.9657658500000252, "latency": "3.0s (privacy 0.38, gemma 2.6)"}
+{"t": 5017.777331839, "wall": 1792565137.6265535, "event": "speech_start", "text": "There are no immediate safety hazards visible. I see a room with curtains, some clothing hanging, and a wooden box on the floor.", "priority": 1, "queued_s": 0.0004858490001424798}
+{"t": 5018.694489721, "wall": 1792565138.5437126, "event": "skew_drop", "total": 11}
+{"t": 5018.794641, "wall": 1792565138.6438642, "event": "skew_drop", "total": 1}
+{"t": 5018.920286057, "wall": 1792565138.7695093, "event": "depth_gap", "gap_s": 0.291}
+{"t": 5018.994915043, "wall": 1792565138.8441381, "event": "skew_drop", "total": 2}
+{"t": 5019.095062417, "wall": 1792565138.9442852, "event": "skew_drop", "total": 3}
+{"t": 5019.221683302, "wall": 1792565139.0709062, "event": "depth_gap", "gap_s": 0.296}
+{"t": 5025.962563038, "wall": 1792565145.8117874, "event": "skew_drop", "total": 4}
+{"t": 5026.162839772, "wall": 1792565146.0120628, "event": "skew_drop", "total": 1}
+{"t": 5026.763711865, "wall": 1792565146.6129348, "event": "skew_drop", "total": 2}
+{"t": 5027.164237524, "wall": 1792565147.0134604, "event": "skew_drop", "total": 3}
+{"t": 5027.264389924, "wall": 1792565147.113613, "event": "skew_drop", "total": 4}
+{"t": 5027.364499314, "wall": 1792565147.2137225, "event": "skew_drop", "total": 5}
+{"t": 5027.365336189, "wall": 1792565147.2145581, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 5027.515916472, "wall": 1792565147.3651397, "event": "depth_gap", "gap_s": 0.376}
+{"t": 5027.564906263, "wall": 1792565147.4141288, "event": "skew_drop", "total": 6}
+{"t": 5027.665056903, "wall": 1792565147.5142808, "event": "skew_drop", "total": 7}
+{"t": 5027.817091789, "wall": 1792565147.666315, "event": "depth_gap", "gap_s": 0.269}
+{"t": 5027.873198977, "wall": 1792565147.7224221, "event": "skew_drop", "total": 8}
+{"t": 5030.740839832, "wall": 1792565150.5900636, "event": "skew_drop", "total": 9}
+{"t": 5032.882488753, "wall": 1792565152.7317123, "event": "skew_drop", "total": 10}
+{"t": 5041.147271844, "wall": 1792565160.9964957, "event": "skew_drop", "total": 1}
+{"t": 5041.848835711, "wall": 1792565161.6980608, "event": "skew_drop", "total": 1}
+{"t": 5043.169189296, "wall": 1792565163.0184138, "event": "skew_drop", "total": 2}
+{"t": 5043.581710442, "wall": 1792565163.4309351, "event": "skew_drop", "total": 3}
+{"t": 5044.812093505, "wall": 1792565164.6613178, "event": "skew_drop", "total": 4}
+{"t": 5045.874346822, "wall": 1792565165.723571, "event": "skew_drop", "total": 5}
+{"t": 5046.075014463, "wall": 1792565165.924238, "event": "skew_drop", "total": 6}
+{"t": 5047.37967735, "wall": 1792565167.2289007, "event": "skew_drop", "total": 7}
+{"t": 5052.306012683, "wall": 1792565172.1552362, "event": "skew_drop", "total": 1}
+{"t": 5052.406171904, "wall": 1792565172.255396, "event": "skew_drop", "total": 2}
+{"t": 5052.508574538, "wall": 1792565172.3577979, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 5052.558956116, "wall": 1792565172.408179, "event": "depth_gap", "gap_s": 0.265}
+{"t": 5052.606835707, "wall": 1792565172.45606, "event": "skew_drop", "total": 1}
+{"t": 5054.240603144, "wall": 1792565174.0898263, "event": "skew_drop", "total": 2}
+{"t": 5056.148169765, "wall": 1792565175.9973936, "event": "skew_drop", "total": 3}
+{"t": 5056.248321082, "wall": 1792565176.0975437, "event": "skew_drop", "total": 4}
+{"t": 5056.392564432, "wall": 1792565176.2417877, "event": "depth_gap", "gap_s": 0.276}
+{"t": 5057.768457307, "wall": 1792565177.6176808, "event": "skew_drop", "total": 5}
+{"t": 5057.868607472, "wall": 1792565177.7178311, "event": "skew_drop", "total": 1}
+{"t": 5058.010298241, "wall": 1792565177.8595216, "event": "depth_gap", "gap_s": 0.274}
+{"t": 5058.993101602, "wall": 1792565178.8423257, "event": "skew_drop", "total": 2}
+{"t": 5060.406905265, "wall": 1792565180.2561285, "event": "skew_drop", "total": 3}
+{"t": 5062.272775165, "wall": 1792565182.1220005, "event": "skew_drop", "total": 4}
+{"t": 5067.502507513, "wall": 1792565187.351732, "event": "skew_drop", "total": 5}
+{"t": 5069.316858483, "wall": 1792565189.1660821, "event": "skew_drop", "total": 1}
+{"t": 5071.121661184, "wall": 1792565190.9708865, "event": "skew_drop", "total": 2}
+{"t": 5071.522040433, "wall": 1792565191.371264, "event": "skew_drop", "total": 3}
+{"t": 5073.842309276, "wall": 1792565193.691534, "event": "skew_drop", "total": 4}
+{"t": 5074.859588034, "wall": 1792565194.7088118, "event": "skew_drop", "total": 1}
+{"t": 5075.05993698, "wall": 1792565194.909163, "event": "skew_drop", "total": 2}
+{"t": 5075.665303085, "wall": 1792565195.514527, "event": "skew_drop", "total": 3}
+{"t": 5090.512625037, "wall": 1792565210.3618498, "event": "skew_drop", "total": 4}
+{"t": 5090.612798505, "wall": 1792565210.4620585, "event": "skew_drop", "total": 1}
+{"t": 5090.731635157, "wall": 1792565210.5808606, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 5090.782053668, "wall": 1792565210.6312764, "event": "depth_gap", "gap_s": 0.264}
+{"t": 5090.917719042, "wall": 1792565210.7669427, "event": "skew_drop", "total": 2}
+{"t": 5098.432231115, "wall": 1792565218.2814565, "event": "skew_drop", "total": 3}
+{"t": 5101.656169067, "wall": 1792565221.505392, "event": "skew_drop", "total": 1}
+{"t": 5101.759866368, "wall": 1792565221.6090915, "event": "skew_drop", "total": 2}
+{"t": 5104.694358779, "wall": 1792565224.543585, "event": "skew_drop", "total": 3}
+{"t": 5105.632302487, "wall": 1792565225.4815254, "event": "skew_drop", "total": 1}
+{"t": 5106.936119853, "wall": 1792565226.7853427, "event": "skew_drop", "total": 2}
+{"t": 5107.237373101, "wall": 1792565227.086596, "event": "skew_drop", "total": 3}
+{"t": 5108.086023721, "wall": 1792565227.9352474, "event": "skew_drop", "total": 4}
+{"t": 5108.186186086, "wall": 1792565228.035409, "event": "skew_drop", "total": 5}
+{"t": 5108.287284021, "wall": 1792565228.1365068, "event": "skew_drop", "total": 6}
+{"t": 5108.295265015, "wall": 1792565228.144489, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 5108.446400962, "wall": 1792565228.2956238, "event": "depth_gap", "gap_s": 0.374}
+{"t": 5109.320696382, "wall": 1792565229.1699195, "event": "user", "text": "Close the first person view.", "channel": "user"}
+{"t": 5109.320974701, "wall": 1792565229.1701968, "event": "query_start", "text": "Close the first person view."}
+{"t": 5110.785293728, "wall": 1792565230.6345155, "event": "intent", "text": "Close the first person view.", "skill": "chat", "name": "", "source": "gemma"}
+{"t": 5110.785549357, "wall": 1792565230.634771, "event": "say", "text": "I am closing the first person view now.", "channel": "argus"}
+{"t": 5110.785693365, "wall": 1792565230.634915, "event": "query_end", "text": "Close the first person view.", "total_s": 1.4647163600002386, "latency": "3.0s (privacy 0.38, gemma 2.6)"}
+{"t": 5110.785816091, "wall": 1792565230.6350377, "event": "speech_start", "text": "I am closing the first person view now.", "priority": 1, "queued_s": 0.00017754500004230067}
+{"t": 5115.464249905, "wall": 1792565235.3134744, "event": "skew_drop", "total": 7}
+{"t": 5116.457139259, "wall": 1792565236.3063626, "event": "skew_drop", "total": 1}
+{"t": 5118.677279943, "wall": 1792565238.5265028, "event": "skew_drop", "total": 2}
+{"t": 5118.87754701, "wall": 1792565238.72677, "event": "skew_drop", "total": 3}
+{"t": 5119.280252683, "wall": 1792565239.1294756, "event": "skew_drop", "total": 4}
+{"t": 5121.183867002, "wall": 1792565241.0330899, "event": "skew_drop", "total": 5}

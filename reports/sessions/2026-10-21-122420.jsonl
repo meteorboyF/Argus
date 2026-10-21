@@ -1,0 +1,464 @@
+{"t": 3740.582947574, "wall": 1792563860.4321716, "event": "system", "text": "session log: /home/argus/Argus/Argus/reports/sessions/2026-10-21-122420.jsonl", "channel": "system"}
+{"t": 3740.591022954, "wall": 1792563860.4402473, "event": "system", "text": "questions can be appended to /tmp/argus_ask.txt", "channel": "system"}
+{"t": 3741.524428497, "wall": 1792563861.3736515, "event": "say", "text": "ARGUS ready.", "channel": "argus"}
+{"t": 3741.525090285, "wall": 1792563861.3743124, "event": "speech_start", "text": "ARGUS ready.", "priority": 0, "queued_s": 0.00039256099989870563}
+{"t": 3741.672595346, "wall": 1792563861.5218182, "event": "system", "text": "stereo uncalibrated: hazard speech suppressed until scripts/calibrate_stereo.py has run", "channel": "system"}
+{"t": 3741.681745203, "wall": 1792563861.5309677, "event": "user", "text": "In one short sentence, what is in front of me?", "channel": "user"}
+{"t": 3741.697765558, "wall": 1792563861.5469906, "event": "query_start", "text": "In one short sentence, what is in front of me?"}
+{"t": 3741.851637735, "wall": 1792563861.7008612, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3741.865588915, "wall": 1792563861.7148113, "event": "safety_paused"}
+{"t": 3742.531146781, "wall": 1792563862.38037, "event": "skew_drop", "total": 1}
+{"t": 3742.631426367, "wall": 1792563862.4806495, "event": "skew_drop", "total": 1}
+{"t": 3742.727801372, "wall": 1792563862.5770247, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3742.728145227, "wall": 1792563862.577367, "event": "safety_paused"}
+{"t": 3743.234061461, "wall": 1792563863.0832844, "event": "skew_drop", "total": 2}
+{"t": 3743.634450887, "wall": 1792563863.4836736, "event": "skew_drop", "total": 3}
+{"t": 3744.635882241, "wall": 1792563864.4851046, "event": "skew_drop", "total": 4}
+{"t": 3745.48640776, "wall": 1792563865.33563, "event": "say", "text": "There are a door and some window coverings in front of you.", "channel": "argus"}
+{"t": 3745.486628601, "wall": 1792563865.3358502, "event": "query_end", "text": "In one short sentence, what is in front of me?", "total_s": 3.78886557099986, "latency": "3.8s (privacy 0.55, gemma 3.2)"}
+{"t": 3745.48673923, "wall": 1792563865.335961, "event": "speech_start", "text": "There are a door and some window coverings in front of you.", "priority": 1, "queued_s": 0.00015648699991288595}
+{"t": 3748.243885973, "wall": 1792563868.0931091, "event": "skew_drop", "total": 5}
+{"t": 3748.34406784, "wall": 1792563868.1932907, "event": "skew_drop", "total": 1}
+{"t": 3748.425857249, "wall": 1792563868.275081, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3748.426528702, "wall": 1792563868.275751, "event": "safety_paused"}
+{"t": 3748.444184424, "wall": 1792563868.2934072, "event": "skew_drop", "total": 2}
+{"t": 3748.544303152, "wall": 1792563868.393526, "event": "skew_drop", "total": 3}
+{"t": 3748.644567006, "wall": 1792563868.4937987, "event": "skew_drop", "total": 4}
+{"t": 3748.744655045, "wall": 1792563868.593878, "event": "skew_drop", "total": 5}
+{"t": 3748.844873617, "wall": 1792563868.6940968, "event": "skew_drop", "total": 6}
+{"t": 3748.944986937, "wall": 1792563868.7942102, "event": "skew_drop", "total": 7}
+{"t": 3754.572577956, "wall": 1792563874.4218009, "event": "skew_drop", "total": 8}
+{"t": 3755.47469381, "wall": 1792563875.3239174, "event": "skew_drop", "total": 1}
+{"t": 3755.674978561, "wall": 1792563875.5242014, "event": "skew_drop", "total": 2}
+{"t": 3755.875317875, "wall": 1792563875.7245407, "event": "skew_drop", "total": 3}
+{"t": 3755.975509613, "wall": 1792563875.8247328, "event": "skew_drop", "total": 4}
+{"t": 3756.090711204, "wall": 1792563875.9399343, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3756.090975791, "wall": 1792563875.9401975, "event": "safety_paused"}
+{"t": 3756.176550173, "wall": 1792563876.0257735, "event": "skew_drop", "total": 5}
+{"t": 3756.2767006, "wall": 1792563876.1259236, "event": "skew_drop", "total": 6}
+{"t": 3756.394147984, "wall": 1792563876.2433715, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3756.395173244, "wall": 1792563876.2443955, "event": "safety_paused"}
+{"t": 3756.476981387, "wall": 1792563876.3262048, "event": "skew_drop", "total": 7}
+{"t": 3756.677223326, "wall": 1792563876.5264459, "event": "skew_drop", "total": 8}
+{"t": 3756.877595445, "wall": 1792563876.726818, "event": "skew_drop", "total": 9}
+{"t": 3758.081119789, "wall": 1792563877.9303427, "event": "skew_drop", "total": 10}
+{"t": 3758.181287946, "wall": 1792563878.030511, "event": "skew_drop", "total": 11}
+{"t": 3758.281439241, "wall": 1792563878.1306622, "event": "skew_drop", "total": 12}
+{"t": 3758.302484583, "wall": 1792563878.1517076, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3758.302986044, "wall": 1792563878.1522079, "event": "safety_paused"}
+{"t": 3758.58182397, "wall": 1792563878.4310472, "event": "skew_drop", "total": 13}
+{"t": 3758.68197184, "wall": 1792563878.531195, "event": "skew_drop", "total": 14}
+{"t": 3758.754609774, "wall": 1792563878.6038332, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3758.754855512, "wall": 1792563878.6040773, "event": "safety_paused"}
+{"t": 3758.782133919, "wall": 1792563878.631357, "event": "skew_drop", "total": 15}
+{"t": 3758.982399194, "wall": 1792563878.8316221, "event": "skew_drop", "total": 16}
+{"t": 3759.082711808, "wall": 1792563878.931935, "event": "skew_drop", "total": 17}
+{"t": 3759.157518025, "wall": 1792563879.006741, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3759.157954364, "wall": 1792563879.0071762, "event": "safety_paused"}
+{"t": 3759.383818652, "wall": 1792563879.2330418, "event": "skew_drop", "total": 18}
+{"t": 3759.483963292, "wall": 1792563879.3331864, "event": "skew_drop", "total": 19}
+{"t": 3759.564203438, "wall": 1792563879.4134264, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3759.564496283, "wall": 1792563879.413718, "event": "safety_paused"}
+{"t": 3759.584280804, "wall": 1792563879.433504, "event": "skew_drop", "total": 20}
+{"t": 3759.884528605, "wall": 1792563879.7337518, "event": "skew_drop", "total": 1}
+{"t": 3760.085048199, "wall": 1792563879.9342713, "event": "skew_drop", "total": 2}
+{"t": 3760.285292808, "wall": 1792563880.1345158, "event": "skew_drop", "total": 3}
+{"t": 3760.585700078, "wall": 1792563880.4349227, "event": "skew_drop", "total": 4}
+{"t": 3765.369475308, "wall": 1792563885.2186987, "event": "user", "text": "what is in front of me?", "channel": "user"}
+{"t": 3765.369767065, "wall": 1792563885.218989, "event": "query_start", "text": "what is in front of me?"}
+{"t": 3767.508345618, "wall": 1792563887.3575683, "event": "skew_drop", "total": 5}
+{"t": 3768.008958049, "wall": 1792563887.8581805, "event": "skew_drop", "total": 1}
+{"t": 3768.047820699, "wall": 1792563887.8970428, "event": "say", "text": "There are several objects in front of you, including a door and some electronics. Be careful of the door frame.", "channel": "argus"}
+{"t": 3768.048089799, "wall": 1792563887.8973114, "event": "query_end", "text": "what is in front of me?", "total_s": 2.6783208459996786, "latency": "2.7s (privacy 0.26, gemma 2.4)"}
+{"t": 3768.048205451, "wall": 1792563887.8974276, "event": "speech_start", "text": "There are several objects in front of you, including a door and some electronics. Be careful of the door frame.", "priority": 1, "queued_s": 0.00016691900009391247}
+{"t": 3769.341725085, "wall": 1792563889.190948, "event": "skew_drop", "total": 2}
+{"t": 3769.542071786, "wall": 1792563889.3912945, "event": "skew_drop", "total": 3}
+{"t": 3769.642214463, "wall": 1792563889.4914372, "event": "skew_drop", "total": 4}
+{"t": 3769.742362804, "wall": 1792563889.5915859, "event": "skew_drop", "total": 5}
+{"t": 3769.770379072, "wall": 1792563889.619602, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3769.770683725, "wall": 1792563889.6199057, "event": "safety_paused"}
+{"t": 3769.84250324, "wall": 1792563889.691726, "event": "skew_drop", "total": 6}
+{"t": 3769.942663294, "wall": 1792563889.791886, "event": "skew_drop", "total": 7}
+{"t": 3770.042878902, "wall": 1792563889.892102, "event": "skew_drop", "total": 8}
+{"t": 3770.142996778, "wall": 1792563889.9922194, "event": "skew_drop", "total": 9}
+{"t": 3770.243143808, "wall": 1792563890.0923672, "event": "skew_drop", "total": 10}
+{"t": 3770.343291735, "wall": 1792563890.1925151, "event": "skew_drop", "total": 11}
+{"t": 3770.443416494, "wall": 1792563890.2926395, "event": "skew_drop", "total": 12}
+{"t": 3770.543897331, "wall": 1792563890.393121, "event": "skew_drop", "total": 13}
+{"t": 3770.64450259, "wall": 1792563890.493726, "event": "skew_drop", "total": 14}
+{"t": 3770.744649781, "wall": 1792563890.5938725, "event": "skew_drop", "total": 15}
+{"t": 3770.844796364, "wall": 1792563890.6940193, "event": "skew_drop", "total": 16}
+{"t": 3770.944973732, "wall": 1792563890.7941968, "event": "skew_drop", "total": 17}
+{"t": 3771.145244945, "wall": 1792563890.9944682, "event": "skew_drop", "total": 18}
+{"t": 3771.245378025, "wall": 1792563891.094601, "event": "skew_drop", "total": 19}
+{"t": 3771.338198089, "wall": 1792563891.187421, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3771.33853596, "wall": 1792563891.1877577, "event": "safety_paused"}
+{"t": 3771.345617158, "wall": 1792563891.1948395, "event": "skew_drop", "total": 20}
+{"t": 3771.445780608, "wall": 1792563891.2950034, "event": "skew_drop", "total": 21}
+{"t": 3771.545908792, "wall": 1792563891.3951316, "event": "skew_drop", "total": 22}
+{"t": 3771.64616479, "wall": 1792563891.4953876, "event": "skew_drop", "total": 23}
+{"t": 3771.746297103, "wall": 1792563891.5955203, "event": "skew_drop", "total": 24}
+{"t": 3771.848148209, "wall": 1792563891.6973717, "event": "skew_drop", "total": 25}
+{"t": 3771.948281097, "wall": 1792563891.797504, "event": "skew_drop", "total": 26}
+{"t": 3772.048401345, "wall": 1792563891.8976243, "event": "skew_drop", "total": 27}
+{"t": 3772.148549338, "wall": 1792563891.9977725, "event": "skew_drop", "total": 28}
+{"t": 3772.248688917, "wall": 1792563892.0979123, "event": "skew_drop", "total": 29}
+{"t": 3772.348865137, "wall": 1792563892.1980884, "event": "skew_drop", "total": 30}
+{"t": 3772.449029645, "wall": 1792563892.2982526, "event": "skew_drop", "total": 31}
+{"t": 3772.549162536, "wall": 1792563892.398386, "event": "skew_drop", "total": 32}
+{"t": 3772.749414108, "wall": 1792563892.598637, "event": "skew_drop", "total": 1}
+{"t": 3772.84954047, "wall": 1792563892.6987634, "event": "skew_drop", "total": 2}
+{"t": 3772.943415237, "wall": 1792563892.7926388, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3772.943687313, "wall": 1792563892.7929094, "event": "safety_paused"}
+{"t": 3772.949667024, "wall": 1792563892.7988892, "event": "skew_drop", "total": 3}
+{"t": 3773.049857133, "wall": 1792563892.89908, "event": "skew_drop", "total": 4}
+{"t": 3773.149989, "wall": 1792563892.999212, "event": "skew_drop", "total": 5}
+{"t": 3773.250121252, "wall": 1792563893.099344, "event": "skew_drop", "total": 6}
+{"t": 3773.35018387, "wall": 1792563893.1994064, "event": "skew_drop", "total": 7}
+{"t": 3773.450536356, "wall": 1792563893.2997596, "event": "skew_drop", "total": 8}
+{"t": 3773.550596765, "wall": 1792563893.3998199, "event": "skew_drop", "total": 9}
+{"t": 3773.65073721, "wall": 1792563893.4999597, "event": "skew_drop", "total": 10}
+{"t": 3773.750904792, "wall": 1792563893.6001277, "event": "skew_drop", "total": 11}
+{"t": 3773.851017876, "wall": 1792563893.7002404, "event": "skew_drop", "total": 12}
+{"t": 3774.051272748, "wall": 1792563893.9004955, "event": "skew_drop", "total": 13}
+{"t": 3774.251618923, "wall": 1792563894.100842, "event": "skew_drop", "total": 14}
+{"t": 3774.451871111, "wall": 1792563894.301094, "event": "skew_drop", "total": 15}
+{"t": 3774.552211119, "wall": 1792563894.4014347, "event": "skew_drop", "total": 16}
+{"t": 3774.648789685, "wall": 1792563894.498013, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3774.649132964, "wall": 1792563894.4983547, "event": "safety_paused"}
+{"t": 3774.752454219, "wall": 1792563894.6016774, "event": "skew_drop", "total": 17}
+{"t": 3774.852719503, "wall": 1792563894.7019427, "event": "skew_drop", "total": 18}
+{"t": 3774.950718514, "wall": 1792563894.7999415, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3774.95098179, "wall": 1792563894.8002036, "event": "safety_paused"}
+{"t": 3774.960191912, "wall": 1792563894.8094149, "event": "skew_drop", "total": 19}
+{"t": 3778.064469462, "wall": 1792563897.9136922, "event": "skew_drop", "total": 20}
+{"t": 3778.464988686, "wall": 1792563898.3142116, "event": "skew_drop", "total": 1}
+{"t": 3778.565158006, "wall": 1792563898.4143808, "event": "skew_drop", "total": 2}
+{"t": 3778.67198582, "wall": 1792563898.5212088, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3778.67226372, "wall": 1792563898.5214856, "event": "safety_paused"}
+{"t": 3778.865962971, "wall": 1792563898.7151868, "event": "skew_drop", "total": 3}
+{"t": 3779.066178278, "wall": 1792563898.9154012, "event": "skew_drop", "total": 4}
+{"t": 3779.166338766, "wall": 1792563899.0155616, "event": "skew_drop", "total": 5}
+{"t": 3779.277760091, "wall": 1792563899.1269834, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3779.27804676, "wall": 1792563899.1272686, "event": "safety_paused"}
+{"t": 3779.36662064, "wall": 1792563899.215844, "event": "skew_drop", "total": 6}
+{"t": 3779.466778666, "wall": 1792563899.3160021, "event": "skew_drop", "total": 7}
+{"t": 3779.56704748, "wall": 1792563899.4162703, "event": "skew_drop", "total": 8}
+{"t": 3779.580905387, "wall": 1792563899.4301286, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3779.58157012, "wall": 1792563899.4307919, "event": "safety_paused"}
+{"t": 3779.667101598, "wall": 1792563899.5163245, "event": "skew_drop", "total": 9}
+{"t": 3779.767330026, "wall": 1792563899.616553, "event": "skew_drop", "total": 10}
+{"t": 3779.867503125, "wall": 1792563899.7167265, "event": "skew_drop", "total": 11}
+{"t": 3779.967652478, "wall": 1792563899.8168755, "event": "skew_drop", "total": 12}
+{"t": 3780.270117907, "wall": 1792563900.1193414, "event": "skew_drop", "total": 13}
+{"t": 3781.17450774, "wall": 1792563901.023731, "event": "skew_drop", "total": 14}
+{"t": 3781.776257041, "wall": 1792563901.6254802, "event": "skew_drop", "total": 15}
+{"t": 3789.492629028, "wall": 1792563909.341852, "event": "skew_drop", "total": 16}
+{"t": 3790.332619609, "wall": 1792563910.1818428, "event": "user", "text": "find me a seat", "channel": "user"}
+{"t": 3790.333465054, "wall": 1792563910.182687, "event": "query_start", "text": "find me a seat"}
+{"t": 3790.334274336, "wall": 1792563910.1834965, "event": "say", "text": "Seat finding is not available right now.", "channel": "argus"}
+{"t": 3790.334757013, "wall": 1792563910.1840098, "event": "query_end", "text": "find me a seat", "total_s": 0.0012861360000897548, "latency": "2.7s (privacy 0.26, gemma 2.4)"}
+{"t": 3790.334958846, "wall": 1792563910.184181, "event": "speech_start", "text": "Seat finding is not available right now.", "priority": 1, "queued_s": 0.00033057500013455865}
+{"t": 3791.697371309, "wall": 1792563911.5465946, "event": "skew_drop", "total": 1}
+{"t": 3793.806569494, "wall": 1792563913.655793, "event": "skew_drop", "total": 2}
+{"t": 3795.618857203, "wall": 1792563915.4680803, "event": "skew_drop", "total": 3}
+{"t": 3795.919148871, "wall": 1792563915.768372, "event": "skew_drop", "total": 1}
+{"t": 3796.019456183, "wall": 1792563915.8686793, "event": "skew_drop", "total": 2}
+{"t": 3796.120449444, "wall": 1792563915.9696727, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3796.121100896, "wall": 1792563915.9703236, "event": "safety_paused"}
+{"t": 3796.220081176, "wall": 1792563916.0693038, "event": "skew_drop", "total": 3}
+{"t": 3796.320194625, "wall": 1792563916.1694171, "event": "skew_drop", "total": 4}
+{"t": 3796.424233652, "wall": 1792563916.2734566, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3796.424728105, "wall": 1792563916.2739518, "event": "safety_paused"}
+{"t": 3796.52052636, "wall": 1792563916.3697493, "event": "skew_drop", "total": 5}
+{"t": 3796.720740426, "wall": 1792563916.5699632, "event": "skew_drop", "total": 6}
+{"t": 3796.820897397, "wall": 1792563916.6701207, "event": "skew_drop", "total": 7}
+{"t": 3796.934791506, "wall": 1792563916.7840157, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3796.935614198, "wall": 1792563916.7848363, "event": "safety_paused"}
+{"t": 3797.622790547, "wall": 1792563917.4720135, "event": "skew_drop", "total": 8}
+{"t": 3798.624786289, "wall": 1792563918.4740093, "event": "skew_drop", "total": 9}
+{"t": 3799.025771388, "wall": 1792563918.8749945, "event": "skew_drop", "total": 10}
+{"t": 3807.549213056, "wall": 1792563927.3984365, "event": "skew_drop", "total": 11}
+{"t": 3807.650215621, "wall": 1792563927.4994385, "event": "skew_drop", "total": 1}
+{"t": 3807.760031305, "wall": 1792563927.6092544, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3807.760273364, "wall": 1792563927.609495, "event": "safety_paused"}
+{"t": 3809.353149519, "wall": 1792563929.2023728, "event": "skew_drop", "total": 2}
+{"t": 3809.45323992, "wall": 1792563929.302463, "event": "skew_drop", "total": 3}
+{"t": 3809.521545418, "wall": 1792563929.3707688, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3809.521921627, "wall": 1792563929.3711433, "event": "safety_paused"}
+{"t": 3809.75372038, "wall": 1792563929.6029437, "event": "skew_drop", "total": 4}
+{"t": 3809.853947523, "wall": 1792563929.7031705, "event": "skew_drop", "total": 5}
+{"t": 3809.923519541, "wall": 1792563929.772743, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3809.923917158, "wall": 1792563929.7731392, "event": "safety_paused"}
+{"t": 3810.054458484, "wall": 1792563929.9036818, "event": "skew_drop", "total": 6}
+{"t": 3810.355230192, "wall": 1792563930.2044537, "event": "skew_drop", "total": 7}
+{"t": 3810.393989063, "wall": 1792563930.2432122, "event": "user", "text": "stop", "channel": "user"}
+{"t": 3810.394235857, "wall": 1792563930.2434578, "event": "query_start", "text": "stop"}
+{"t": 3811.360905857, "wall": 1792563931.2101288, "event": "skew_drop", "total": 8}
+{"t": 3811.862875804, "wall": 1792563931.7120984, "event": "skew_drop", "total": 9}
+{"t": 3812.818938425, "wall": 1792563932.6681604, "event": "say", "text": "There are no immediate safety hazards visible. I see a doorway and some blinds.", "channel": "argus"}
+{"t": 3812.819402573, "wall": 1792563932.6686244, "event": "query_end", "text": "stop", "total_s": 2.4251648919998843, "latency": "2.4s (privacy 0.26, gemma 2.2)"}
+{"t": 3812.819547603, "wall": 1792563932.6687694, "event": "speech_start", "text": "There are no immediate safety hazards visible. I see a doorway and some blinds.", "priority": 1, "queued_s": 0.0002212260001215327}
+{"t": 3816.500460293, "wall": 1792563936.3496838, "event": "skew_drop", "total": 10}
+{"t": 3816.801028605, "wall": 1792563936.6502516, "event": "skew_drop", "total": 1}
+{"t": 3817.001622923, "wall": 1792563936.8508463, "event": "skew_drop", "total": 2}
+{"t": 3817.101777884, "wall": 1792563936.951001, "event": "skew_drop", "total": 3}
+{"t": 3817.201902668, "wall": 1792563937.0511258, "event": "skew_drop", "total": 4}
+{"t": 3817.218775917, "wall": 1792563937.067999, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3817.219061081, "wall": 1792563937.0682828, "event": "safety_paused"}
+{"t": 3817.302039167, "wall": 1792563937.1512623, "event": "skew_drop", "total": 5}
+{"t": 3817.402175153, "wall": 1792563937.2513976, "event": "skew_drop", "total": 6}
+{"t": 3817.602442836, "wall": 1792563937.4516656, "event": "skew_drop", "total": 7}
+{"t": 3817.90443272, "wall": 1792563937.7536554, "event": "skew_drop", "total": 8}
+{"t": 3818.004551713, "wall": 1792563937.8537748, "event": "skew_drop", "total": 9}
+{"t": 3818.071633232, "wall": 1792563937.920856, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3818.071898684, "wall": 1792563937.9211204, "event": "safety_paused"}
+{"t": 3818.104685651, "wall": 1792563937.9539087, "event": "skew_drop", "total": 10}
+{"t": 3818.204861544, "wall": 1792563938.0540848, "event": "skew_drop", "total": 11}
+{"t": 3818.304972346, "wall": 1792563938.1541948, "event": "skew_drop", "total": 12}
+{"t": 3818.405199346, "wall": 1792563938.2544222, "event": "skew_drop", "total": 13}
+{"t": 3820.439299031, "wall": 1792563940.2885225, "event": "user", "text": "read this", "channel": "user"}
+{"t": 3820.439525793, "wall": 1792563940.2887478, "event": "query_start", "text": "read this"}
+{"t": 3820.655075276, "wall": 1792563940.504299, "event": "skew_drop", "total": 14}
+{"t": 3820.929712045, "wall": 1792563940.7789347, "event": "say", "text": "Reading mode. Hold the page in front of you.", "channel": "argus"}
+{"t": 3820.930665718, "wall": 1792563940.779888, "event": "speech_start", "text": "Reading mode. Hold the page in front of you.", "priority": 1, "queued_s": 0.0005835769998157048}
+{"t": 3820.944819841, "wall": 1792563940.7940428, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3820.945082156, "wall": 1792563940.794304, "event": "safety_paused"}
+{"t": 3822.966022001, "wall": 1792563942.815245, "event": "skew_drop", "total": 15}
+{"t": 3823.066215695, "wall": 1792563942.9154387, "event": "skew_drop", "total": 1}
+{"t": 3823.166382987, "wall": 1792563943.0156062, "event": "skew_drop", "total": 2}
+{"t": 3823.177797055, "wall": 1792563943.0270197, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3823.178064106, "wall": 1792563943.027286, "event": "safety_paused"}
+{"t": 3823.366677799, "wall": 1792563943.215901, "event": "skew_drop", "total": 3}
+{"t": 3823.466872934, "wall": 1792563943.3160956, "event": "skew_drop", "total": 4}
+{"t": 3823.566987235, "wall": 1792563943.4162102, "event": "skew_drop", "total": 5}
+{"t": 3823.592411931, "wall": 1792563943.441635, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3823.592708872, "wall": 1792563943.4419305, "event": "safety_paused"}
+{"t": 3824.57220255, "wall": 1792563944.421425, "event": "skew_drop", "total": 6}
+{"t": 3824.972654414, "wall": 1792563944.8218772, "event": "skew_drop", "total": 7}
+{"t": 3825.10498859, "wall": 1792563944.9542112, "event": "say", "text": "Bring the page closer.", "channel": "argus"}
+{"t": 3825.106435726, "wall": 1792563944.955658, "event": "speech_start", "text": "Bring the page closer.", "priority": 1, "queued_s": 0.0012004360000901215}
+{"t": 3826.891022042, "wall": 1792563946.7402446, "event": "skew_drop", "total": 8}
+{"t": 3826.991167645, "wall": 1792563946.8403907, "event": "skew_drop", "total": 9}
+{"t": 3827.091383907, "wall": 1792563946.9406068, "event": "skew_drop", "total": 10}
+{"t": 3827.103843397, "wall": 1792563946.9530666, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3827.104155347, "wall": 1792563946.953377, "event": "safety_paused"}
+{"t": 3827.491905523, "wall": 1792563947.341128, "event": "skew_drop", "total": 11}
+{"t": 3829.451468261, "wall": 1792563949.3006914, "event": "say", "text": "Hold still, the picture is blurry.", "channel": "argus"}
+{"t": 3829.453320919, "wall": 1792563949.3025434, "event": "speech_start", "text": "Hold still, the picture is blurry.", "priority": 1, "queued_s": 0.0015188190000117174}
+{"t": 3829.866442751, "wall": 1792563949.7156653, "event": "skew_drop", "total": 12}
+{"t": 3831.384688377, "wall": 1792563951.2339115, "event": "skew_drop", "total": 1}
+{"t": 3831.58494456, "wall": 1792563951.4341679, "event": "skew_drop", "total": 2}
+{"t": 3831.885542523, "wall": 1792563951.7347655, "event": "skew_drop", "total": 3}
+{"t": 3832.187435776, "wall": 1792563952.0366588, "event": "skew_drop", "total": 4}
+{"t": 3832.387761021, "wall": 1792563952.236984, "event": "skew_drop", "total": 5}
+{"t": 3832.487925868, "wall": 1792563952.3371487, "event": "skew_drop", "total": 6}
+{"t": 3832.580601842, "wall": 1792563952.429825, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3832.582378688, "wall": 1792563952.431602, "event": "safety_paused"}
+{"t": 3832.689617926, "wall": 1792563952.538841, "event": "skew_drop", "total": 7}
+{"t": 3832.789923578, "wall": 1792563952.6391466, "event": "skew_drop", "total": 8}
+{"t": 3832.890025479, "wall": 1792563952.7392483, "event": "skew_drop", "total": 9}
+{"t": 3832.895341648, "wall": 1792563952.7445643, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3832.895636477, "wall": 1792563952.7448583, "event": "safety_paused"}
+{"t": 3832.990182773, "wall": 1792563952.8394058, "event": "skew_drop", "total": 10}
+{"t": 3833.090317986, "wall": 1792563952.939541, "event": "skew_drop", "total": 11}
+{"t": 3833.19075603, "wall": 1792563953.0399792, "event": "skew_drop", "total": 12}
+{"t": 3833.290891757, "wall": 1792563953.1401148, "event": "skew_drop", "total": 13}
+{"t": 3833.391058366, "wall": 1792563953.2402813, "event": "skew_drop", "total": 14}
+{"t": 3833.453448979, "wall": 1792563953.302672, "event": "say", "text": "Bring the page closer.", "channel": "argus"}
+{"t": 3833.455939008, "wall": 1792563953.3051617, "event": "speech_start", "text": "Bring the page closer.", "priority": 1, "queued_s": 0.00022945000000618165}
+{"t": 3833.49122155, "wall": 1792563953.3404446, "event": "skew_drop", "total": 15}
+{"t": 3833.691457643, "wall": 1792563953.5406804, "event": "skew_drop", "total": 16}
+{"t": 3833.791598427, "wall": 1792563953.6408215, "event": "skew_drop", "total": 17}
+{"t": 3833.893173289, "wall": 1792563953.7423966, "event": "skew_drop", "total": 18}
+{"t": 3833.923376568, "wall": 1792563953.7726002, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3833.923980979, "wall": 1792563953.773203, "event": "safety_paused"}
+{"t": 3833.993334042, "wall": 1792563953.8425581, "event": "skew_drop", "total": 19}
+{"t": 3834.09348241, "wall": 1792563953.9427059, "event": "skew_drop", "total": 20}
+{"t": 3834.194667752, "wall": 1792563954.0438907, "event": "skew_drop", "total": 21}
+{"t": 3834.495945953, "wall": 1792563954.3451686, "event": "skew_drop", "total": 22}
+{"t": 3836.379447738, "wall": 1792563956.2286708, "event": "say", "text": "Hold still.", "channel": "argus"}
+{"t": 3836.380158009, "wall": 1792563956.2293804, "event": "speech_start", "text": "Hold still.", "priority": 1, "queued_s": 0.00018244000011691242}
+{"t": 3836.935983386, "wall": 1792563956.7852068, "event": "skew_drop", "total": 23}
+{"t": 3837.342412275, "wall": 1792563957.1916351, "event": "skew_drop", "total": 1}
+{"t": 3838.953706394, "wall": 1792563958.8029294, "event": "skew_drop", "total": 2}
+{"t": 3839.153943209, "wall": 1792563959.003166, "event": "skew_drop", "total": 3}
+{"t": 3839.254101444, "wall": 1792563959.1033244, "event": "skew_drop", "total": 4}
+{"t": 3839.403897289, "wall": 1792563959.2531202, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3839.404181718, "wall": 1792563959.2534034, "event": "safety_paused"}
+{"t": 3839.454394873, "wall": 1792563959.3036177, "event": "skew_drop", "total": 5}
+{"t": 3839.654629996, "wall": 1792563959.5038528, "event": "skew_drop", "total": 6}
+{"t": 3839.754799847, "wall": 1792563959.604023, "event": "skew_drop", "total": 7}
+{"t": 3839.854944514, "wall": 1792563959.7041676, "event": "skew_drop", "total": 8}
+{"t": 3839.896109911, "wall": 1792563959.745333, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3839.897066529, "wall": 1792563959.7462883, "event": "safety_paused"}
+{"t": 3839.955095485, "wall": 1792563959.8043191, "event": "skew_drop", "total": 9}
+{"t": 3840.055257944, "wall": 1792563959.9044807, "event": "skew_drop", "total": 10}
+{"t": 3840.155459317, "wall": 1792563960.0046825, "event": "skew_drop", "total": 11}
+{"t": 3840.456665067, "wall": 1792563960.3058982, "event": "skew_drop", "total": 12}
+{"t": 3840.656873664, "wall": 1792563960.5060966, "event": "skew_drop", "total": 13}
+{"t": 3840.757021053, "wall": 1792563960.6062436, "event": "skew_drop", "total": 14}
+{"t": 3840.890126309, "wall": 1792563960.7393498, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3840.890539319, "wall": 1792563960.739761, "event": "safety_paused"}
+{"t": 3840.957929648, "wall": 1792563960.8071523, "event": "skew_drop", "total": 15}
+{"t": 3841.058343, "wall": 1792563960.9075656, "event": "skew_drop", "total": 16}
+{"t": 3841.142094242, "wall": 1792563960.9913175, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3841.142369902, "wall": 1792563960.9915917, "event": "safety_paused"}
+{"t": 3841.158476404, "wall": 1792563961.0076995, "event": "skew_drop", "total": 17}
+{"t": 3841.259188843, "wall": 1792563961.1084118, "event": "skew_drop", "total": 18}
+{"t": 3841.559644262, "wall": 1792563961.4088674, "event": "skew_drop", "total": 19}
+{"t": 3841.759882752, "wall": 1792563961.6091058, "event": "skew_drop", "total": 20}
+{"t": 3841.862162268, "wall": 1792563961.711385, "event": "skew_drop", "total": 21}
+{"t": 3841.972925198, "wall": 1792563961.8221486, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3841.973194778, "wall": 1792563961.8224163, "event": "safety_paused"}
+{"t": 3842.368623538, "wall": 1792563962.2178466, "event": "skew_drop", "total": 22}
+{"t": 3842.42816018, "wall": 1792563962.2773829, "event": "say", "text": "Hold still, the picture is blurry.", "channel": "argus"}
+{"t": 3842.428688427, "wall": 1792563962.2779102, "event": "speech_start", "text": "Hold still, the picture is blurry.", "priority": 1, "queued_s": 0.00018807300011758343}
+{"t": 3842.673544055, "wall": 1792563962.5227666, "event": "skew_drop", "total": 1}
+{"t": 3842.895597719, "wall": 1792563962.7448206, "event": "skew_drop", "total": 2}
+{"t": 3843.345827366, "wall": 1792563963.1950505, "event": "skew_drop", "total": 3}
+{"t": 3843.445958663, "wall": 1792563963.2951818, "event": "skew_drop", "total": 4}
+{"t": 3843.601179142, "wall": 1792563963.4504025, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3843.6014845, "wall": 1792563963.4507062, "event": "safety_paused"}
+{"t": 3843.6482721, "wall": 1792563963.497495, "event": "skew_drop", "total": 5}
+{"t": 3843.74844423, "wall": 1792563963.597667, "event": "skew_drop", "total": 6}
+{"t": 3843.848613033, "wall": 1792563963.697836, "event": "skew_drop", "total": 7}
+{"t": 3843.85606581, "wall": 1792563963.7052891, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3843.856324541, "wall": 1792563963.7055464, "event": "safety_paused"}
+{"t": 3844.048849642, "wall": 1792563963.8980727, "event": "skew_drop", "total": 8}
+{"t": 3844.148982827, "wall": 1792563963.9982057, "event": "skew_drop", "total": 9}
+{"t": 3844.233612481, "wall": 1792563964.0828357, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3844.233925359, "wall": 1792563964.083147, "event": "safety_paused"}
+{"t": 3844.249176048, "wall": 1792563964.098399, "event": "skew_drop", "total": 10}
+{"t": 3844.349301426, "wall": 1792563964.1985242, "event": "skew_drop", "total": 11}
+{"t": 3845.033989593, "wall": 1792563964.8832128, "event": "skew_drop", "total": 12}
+{"t": 3845.134380391, "wall": 1792563964.9836035, "event": "skew_drop", "total": 13}
+{"t": 3845.235218059, "wall": 1792563965.0844498, "event": "skew_drop", "total": 14}
+{"t": 3845.237278502, "wall": 1792563965.0865016, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3845.237531185, "wall": 1792563965.0867527, "event": "safety_paused"}
+{"t": 3845.335396689, "wall": 1792563965.1846194, "event": "skew_drop", "total": 15}
+{"t": 3845.435514261, "wall": 1792563965.2847373, "event": "skew_drop", "total": 16}
+{"t": 3845.53566921, "wall": 1792563965.3848925, "event": "skew_drop", "total": 17}
+{"t": 3845.635792031, "wall": 1792563965.4850152, "event": "skew_drop", "total": 18}
+{"t": 3845.735954596, "wall": 1792563965.5851777, "event": "skew_drop", "total": 19}
+{"t": 3845.83610609, "wall": 1792563965.685329, "event": "skew_drop", "total": 20}
+{"t": 3845.936283536, "wall": 1792563965.7855067, "event": "skew_drop", "total": 21}
+{"t": 3846.036420789, "wall": 1792563965.8856435, "event": "skew_drop", "total": 22}
+{"t": 3846.136534841, "wall": 1792563965.985758, "event": "skew_drop", "total": 23}
+{"t": 3846.209028698, "wall": 1792563966.0582516, "event": "say", "text": "Bring the page closer.", "channel": "argus"}
+{"t": 3846.209484814, "wall": 1792563966.0587068, "event": "speech_start", "text": "Bring the page closer.", "priority": 1, "queued_s": 0.00013821399988955818}
+{"t": 3846.236683455, "wall": 1792563966.0859067, "event": "skew_drop", "total": 24}
+{"t": 3846.336837511, "wall": 1792563966.186061, "event": "skew_drop", "total": 25}
+{"t": 3846.437290939, "wall": 1792563966.2865143, "event": "skew_drop", "total": 26}
+{"t": 3846.670439284, "wall": 1792563966.519662, "event": "skew_drop", "total": 27}
+{"t": 3846.770749762, "wall": 1792563966.619973, "event": "skew_drop", "total": 28}
+{"t": 3846.855954229, "wall": 1792563966.705177, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3846.856279491, "wall": 1792563966.705501, "event": "safety_paused"}
+{"t": 3846.870879016, "wall": 1792563966.7201018, "event": "skew_drop", "total": 29}
+{"t": 3846.971241913, "wall": 1792563966.8204644, "event": "skew_drop", "total": 30}
+{"t": 3847.071358238, "wall": 1792563966.9205813, "event": "skew_drop", "total": 31}
+{"t": 3847.172193348, "wall": 1792563967.0214164, "event": "skew_drop", "total": 32}
+{"t": 3847.372364592, "wall": 1792563967.2215874, "event": "skew_drop", "total": 33}
+{"t": 3847.472486935, "wall": 1792563967.3217099, "event": "skew_drop", "total": 1}
+{"t": 3847.57263872, "wall": 1792563967.4218616, "event": "skew_drop", "total": 2}
+{"t": 3847.612575428, "wall": 1792563967.4617984, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3847.61904013, "wall": 1792563967.4682631, "event": "safety_paused"}
+{"t": 3847.67281393, "wall": 1792563967.522037, "event": "skew_drop", "total": 3}
+{"t": 3847.772936626, "wall": 1792563967.62216, "event": "skew_drop", "total": 4}
+{"t": 3847.873474731, "wall": 1792563967.722698, "event": "skew_drop", "total": 5}
+{"t": 3848.073741436, "wall": 1792563967.9229639, "event": "skew_drop", "total": 6}
+{"t": 3848.174801101, "wall": 1792563968.024024, "event": "skew_drop", "total": 7}
+{"t": 3848.274972408, "wall": 1792563968.1241953, "event": "skew_drop", "total": 8}
+{"t": 3848.294914634, "wall": 1792563968.1441376, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3848.295192854, "wall": 1792563968.1444144, "event": "safety_paused"}
+{"t": 3848.375161253, "wall": 1792563968.2243845, "event": "skew_drop", "total": 9}
+{"t": 3848.475306991, "wall": 1792563968.32453, "event": "skew_drop", "total": 10}
+{"t": 3848.575456858, "wall": 1792563968.42468, "event": "skew_drop", "total": 11}
+{"t": 3848.67559674, "wall": 1792563968.5248196, "event": "skew_drop", "total": 12}
+{"t": 3848.875932218, "wall": 1792563968.725155, "event": "skew_drop", "total": 13}
+{"t": 3848.976079013, "wall": 1792563968.8253021, "event": "skew_drop", "total": 14}
+{"t": 3848.992151179, "wall": 1792563968.8413742, "event": "say", "text": "Hold still.", "channel": "argus"}
+{"t": 3848.993462469, "wall": 1792563968.8426847, "event": "speech_start", "text": "Hold still.", "priority": 1, "queued_s": 0.0010563989999354817}
+{"t": 3849.052467189, "wall": 1792563968.9016905, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3849.052744641, "wall": 1792563968.9019663, "event": "safety_paused"}
+{"t": 3851.832983581, "wall": 1792563971.6822064, "event": "say", "text": "Bring the page closer.", "channel": "argus"}
+{"t": 3851.833342125, "wall": 1792563971.6825638, "event": "say", "text": "I couldn't frame the text. Try again with more light.", "channel": "argus"}
+{"t": 3851.833493876, "wall": 1792563971.682716, "event": "speech_start", "text": "Bring the page closer.", "priority": 1, "queued_s": 0.0002403309999863268}
+{"t": 3851.833688413, "wall": 1792563971.6829102, "event": "query_end", "text": "read this", "total_s": 31.39415791500005, "latency": "2.4s (privacy 0.26, gemma 2.2)"}
+{"t": 3852.78811773, "wall": 1792563972.6373408, "event": "skew_drop", "total": 15}
+{"t": 3852.888264628, "wall": 1792563972.7374878, "event": "skew_drop", "total": 1}
+{"t": 3852.988395108, "wall": 1792563972.8376184, "event": "skew_drop", "total": 2}
+{"t": 3853.007307466, "wall": 1792563972.8565307, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3853.007591094, "wall": 1792563972.8568127, "event": "safety_paused"}
+{"t": 3853.088536502, "wall": 1792563972.9377596, "event": "skew_drop", "total": 3}
+{"t": 3853.188695368, "wall": 1792563973.037918, "event": "skew_drop", "total": 4}
+{"t": 3853.288897022, "wall": 1792563973.13812, "event": "skew_drop", "total": 5}
+{"t": 3853.389095603, "wall": 1792563973.2383184, "event": "skew_drop", "total": 6}
+{"t": 3853.489343339, "wall": 1792563973.338566, "event": "skew_drop", "total": 7}
+{"t": 3853.953175336, "wall": 1792563973.8023982, "event": "speech_start", "text": "I couldn't frame the text. Try again with more light.", "priority": 1, "queued_s": 2.119512300000224}
+{"t": 3853.990383, "wall": 1792563973.839606, "event": "skew_drop", "total": 8}
+{"t": 3854.299312235, "wall": 1792563974.1485355, "event": "skew_drop", "total": 9}
+{"t": 3856.707403246, "wall": 1792563976.556626, "event": "skew_drop", "total": 10}
+{"t": 3857.709010257, "wall": 1792563977.5582333, "event": "skew_drop", "total": 11}
+{"t": 3858.010393161, "wall": 1792563977.859616, "event": "skew_drop", "total": 12}
+{"t": 3858.210673565, "wall": 1792563978.059897, "event": "skew_drop", "total": 1}
+{"t": 3858.310824537, "wall": 1792563978.1600475, "event": "skew_drop", "total": 2}
+{"t": 3858.391120068, "wall": 1792563978.2403433, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3858.391364527, "wall": 1792563978.2405863, "event": "safety_paused"}
+{"t": 3858.511081967, "wall": 1792563978.360305, "event": "skew_drop", "total": 3}
+{"t": 3858.611225738, "wall": 1792563978.4604487, "event": "skew_drop", "total": 4}
+{"t": 3858.692756908, "wall": 1792563978.5419798, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3858.693036312, "wall": 1792563978.5422583, "event": "safety_paused"}
+{"t": 3858.711401159, "wall": 1792563978.560624, "event": "skew_drop", "total": 5}
+{"t": 3858.811543331, "wall": 1792563978.6607664, "event": "skew_drop", "total": 6}
+{"t": 3859.01191907, "wall": 1792563978.861142, "event": "skew_drop", "total": 7}
+{"t": 3859.112617394, "wall": 1792563978.9618402, "event": "skew_drop", "total": 8}
+{"t": 3859.199183412, "wall": 1792563979.0484064, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3859.199887155, "wall": 1792563979.0491092, "event": "safety_paused"}
+{"t": 3859.212777295, "wall": 1792563979.0620208, "event": "skew_drop", "total": 9}
+{"t": 3863.635478615, "wall": 1792563983.4847016, "event": "skew_drop", "total": 10}
+{"t": 3872.263523235, "wall": 1792563992.1127465, "event": "skew_drop", "total": 1}
+{"t": 3872.363757882, "wall": 1792563992.2129805, "event": "skew_drop", "total": 1}
+{"t": 3872.477485675, "wall": 1792563992.3267088, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3872.477771832, "wall": 1792563992.3269937, "event": "safety_paused"}
+{"t": 3872.564159942, "wall": 1792563992.4133832, "event": "skew_drop", "total": 2}
+{"t": 3872.664293944, "wall": 1792563992.513517, "event": "skew_drop", "total": 3}
+{"t": 3872.783289557, "wall": 1792563992.6325283, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3872.783814412, "wall": 1792563992.6330366, "event": "safety_paused"}
+{"t": 3872.864906669, "wall": 1792563992.71413, "event": "skew_drop", "total": 4}
+{"t": 3876.172758649, "wall": 1792563996.0219815, "event": "skew_drop", "total": 5}
+{"t": 3877.575566319, "wall": 1792563997.4247897, "event": "skew_drop", "total": 6}
+{"t": 3877.675771597, "wall": 1792563997.5249953, "event": "skew_drop", "total": 1}
+{"t": 3877.759944223, "wall": 1792563997.6091673, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3877.760688192, "wall": 1792563997.6099105, "event": "safety_paused"}
+{"t": 3877.77608488, "wall": 1792563997.6253083, "event": "skew_drop", "total": 2}
+{"t": 3877.876232972, "wall": 1792563997.7254558, "event": "skew_drop", "total": 3}
+{"t": 3877.976379624, "wall": 1792563997.8256025, "event": "skew_drop", "total": 4}
+{"t": 3878.076492514, "wall": 1792563997.9257157, "event": "skew_drop", "total": 5}
+{"t": 3878.176813798, "wall": 1792563998.0260367, "event": "skew_drop", "total": 6}
+{"t": 3878.276930338, "wall": 1792563998.1261532, "event": "skew_drop", "total": 7}
+{"t": 3878.377077023, "wall": 1792563998.2263, "event": "skew_drop", "total": 8}
+{"t": 3878.477263454, "wall": 1792563998.3264866, "event": "skew_drop", "total": 9}
+{"t": 3878.577406812, "wall": 1792563998.4266298, "event": "skew_drop", "total": 10}
+{"t": 3878.677584282, "wall": 1792563998.5268073, "event": "skew_drop", "total": 11}
+{"t": 3878.877814418, "wall": 1792563998.7270377, "event": "skew_drop", "total": 12}
+{"t": 3878.978052116, "wall": 1792563998.827275, "event": "skew_drop", "total": 13}
+{"t": 3879.070818983, "wall": 1792563998.9200423, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3879.071081395, "wall": 1792563998.920303, "event": "safety_paused"}
+{"t": 3880.784947432, "wall": 1792564000.6341708, "event": "skew_drop", "total": 14}
+{"t": 3881.185566732, "wall": 1792564001.0347908, "event": "skew_drop", "total": 15}
+{"t": 3881.28564238, "wall": 1792564001.1348655, "event": "skew_drop", "total": 16}
+{"t": 3881.386806235, "wall": 1792564001.2360291, "event": "skew_drop", "total": 17}
+{"t": 3881.39061607, "wall": 1792564001.239839, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3881.390881938, "wall": 1792564001.240104, "event": "safety_paused"}
+{"t": 3881.486919196, "wall": 1792564001.336142, "event": "skew_drop", "total": 18}
+{"t": 3881.787296928, "wall": 1792564001.6365201, "event": "skew_drop", "total": 19}
+{"t": 3881.887507333, "wall": 1792564001.7367303, "event": "skew_drop", "total": 20}
+{"t": 3882.00468525, "wall": 1792564001.8539083, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 3882.004968943, "wall": 1792564001.8541908, "event": "safety_paused"}
+{"t": 3882.588957424, "wall": 1792564002.438181, "event": "skew_drop", "total": 21}
+{"t": 3882.990213757, "wall": 1792564002.8394365, "event": "skew_drop", "total": 1}
+{"t": 3883.691504397, "wall": 1792564003.5407276, "event": "skew_drop", "total": 2}
+{"t": 3884.19233675, "wall": 1792564004.0415597, "event": "skew_drop", "total": 3}
+{"t": 3884.392594139, "wall": 1792564004.241817, "event": "skew_drop", "total": 4}
+{"t": 3885.401770945, "wall": 1792564005.2509942, "event": "skew_drop", "total": 5}

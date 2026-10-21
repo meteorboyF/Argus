@@ -1,0 +1,124 @@
+{"t": 4776.256212282, "wall": 1792564896.105435, "event": "system", "text": "session log: /home/argus/Argus/Argus/reports/sessions/2026-10-21-124136.jsonl", "channel": "system"}
+{"t": 4777.135724772, "wall": 1792564896.9849482, "event": "say", "text": "ARGUS ready.", "channel": "argus"}
+{"t": 4777.137532065, "wall": 1792564896.9867547, "event": "speech_start", "text": "ARGUS ready.", "priority": 0, "queued_s": 0.0013306929995451355}
+{"t": 4777.204532232, "wall": 1792564897.0537553, "event": "system", "text": "stereo uncalibrated: hazard speech suppressed until scripts/calibrate_stereo.py has run", "channel": "system"}
+{"t": 4777.289812031, "wall": 1792564897.1390355, "event": "user", "text": "In one short sentence, what is in front of me?", "channel": "user"}
+{"t": 4777.297150906, "wall": 1792564897.146374, "event": "query_start", "text": "In one short sentence, what is in front of me?"}
+{"t": 4777.297743961, "wall": 1792564897.146966, "event": "intent", "text": "In one short sentence, what is in front of me?", "skill": "describe", "name": "", "source": "rule"}
+{"t": 4777.456651181, "wall": 1792564897.305875, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4777.719155307, "wall": 1792564897.5683784, "event": "skew_drop", "total": 1}
+{"t": 4777.85958426, "wall": 1792564897.708807, "event": "skew_drop", "total": 1}
+{"t": 4778.014963682, "wall": 1792564897.8641877, "event": "depth_gap", "gap_s": 0.817}
+{"t": 4778.923404647, "wall": 1792564898.7726274, "event": "skew_drop", "total": 2}
+{"t": 4779.023569376, "wall": 1792564898.8727918, "event": "skew_drop", "total": 3}
+{"t": 4779.164468402, "wall": 1792564899.013691, "event": "depth_gap", "gap_s": 0.293}
+{"t": 4779.272508514, "wall": 1792564899.121733, "event": "skew_drop", "total": 4}
+{"t": 4779.37416036, "wall": 1792564899.2233832, "event": "skew_drop", "total": 5}
+{"t": 4779.53195962, "wall": 1792564899.3811822, "event": "depth_gap", "gap_s": 0.366}
+{"t": 4780.562363181, "wall": 1792564900.4115853, "event": "say", "text": "There are electrical outlets and a wooden door in front of you.", "channel": "argus"}
+{"t": 4780.562695902, "wall": 1792564900.4119177, "event": "query_end", "text": "In one short sentence, what is in front of me?", "total_s": 3.2655536370002665, "latency": "3.3s (privacy 0.34, gemma 2.9)"}
+{"t": 4780.562834277, "wall": 1792564900.412056, "event": "speech_start", "text": "There are electrical outlets and a wooden door in front of you.", "priority": 1, "queued_s": 0.00020001000029878924}
+{"t": 4781.228955364, "wall": 1792564901.078178, "event": "skew_drop", "total": 6}
+{"t": 4781.334041596, "wall": 1792564901.183265, "event": "skew_drop", "total": 7}
+{"t": 4781.47976772, "wall": 1792564901.3289907, "event": "depth_gap", "gap_s": 0.322}
+{"t": 4785.200287764, "wall": 1792564905.0495114, "event": "depth_gap", "gap_s": 0.277}
+{"t": 4785.669437972, "wall": 1792564905.5186617, "event": "skew_drop", "total": 8}
+{"t": 4785.87136038, "wall": 1792564905.7205834, "event": "skew_drop", "total": 1}
+{"t": 4786.071618382, "wall": 1792564905.9208412, "event": "skew_drop", "total": 2}
+{"t": 4786.172940548, "wall": 1792564906.0221632, "event": "skew_drop", "total": 3}
+{"t": 4786.327229134, "wall": 1792564906.1764524, "event": "depth_gap", "gap_s": 0.28}
+{"t": 4786.377143842, "wall": 1792564906.2263665, "event": "skew_drop", "total": 4}
+{"t": 4787.008552489, "wall": 1792564906.857776, "event": "skew_drop", "total": 5}
+{"t": 4787.496224009, "wall": 1792564907.3454475, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4787.547331963, "wall": 1792564907.3965554, "event": "depth_gap", "gap_s": 0.256}
+{"t": 4787.76100858, "wall": 1792564907.6102314, "event": "skew_drop", "total": 6}
+{"t": 4788.206923477, "wall": 1792564908.0561466, "event": "skew_drop", "total": 7}
+{"t": 4789.264828869, "wall": 1792564909.114052, "event": "depth_gap", "gap_s": 0.296}
+{"t": 4789.763832146, "wall": 1792564909.613055, "event": "skew_drop", "total": 8}
+{"t": 4790.295544123, "wall": 1792564910.1447678, "event": "depth_gap", "gap_s": 0.325}
+{"t": 4798.867048679, "wall": 1792564918.7162719, "event": "skew_drop", "total": 9}
+{"t": 4799.691719603, "wall": 1792564919.540943, "event": "skew_drop", "total": 1}
+{"t": 4800.092625081, "wall": 1792564919.941849, "event": "skew_drop", "total": 2}
+{"t": 4800.293504595, "wall": 1792564920.142728, "event": "skew_drop", "total": 3}
+{"t": 4800.693930691, "wall": 1792564920.5431547, "event": "skew_drop", "total": 4}
+{"t": 4801.207202145, "wall": 1792564921.0564263, "event": "skew_drop", "total": 5}
+{"t": 4801.407617859, "wall": 1792564921.256854, "event": "skew_drop", "total": 6}
+{"t": 4801.507730272, "wall": 1792564921.3569543, "event": "skew_drop", "total": 7}
+{"t": 4801.607862429, "wall": 1792564921.4570868, "event": "skew_drop", "total": 8}
+{"t": 4801.630689978, "wall": 1792564921.4799135, "event": "system", "text": "safety paused: no fresh depth", "channel": "system"}
+{"t": 4801.708034653, "wall": 1792564921.557259, "event": "skew_drop", "total": 9}
+{"t": 4801.831358954, "wall": 1792564921.680583, "event": "depth_gap", "gap_s": 0.462}
+{"t": 4801.908274838, "wall": 1792564921.7574995, "event": "skew_drop", "total": 10}
+{"t": 4802.008437749, "wall": 1792564921.8576627, "event": "skew_drop", "total": 11}
+{"t": 4802.10855493, "wall": 1792564921.957779, "event": "skew_drop", "total": 12}
+{"t": 4802.208708529, "wall": 1792564922.0579326, "event": "skew_drop", "total": 13}
+{"t": 4802.308838606, "wall": 1792564922.1580632, "event": "skew_drop", "total": 14}
+{"t": 4802.433012424, "wall": 1792564922.2822366, "event": "depth_gap", "gap_s": 0.596}
+{"t": 4802.611078438, "wall": 1792564922.4603019, "event": "skew_drop", "total": 15}
+{"t": 4802.711220677, "wall": 1792564922.560445, "event": "skew_drop", "total": 16}
+{"t": 4802.811359747, "wall": 1792564922.6605844, "event": "skew_drop", "total": 17}
+{"t": 4802.911542307, "wall": 1792564922.7607665, "event": "skew_drop", "total": 18}
+{"t": 4803.01174858, "wall": 1792564922.8609726, "event": "skew_drop", "total": 19}
+{"t": 4803.135086003, "wall": 1792564922.9843109, "event": "depth_gap", "gap_s": 0.6}
+{"t": 4803.211999455, "wall": 1792564923.0612621, "event": "skew_drop", "total": 20}
+{"t": 4803.312125405, "wall": 1792564923.1613505, "event": "skew_drop", "total": 21}
+{"t": 4803.412267003, "wall": 1792564923.2614918, "event": "skew_drop", "total": 22}
+{"t": 4803.536455446, "wall": 1792564923.3856788, "event": "depth_gap", "gap_s": 0.392}
+{"t": 4803.612538168, "wall": 1792564923.4617627, "event": "skew_drop", "total": 23}
+{"t": 4803.712677238, "wall": 1792564923.5619016, "event": "skew_drop", "total": 24}
+{"t": 4803.837306216, "wall": 1792564923.6865304, "event": "depth_gap", "gap_s": 0.294}
+{"t": 4804.014905934, "wall": 1792564923.8641298, "event": "skew_drop", "total": 25}
+{"t": 4804.215200876, "wall": 1792564924.0644245, "event": "skew_drop", "total": 1}
+{"t": 4804.315295368, "wall": 1792564924.1645203, "event": "skew_drop", "total": 2}
+{"t": 4804.415719766, "wall": 1792564924.2649436, "event": "skew_drop", "total": 3}
+{"t": 4804.515680043, "wall": 1792564924.3649046, "event": "skew_drop", "total": 4}
+{"t": 4804.641954034, "wall": 1792564924.4911773, "event": "depth_gap", "gap_s": 0.493}
+{"t": 4804.715932071, "wall": 1792564924.5651557, "event": "skew_drop", "total": 5}
+{"t": 4804.816117736, "wall": 1792564924.6653428, "event": "skew_drop", "total": 6}
+{"t": 4804.916239301, "wall": 1792564924.7654634, "event": "skew_drop", "total": 7}
+{"t": 4805.0163881, "wall": 1792564924.8656123, "event": "skew_drop", "total": 8}
+{"t": 4805.116521891, "wall": 1792564924.965746, "event": "skew_drop", "total": 9}
+{"t": 4805.216759847, "wall": 1792564925.065985, "event": "skew_drop", "total": 10}
+{"t": 4805.351927866, "wall": 1792564925.2011526, "event": "depth_gap", "gap_s": 0.69}
+{"t": 4805.951204867, "wall": 1792564925.8004284, "event": "skew_drop", "total": 11}
+{"t": 4806.151725581, "wall": 1792564926.0009499, "event": "skew_drop", "total": 12}
+{"t": 4806.35182301, "wall": 1792564926.201047, "event": "skew_drop", "total": 13}
+{"t": 4806.451980514, "wall": 1792564926.3012044, "event": "skew_drop", "total": 14}
+{"t": 4806.55213885, "wall": 1792564926.4013631, "event": "skew_drop", "total": 15}
+{"t": 4806.652355333, "wall": 1792564926.5015798, "event": "skew_drop", "total": 16}
+{"t": 4806.812514343, "wall": 1792564926.6617384, "event": "depth_gap", "gap_s": 0.457}
+{"t": 4806.852650948, "wall": 1792564926.7018754, "event": "skew_drop", "total": 17}
+{"t": 4806.952720544, "wall": 1792564926.8019445, "event": "skew_drop", "total": 18}
+{"t": 4807.052885568, "wall": 1792564926.90211, "event": "skew_drop", "total": 19}
+{"t": 4807.153274252, "wall": 1792564927.0024977, "event": "skew_drop", "total": 20}
+{"t": 4807.253414572, "wall": 1792564927.1026397, "event": "skew_drop", "total": 21}
+{"t": 4807.353544299, "wall": 1792564927.2027686, "event": "skew_drop", "total": 22}
+{"t": 4807.516153292, "wall": 1792564927.365377, "event": "depth_gap", "gap_s": 0.655}
+{"t": 4807.553818057, "wall": 1792564927.403042, "event": "skew_drop", "total": 23}
+{"t": 4807.654246615, "wall": 1792564927.5034719, "event": "skew_drop", "total": 24}
+{"t": 4807.81955994, "wall": 1792564927.6687841, "event": "depth_gap", "gap_s": 0.3}
+{"t": 4808.154840751, "wall": 1792564928.0040643, "event": "skew_drop", "total": 25}
+{"t": 4808.656512064, "wall": 1792564928.5057366, "event": "skew_drop", "total": 26}
+{"t": 4808.756683649, "wall": 1792564928.6059077, "event": "skew_drop", "total": 27}
+{"t": 4808.85681088, "wall": 1792564928.7060344, "event": "skew_drop", "total": 28}
+{"t": 4808.980070221, "wall": 1792564928.8292935, "event": "depth_gap", "gap_s": 0.395}
+{"t": 4809.357813199, "wall": 1792564929.2070374, "event": "skew_drop", "total": 29}
+{"t": 4809.457950255, "wall": 1792564929.307175, "event": "skew_drop", "total": 1}
+{"t": 4809.582087081, "wall": 1792564929.4313107, "event": "depth_gap", "gap_s": 0.298}
+{"t": 4809.761062842, "wall": 1792564929.610287, "event": "skew_drop", "total": 2}
+{"t": 4810.161521236, "wall": 1792564930.0107448, "event": "skew_drop", "total": 3}
+{"t": 4810.361871, "wall": 1792564930.2110946, "event": "skew_drop", "total": 4}
+{"t": 4810.461977559, "wall": 1792564930.311202, "event": "skew_drop", "total": 5}
+{"t": 4810.562143481, "wall": 1792564930.4113688, "event": "skew_drop", "total": 6}
+{"t": 4810.662318971, "wall": 1792564930.511543, "event": "skew_drop", "total": 7}
+{"t": 4810.762501597, "wall": 1792564930.6117263, "event": "skew_drop", "total": 8}
+{"t": 4810.862692544, "wall": 1792564930.7119174, "event": "skew_drop", "total": 9}
+{"t": 4810.962836832, "wall": 1792564930.8120618, "event": "skew_drop", "total": 10}
+{"t": 4811.090418733, "wall": 1792564930.9396424, "event": "depth_gap", "gap_s": 0.743}
+{"t": 4811.363457157, "wall": 1792564931.2126813, "event": "skew_drop", "total": 11}
+{"t": 4811.463632167, "wall": 1792564931.3128572, "event": "skew_drop", "total": 12}
+{"t": 4811.563816586, "wall": 1792564931.4130409, "event": "skew_drop", "total": 13}
+{"t": 4811.664150933, "wall": 1792564931.5133734, "event": "skew_drop", "total": 14}
+{"t": 4811.764394874, "wall": 1792564931.6136177, "event": "skew_drop", "total": 15}
+{"t": 4811.864539547, "wall": 1792564931.713762, "event": "skew_drop", "total": 16}
+{"t": 4811.964680796, "wall": 1792564931.8139033, "event": "skew_drop", "total": 17}
