@@ -67,6 +67,11 @@ class Orchestrator:
         # P0-P4 arbitration over Piper: hazards cut answers, answers resume,
         # the user talking holds non-safety speech (argus/arbiter.py).
         from .arbiter import ArbitratedSpeaker
+        from .speech import prefer_usb_audio
+        if enable_audio:
+            chosen = prefer_usb_audio()
+            if chosen:
+                print(f"[speech] USB audio selected: {chosen}")
         self.speaker = ArbitratedSpeaker(Speaker(cfg.speech, enabled=enable_audio))
         self.enable_audio = enable_audio
 

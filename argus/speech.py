@@ -346,3 +346,26 @@ def mic_stream(sample_rate: int, block_ms: int = 80, device=None):
                         callback=cb):
         while True:
             yield q.get()
+
+
+def prefer_usb_audio() -> dict:
+    """Make the USB headset PulseAudio's default source and sink, if present.
+
+    After a reboot Pulse fell back to the Jetson's onboard analog input,
+    where nothing is plugged in, and the mic recorded pure zeros
+    (2026-10-21). Called at start-up; harmless without a USB headset."""
+    out = {}
+    if not shutil.which("pactl"):
+        return out
+    for kind, cmd in (("source", "set-default-source"), ("sink", "set-default-sink")):
+        try:
+            names = subprocess.run(["pactl", "list", "short", kind + "s"], capture_output=True,
+                                   text=True, timeout=3).stdout.split("\n")
+            usb = [l.split("\t")[1] for l in names if "\t" in l and "usb" in l.lower()
+                   and ".monitor" not in l]
+            if usb:
+                subprocess.run(["pactl", cmd, usb[0]], timeout=3, check=False)
+                out[kind] = usb[0]
+        except (OSError, subprocess.SubprocessError, IndexError):
+            pass
+    return out
