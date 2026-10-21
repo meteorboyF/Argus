@@ -383,7 +383,8 @@ class Orchestrator:
         if getattr(self, "_reader", None) is None:
             from .reading import ReadingSession
             self._reader = ReadingSession(self.rig, self.speaker,
-                                          locate=self.grounder.find_object)
+                                          locate=lambda n, im: self.grounder.find_object(
+                                              n, im, conf=0.12))
         return self._reader
 
     def handle_query(self, question: str):

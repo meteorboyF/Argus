@@ -649,3 +649,80 @@ def run_bandwidth(cfg: ArgusConfig, seconds: float = 8.0, rates=(30, 60, 80),
         return report
     finally:
         guide.close()
+
+
+# ---------------------------------------------------------------------------
+# --focus: spoken focus assistant for the wide camera's manual lens
+# ---------------------------------------------------------------------------
+def focus_score(gray: np.ndarray) -> float:
+    """Sharpness of the central half (Laplacian variance), robust to brightness."""
+    h, w = gray.shape
+    c = gray[h // 4:3 * h // 4, w // 4:3 * w // 4]
+    c = cv2.equalizeHist(c)
+    return float(cv2.Laplacian(c, cv2.CV_64F).var())
+
+
+def focus_advice(history: list[float], best: float) -> str:
+    """Trend of the last few scores -> one short spoken cue."""
+    if len(history) < 4:
+        return "Turn the lens slowly."
+    recent, before = np.mean(history[-2:]), np.mean(history[-4:-2])
+    if recent >= 0.97 * best and best > 0:
+        return "That is the sharpest so far."
+    if recent > before * 1.05:
+        return "Sharper. Keep going."
+    if recent < before * 0.95:
+        return "Blurrier. Turn back."
+    return "Keep turning slowly."
+
+
+def run_focus(cfg: ArgusConfig, seconds: float = 120.0, speak: bool = True) -> dict:
+    """Guide the wearer to focus the wide camera on a page at reading distance."""
+    from .guide import Guide
+    guide = Guide(cfg.speech, "ARGUS focus", speak=speak, show=True, min_gap_s=1.2, repeat_s=6.0)
+    roles = assign_roles(capture_nodes(), cfg)
+    if "wide" not in roles:
+        guide.failed("The wide camera is not connected.")
+        guide.close()
+        return {"error": "no wide camera"}
+    probe = StreamProbe("wide", roles["wide"], cfg.camera.wide_width, cfg.camera.wide_height,
+                        cfg.camera.wide_fps, cfg.camera.pixel_format)
+    hist: list[float] = []
+    best, best_t = 0.0, 0.0
+    try:
+        _wait_frames({"wide": probe})
+        guide.announce("Focus. Hold a printed page facing the middle camera, at arm's length, "
+                       "about forty five centimetres. With your other hand, turn the lens of "
+                       "the middle camera very slowly. I will tell you when it is sharp.")
+        t0 = time.monotonic()
+        last_sample = 0.0
+        while time.monotonic() - t0 < seconds:
+            f = probe.snapshot(1.0)
+            if f is None:
+                time.sleep(0.05)
+                continue
+            now = time.monotonic()
+            if now - last_sample >= 0.25:
+                last_sample = now
+                s = focus_score(cv2.cvtColor(f, cv2.COLOR_BGR2GRAY))
+                hist.append(s)
+                if s > best:
+                    best, best_t = s, now
+                cue = focus_advice(hist, best)
+                guide.say(cue)
+                # Stable at the peak for 3 s: done.
+                if best > 0 and now - best_t > 3.0 and np.mean(hist[-8:]) >= 0.93 * best \
+                        and len(hist) > 20:
+                    guide.done("That is the sharpest. Stop turning and leave the lens there.")
+                    break
+            view = cv2.resize(f, (1920, 1080))
+            cv2.putText(view, f"sharpness {hist[-1] if hist else 0:.0f}   best {best:.0f}",
+                        (40, 1040), cv2.FONT_HERSHEY_SIMPLEX, 1.6, (0, 255, 0), 4, cv2.LINE_AA)
+            guide.show(view, sub="Turn the middle camera's lens slowly. Esc to stop.",
+                       progress=min(1.0, (hist[-1] / best) if best else 0.0))
+        else:
+            guide.done(f"Best sharpness {best:.0f}. Leave the lens at its sharpest point.")
+        return {"kind": "argus-focus", "best": best, "samples": hist[-200:]}
+    finally:
+        probe.close()
+        guide.close()

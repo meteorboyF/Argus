@@ -107,7 +107,8 @@ class Grounder:
         image = canvas[:, :, ::-1].transpose(2, 0, 1)
         return np.ascontiguousarray(image[None], dtype=np.float32) / 255.0, scale, pad_x, pad_y
 
-    def _find_object_trt(self, name: str, frame_bgr: np.ndarray) -> Detection | None:
+    def _find_object_trt(self, name: str, frame_bgr: np.ndarray,
+                         conf: float | None = None) -> Detection | None:
         import cv2
         image, scale, pad_x, pad_y = self._preprocess(frame_bgr)
         outputs = self._runner.infer(
@@ -115,7 +116,8 @@ class Grounder:
         raw = next(iter(outputs.values()))[0]
         if raw.shape[0] != 5:
             raise RuntimeError(f"Unexpected grounding output shape: {raw.shape}")
-        keep = np.flatnonzero(raw[4] >= self.cfg.conf_threshold)
+        thr = self.cfg.conf_threshold if conf is None else conf
+        keep = np.flatnonzero(raw[4] >= thr)
         if keep.size == 0:
             return None
         boxes_xywh = raw[:4, keep].T
@@ -124,8 +126,7 @@ class Grounder:
         for cx, cy, width, height in boxes_xywh:
             boxes.append([float(cx - width / 2), float(cy - height / 2),
                           float(width), float(height)])
-        selected = cv2.dnn.NMSBoxes(boxes, scores.tolist(),
-                                    self.cfg.conf_threshold, 0.45)
+        selected = cv2.dnn.NMSBoxes(boxes, scores.tolist(), thr, 0.45)
         if len(selected) == 0:
             return None
         best_i = max((int(i) for i in np.asarray(selected).reshape(-1)),
@@ -152,10 +153,13 @@ class Grounder:
         # One TensorRT pass so the CUDA context and kernels are hot too.
         self._find_object_trt("object", np.zeros((self.cfg.imgsz, self.cfg.imgsz, 3), np.uint8))
 
-    def find_object(self, name: str, frame_bgr: np.ndarray) -> Detection | None:
-        """Detect the single best instance of `name` in the frame, or None."""
+    def find_object(self, name: str, frame_bgr: np.ndarray,
+                    conf: float | None = None) -> Detection | None:
+        """Detect the single best instance of `name` in the frame, or None.
+        `conf` overrides the threshold (reading uses a low one: a wrong crop
+        only costs time, the full still is the fallback)."""
         if self.cfg.backend == "trt":
-            return self._find_object_trt(name.strip(), frame_bgr)
+            return self._find_object_trt(name.strip(), frame_bgr, conf)
         self._set_classes([name])
         results = self._model.predict(
             frame_bgr, conf=self.cfg.conf_threshold, imgsz=self.cfg.imgsz, verbose=False

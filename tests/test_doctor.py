@@ -109,3 +109,23 @@ def test_snapshot_refuses_stale_frames():
     p.latest, p.latest_ts = np.zeros((2, 2, 3), np.uint8), time.perf_counter() - 2.0
     assert p.snapshot() is not None
     assert p.snapshot(max_age_s=1.0) is None
+
+
+def test_focus_score_prefers_sharp_images():
+    import cv2
+    import numpy as np
+    from argus.doctor import focus_score
+    rng = np.random.default_rng(0)
+    img = np.zeros((400, 600), np.uint8)
+    for _ in range(60):
+        x, y = int(rng.integers(150, 420)), int(rng.integers(100, 300))
+        cv2.putText(img, "Text", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.8, 255, 2)
+    blurred = cv2.GaussianBlur(img, (0, 0), 3)
+    assert focus_score(img) > 3 * focus_score(blurred)
+
+
+def test_focus_advice_follows_the_trend():
+    from argus.doctor import focus_advice
+    assert focus_advice([10, 10, 22, 22], 22) == "That is the sharpest so far."
+    assert focus_advice([30, 30, 20, 18], 30) == "Blurrier. Turn back."
+    assert focus_advice([10, 10, 13, 14], 40) == "Sharper. Keep going."

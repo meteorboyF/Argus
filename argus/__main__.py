@@ -75,6 +75,10 @@ def _cmd_doctor(args):
                                    speak=speak)
         doctor.write_json(rep, f"skew-test-{stamp}.json")
         sys.exit(0 if "error" not in rep else 1)
+    if args.focus:
+        rep = doctor.run_focus(cfg, speak=speak)
+        doctor.write_json(rep, f"focus-{stamp}.json")
+        return
     if args.bandwidth:
         rep = doctor.run_bandwidth(cfg, speak=speak)
         doctor.write_json(rep, f"usb-bandwidth-{stamp}.json")
@@ -143,6 +147,8 @@ def main(argv=None):
     pd.add_argument("--bandwidth", action="store_true",
                     help="stereo fps matrix with the wide camera closed vs streaming")
     pd.add_argument("--stereo-fps", type=int, default=None, help="override stereo fps (skew test)")
+    pd.add_argument("--focus", action="store_true",
+                    help="spoken focus assistant: focus the wide camera's lens for reading")
     pd.add_argument("--quiet", action="store_true", help="no speech")
     pd.set_defaults(func=_cmd_doctor)
 
