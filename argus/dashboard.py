@@ -197,10 +197,10 @@ class Dashboard(threading.Thread):
         self.window = window
         self.typed = ""
         self.closed = threading.Event()
-        self._stop = threading.Event()
+        self._halt = threading.Event()   # not _stop: that shadows Thread._stop() and breaks join()
 
     def stop(self):
-        self._stop.set()
+        self._halt.set()
 
     # ------------------------------------------------------------ render
     def render(self, snap: Snapshot) -> np.ndarray:
@@ -272,18 +272,16 @@ class Dashboard(threading.Thread):
         else:
             cv2.resizeWindow(self.window, self.width, self.height)
         try:
-            while not self._stop.is_set():
+            while not self._halt.is_set():
                 t0 = time.perf_counter()
                 cv2.imshow(self.window, self.render(bus.snapshot()))
                 key = cv2.waitKey(max(1, int(self.period * 1000 * 0.5))) & 0xFF
                 if key != 255:
                     if not self._handle_key(key):
                         break
-                try:
-                    if cv2.getWindowProperty(self.window, cv2.WND_PROP_VISIBLE) < 1:
-                        break
-                except cv2.error:
-                    break
+                # Losing focus or visibility (clicking another window) must
+                # NOT end the session: it shut ARGUS down mid-test on
+                # 2026-10-21. Only an explicit key (Esc / q) closes it.
                 dt = time.perf_counter() - t0
                 if dt < self.period:
                     time.sleep(self.period - dt)

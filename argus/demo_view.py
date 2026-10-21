@@ -58,7 +58,7 @@ class FaceBlurCache(threading.Thread):
         self.boxes: list[tuple[int, int, int, int]] = []
         self._frame = None
         self._lock = threading.Lock()
-        self._stop = threading.Event()
+        self._halt = threading.Event()   # not _stop: that shadows Thread._stop() and breaks join()
         self.ok = False
         try:
             from .privacy import PrivacyGate
@@ -72,7 +72,7 @@ class FaceBlurCache(threading.Thread):
             self._frame = frame
 
     def run(self):
-        while not self._stop.is_set() and self.ok:
+        while not self._halt.is_set() and self.ok:
             with self._lock:
                 f, self._frame = self._frame, None
             if f is None:
@@ -102,7 +102,7 @@ class FaceBlurCache(threading.Thread):
         return out
 
     def stop(self):
-        self._stop.set()
+        self._halt.set()
 
 
 # ---------------------------------------------------------------------------
