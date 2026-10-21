@@ -58,7 +58,10 @@ class Orchestrator:
         self.rig = CameraRig(cfg.camera)
         self.safety = SafetyReflex(cfg.safety)
         self.agent = GemmaAgent(cfg.agent)
-        self.speaker = Speaker(cfg.speech, enabled=enable_audio)
+        # P0-P4 arbitration over Piper: hazards cut answers, answers resume,
+        # the user talking holds non-safety speech (argus/arbiter.py).
+        from .arbiter import ArbitratedSpeaker
+        self.speaker = ArbitratedSpeaker(Speaker(cfg.speech, enabled=enable_audio))
         self.enable_audio = enable_audio
 
         self._latest_depth: np.ndarray | None = None
@@ -174,9 +177,10 @@ class Orchestrator:
                     nav_status=f"{guidance.status} ({guidance.width_deg:.0f} deg free)")
             phrase = self.navigator.spoken(guidance)
             if phrase:
-                self.speaker.speak(phrase, Priority.NORMAL)
+                self.speaker.speak(phrase, Priority.GUIDANCE)
 
     def _publish_depth(self, depth_m: np.ndarray):
+        self.speaker.arbiter.depth_heartbeat()
         """Dashboard view of the depth map, sampled at most ~10 Hz."""
         from .dashboard import depth_to_color, disparity_to_color
         now = time.perf_counter()
@@ -483,7 +487,7 @@ class Orchestrator:
             self._dashboard = Dashboard(on_question=self.handle_query, fullscreen=fullscreen)
             self._dashboard.start()
         self.start_fast_loop()
-        self.speaker.speak("ARGUS ready.")
+        self.speaker.speak("ARGUS ready.", Priority.SYSTEM)
         try:
             if not self.enable_mic:
                 # No wake word / STT: questions arrive typed from the dashboard
@@ -517,13 +521,28 @@ class Orchestrator:
             if self._dashboard is not None and self._dashboard.closed.is_set():
                 break
             if self.wake.detected(block):
-                self.speaker.speak("Yes?")
+                # Earcon instead of "Yes?": ~0.25 s instead of a Piper sentence.
+                from . import earcons
+                from .vad import EndpointConfig, record_utterance
+                earcons.play("listening")
                 bus.set(gemma="listening")
-                audio = record(self.cfg.speech.record_seconds, sr,
-                               device=self.cfg.speech.input_device,
-                               stop_on_silence=self.cfg.speech.stop_on_silence)
+                t_listen = time.perf_counter()
+                # Silero endpointing: stops 0.7 s after the user stops talking
+                # (15 s cap). While they talk, non-safety speech is held.
+                audio, state = record_utterance(
+                    device=self.cfg.speech.input_device,
+                    cfg=EndpointConfig(max_s=max(self.cfg.speech.record_seconds, 15.0)),
+                    on_speech=self.speaker.arbiter.set_user_speaking)
+                self.speaker.arbiter.set_user_speaking(False)
+                if state == "timeout":
+                    bus.set(gemma="idle (no speech heard)")
+                    self.wake.reset()
+                    continue
                 bus.set(gemma="transcribing")
+                t_stt = time.perf_counter()
                 question = self.stt.transcribe(audio)
+                bus.set(stt_latency=f"listen {t_stt - t_listen:.1f}s, "
+                                    f"stt {time.perf_counter() - t_stt:.2f}s")
                 if question:
                     self.handle_query(question)
                 # speak() is non-blocking now, so wait for the answer to finish

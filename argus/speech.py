@@ -104,16 +104,21 @@ class Transcriber:
 
 
 class Priority(IntEnum):
-    """Speech urgency. Higher wins the speaker.
+    """Speech urgency. Higher wins the speaker. The arbiter's P-levels:
 
-    NORMAL — agent answers, acknowledgements. Never interrupts anything.
-    WARN   — advisory hazard. Jumps ahead of queued NORMAL speech but lets an
-             in-flight utterance finish.
-    DANGER — urgent hazard. Preempts whatever is playing, immediately.
+    SYSTEM   (P4) — status, "ARGUS ready". Lowest.
+    NORMAL   (P3) — agent answers, acknowledgements.
+    GUIDANCE (P2) — navigation and framing cues.
+    WARN     (P1) — advisory hazard.
+    DANGER   (P0) — imminent hazard; preempts everything immediately.
+
+    Only the order matters; code compares levels, never raw values.
     """
-    NORMAL = 0
-    WARN = 1
-    DANGER = 2
+    SYSTEM = 0
+    NORMAL = 1
+    GUIDANCE = 2
+    WARN = 3
+    DANGER = 4
 
 
 # A safety phrase that has waited longer than this is describing a world that
