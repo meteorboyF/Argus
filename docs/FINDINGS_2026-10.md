@@ -1,0 +1,126 @@
+# ARGUS findings, October 2026 (device sessions 10-02, 10-18, 10-21)
+
+What was learned on the real rig, with the evidence behind each item. If a
+finding conflicts with older documentation, this file is newer; `STATUS.md`
+is the per-component truth. Each section ends with **Do / Don't** rules for
+whoever works next.
+
+Hardware, unchanged: Jetson Orin Nano Super 8 GB (L4T R36.5.2, JetPack 6,
+MAXN_SUPER), 2x Arducam B0495 (AR0234, USB3, stereo), 1x Arducam B0459
+(IMX477, USB3, "wide"), USB headset (GeneralPlus USB Audio, mic + phones),
+original 19 V barrel PSU, a pink 3D-printed bridge holding the two stereo
+cameras on knob-and-bolt heads with the wide camera on a centre post.
+
+---
+
+## 1. Rig, cameras and USB
+
+| Finding | Evidence |
+|---|---|
+| Camera roles must be bound by **hub port** and re-verified after every recable. They changed three times (10-02, 10-18, 10-21). Current: left `2-1.1`, right `2-1.2`, wide `2-1.4` (`config/argus.yaml`). | `reports/doctor-*.json`, `DECISION_LOG.md` |
+| Left vs right is decided by **parallax, not labels**: near objects shift further right in the LEFT image. Moving cameras into the bridge swapped them once (near keychain shifted 219 px more than the far monitor, in the swapped direction). | `DECISION_LOG.md` 2026-10-18 |
+| "Connected" ≠ enumerated. With no kernel USB event at all, the cable has no contact; `-71` errors plus a reset mean a strained plug. A B0495 dropped off USB while its knob was being turned. | `journalctl -k` excerpts in `DECISION_LOG.md` |
+| USB bandwidth is **not** a constraint. The stereo pair holds 79 fps even with the wide camera at 1080p30; the wide camera reopens in 0.47 s. | `reports/usb-bandwidth-2026-10-02-2112.json` |
+| Stereo runs at **60 fps**: capture CPU is 73 / 111 / 152 % of one core at 30 / 60 / 80 fps; worst-case pair skew is 8.3 ms. | same + `DECISION_LOG.md` |
+| All three cameras are upright when worn: rotations are 0. | `reports/worn-orientation-2026-10-02.json` |
+| B0495 modes: YUYV 960x600 @ 15/30/60/80, 1920x1200 @ 15/30/50. B0459 modes: YUYV 1280x720, 1920x1080, 2016x1520, 3840x2160, 4048x3040. A 4048x3040 still takes ~1.25 s (open + 2 settle frames) at 6.4 fps; the 1080p stream is restored afterwards. | `v4l2-ctl`, `reports/reading-latency-2026-10-21.json` |
+| **The B0459 has no focus control** (fixed, hand-focused lens) and no exposure compensation. As shipped it focuses far: a page at arm's length is blurred (Laplacian 47). A bright window behind a page makes it read as 46/255 against a 126 background. | `reports/reading-latency-2026-10-21.json`, `DECISION_LOG.md` 2026-10-21 |
+| The board throttles on over-current under heavy GPU load in MAXN_SUPER (`oc3` channel, 700–965 events per Gemma benchmark), even on the original PSU. It is protective, not damaging, but GPU latencies measured under it are pessimistic. | `argus doctor` row, `reports/vlm-m3-qat-2026-10-02.json` (`oc_throttle_events`) |
+
+**Do:**
+- run `python3 -m argus doctor` after any physical change;
+- check the left/right binding by parallax;
+- tighten both screw-locks and give each cable a slack loop tied to the bridge.
+
+**Don't:**
+- trust `/dev/videoN` numbers or port hints after recabling;
+- run GPU benchmarks without recording the OC counter (`doctor.oc_events()`).
+
+## 2. Stereo alignment and calibration (still open)
+
+| Finding | Evidence |
+|---|---|
+| The old ball-head mount was toed out ~25° (worn, at 1 m: 328 px disparity, 13.6 px vertical, ~1° roll). | `reports/worn-orientation-2026-10-02.json` |
+| The printed bridge fixed most of it. After a guided session: vertical within about ±5–15 px, roll "very slightly", overlap 81–91%. A clean final measurement was never taken: the last one was done while the rig was being handled and was discarded. | `reports/align-*.json`, `DECISION_LOG.md` 2026-10-21 |
+| Alignment tolerances must sit above estimator noise and what a hand can hold. 3 px / 0.5° / 1° looped forever; now 8 px / 1° / 2°, with 1.5x hysteresis while locking. | `argus/align.py` `Targets` |
+| Yaw from a homography on a near scene reads the baseline parallax as toe-out (~7° at 1 m for 13 cm). Measure yaw on a scene ≥ 3–4 m away. A near person in view corrupts homography pitch: size pitch from vertical pixels. | `argus/align.py` |
+| Never measure with the camera facing its own monitor. Video feedback gave 775 fake matches and a perfect-looking 0 px. | `DECISION_LOG.md` 2026-10-18 |
+| Calibration gate: OpenCV's free k3 overfits held-out views badly (0.1 px corner noise → 2.3 px worst row error; 0.2 px → 16 px). k3 is now fixed at 0 (0.65 / 1.37 px). The gate requires a tape-measured baseline. | `tests/test_calibration_gate.py`, `DECISION_LOG.md` |
+| **There is still no `/opt/argus/config/stereo_calib.npz`.** Everything metric (hazard speech, approach TTC speech, seat steps, VO, corridor guidance) is coded but stays off by design until it exists. | `STATUS.md` |
+
+**Do:**
+- before calibrating, get from the user: the square size (measure across 4 squares, divide by 4, in mm), the lens-to-lens baseline in mm, and confirmation that the board lies flat;
+- then run `scripts/calibrate_stereo.py --coach --square-mm N --baseline-mm B`, then `--verify`.
+
+**Don't:**
+- relax the calibration gate to get a file saved;
+- enable metric speech without a gated calibration.
+
+## 3. Memory and models
+
+| Finding | Evidence |
+|---|---|
+| The Gemma mmproj bundled a 612 MB **audio** tower. A vision-only projector is 373 MB (`scripts/strip_mmproj_audio.py`). | `reports/vlm-m3-steps-2026-10-02.json` |
+| Production Gemma: **QAT UD-Q4_K_XL**, vision mmproj **on GPU**, `--image-max-tokens 560 -ub 1024 -b 1024`, ctx 2048, `--cache-ram 0`, one slot, flash-attn. Describe ~2.2 s, find ~1.7 s, read-560 ~3.5 s warm (all under OC throttling). | `reports/vlm-m3-qat-2026-10-02.json`, `scripts/run_llama_server.sh` |
+| A 256 px image cap made Gemma answer "I cannot see… I am a text-based AI". Images are now sized by token budget (48x48 px per token, 280 tokens). | `DECISION_LOG.md` 2026-10-02 |
+| Benchmarks must send `cache_prompt: false`, or repeated images report prompt-cache speeds. | `scripts/bench_vlm.py` |
+| Grounding no longer loads torch: a 401-label CLIP vocabulary is precomputed (`config/vocab_en.txt` → `/opt/argus/models/clip/vocab_embeddings.npy`). RSS 1672 → 353 MB, warm-up 11.6 → 1.6 s. Torch/CLIP load only for out-of-vocabulary words. | `reports/mem-budget-2026-10-02.json` |
+| Per-component RSS: privacy 173, grounding 353, CUDA SAD 120, Piper 157, Whisper tiny 555, openWakeWord 200 MB, llama-server ~3.1 GB. Projected stack ~4.6 GB. **Not yet soak-measured.** On the dev desktop VS Code + Chromium + agents hold ~3 GB more. | `reports/mem-budget-2026-10-02.json` |
+| The Qwen3.5-2B bake-off has not been done. | — |
+
+**Do:** pin SHA-256 for every new model in `STATUS.md`, and measure RSS and `MemAvailable` together.
+
+**Don't:**
+- reintroduce torch into the runtime path;
+- use `--mlock`;
+- switch to E4B.
+
+## 4. Perception modules
+
+| Finding | Evidence |
+|---|---|
+| Depth backends on 40 live, **unrectified** pairs: CUDA SAD 480x300/64 is 7.6 ms median; VPI SGM 480x300/64 is 13.0 ms (denser: 94–98% valid on synthetic, against SAD's 85%); SGM 960x600 is 30 ms and too heavy next to Gemma. SAD remains the default; `vpi_sgm` is selectable. Choose on calibrated tape accuracy. | `reports/depth-backends-2026-10-21.json` |
+| Synthetic stereo tests need the real sign convention: a point appears further LEFT in the right image. A wrong-sign pair made VPI look broken. | `tests/test_vpi_stereo.py` |
+| Corridor engine (`argus/hazards.py`): RANSAC ground fitted on the **bottom image rows** (fitting all low points let a lower floor past a step win and hid the drop); vectorised, 5 ms per tick. A head-worn camera looks down 20–25°: a 10° synthetic camera could not see the floor before 2 m. The head-motion gate is in deg/s via phase correlation (Farneback failed on fine texture). | `tests/test_hazards.py`, `DECISION_LOG.md` |
+| Movers: YOLO11n FP16 TensorRT at 640x416, **3.3 ms GPU, 14.4 ms end to end** after `cv2.dnn.blobFromImage` (numpy pre-processing cost 15 ms). Runs on the (rectified) left frame so boxes align with depth. Found a live person at 0.91. | `argus/movers.py`, `STATUS.md` pins |
+| **pycuda contexts are per thread.** A TensorRT engine created on a worker thread failed ("no currently active context"). `TRTRunner` now pushes the primary context per call. | `argus/trt_runner.py`, `DECISION_LOG.md` |
+| The grounder finds a hand-held book at only 0.19 confidence: reading locates documents at 0.12 (a wrong crop only costs time). | `argus/orchestrator.py` reader construction |
+| Privacy: a dark, side-on face scored 0.27 and passed the 0.5 default; the threshold is now 0.25. Demo/recording face blur is display-only and pads boxes upward. | `DECISION_LOG.md` 2026-10-02 |
+
+## 5. Reading (OCR)
+
+| Finding | Evidence |
+|---|---|
+| RapidOCR 1.4.4 (PP-OCRv4 ch det/rec, onnxruntime **CPU**; onnxruntime has no GPU provider here). A synthetic sign reads perfectly in ~1.2 s. RapidOCR resizes to `max_side_len 2000`, so a full 12 MP still loses detail: **locate and crop first**. | `reports/reading-latency-2026-10-21.json` |
+| The default recogniser is Chinese+English: it produced a lone "米" on a textless scene, so CJK-only tokens are dropped. The English PP-OCRv3 recogniser (`/opt/argus/models/ocr/en_PP-OCRv3_rec_infer.onnx`) was **not** better on the blurred cover. | `argus/ocr.py`, `DECISION_LOG.md` |
+| A real book cover (*Crime and Punishment*): raw still → no text; crop + CLAHE on lightness → "Ght and Pnishment" (0.89). The root causes are **optical** (fixed focus, backlight); no model fixes them. | `DECISION_LOG.md` 2026-10-21 |
+| The coach now checks light before framing (backlit / dark / glare), uses the book finder when no words are detected yet ("I can see it, but it's blurry. Move it a bit back so I can see it properly"), and diagnoses and retries failed reads twice. On the real failed still the diagnosis is exactly the backlight. | `tests/test_reading.py` |
+| Gemma is used only for questions **about** OCR text, as masked text, never on the image. | `argus/agent.py` `ask_text` |
+
+**Open:**
+- the lens refocus (`python3 -m argus doctor --focus`, with the user);
+- a book-cover and printed-page CER test (DoD: CER < 3%, < 4 s to first word);
+- the Bangla evaluation (Tesseract `ben` needs apt/sudo; PaddleOCR-VL-Bangla GGUF memory test).
+
+## 6. Speech, conversation and wake word
+
+| Finding | Evidence |
+|---|---|
+| After a reboot PulseAudio fell back to the onboard analog jack: the mic recorded pure zeros and speech went nowhere. `prefer_usb_audio()` selects the USB headset at every start. | `argus/speech.py` |
+| The arbiter (`argus/arbiter.py`): P0 DANGER cuts speech (< 50 ms in test), P1 WARN cuts P2–P4, interrupted answers resume if < 5 s old, user speech holds P2–P4. The old speech-priority "hang" was a test race (the fake interrupted before the queue was filtered); fixed, and the suite runs green. | `tests/test_arbiter.py`, `tests/test_speech_priority.py` |
+| Silero VAD (bundled with faster-whisper): endpoint after 0.7 s silence, 15 s cap. While waiting, only the pre-roll is kept (no unbounded buffer). | `tests/test_vad.py` |
+| Wake word = the spoken name via VAD + Whisper tiny with a **glossary hint** "Names: Argus." (9/9 on synthetic phrases, 0.78 s). A prefix hint ("Argus, hey Argus.") made Whisper *drop* the name from longer phrases. Whisper base was no better and slower (1.4 s, 41 s load). | `argus/wake_stt.py`, `DECISION_LOG.md` |
+| Real-voice test: the name was recognised every time, but a bare "Argus" answered only with a beep went unnoticed. Now it answers "Yes?" and listens 8 s, **while** saying "Yes?". Every heard phrase is logged as `heard` in the session JSONL. | `reports/sessions/2026-10-21-125728.jsonl` |
+| Conversation layer (`argus/dialogue.py`): rules first (control, read, next page, seat, find, describe, exit, filler), then one Gemma text-only call returning validated `{skill, name, say}`. Live routing 13/14 at 0.99 s median. Gemma once claimed "I am closing the first person view now"; the persona now forbids claiming untooled actions, and `shut down` is a real command. | `reports/dialogue-routing-2026-10-21.json` |
+| Questions about printed text ("what is the name of the book?", "who wrote this", anything with title/author/writer) must go to **reading**, not chat or find. Gemma had routed the title question to `find`, and Whisper misheard "Read the title" as "I'm the title". | `tests/test_dialogue.py` |
+| Real voice turn times: chat ~1.6 s, describe 2.4–3.0 s (privacy 0.26–0.6 s + Gemma ~2.2 s). | `reports/sessions/2026-10-21-124310-summary.json` |
+
+## 7. Demo, logging and robustness
+
+| Finding | Evidence |
+|---|---|
+| The demo window must not end a session by accident: losing focus closed it once, and a stray Esc twice. Now it closes only on **Esc twice within 2 s** or "Argus, shut down"; the close reason is logged. The dashboard had shadowed `Thread._stop` with an Event, which crashed `join()`. | `argus/dashboard.py` |
+| Recording: the Orin Nano has **no hardware video encoder**; 1080p MJPG cost 138 ms per frame. Frames are downscaled to 960x540 and piped from a thread to ffmpeg x264 ultrafast (1.5 ms per frame in the render thread). TTS and earcon PCM are tapped to an audio timeline. | `argus/demo_view.py` |
+| Never use `pkill -f <pattern>` where the pattern appears in your own command line: it killed the agent's shell twice and lost a run's output and recording. Stop processes by PID (`pgrep -f "^python3 -m argus ..."` then `kill -INT`). | — |
+| The skew test once **OOM-killed** the board (and a VS Code process) by buffering 4000 raw frames per camera. Measurement tools must buffer results, not images. | `DECISION_LOG.md` 2026-10-02 |
+| **Open safety issue:** with the full demo stack (Gemma, Whisper, demo view, face blur, recording) the fast loop's depth heartbeat had gaps of 0.26–0.73 s several times a minute, and skew drops rose to 12–20 ms. The cause is not yet found: suspect CPU/GIL contention. Must be fixed before any walking test. | `reports/sessions/2026-10-21-124310.jsonl` (`depth_gap` events) |

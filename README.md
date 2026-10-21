@@ -8,57 +8,51 @@ assistant. It is not yet a validated mobility aid.
 Read [STATUS.md](STATUS.md) first. It is the authority on what works today.
 [ARCHITECTURE.md](ARCHITECTURE.md) describes the target, not completed work.
 
-## Current honest state
+## Current honest state (2026-10-21)
 
-- The three-camera capture, normalization, USB-role discovery, stereo
-  calibration tool, synthetic safety rules, privacy-gated Gemma client, and
-  speech components exist as prototype code.
-- Gemma 4 E2B has run multimodal inference through a native CUDA llama.cpp build
-  on this Jetson after upgrading to L4T R36.5.2.
-- YOLO-World grounding runs through a device-built FP16 TensorRT engine with a
-  runtime single-label embedding; physical positive-object validation is pending
-- Stereo disparity runs through an auditable CUDA SAD matcher at about 13 ms;
-  calibration is absent, so metric hazard speech remains disabled
-- A manual positive demo now runs `Find the monitor` through CPU privacy,
-  CUDA Gemma, TensorRT grounding, and Piper/Pulse USB speech; wake/STT and
-  memory hardening are not complete
-  and its vocabulary contract is unverified.
-- GPU stereo depth is not deployed. No stereo calibration file or RAFT engine is
-  present. Production startup therefore intentionally fails closed.
-- Face blur exists; sensitive-text handling does not.
-- A monitor dashboard (`run --dashboard`) shows all three feeds, depth, the
-  top-down corridor/SLAM map, status and the spoken conversation; questions
-  can be typed there or appended to a file, so the demo works without a mic.
-- Incoming-vehicle time-to-collision rules, stereo visual odometry and corridor
-  guidance are implemented with synthetic tests but stay off until the stereo
-  pair is calibrated. Calibrated wide-to-stereo projection does not exist.
-- Object distance is deliberately omitted until cross-camera calibration is
-  implemented. The old proportional pixel mapping was unsafe.
-- The full test suite is not green: camera, safety, and calibration-health tests
-  pass, while the speech-priority suite hangs during shutdown.
+- **Talks.** Say "Argus, what's in front of me?" (or "Argus" → "Yes?" →
+  request). A rule router plus Gemma 4 E2B routing drives the skills:
+  - describe (privacy-gated image),
+  - find an object,
+  - read text / answer about it,
+  - seat guidance,
+  - small talk,
+  - shut down.
+
+  Voice turns take 1.6 s (chat) to 3 s (describe).
+- **Reads**, with a coach that speaks like a sighted helper (light, glare,
+  blur, position). It works on clean signs. A real book cover failed on
+  optics: the wide camera's lens needs a one-time refocus
+  (`doctor --focus`).
+- **Safety loop is built but silent.**
+  - Built: corridor hazards (head-level, drop-off), approaching person/vehicle
+    TTC, a speech arbiter where hazards cut everything.
+  - Silent: metric speech stays off until the stereo pair is calibrated (no
+    calibration file yet).
+  - Open safety issue: the fast loop stalls up to 0.7 s under the full demo
+    stack.
+- **Demo/study ready:** first-person view with captions and hazard banner,
+  MP4 recording with ARGUS's audio, JSONL session logs, study metrics script.
+- Not a validated mobility aid.
 
 ## Safe commands that work now
 
 From the repository root:
 
 ```bash
-python3 -m argus selftest
-python3 -m argus --config config/argus.yaml baseline --output /tmp/argus-baseline.json
-python3 -m argus preview
-python3 scripts/calibrate_stereo.py --help
-pytest -q tests/ --ignore=tests/test_speech_priority.py
+python3 -m pytest -q tests/                        # 295 tests
+python3 -m argus doctor                            # rig check with spoken summary
+scripts/run_llama_server.sh &                      # Gemma on :8080
+DISPLAY=:0 python3 -m argus run --demo --record reports/sessions/demo.mp4
+DISPLAY=:0 python3 -m argus run --dashboard --no-mic --ask-file /tmp/ask.txt
+python3 -m argus align --scene-m 3                 # spoken stereo mount alignment
+python3 scripts/calibrate_stereo.py --coach --square-mm N --baseline-mm B
+python3 -m argus doctor --focus                    # refocus the wide camera for reading
+python3 scripts/summarise_session.py reports/sessions/<log>.jsonl
 ```
 
-Live demo on the attached monitor (needs `scripts/run_llama_server.sh` running):
-
-```bash
-DISPLAY=:0 python3 -m argus --config config/argus.yaml run --dashboard --no-mic --ask-file /tmp/ask.txt
-echo "find the monitor" >> /tmp/ask.txt      # or type in the dashboard and press Enter
-```
-
-`python3 -m argus run` is a production command and refuses to start when the
-GPU depth, grounding or privacy path is missing. Do not disable the fail-closed
-settings for a wearable demonstration.
+Close the demo with Esc twice or "Argus, shut down". Production runs stay
+fail-closed: never disable those settings for a wearable demonstration.
 
 ## Hardware and deployed artifacts
 
@@ -82,6 +76,8 @@ ARCHITECTURE.md         target Two-Speed architecture
 STATUS.md               current implementation truth
 AGENT_HANDOFF.md        exact continuation instructions
 DECISION_LOG.md         HCI engineering hurdles and decisions
+docs/FINDINGS_2026-10.md  device findings with evidence (read before changing hardware paths)
+docs/prompts/           prompts that drive agent sessions
 ```
 
 The PDF and DOCX under `historical/design-intent/` begin with an explicit

@@ -36,3 +36,9 @@ pycuda==2024.1.2
 platformdirs==4.11.3
 pytools==2026.1.1
 siphash24==1.8
+
+# Reading mode (2026-10-21). Install rapidocr with --no-deps so it cannot
+# replace the pinned OpenCV / onnxruntime: pip install --no-deps rapidocr_onnxruntime==1.4.4
+rapidocr_onnxruntime==1.4.4
+pyclipper==1.4.0
+shapely==2.1.2

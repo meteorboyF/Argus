@@ -1,6 +1,6 @@
 # ARGUS implementation status
 
-Last audited: 2026-10-02. This file is the implementation source of truth.
+Last audited: 2026-10-21. This file is the implementation source of truth.
 
 Status meanings: **done** means implemented and verified for its stated scope;
 **partial** means useful code/evidence exists but acceptance is incomplete;
@@ -9,30 +9,35 @@ implementation exists.
 
 | Component | Status | Verified reality / next gate |
 |---|---|---|
-| Jetson environment baseline | partial | Refreshed report: 24 pass/2 fail. MAXN_SUPER is active; privileged `jetson_clocks --show` remains unverified and calibration is absent |
-| Camera identity/transforms | partial | Each camera has its own capture thread with real arrival timestamps; roles bind to the hub port so a camera that falls back to USB 2 (`1-2.x` instead of `2-1.x`) keeps its role and is flagged. Brackets now mount both AR0234s upright, rotations set to 0. On 2026-09-29 hub ports 2 and 4 linked at 480 Mbit/s (10 fps, multi-second stalls); reseat needed before calibration |
-| Stereo calibration tool | partial | Threaded capture, pose diversity and hard RMS/vertical gates; accepts the physical 8x8 folding board (7x7 inner corners). No deployed calibration yet; 0.5–3 m validation pending |
-| Calibration drift monitor | partial | 12 synthetic tests pass; needs real calibrated scenes |
-| GPU stereo depth | partial | Deterministic CUDA SAD backend is production default and never falls back to CPU. Live median 12.7 ms, p95 14.1 ms, GR3D peak 95%. Synthetic shift passed; physical metric accuracy is blocked on calibration |
-| CPU SGBM | diagnostic only | Implemented; not permitted as production depth |
-| Safety rules | partial | Static obstacle/drop rules plus the temporal approach rule (per-zone closing speed and time-to-collision); 77 unit tests pass. Uncalibrated warnings stay suppressed |
-| Incoming vehicle warning | partial | Eye-level band split into left/center/right zones; closing speed from a 0.8 s linear fit, WARN at 3 s TTC, DANGER at 1.5 s. Synthetic 5 m/s approach test passes; real-scene validation blocked on calibration |
-| Speech pipeline | partial | Six priority/preemption tests now pass. Piper completed through PulseAudio USB without PortAudio underruns. Wake word/STT microphone loop is not yet accepted; wake phrase remains `hey_jarvis` |
-| YOLO-World TensorRT | partial | Production FP16 runtime-label engine. 401-label vocabulary embedded offline (parity 0.0); warm-up no longer loads torch/CLIP: RSS 1672 -> 353 MB, load 11.6 -> 1.6 s (`reports/mem-budget-2026-10-02.json`). Out-of-vocabulary labels still load CLIP lazily |
-| Ultralytics grounding | diagnostic only | `.pt` prototype exists; prohibited production fallback |
-| Face privacy gate | partial | InsightFace blur is required and fail-closed. 2026-10-02: a dark, side-on, edge-cropped face scored 0.27 and passed the 0.5 default unblurred; threshold now 0.25. Adversarial set still needed |
-| Sensitive-text privacy | not started | No CRAFT/text flag or blur implementation |
-| Gemma 4 agent | partial | 2026-10-02: QAT UD-Q4_K_XL + vision-only mmproj on GPU, `--image-max-tokens 560`, client sends ~280 tokens. Live `GemmaAgent.ask` 2.23 s / 1.91 s; QAT bench describe 2.18 s, find 1.66 s, read (556 tok) 3.54 s warm, all under over-current throttling (`reports/vlm-m3-qat-2026-10-02.json`). One live answer missed a visible blurred fan: accuracy needs the 30-frame bake-off |
-| Agent tool protocol | partial | Explicit locate intent is deterministically forced through verified TensorRT grounding when Gemma ignores the prompt. Positive monitor query returned center; broader language tests remain |
-| Wide-to-stereo projection | broken | Old proportional mapping disabled; direction only until calibrated projection exists |
-| SLAM | partial | Stereo visual odometry in `argus/slam.py` (ORB stereo triangulation, LK tracking, PnP RANSAC) on its own thread; two synthetic tests pass with metric scale. Off until stereo calibration exists |
-| Full two-speed integration | partial | `run --dashboard` shows cameras, depth, top-down map, status and the conversation on the monitor; questions can be typed or appended to a file. Verified live 2026-09-29. Wake/STT and memory hardening remain |
-| Monitor dashboard | done | `argus/dashboard.py` + `argus/telemetry.py`: OpenCV window with three feeds, depth, corridor/SLAM map, status and speech log; verified at 1920x1080 on 2026-09-29 |
-| Corridor navigation | partial | `argus/navigation.py` picks the widest free bearing from calibrated depth; three synthetic tests pass. Off until calibration exists |
-| Rig doctor | partial | `python3 -m argus doctor` (+ `--snap`, `--skew-test`, `--bandwidth`) verified with one B0495: 29.9/59.8/79.5 fps at 30/60/80 on USB3. Full three-camera run pending reconnection |
-| Headless service/soak/fault tests | not started | No service definition or sustained validation |
+| Jetson environment | partial | L4T R36.5.2, MAXN_SUPER. Over-current throttling (oc3) occurs under heavy GPU load on the original PSU; `doctor` and benches record the counter. `jetson_clocks --show` unverified (needs the user's sudo) |
+| Rig doctor | done | `python3 -m argus doctor` (+ `--snap`, `--skew-test`, `--bandwidth`, `--focus`): all green with 3 cameras on USB3 (`reports/doctor-2026-10-18-2353.json`). Probes reopen a camera that drops off USB |
+| Camera identity/transforms | done (re-verify on recable) | Roles bound by hub port: left 2-1.1, right 2-1.2, wide 2-1.4 (2026-10-21, by parallax). Rotations 0 (worn). Stereo 60 fps (`reports/usb-bandwidth-2026-10-02-2112.json`) |
+| Stereo mount alignment | partial | Printed bridge; guided `argus align` brought vertical from 118 px to ~±5-15 px, roll ~1 deg. No clean final measurement (last one discarded: rig was being handled) |
+| Stereo calibration tool | partial | Spoken `--coach`; held-out gate (mono RMS <= 0.5, stereo <= 0.7, row mean < 0.5 / max < 1 px, tape baseline +/-10%, >= 15 views, >= 70% coverage); k3 fixed. **No calibration file yet**: needs the user (square size, baseline, flat board) |
+| GPU stereo depth | partial | CUDA SAD default (7.6 ms median 480x300/64); VPI SGM selectable (13.0 ms), confidence -> UNKNOWN (`reports/depth-backends-2026-10-21.json`). Metric accuracy blocked on calibration |
+| Corridor hazards | partial | `argus/hazards.py`: ground plane, body/head bands, head-level rule, drop-off, head-motion gate (deg/s), 3-frame persistence, refractory, hysteresis; 5 ms/tick; 12 ray-cast tests. Speech only with calibration. Test walk pending |
+| Approaching person/vehicle | partial | YOLO11n TRT (3.3 ms GPU, 14.4 ms end to end) + ByteTrack-style tracker + range Kalman + TTC hysteresis; 10 tests; live person detected. Speech only with calibration |
+| Legacy reflex / TTC zones | partial | `argus/safety.py`; now keeps only the approach-zone rule when the corridor engine is on |
+| Fast-loop timing | **broken under full stack** | Depth heartbeat gaps 0.26-0.73 s several times a minute and skew drops 12-20 ms with Gemma + Whisper + demo view + recording (`reports/sessions/2026-10-21-124310.jsonl`). Root cause not found. Must fix before walking tests |
+| Speech arbiter | done (unit) | P0-P4, preemption < 50 ms in test, answer resume / "repeat?" offer, user-speech hold, depth watchdog earcon (rate-limited). Legacy priority suite fixed and green |
+| Wake word | partial | "Argus" / "Hey Argus" via VAD + Whisper tiny with a glossary hint (9/9 synthetic, 0.78 s). Real voice: the name recognised every time; bare "Argus" -> "Yes?". False wakes/hour not measured. Trained openWakeWord model not built (`training/hey_argus/`) |
+| VAD / STT | partial | Silero endpointing (0.7 s, 15 s cap) works live; Whisper tiny English only; mishearings seen ("Read the" -> "I'm the") |
+| Conversation layer | partial | `argus/dialogue.py`: rule routing + Gemma JSON routing (13/14, 0.99 s), context, follow-ups without the wake word, exit, filler, persona. Live voice: chat 1.6 s, describe 2.4-3.0 s. Reading/seat flows not yet voice-tested end to end |
+| Reading / OCR | partial | RapidOCR CPU; locate document -> CLAHE crop -> OCR (1.5 s); light/glare/blur-aware coach; diagnose and retry. Synthetic sign perfect; real book cover failed on optics (fixed-focus lens, backlight). Needs `doctor --focus` + CER test. Bangla not evaluated |
+| Sensitive-text privacy | done (unit) | Luhn cards, BD mobiles, OTP/PIN codes masked before logs, screen and Gemma; demo face blur display-only |
+| Face privacy gate | partial | InsightFace, threshold 0.25 after a 0.27 miss; fail-closed. Adversarial set still needed |
+| Gemma 4 agent | partial | QAT UD-Q4_K_XL + vision-only mmproj on GPU, 280-token images; describe ~2.2 s; text-only routing/answers. Qwen3.5-2B bake-off not done |
+| YOLO-World grounding | partial | TRT FP16 + 401-label precomputed vocabulary (no torch at runtime); optional conf override (reading uses 0.12) |
+| Seat guidance | partial | Closed loop on YOLO11n chair/couch/bench; corridor whitelist; direction only until calibration. Live voice test pending (seen when the user stood up) |
+| SLAM / navigation | partial | Stereo VO + corridor guidance exist with synthetic tests; off until calibration |
+| Demo view / recording | done | `run --demo [--record]`: POV with display face blur, captions, hazard banner, insets, chips; x264 via ffmpeg thread (1.5 ms/frame); TTS audio muxed; closes only on Esc x2 or "shut down" |
+| Session logger / study metrics | done | JSONL with masking; `scripts/summarise_session.py` (alarms/min, lead, task times, latency percentiles, precision/recall vs annotated truth) |
+| Memory budget | partial | Per-component RSS measured; projected stack ~4.6 GB; 10-minute soak not done |
+| Headless service/soak/fault tests | not started | No systemd unit or long soak |
 
 ## Reproducibility pins
+
+Python additions (2026-10-21, `pip install --no-deps` where noted): `rapidocr_onnxruntime==1.4.4` (--no-deps), `pyclipper`, `shapely`. `faster-whisper` bundles the Silero VAD used by `argus/vad.py`. OCR runs on onnxruntime 1.23.2 CPUExecutionProvider (no GPU provider in this build).
 
 ### Platform
 
@@ -52,6 +57,7 @@ implementation exists.
 | `clip/vocab_embeddings.npy` (401 labels, `scripts/build_vocab_embeddings.py`) | `b2db59b8ee6b20e36b5196558a0f57007f24d4ce3eb5fd1955b9eaa2bd0b7da6` |
 | `gemma-4-E2B-it-Q4_K_M.gguf` (previous) | `9378bc471710229ef165709b62e34bfb62231420ddaf6d729e727305b5b8672d` |
 | `mmproj-gemma4-e2b-f16.gguf` | `140be8d7849741f88c50757d529b84373ee8e27052cc2236855b537f4a8215fa` |
+| `ocr/en_PP-OCRv3_rec_infer.onnx` (SWHL/RapidOCR; evaluated, not default) | `ef7abd8bd3629ae57ea2c28b425c1bd258a871b93fd2fe7c433946ade9b5d9ea` |
 | `yolo11n_416x640_fp16.engine` (movers; trtexec FP16 on device) | `879c51fc923af746e2a2ad85197ad6ec77b1a6e47f296c67a8f95299bcc029a4` |
 | `yolo11n_416x640.onnx` (Ultralytics 8.4.67 export, opset 17) | `8d338f38565b2787ea8b7e8661b81164268eddcb545ef3b2f47d2a983e72b5d7` |
 | `yolo11n.pt` | `0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1` |
@@ -94,13 +100,14 @@ reports/environment-baseline-2026-08-14.json`.
 
 ## Test evidence
 
-- `tests/test_cameras.py`: 9 passed.
-- `tests/test_safety.py`: 9 passed.
-- `tests/test_calib_health.py`: 12 passed.
-- `tests/test_fail_closed.py`: 14 passed.
-- `tests/test_diagnostics.py`: 4 passed.
-- `tests/test_cuda_stereo.py`: 3 passed on the Jetson, including worker-thread CUDA.
-- `tests/test_speech_priority.py`: 6 passed, including DANGER preemption.
+- 2026-10-21: `python3 -m pytest -q tests/` -> **295 passed** in ~22 s on the
+  Jetson (27 test files, including the formerly hanging speech-priority suite,
+  VPI, CUDA and TensorRT-free unit tests). Every new module has tests:
+  `test_doctor`, `test_timecode`, `test_align`, `test_calibration_gate`,
+  `test_reading`, `test_arbiter`, `test_vad`, `test_hazards`, `test_movers`,
+  `test_seat`, `test_dialogue`, `test_wake_stt`, `test_vocab`,
+  `test_vpi_stereo`, `test_session_summary`.
+- Device findings and measurements: `docs/FINDINGS_2026-10.md`.
 
 ## Latest GPU depth report — 2026-08-14
 

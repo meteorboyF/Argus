@@ -1,87 +1,51 @@
 # ARGUS progress
 
-Updated: 2026-10-02 (evening, JETSON_PROMPT_03 session). Short, current, and honest. `STATUS.md` holds the
-per-component table; this file says what happened last and what is blocking.
+Updated: 2026-10-21. Short and honest. `STATUS.md` holds the per-component
+table, `AGENT_HANDOFF.md` the continuation plan, and
+`docs/FINDINGS_2026-10.md` the device findings with evidence.
 
-## What was done last (2026-10-02 evening)
+## Done in the October sessions (36 commits, 9bd2475..5a3964f)
 
-- **M0 rig doctor** (`python3 -m argus doctor`): presence, USB link speed,
-  delivered fps, stereo arrival skew, RAM, llama-server, Piper, over-current
-  counter; spoken summary; snapshots in `/tmp/argus_snap/`. Also `--snap`,
-  `--skew-test` (on-screen Gray-coded timecode) and `--bandwidth`. Verified
-  with the one B0495 currently connected: 79.5 fps at 960x600@80 on USB3.
-- `/opt/argus/config/argus.yaml` had drifted to August values (90/270
-  rotations, CPU SGBM); resynced from the repo template and backed up.
-- **M3 memory/VLM**: QAT Gemma + vision-only projector on GPU + token-budget
-  images. Describe answers correctly now (it used to refuse) in ~2.2 s.
-  Grounding uses a precomputed 401-label vocabulary: no torch at runtime.
-  Projected resident stack ~4.6 GB (not yet soak-measured).
-- Privacy: a face scoring 0.27 slipped past the 0.5 threshold; now 0.25.
+- **Rig tools:**
+  - `argus doctor` (cameras, USB3, fps, skew, RAM, OC throttling, llama-server,
+    Piper; `--snap`, `--skew-test`, `--bandwidth`, `--focus`);
+  - spoken stereo alignment (`argus align`);
+  - spoken calibration coach with a held-out quality gate.
+- **Memory/VLM:**
+  - QAT Gemma + vision-only projector on GPU, token-budget images (describe
+    ~2.2 s);
+  - grounding without torch (−1.3 GB).
+- **Fast loop:** corridor hazards (head-level, drop-off, motion gate, alarm
+  hygiene), YOLO11n TensorRT approach TTC, VPI SGM backend option. All silent
+  until calibration.
+- **Speech:** P0–P4 arbiter, Silero endpointing, earcons, USB headset
+  auto-select, wake on "Argus" without a trained model.
+- **Conversation:** rules plus Gemma routing, context, follow-ups, persona,
+  shut down by voice.
+- **Reading:** OCR, 12 MP still, document locate + contrast crop, coach that
+  guides on light/glare/blur/position, diagnose and retry, masked page
+  questions.
+- **Seat guidance**, closed loop with a corridor whitelist.
+- **Demo:** first-person view, MP4 recording with audio, JSONL study logs,
+  `summarise_session.py`.
+- 295 tests pass.
 
-## Earlier (night of 2026-09-29, commits a4b6eb5..806b8ba)
+## Live results with the user (2026-10-21)
 
-- **Monitor dashboard.** `python3 -m argus run --dashboard --no-mic --ask-file PATH`
-  shows all three camera feeds, the depth map, a top-down corridor/SLAM map, a
-  status panel and the spoken conversation on the attached monitor. Questions
-  can be typed in the window or appended to the ask file. Verified live.
-- **Slow loop speed.** A typed "find the monitor" round-trips in 1.8 s
-  (privacy 0.17 s, grounding 0.72 s, Gemma final turn 0.91 s). Gemma 4 E2B runs
-  in llama-server on CUDA with `-ngl 99` and flash attention. The CLIP text
-  encoder warms at startup instead of on the first question.
-- **Fast loop: incoming-vehicle rule.** Per-zone closing speed and
-  time-to-collision in `argus/safety.py` (WARN at 3 s, DANGER at 1.5 s).
-  Laya was evaluated at the user's request and rejected for this path; see
-  `DECISION_LOG.md`.
-- **SLAM and navigation.** Stereo visual odometry (`argus/slam.py`) and
-  corridor guidance (`argus/navigation.py`) with synthetic tests. Both switch
-  on automatically once a stereo calibration file exists.
-- **Cameras.** Per-camera capture threads with real arrival timestamps, role
-  binding by hub port across the USB 3 / USB 2 companion buses, live link
-  speed on the dashboard. Two cameras that had fallen back to USB 2 were
-  brought back to 5 Gbit/s by reseating their screw-lock USB-C plugs.
-- **Calibration coaching.** `scripts/calibrate_stereo.py --coach` runs
-  fullscreen with large on-screen instructions for whoever holds the board,
-  finishes on its own after 15 diverse views, and shows the result.
-- 77 unit tests pass (`pytest -q tests/ --ignore=tests/test_speech_priority.py`).
+- **Voice conversation works:**
+  - wake on "Argus", then "Yes?", then a question;
+  - "what is in front of me" answered in 2.4–3.0 s, chat in 1.6 s;
+  - follow-ups without the wake word.
+- **Reading a real book cover failed.** The wide camera's lens is fixed-focus,
+  set far, and a window behind the book made it dark. Code now coaches for
+  this; the lens refocus is pending.
 
-## What is halting progress
+## What is blocking
 
-1. **No stereo calibration file.** `/opt/argus/config/stereo_calib.npz` does
-   not exist. Until it does, metric hazard speech, the approach rule, SLAM and
-   corridor guidance all stay off by design. Everything downstream waits on
-   this one physical step.
-2. **Camera orientation is unresolved.** During the first calibration attempt
-   both stereo pictures were upside down (the holder's head at the bottom of
-   the frame), whereas earlier that night, with the rig resting on the desk,
-   they were upright. Calibration bakes in the orientation, so the rig must be
-   held in its worn orientation and the config rotations (currently 0) must
-   match it before any views are captured. Open question to the user: with the
-   rig held as worn, is the picture upright or inverted?
-3. **Chessboard square size is unknown.** The board is a folding 8x8 chess
-   board (7x7 inner corners). The calibrator needs the measured square size in
-   millimetres to set metric scale. A placeholder run saved nothing; the
-   attempt was stopped before any capture because of item 2.
-4. **Only one camera is plugged in right now** (one B0495 on hub port 4).
-   Calibration needs both stereo cameras, and the demo needs all three.
-5. **USB-C screw-lock plugs are the weak point.** A plug seated at a slight
-   angle links at USB 2 (480 Mbit/s): 10 fps and multi-second stalls. The
-   dashboard camera line turns amber with "reseat!" when this happens. Tighten
-   both screws and strain-relieve the cables to the frame.
-6. **No USB microphone connected**, so wake word and speech-to-text remain
-   unvalidated. The dashboard's typed questions cover the demo meanwhile.
-7. **Memory headroom.** The full stack with llama-server resident sits near
-   6.7 GB of 7.6 GB RAM. Not blocking the demo, but there is little slack.
-
-## Next steps, in order
-
-1. Plug in both stereo cameras and the wide camera; confirm three "USB3" on
-   the dashboard camera line.
-2. Settle the worn orientation; set `left_rotation`/`right_rotation` in
-   `config/argus.yaml` to 180 if the worn view is inverted.
-3. Measure one square of the board in mm, then run
-   `DISPLAY=:0 python3 scripts/calibrate_stereo.py --square-mm <N> --coach`
-   and follow the on-screen text. Verify with
-   `python3 scripts/calibrate_stereo.py --verify` against a tape measure at
-   0.5, 1, 2 and 3 m.
-4. Restart the dashboard and watch the approach rule, SLAM trail and corridor
-   guidance come alive.
+1. **Fast-loop stalls under the full stack** (0.26–0.73 s depth gaps).
+   Safety-critical; next engineering task.
+2. **No stereo calibration** (needs the user: chessboard square size,
+   lens-to-lens baseline, flat board). Blocks every metric safety feature.
+3. **Wide-camera focus** for reading (`doctor --focus` with the user).
+4. Not yet tested with the user: reading by voice, seat by voice, walking
+   hazards, wake-word false accepts per hour.

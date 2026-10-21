@@ -1,79 +1,95 @@
-# ARGUS target architecture
+# ARGUS architecture
 
-**TARGET DESIGN — NOT IMPLEMENTATION PROOF.** `STATUS.md` is authoritative for
-what exists and has been verified.
+`STATUS.md` is authoritative for what works today. This file describes the
+design every module follows. Device measurements are in
+`docs/FINDINGS_2026-10.md`.
 
-## Two-Speed system
+## Principles
 
-### Fast safety loop
+- **Two speeds.** Safety runs on-device, fast, deterministic and terse
+  (earcon + at most 3 words). Generative AI is on demand and separate.
+- **Configure down, inhibit up.** The slow loop may *configure* the fast loop
+  (for example, whitelist the seat being approached for body-band speech) but
+  can never disable it. The fast loop *inhibits* slow-loop audio: hazards
+  preempt any speech.
+- **Gemma talks; the skills do the work.** A language model routes requests
+  and phrases replies; deterministic code reads, measures and decides
+  anything safety-relevant.
+- **Fail closed.** Missing calibration means no metric speech; a missing
+  privacy gate means no image to Gemma; a missing GPU backend means no
+  production start. Invalid or stale depth is UNKNOWN, never CLEAR.
+- **Guide, don't fail.** When perception is not good enough, tell the person
+  what to change ("move it a bit back so I can see it properly").
 
-Target rate: 10–15 Hz, always running independently of speech and Gemma.
-
-```text
-AR0234 left/right
-  -> timestamp/skew validation
-  -> calibrated rectification
-  -> GPU stereo depth (TensorRT/CUDA)
-  -> rule-based corridor/drop/approach/time-to-collision rules
-  -> SLAM pose and tracking quality
-  -> priority safety speech/haptic output
-```
-
-The decision layer is deterministic and auditable. A neural language model must
-never be in this path. GPU depth is permitted because it estimates geometry;
-hazard decisions remain explicit rules. Invalid, stale, uncalibrated, or
-degraded depth is an UNKNOWN state, never CLEAR.
-
-### Slow interaction loop
+## Fast safety loop (10 Hz, its own thread)
 
 ```text
-ARGUS wake word -> CPU STT -> fresh IMX477P frame
-  -> mandatory face and sensitive-text privacy gate
-  -> Gemma 4 E2B vision agent via CUDA llama.cpp
-  -> optional find_object(name) call
-  -> YOLO-World TensorRT grounding
-  -> calibrated wide-to-stereo projection and robust depth sampling
-  -> concise answer -> CPU Piper speech
+AR0234 left/right (60 fps, per-camera reader threads, arrival timestamps)
+  -> skew gate (12 ms)
+  -> rectification (only with stereo_calib.npz)
+  -> GPU disparity: CUDA SAD (default) | VPI SGM (confidence -> UNKNOWN)
+  -> hazards.py: RANSAC ground plane (bottom rows), corridor 0.8 x 2.0 m,
+       body / head bands, drop-off, head-motion gate (deg/s), alarm hygiene
+  -> movers.py: YOLO11n TRT on the left frame -> tracker -> range Kalman -> TTC
+  -> safety.py: legacy approach-zone rule
+  -> arbiter: earcon + "Stop. Left." (P0/P1), heartbeat for the depth watchdog
 ```
 
-Every image consumer after capture receives only the gated frame. Gate
-initialization failure, inference exception, or invalid output cancels the image
-query. Grounded distance is included only when cross-camera calibration and a
-fresh valid depth region support it.
+Metric speech requires calibration. Detection, tracking and depth are shown on
+the dashboard regardless.
+
+## Slow conversational loop
+
+```text
+mic (USB headset, Pulse default forced) -> Silero VAD phrases
+  -> wake_stt.py: Whisper tiny + "Names: Argus." hint; phrase starts with the name?
+       "Argus, <request>" -> request     "Argus" -> "Yes?" -> next phrase
+  -> dialogue.py
+       rules: stop/pause/continue/repeat, next page, read, text questions
+              (title/author/label/price/date), seat, find, describe, exit, filler
+       else Gemma text-only router -> {skill, name, say} (validated)
+  -> skills
+       describe      -> wide frame -> PRIVACY GATE -> Gemma (280-token image)
+       find          -> YOLO-World TRT (precomputed vocabulary) -> direction
+       read          -> reading.py coach (light / glare / blur / position, book finder)
+                        -> 12 MP still -> locate document -> CLAHE crop -> RapidOCR
+                        -> sentence playback | answer just the question (Gemma, masked text)
+       page_question -> Gemma on masked OCR text
+       seat          -> seat.py closed loop (re-detect every 0.7 s, corridor whitelist)
+       chat          -> Gemma answer (persona: short, never claims untooled actions)
+       exit          -> "Closing. Goodbye." -> clean shutdown
+  -> arbiter.py (P2 guidance / P3 answers / P4 system) -> Piper (paplay)
+  -> follow-ups for 6 s without the wake word after ARGUS asks something
+```
 
 ## Resource ownership
 
-- GPU: Gemma decoder/vision processing, YOLO-World, stereo depth.
-- CPU: capture/orchestration, wake word, STT, TTS, rule evaluation.
-- Shared memory target: resident stack at or below approximately 5 GB, proven by
-  measurement rather than the proposal estimate.
-- Gemma: Q4_K_M, context 2048, one slot, all feasible layers offloaded, flash
-  attention enabled only after correctness is verified.
-- YOLO-World: FP16 initially; INT8 only after clean calibration evidence.
+- **GPU:** Gemma (llama.cpp, QAT Q4 + vision projector), YOLO-World TRT,
+  YOLO11n TRT, stereo disparity.
+- **CPU:**
+  - capture threads, rules, tracker, Kalman,
+  - InsightFace privacy,
+  - RapidOCR, Silero, Whisper, Piper,
+  - dashboard and recording (ffmpeg x264).
+- **Memory:** the target is a resident stack ≤ 5.5 GB. No torch at runtime
+  (precomputed CLIP vocabulary). TensorRT engines run via `TRTRunner`, which
+  pushes the CUDA context per call so any thread may use them.
 
-## Safety boundaries
+## Modules
 
-- Production startup requires verified GPU depth and GPU grounding.
-- No stereo calibration: no spoken metric/danger conclusion from stereo.
-- No verified wide-to-stereo transform: direction only, no object distance.
-- Safety speech preempts ordinary output and stale warnings are discarded.
-- Loss of calibration, camera, depth, or pose produces an explicit degraded
-  state and conservative user message.
-
-## Intended modules
-
-Existing modules may be replaced internally while retaining clear boundaries:
-
-- `cameras`: stable device identity, transforms, timestamps and health.
-- `depth`: calibrated GPU disparity/depth and validity metadata.
-- `safety`: pure deterministic rules over timestamped geometry.
-- `privacy`: fail-closed face/text transformation and audit metadata.
-- `grounding`: TensorRT open-vocabulary contract and detections.
-- `agent`: gated-image reasoning and bounded tool protocol.
-- `speech`: CPU wake/STT/TTS with priority and cancellation.
-- `slam`: stereo visual odometry (pose, trail, tracking quality, ego speed).
-- `navigation`: deterministic corridor guidance over calibrated depth.
-- `telemetry`: lock-free snapshot bus every module publishes state into.
-- `dashboard`: on-monitor rendering of the telemetry bus and typed questions.
-- `orchestrator`: lifecycle and explicit data contracts between loops.
-
+| Module | Responsibility |
+|---|---|
+| `cameras` | discovery, hub-port role binding, reader threads, `capture_still()` |
+| `depth`, `cuda_stereo`, `vpi_stereo`, `calib_health` | rectified GPU disparity → metric depth; drift monitor |
+| `hazards` | corridor engine (ground, bands, drop, motion gate, alarms) |
+| `movers` | YOLO11n detector, tracker, approach TTC |
+| `safety` | legacy reflex (approach zones) |
+| `slam`, `navigation`, `seat` | VO, corridor guidance, seat guidance |
+| `grounding`, `vocab`, `trt_runner` | open-vocabulary find, label embeddings, TensorRT |
+| `privacy`, `sensitive` | face blur gate; text masking |
+| `ocr`, `reading` | OCR pipeline; reading session and coach |
+| `agent`, `dialogue` | Gemma client (image, text, router); conversation manager |
+| `speech`, `arbiter`, `vad`, `wake_stt`, `earcons` | TTS, priorities, endpointing, wake on name, cues |
+| `doctor`, `align`, `guide`, `timecode` | rig tools; spoken + on-screen guidance for humans |
+| `telemetry`, `dashboard`, `demo_view` | bus + `SessionLogger`; monitor views; recording |
+| `orchestrator` | lifecycle and wiring only: new behaviour goes into modules |
