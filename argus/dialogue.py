@@ -33,10 +33,13 @@ from .telemetry import bus
 
 PERSONA = (
     "You are ARGUS, a calm, warm and capable assistant built into smart glasses "
-    "worn by a blind person, in the spirit of a trusted butler. Be attentive and "
-    "conversational, with gentle dry humour only when invited. Speak naturally, "
+    "worn by a blind person. Talk like a helpful, relaxed person, not a formal "
+    "service desk. Answer the user's actual question directly. For advice, give "
+    "a useful concrete suggestion first; ask a follow-up only if needed. "
+    "Use the conversation to understand follow-ups; do not repeat greetings, "
+    "capability pitches, or filler such as 'I am functioning well'. Speak naturally, "
     "in at most two short sentences. Use plain words, no lists, no markdown, no "
-    "emoji. Confirm what you are doing. Never pretend to see something you have "
+    "emoji. Acknowledge actions only when using a skill. Never pretend to see something you have "
     "not been shown; never guess private numbers. Never promise protection or "
     "safe walking. Missing calibration means metric warnings are unavailable. Never say you "
     "are doing or have done something you were not given a tool for (opening apps, "
@@ -58,7 +61,8 @@ ROUTER_INSTRUCTIONS = (
     "- seat: find a place to sit\n"
     "- page_question: a question about the text that was just read\n"
     "- chat: anything else - greetings, small talk, general knowledge, how to do "
-    "something, what ARGUS can do\n"
+    "something, what ARGUS can do. General discussion of books, authors, or "
+    "writing a title is chat, not read. Only use read for actual camera text.\n"
     'For chat, "say" is the full answer (at most two short sentences). For every '
     'other skill, "say" is a brief acknowledgement of at most six words, such as '
     '"Sure, let me look." or "Okay, hold the book up."')
@@ -121,13 +125,18 @@ def rule_route(text: str, reading_active: bool, reading_playing: bool) -> Intent
     generic_read = is_read_request(t) or re.search(
         r"\b(help me|need to|want to|have to|can you|could you|would you|please)\s+"
         r"(?:\w+\s+){0,2}read\b", t, re.I)
+    # Discussing text is not a request to capture text. Preserve explicit
+    # reading requests and leave general discussion to the contextual router.
+    conceptual_text = not generic_read and bool(re.search(
+        r"\b(difference between|compare|recommend|suggest|come up with|"
+        r"think of|write|create|invent)\b", t, re.I))
     if generic_read and not re.search(r"\b(title|author|writer|name of)\b", t, re.I):
         return Intent("read", say="Sure. Hold it up in front of you, about arm's length away.")
-    if reading_active and is_page_question(t):
+    if not conceptual_text and reading_active and is_page_question(t):
         return Intent("page_question")
-    if generic_read or re.search(r"\b(title|author|writer)\b", t, re.I) or (
+    if not conceptual_text and (generic_read or re.search(r"\b(title|author|writer)\b", t, re.I) or (
             _TEXT_QUESTION.search(t) and re.search(
-                r"\b(what|who|which|when|how much|tell me|read)\b", t, re.I)):
+                r"\b(what|who|which|when|how much|tell me|read)\b", t, re.I))):
         # "What is the name of the book?", "who wrote this?", "read the title
         # and the author": read the text, then answer only that. Chat answered
         # "I cannot find the book title" without looking (2026-10-21).
@@ -253,7 +262,7 @@ class DialogueManager:
         ]
         try:
             t0 = time.perf_counter()
-            data = self.o.agent._post_text(messages, max_tokens=90)
+            data = self.o.agent._post_text(messages, max_tokens=128)
             bus.set(router_latency=f"{time.perf_counter() - t0:.1f}s")
             intent = parse_router(data)
         except Exception as e:  # noqa: BLE001
@@ -404,7 +413,4 @@ class DialogueManager:
         return answer
 
     def _page_finished(self) -> None:
-        from .speech import Priority
-        self.o.speaker.speak("That's the end of the page. Say next page when you've "
-                             "turned it, or ask me about it.", Priority.NORMAL)
         self.expect_reply = True

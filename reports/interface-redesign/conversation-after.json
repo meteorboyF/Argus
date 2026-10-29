@@ -1,0 +1,126 @@
+{
+  "kind": "local-text-conversation-check",
+  "voice_pipeline_tested": false,
+  "rows": [
+    {
+      "case": "greeting",
+      "user": "Hello, how are you today?",
+      "intent": {
+        "skill": "chat",
+        "name": "",
+        "say": "I am doing well, thank you for asking. How can I help you today?",
+        "source": "gemma"
+      },
+      "answer": "I am doing well, thank you for asking. How can I help you today?",
+      "seconds": 1.962
+    },
+    {
+      "case": "preference",
+      "user": "My name is Sami",
+      "intent": {
+        "skill": "preference_name",
+        "name": "sami",
+        "say": "",
+        "source": "rule"
+      },
+      "answer": "I will call you sami for this session.",
+      "seconds": 0.0
+    },
+    {
+      "case": "memory",
+      "user": "What is my name?",
+      "intent": {
+        "skill": "answer",
+        "name": "",
+        "say": "You asked me to call you sami.",
+        "source": "rule"
+      },
+      "answer": "You asked me to call you sami.",
+      "seconds": 0.0
+    },
+    {
+      "case": "advice",
+      "user": "I am nervous about presenting my project tomorrow. Any advice?",
+      "intent": {
+        "skill": "chat",
+        "name": "",
+        "say": "Take a deep breath before you start. Practice your main points out loud a few times.",
+        "source": "gemma"
+      },
+      "answer": "Take a deep breath before you start. Practice your main points out loud a few times.",
+      "seconds": 2.016
+    },
+    {
+      "case": "followup",
+      "user": "Can you give me one concrete example of that?",
+      "intent": {
+        "skill": "chat",
+        "name": "",
+        "say": "Try practicing your introduction out loud three times in a row. Focus on speaking clearly and confidently.",
+        "source": "gemma"
+      },
+      "answer": "Try practicing your introduction out loud three times in a row. Focus on speaking clearly and confidently.",
+      "seconds": 1.989
+    },
+    {
+      "case": "knowledge",
+      "user": "Why does ice float on water?",
+      "intent": {
+        "skill": "chat",
+        "name": "",
+        "say": "Ice floats because its structure is less dense than liquid water. This makes it less heavy than the water it displaces.",
+        "source": "gemma"
+      },
+      "answer": "Ice floats because its structure is less dense than liquid water. This makes it less heavy than the water it displaces.",
+      "seconds": 2.237
+    },
+    {
+      "case": "abstract_text",
+      "user": "What is the difference between a book and a movie?",
+      "intent": {
+        "skill": "chat",
+        "name": "",
+        "say": "A book is written text, while a movie is a visual story. Books let you imagine the scenes, and movies show you the action.",
+        "source": "gemma"
+      },
+      "answer": "A book is written text, while a movie is a visual story. Books let you imagine the scenes, and movies show you the action.",
+      "seconds": 2.329
+    },
+    {
+      "case": "abstract_title",
+      "user": "Can you suggest a title for my presentation about technology?",
+      "intent": {
+        "skill": "chat",
+        "name": "",
+        "say": "How about 'The Future is Now' or 'Tech Unlocked'?",
+        "source": "gemma"
+      },
+      "answer": "How about 'The Future is Now' or 'Tech Unlocked'?",
+      "seconds": 1.995
+    },
+    {
+      "case": "capability",
+      "user": "Can you open YouTube for me?",
+      "intent": {
+        "skill": "chat",
+        "name": "",
+        "say": "I can't open apps like YouTube for you right now.",
+        "source": "gemma"
+      },
+      "answer": "I can't open apps like YouTube for you right now.",
+      "seconds": 1.851
+    },
+    {
+      "case": "visual_boundary",
+      "user": "What colour is the shirt I am wearing?",
+      "intent": {
+        "skill": "describe",
+        "name": "",
+        "say": "I can't see you right now.",
+        "source": "gemma"
+      },
+      "answer": "",
+      "seconds": 1.774
+    }
+  ]
+}

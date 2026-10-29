@@ -1,0 +1,9 @@
+{
+  "kind": "recording-layout-render-benchmark",
+  "frames": 40,
+  "median_ms": 20.23483650009439,
+  "p95_ms": 21.96798524928454,
+  "max_ms": 25.904812000590027,
+  "peak_process_rss_mb": 106.1171875,
+  "note": "Isolated CPU renderer, not full-stack acceptance. Same camera frame; warmed fonts/text caches."
+}

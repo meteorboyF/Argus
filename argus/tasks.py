@@ -24,13 +24,16 @@ class TaskRunner:
             self.label = label[:80]
             cancel = self._cancel = threading.Event()
             def run():
+                from .telemetry import bus
                 self.local.cancel = cancel
+                bus.set(task_busy=True)
                 try:
                     action()
                 except Exception as exc:
                     if on_error is not None and not cancel.is_set():
                         on_error(exc)
                 finally:
+                    bus.set(task_busy=False)
                     self.local.cancel = None
                     with self._lock:
                         self.label = ''

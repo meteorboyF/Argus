@@ -1,0 +1,122 @@
+{
+  "kind": "calibration-target-analysis",
+  "activated": false,
+  "training_views": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    7,
+    8,
+    9,
+    11,
+    12,
+    13,
+    14
+  ],
+  "heldout_views": [
+    5,
+    10,
+    15
+  ],
+  "cameras": {
+    "left": {
+      "fixed_k3": {
+        "training_rms_px": 0.806262840426737,
+        "heldout_rms_px": [
+          0.9696769118309021,
+          0.8021019101142883,
+          0.840092122554779
+        ]
+      },
+      "free_k3": {
+        "training_rms_px": 0.8062595704326893,
+        "heldout_rms_px": [
+          0.9697152972221375,
+          0.8014695048332214,
+          0.8393176794052124
+        ]
+      },
+      "rational": {
+        "training_rms_px": 0.801240515136257,
+        "heldout_rms_px": [
+          0.9391428828239441,
+          0.8130190968513489,
+          0.8336060047149658
+        ]
+      },
+      "released_board": {
+        "training_rms_px": 0.3226439141108354,
+        "heldout_rms_px": [
+          0.39198118448257446,
+          0.4154726564884186,
+          0.4382745921611786
+        ],
+        "max_model_coordinate_deviation_mm": [
+          0.6637424230575562,
+          4.357203960418701,
+          3.242377996444702
+        ]
+      }
+    },
+    "right": {
+      "fixed_k3": {
+        "training_rms_px": 0.8439183412618607,
+        "heldout_rms_px": [
+          0.8726908564567566,
+          0.7321838736534119,
+          0.8068656921386719
+        ]
+      },
+      "free_k3": {
+        "training_rms_px": 0.8419014724049191,
+        "heldout_rms_px": [
+          0.879957377910614,
+          0.7122892737388611,
+          0.8188252449035645
+        ]
+      },
+      "rational": {
+        "training_rms_px": 0.8317130754198477,
+        "heldout_rms_px": [
+          0.829186201095581,
+          0.6795308589935303,
+          0.9236474633216858
+        ]
+      },
+      "released_board": {
+        "training_rms_px": 0.24832087033507005,
+        "heldout_rms_px": [
+          0.2973058521747589,
+          0.388785183429718,
+          0.32373520731925964
+        ],
+        "max_model_coordinate_deviation_mm": [
+          1.1871010065078735,
+          4.628241062164307,
+          4.228944778442383
+        ]
+      }
+    }
+  },
+  "cross_camera": {
+    "left_shape_on_right": {
+      "training_rms_px": 0.295667308128064,
+      "heldout_rms_px": [
+        0.323876291513443,
+        0.40221357345581055,
+        0.39225029945373535
+      ]
+    },
+    "right_shape_on_left": {
+      "training_rms_px": 0.3525789528091339,
+      "heldout_rms_px": [
+        0.35613641142845154,
+        0.409991979598999,
+        0.43642228841781616
+      ]
+    }
+  },
+  "note": "Held-out poses estimated using corners, intrinsics/shape fit on training views only. Learned shape is diagnostic, not physical metrology or approved calibration."
+}

@@ -1,0 +1,52 @@
+{
+  "kind": "calibration-initialization-experiment",
+  "activated": false,
+  "experiments": [
+    {
+      "starting_focal_px": 600.0,
+      "mono_rms_px": [
+        0.6773766276149037,
+        0.6359717924621443
+      ],
+      "fitted_focal_px": [
+        671.4838844044504,
+        682.3012185111248,
+        734.0302256744194,
+        746.1940945564324
+      ],
+      "stereo_rms_px": 1.0887596830056465,
+      "baseline_mm": 99.39640507585844
+    },
+    {
+      "starting_focal_px": 800.0,
+      "mono_rms_px": [
+        0.6773766276148929,
+        0.635971792462144
+      ],
+      "fitted_focal_px": [
+        671.4839098246755,
+        682.3012431501263,
+        734.0302563979649,
+        746.1941254757872
+      ],
+      "stereo_rms_px": 1.08875972910477,
+      "baseline_mm": 99.39640310213858
+    },
+    {
+      "starting_focal_px": 1000.0,
+      "mono_rms_px": [
+        0.6773766276148916,
+        0.6359717924621453
+      ],
+      "fitted_focal_px": [
+        671.4839366617451,
+        682.3012705423623,
+        734.0302598098002,
+        746.1941288261871
+      ],
+      "stereo_rms_px": 1.088759691036431,
+      "baseline_mm": 99.39639905950992
+    }
+  ],
+  "note": "No parameters fixed to guessed focal length: each focal guess was optimized. Diagnostic only; no held-out acceptance/activation."
+}

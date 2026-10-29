@@ -1,0 +1,137 @@
+{
+  "kind": "argus-doctor",
+  "time": "2026-10-28T22:57:52",
+  "config_file": "/opt/argus/config/argus.yaml",
+  "config": {
+    "stereo": [
+      960,
+      600,
+      60
+    ],
+    "wide": [
+      1920,
+      1080,
+      30
+    ],
+    "pixel_format": "YUYV"
+  },
+  "rows": [
+    {
+      "name": "left camera present",
+      "ok": true,
+      "detail": "/dev/video2 Arducam B0495 (USB3 2.3MP) @ 1-2.2",
+      "data": {}
+    },
+    {
+      "name": "left on SuperSpeed",
+      "ok": false,
+      "detail": "480 Mbit/s (reseat the USB-C plug)",
+      "data": {}
+    },
+    {
+      "name": "right camera present",
+      "ok": true,
+      "detail": "/dev/video4 Arducam B0495 (USB3 2.3MP) @ 2-1.1",
+      "data": {}
+    },
+    {
+      "name": "right on SuperSpeed",
+      "ok": true,
+      "detail": "5000 Mbit/s",
+      "data": {}
+    },
+    {
+      "name": "wide camera present",
+      "ok": true,
+      "detail": "/dev/video0 Arducam B0459 (USB3 12MP) @ 2-1.4",
+      "data": {}
+    },
+    {
+      "name": "wide on SuperSpeed",
+      "ok": true,
+      "detail": "5000 Mbit/s",
+      "data": {}
+    },
+    {
+      "name": "left fps (10s)",
+      "ok": false,
+      "detail": "0.0 of 60 fps, worst gap inf ms, first frame nan s, mode 0x0",
+      "data": {
+        "fps": 0.0,
+        "target": 60,
+        "max_gap_ms": Infinity,
+        "open_to_first_frame_s": null
+      }
+    },
+    {
+      "name": "right fps (10s)",
+      "ok": false,
+      "detail": "0.0 of 60 fps, worst gap inf ms, first frame nan s, mode 0x0",
+      "data": {
+        "fps": 0.0,
+        "target": 60,
+        "max_gap_ms": Infinity,
+        "open_to_first_frame_s": null
+      }
+    },
+    {
+      "name": "wide fps (10s)",
+      "ok": false,
+      "detail": "0.0 of 30 fps, worst gap inf ms, first frame nan s, mode 0x0",
+      "data": {
+        "fps": 0.0,
+        "target": 30,
+        "max_gap_ms": Infinity,
+        "open_to_first_frame_s": null
+      }
+    },
+    {
+      "name": "stereo arrival skew",
+      "ok": false,
+      "detail": "median None ms, p95 None ms, None% over 12.0 ms gate",
+      "data": {
+        "n": 0
+      }
+    },
+    {
+      "name": "snapshots",
+      "ok": null,
+      "detail": "none",
+      "data": {}
+    },
+    {
+      "name": "free RAM",
+      "ok": true,
+      "detail": "3576 MB available of 7607 MB, swap 19/3803 MB",
+      "data": {
+        "total_mb": 7607,
+        "available_mb": 3576,
+        "swap_total_mb": 3803,
+        "swap_used_mb": 19
+      }
+    },
+    {
+      "name": "over-current throttle events",
+      "ok": null,
+      "detail": "oc1=0, oc2=0, oc3=0",
+      "data": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 0
+      }
+    },
+    {
+      "name": "llama-server",
+      "ok": false,
+      "detail": "not reachable (URLError)",
+      "data": {}
+    },
+    {
+      "name": "Piper playback",
+      "ok": null,
+      "detail": "skipped (--quiet)",
+      "data": {}
+    }
+  ],
+  "all_ok": false
+}

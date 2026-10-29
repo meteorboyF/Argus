@@ -4,7 +4,7 @@ Flow ("read this"):
   1. Coach: text detection on the live wide stream at a few Hz. Spoken cues
      ("move the page to the right", "bring it closer", "hold still") until
      the text block is inside the frame, large enough, sharp and still.
-  2. Capture: earcon, then a 12 MP still (CameraRig.capture_still).
+  2. Capture: earcon, then a frame from the configured reading camera.
   3. OCR (argus.ocr) on the still; text spoken sentence by sentence.
      "stop", "pause", "continue", "repeat" control playback.
   4. Questions about the page ("what's the expiry date?") go to Gemma as
@@ -62,11 +62,12 @@ class FrameCheck:
     width: int
     height: int
     sharpness: float       # Laplacian variance inside the text block (or page)
-    motion: float          # mean abs grey difference to the previous frame
+    motion: float          # denoised page-region difference from previous check
     page_box: tuple | None = None   # book/paper found by the grounder (x0, y0, x1, y1)
     region_mean: float = 128.0      # brightness of the text block / page
     background_mean: float = 128.0  # brightness of the rest of the frame
     glare_frac: float = 0.0         # fraction of saturated pixels on the page
+    text_contrast: float = 0.0      # robust local contrast inside detected words
 
 
 @dataclass
@@ -80,7 +81,8 @@ class FrameLimits:
     close_width_frac: float = 0.45
     min_sharpness: float = 60.0
     max_motion: float = 6.0
-    dark_mean: float = 55.0       # page darker than this cannot be read
+    dark_mean: float = 55.0
+    min_text_contrast: float = 35.0
     backlit_margin: float = 60.0  # background this much brighter = light behind the page
     glare_frac: float = 0.04
 
@@ -101,7 +103,9 @@ def framing_advice(fc: FrameCheck, lim: FrameLimits = FrameLimits()) -> tuple[st
                 "at about arm's length."), False
 
     # Light first: no framing helps if the page is too dark or glaring.
-    if fc.region_mean < lim.dark_mean:
+    if fc.region_mean < lim.dark_mean and not (
+            fc.boxes and fc.text_contrast >= lim.min_text_contrast
+            and fc.sharpness >= lim.min_sharpness):
         if fc.background_mean > fc.region_mean + lim.backlit_margin:
             return ("There's a bright light behind the page, so it looks dark to me. "
                     "Turn around so the light is behind you."), False
@@ -135,7 +139,38 @@ def framing_advice(fc: FrameCheck, lim: FrameLimits = FrameLimits()) -> tuple[st
         return "Bring the page a little closer.", False
     if not fc.boxes:
         return "I can see the page. Hold it still while I find the words.", False
-    return "Hold still. Capturing.", True
+    return "The page is framed. Hold it there.", True
+
+
+def page_motion(gray: np.ndarray, previous: np.ndarray | None, region) -> float:
+    """Ignore sensor grain and activity outside the page when coaching motion."""
+    if previous is None or gray.shape != previous.shape:
+        return 0.0
+    current = cv2.GaussianBlur(gray,(5,5),0)
+    before = cv2.GaussianBlur(previous,(5,5),0)
+    diff = np.abs(current.astype(np.int16)-before.astype(np.int16))
+    if region is not None:
+        h,w = gray.shape
+        x0,y0,x1,y1 = map(int,region)
+        x0,y0 = max(0,x0),max(0,y0)
+        x1,y1 = min(w,x1),min(h,y1)
+        if x1>x0 and y1>y0:
+            diff = diff[y0:y1,x0:x1]
+    return float(diff.mean())
+
+
+def text_contrast(gray: np.ndarray, boxes: list) -> float:
+    """Median word contrast, denoised so sensor grain cannot clear low light."""
+    smooth = cv2.GaussianBlur(gray, (5, 5), 0)
+    contrasts = []
+    for box in boxes:
+        x, y, w, h = cv2.boundingRect(np.asarray(box, np.float32))
+        roi = smooth[max(0,y):min(gray.shape[0],y+h),
+                     max(0,x):min(gray.shape[1],x+w)]
+        if roi.size:
+            lo, hi = np.percentile(roi, (10, 90))
+            contrasts.append(float(hi-lo))
+    return float(np.median(contrasts)) if contrasts else 0.0
 
 
 def region_stats(gray: np.ndarray, box) -> tuple[float, float, float, float]:
@@ -182,21 +217,28 @@ class ReadingSession:
 
     def coach(self) -> bool:
         """Speak framing cues until the text is framed; False on timeout."""
-        prev = None
         said = ""
         said_at = 0.0
         t0 = time.monotonic()
         steady = 0
+        self._coached_frame = None
         while (time.monotonic() - t0 < self.coach_timeout_s
                and not self._stop.is_set()):
-            frame = self.rig.get_wide_frame()
+            frame = self.rig.get_reading_frame()
             if frame is None:
                 time.sleep(0.1)
                 continue
+            # Measure local stability over a fixed short interval, rather than
+            # across slow text detection calls (often >1s on this device).
+            before = cv2.resize(frame, (960, int(frame.shape[0] * 960 / frame.shape[1])))
+            prev = cv2.cvtColor(before, cv2.COLOR_BGR2GRAY)
+            if self._stop.wait(0.12):
+                return False
+            frame = self.rig.get_reading_frame()
+            if frame is None:
+                continue
             small = cv2.resize(frame, (960, int(frame.shape[0] * 960 / frame.shape[1])))
             gray = cv2.cvtColor(small, cv2.COLOR_BGR2GRAY)
-            motion = float(np.abs(gray.astype(np.int16) - prev).mean()) if prev is not None else 0.0
-            prev = gray.astype(np.int16)
             boxes = self._detect(small)
             page_box = None
             if boxes:
@@ -216,13 +258,20 @@ class ReadingSession:
                 rmean, bmean, glare, sharp = region_stats(gray, region)
             else:
                 rmean, bmean, glare, sharp = 128.0, 128.0, 0.0, 0.0
+            motion = page_motion(gray,prev,region)
             fc = FrameCheck(boxes, small.shape[1], small.shape[0], sharp, motion,
-                            page_box, rmean, bmean, glare)
+                            page_box, rmean, bmean, glare, text_contrast(gray, boxes))
             cue, ready = framing_advice(fc)
             self.last_check = fc
-            bus.set(reading=cue)
+            bus.set(reading=cue,reading_ocr_status=cue,reading_motion=motion,reading_sharpness=sharp,
+                    reading_brightness=rmean,reading_ready=ready)
+            bus.record("reading_frame_check",ready=ready,motion=motion,
+                       sharpness=sharp,brightness=rmean,text_boxes=len(boxes),cue=cue,
+                       text_contrast=fc.text_contrast,
+                       motion_sample_s=0.12)
             steady = steady + 1 if ready else 0
             if steady >= 2:            # two good checks in a row
+                self._coached_frame = frame.copy()
                 return True
             now = time.monotonic()
             if cue != said and (now - said_at > 2.0) and not self.speaker.busy:
@@ -238,6 +287,9 @@ class ReadingSession:
         page has been spoken (not when it was stopped)."""
         self.stop()
         self._stop.clear()
+        self._coached_frame = None
+        bus.set(reading_ocr_text="", reading_ocr_at=0.0,
+                reading_ocr_status="Framing page" if coach else "Capturing")
         self._on_finished = on_finished
         if intro:
             self.speaker.speak(intro)
@@ -250,20 +302,35 @@ class ReadingSession:
                     return None
                 fc = getattr(self, "last_check", None)
                 hint = framing_advice(fc)[0] if fc is not None else ""
+                bus.set(reading_ocr_status="Framing failed: " + hint)
                 self.speaker.speak("I couldn't get a clear view of the text. " + hint)
                 return None
             earcons.play("capturing")
             t0 = time.perf_counter()
-            still = self.rig.capture_still()
+            source = getattr(getattr(self.rig,"cfg",None),"reading_source",None)
+            if coach and source in ("left","right") and self._coached_frame is not None:
+                # The approved view is already owned and fresh from the coach;
+                # do not replace it with a different, potentially blurred frame.
+                still = self._coached_frame.copy()
+            else:
+                still = self.rig.capture_reading_still()
             if self._stop.is_set():
                 return None
             if still is None:
+                bus.set(reading_ocr_status="No fresh camera image")
                 self.speaker.speak("The camera did not give me a picture.")
                 return None
             capture_s = time.perf_counter() - t0
+            if coach:
+                self.speaker.speak("Captured. Reading now.")
+            bus.frame("reading_capture", still)
+            bus.set(reading_capture_at=time.monotonic(), reading_ocr_status="Recognizing captured image")
             reading = self.ocr.read_robust(still, self.locate)
             if self._stop.is_set():
                 return None
+            bus.set(reading_ocr_text=reading.masked_text,
+                    reading_ocr_at=time.monotonic(),
+                    reading_ocr_status="OCR completed" if reading.lines else "No readable text")
             if len(reading.text.replace(" ", "")) >= 4:
                 break
             # Nothing readable: say why, the way a helper would, and retry.

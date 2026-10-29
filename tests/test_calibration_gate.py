@@ -51,6 +51,34 @@ def test_clean_rig_has_small_held_out_row_error():
     assert mean < 0.5 and mx < 1.0
 
 
+def test_joint_corner_order_recovers_known_rig_across_diagonal_switch():
+    """Project a real 101 mm rig with relative roll; fit after detector ordering."""
+    rng = np.random.default_rng(42)
+    obj = cs.make_object_points((7,7), .024)
+    rotation, _ = cv2.Rodrigues(np.array([.01,.03,np.deg2rad(2)]))
+    translation = np.array([-.101, .001, .002])
+    objs, pl, pr = [], [], []
+    for i in range(24):
+        rv = np.array([rng.uniform(-.5,.5),rng.uniform(-.5,.5),
+                       np.deg2rad(rng.uniform(40,48))])
+        tv = np.array([rng.uniform(-.18,.1),rng.uniform(-.14,.08),rng.uniform(.55,1.0)])
+        rb, _ = cv2.Rodrigues(rv)
+        rr, _ = cv2.Rodrigues(rotation@rb)
+        il, _ = cv2.projectPoints(obj,rv,tv,K,D)
+        ir, _ = cv2.projectPoints(obj,rr,rotation@tv+translation,K,D)
+        il = cs.normalize_corners(il,(7,7))
+        ir = cs.normalize_corners(ir,(7,7))
+        matched = cs.align_stereo_corners(il,ir,(7,7))
+        assert matched is not None
+        objs.append(obj.copy()); pl.append(il); pr.append(matched)
+    rms, _, _, _, _, recovered_rotation, recovered_translation = cs.calibrate(objs,pl,pr,SIZE)
+    assert rms < .01
+    np.testing.assert_allclose(recovered_translation.ravel(),translation,atol=.001)
+    np.testing.assert_allclose(recovered_rotation,rotation,atol=.001)
+    mean, maximum, held = cs.held_out_row_error(objs,pl,pr,SIZE)
+    assert held >= 3 and mean < .1 and maximum < .2
+
+
 def test_gate_accepts_good_calibration():
     why = cs.quality_gate(mono_rms={"left": 0.3, "right": 0.35}, stereo_rms=0.45, row_mean=0.2,
                           row_max=0.7, baseline_m=0.131, tape_baseline_m=0.13, n_views=18,
@@ -74,6 +102,15 @@ def test_gate_requires_tape_baseline():
                           row_max=0.5, baseline_m=0.13, tape_baseline_m=None, n_views=20,
                           coverage=1.0)
     assert why == ["baseline not checked against a tape measurement"]
+
+
+def test_gate_rejects_unstable_intrinsics_and_flat_only_views():
+    why = cs.quality_gate(mono_rms={'left':.3,'right':.3},stereo_rms=.4,
+                          row_mean=.2,row_max=.5,baseline_m=.101,tape_baseline_m=.101,
+                          n_views=20,coverage=1.,intrinsic_fit={'left':{'stable':False}},
+                          perspective_spans=[.01,.12])
+    assert any('intrinsics are unstable' in reason for reason in why)
+    assert any('perspective variation' in reason for reason in why)
 
 
 def test_gate_rejects_nan():

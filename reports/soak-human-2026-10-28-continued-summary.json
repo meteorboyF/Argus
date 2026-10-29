@@ -1,0 +1,126 @@
+{
+  "kind": "argus-full-stack-soak",
+  "T1_complete": false,
+  "human_workload_confirmation": "pending",
+  "requested_s": 600.0,
+  "backend": "cuda_sad",
+  "calibrated": false,
+  "config": "/opt/argus/config/argus.yaml",
+  "cv_threads": 1,
+  "begin": 1406.012565507,
+  "oc_before": {
+    "oc1": 0,
+    "oc2": 0,
+    "oc3": 0
+  },
+  "duration_s": 600.2181796959999,
+  "timing": {
+    "tick_ms": {
+      "n": 5932,
+      "median": 43.253236499936065,
+      "p95": 77.34133444999998,
+      "max": 609.3345490000956
+    },
+    "interval_ms": {
+      "n": 5931,
+      "median": 100.13713399985136,
+      "p95": 103.36319499992896,
+      "max": 609.6616950001135
+    },
+    "capture_wait_ms": {
+      "n": 5932,
+      "median": 0.14989199985393498,
+      "p95": 0.2904128000295712,
+      "max": 20.752366999886362
+    },
+    "depth_ms": {
+      "n": 5320,
+      "median": 18.202628000040022,
+      "p95": 29.432951100079663,
+      "max": 219.6237900000142
+    },
+    "hazards_ms": {
+      "n": 5319,
+      "median": 0.052802000027440954,
+      "p95": 0.14055440008178244,
+      "max": 25.665826000022207
+    },
+    "movers_ms": {
+      "n": 5319,
+      "median": 23.81367200018758,
+      "p95": 52.107749700053276,
+      "max": 571.4971329998662
+    },
+    "publish_ms": {
+      "n": 5319,
+      "median": 0.5653910000091855,
+      "p95": 2.3028785999485977,
+      "max": 64.59827499998028
+    }
+  },
+  "outages": [
+    {
+      "start": 1406.012565507,
+      "end": 1406.64252083,
+      "gap_s": 0.6299553229998764,
+      "open": false
+    },
+    {
+      "start": 1407.4625485,
+      "end": 1407.903901299,
+      "gap_s": 0.4413527990000148,
+      "open": false
+    },
+    {
+      "start": 1408.204717428,
+      "end": 1408.604568538,
+      "gap_s": 0.3998511099998723,
+      "open": false
+    },
+    {
+      "start": 1409.530757238,
+      "end": 1409.896727782,
+      "gap_s": 0.3659705439999925,
+      "open": false
+    },
+    {
+      "start": 1491.030365977,
+      "end": 1491.607800901,
+      "gap_s": 0.5774349240000447,
+      "open": false
+    },
+    {
+      "start": 1907.717908179,
+      "end": 1928.17300251,
+      "gap_s": 20.455094331000055,
+      "open": false
+    },
+    {
+      "start": 1934.702716393,
+      "end": 1955.167199191,
+      "gap_s": 20.464482798000063,
+      "open": false
+    },
+    {
+      "start": 1980.374099665,
+      "end": 2000.837996535,
+      "gap_s": 20.4638968700001,
+      "open": false
+    }
+  ],
+  "timing_and_rss_pass": false,
+  "llama_healthy_whole_run": true,
+  "reading_attempts": 2,
+  "oc_after": {
+    "oc1": 0,
+    "oc2": 0,
+    "oc3": 499
+  },
+  "heard_count": 11,
+  "query_count": 8,
+  "fast_error": null,
+  "peak_stack_rss_mb": 4172.078125,
+  "min_available_mb": 216.390625,
+  "peak_gr3d": 99,
+  "note": "Human workload observed in session log; evaluator confirmation pending. Camera reconnects observed late in run; cause of outages not established."
+}

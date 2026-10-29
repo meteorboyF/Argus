@@ -1,0 +1,74 @@
+{
+  "kind": "argus-reliability-summary",
+  "acceptance": false,
+  "backend": "cuda_sad",
+  "calibrated": false,
+  "phases": [
+    {
+      "phase": "baseline",
+      "seconds": 20.36071978100017,
+      "tick_ms": {
+        "n": 203,
+        "median": 49.25626200019906,
+        "p95": 60.23160859986092,
+        "max": 82.98769299972264
+      },
+      "outages": [],
+      "errors": [],
+      "operations": 0,
+      "peak_rss_mb": 2702.8984375,
+      "min_available_mb": 1616.8671875,
+      "peak_gr3d": 92,
+      "oc3_delta": 0
+    },
+    {
+      "phase": "ocr",
+      "seconds": 20.343302417999894,
+      "tick_ms": {
+        "n": 203,
+        "median": 48.2876920000308,
+        "p95": 74.48160339999957,
+        "max": 221.92561900010332
+      },
+      "outages": [
+        {
+          "start": 3687.258776406,
+          "end": 3687.574328019,
+          "gap_s": 0.3155516130000251,
+          "open": false
+        }
+      ],
+      "errors": [],
+      "operations": 2,
+      "peak_rss_mb": 3315.1015625,
+      "min_available_mb": 914.8515625,
+      "peak_gr3d": 94,
+      "oc3_delta": 0
+    },
+    {
+      "phase": "combined",
+      "seconds": 20.643209354999726,
+      "tick_ms": {
+        "n": 200,
+        "median": 47.31713799992576,
+        "p95": 103.86818834981555,
+        "max": 232.9653709998638
+      },
+      "outages": [
+        {
+          "start": 3750.125299918,
+          "end": 3750.513971888,
+          "gap_s": 0.38867196999990483,
+          "open": false
+        }
+      ],
+      "errors": [],
+      "operations": 100,
+      "peak_rss_mb": 4073.3203125,
+      "min_available_mb": 265.5625,
+      "peak_gr3d": 99,
+      "oc3_delta": 1413
+    }
+  ],
+  "note": "20 s phases, synthetic OCR/speech. Long camera outages did not reproduce. T1 incomplete."
+}

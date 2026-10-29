@@ -56,6 +56,8 @@ class CameraConfig:
     wide_width: int = 1920
     wide_height: int = 1080
     wide_fps: int = 30
+    # Reading shares the existing reader; never reconfigure a stereo stream.
+    reading_source: str = "left"  # left, right, or wide
     left_rotation: int = 0       # clockwise degrees: 0, 90, 180, or 270
     right_rotation: int = 0
     wide_rotation: int = 0

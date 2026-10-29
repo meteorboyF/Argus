@@ -1,0 +1,101 @@
+{
+  "kind": "argus-doctor",
+  "time": "2026-10-29T03:54:22",
+  "config_file": "/opt/argus/config/argus.yaml",
+  "config": {
+    "stereo": [
+      960,
+      600,
+      60
+    ],
+    "wide": [
+      1920,
+      1080,
+      30
+    ],
+    "pixel_format": "YUYV"
+  },
+  "rows": [
+    {
+      "name": "left camera present",
+      "ok": false,
+      "detail": "B0495 not found (port hint 2-1.2)",
+      "data": {}
+    },
+    {
+      "name": "right camera present",
+      "ok": true,
+      "detail": "/dev/video0 Arducam B0495 (USB3 2.3MP) @ 2-1.1",
+      "data": {}
+    },
+    {
+      "name": "right on SuperSpeed",
+      "ok": true,
+      "detail": "5000 Mbit/s",
+      "data": {}
+    },
+    {
+      "name": "wide camera present",
+      "ok": false,
+      "detail": "B0459 not found (port hint 2-1.4)",
+      "data": {}
+    },
+    {
+      "name": "right fps (15s)",
+      "ok": true,
+      "detail": "59.9 of 60 fps, worst gap 21 ms, first frame 0.55 s, mode 960x600",
+      "data": {
+        "fps": 59.87,
+        "target": 60,
+        "max_gap_ms": 20.6,
+        "open_to_first_frame_s": 0.5505247300000065
+      }
+    },
+    {
+      "name": "stereo arrival skew",
+      "ok": false,
+      "detail": "needs both stereo cameras",
+      "data": {}
+    },
+    {
+      "name": "snapshots",
+      "ok": null,
+      "detail": "/tmp/argus_snap/right.jpg",
+      "data": {}
+    },
+    {
+      "name": "free RAM",
+      "ok": true,
+      "detail": "1836 MB available of 7607 MB, swap 30/3803 MB",
+      "data": {
+        "total_mb": 7607,
+        "available_mb": 1836,
+        "swap_total_mb": 3803,
+        "swap_used_mb": 30
+      }
+    },
+    {
+      "name": "over-current throttle events",
+      "ok": null,
+      "detail": "oc1=0, oc2=0, oc3=0",
+      "data": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 0
+      }
+    },
+    {
+      "name": "llama-server",
+      "ok": true,
+      "detail": "{\"status\":\"ok\"}",
+      "data": {}
+    },
+    {
+      "name": "Piper playback",
+      "ok": null,
+      "detail": "skipped (--quiet)",
+      "data": {}
+    }
+  ],
+  "all_ok": false
+}

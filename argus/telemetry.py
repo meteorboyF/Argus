@@ -92,6 +92,15 @@ class Telemetry:
         with self._lock:
             return self._values.get(key, default)
 
+    def clear_interaction_display(self) -> None:
+        """Clear presentation text without deleting study logs or safety state."""
+        with self._lock:
+            self._events = collections.deque(
+                (e for e in self._events if e.kind not in ('user', 'argus')),
+                maxlen=self._events.maxlen)
+            for key in ('speaking', 'reading_ocr_text', 'reading_ocr_status', 'reading'):
+                self._values.pop(key, None)
+
 
 class SessionLogger:
     """Append-only JSONL study log: one event per line, flushed immediately

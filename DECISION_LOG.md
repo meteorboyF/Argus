@@ -1,5 +1,132 @@
 # ARGUS engineering decision and hurdle log
 
+## 2026-10-29 — inconsistent reading capture in recording
+
+User reported hold-still loops. Log showed "Capturing" after only first ready
+frame, then failed second check; raw full-image motion treated noisy sensor or
+background activity as hand movement. Made ready/captured wording truthful,
+denoised page-ROI motion and reused the approved stereo view for OCR. Retained
+two-check/framing/light/blur gates. Added numeric frame-check telemetry to
+diagnose remaining failures without page text.418 tests pass; failed take01
+preserved146.193s, fresh take02 required for live confirmation.
+
+## 2026-10-29 — residual failure persists after conditioning improvements
+
+Robust25-view capture has sufficient perspective variation, stable multi-start
+fits and low pairing skew, yet fails accuracy gates. Offline residual patterns
+are shared across cameras (correlation.907). View20 is a marked outlier, but
+diagnostic exclusion still fails mono/stereo limits. Learned fixed target
+geometry improves some unseen views while view20 remains bad; lens-model
+variants scarcely help. Evidence supports shared target/localization errors
+with view-dependent inconsistency, not a proven camera mount fault or operator
+mistake. No raw images retained to separate flex/blur/corner localization.
+Original data unchanged, no production pruning or activation. Prefer a well-lit
+stationary repeatability diagnostic or verified flat target before another
+full human capture. Numeric reports have2026-10-29-robust-live suffix.
+
+## 2026-10-29 — stabilized fitter and explicit perspective coaching
+
+Replaced default mono initialization with three optimized image-size-based
+focal starts, selecting lowest mono residual independently of tape baseline.
+Added rejection for similar-error solutions disagreeing by>10% focal scale.
+Capture now measures opposite-edge perspective cues and requests top/bottom,
+then side-to-side tilts. Flat movement/rotation cannot satisfy this cue;
+both ranges>=.08 required before automatic completion and final acceptance.
+This is an explicit conditioning heuristic; it does not replace held-out,
+reprojection or physical scale checks.413 tests pass. Saved latest capture
+replays to99.396mm but still fails accuracy/held-out/tilt gates; no activation.
+Live confirmation remains required. Report:
+`reports/calibration-replay-2026-10-29-robust.json`.
+
+## 2026-10-29 — latest failure isolates initialization sensitivity
+
+23mm capture gave2668mm baseline and pathological left focal length. Three
+optimized starts600/800/1000px on identical saved corners all yield99.396mm
+baseline, left671/682 and right734/746px focal lengths, stereo1.089px. No
+fixed guessed intrinsics, baseline tuning, pruning or activation. This proves
+initialization can cause this run's extreme geometry; residual quality still
+fails and cannot be excused by numerical stabilization. Camera skews remain
+low, joint ordering unchanged on replay. Limited estimated pitch variation
+may contribute to conditioning; target/localization issues remain unresolved.
+Next implementation: robust initialization/stability diagnostics before another
+human capture. Production fitter unchanged in this analysis turn. Evidence:
+`reports/calibration-initialization-2026-10-29-23mm-live.json`.
+
+## 2026-10-29 — offline target geometry investigation
+
+Fixed-code live solve remained above gates despite plausible98.4mm baseline.
+With corners now preserved, compared lens/target models on12 training views
+and3 held-out poses. Free-k3/rational barely help. Released target geometry
+reduces held-out mono RMS from .8–1.0 to .3–.4px; shape learned on left also
+improves right held-out RMS and vice versa. This supports a shared target
+geometry/localization mismatch rather than blaming one mount, but learned
+geometry is not a ruler measurement and can absorb other systematic errors.
+Added read-only `analyze_calibration_target.py`; full result in
+`reports/calibration-target-analysis-2026-10-29.json`. No pruning, thresholds
+changed, released-board production model or activation. Next verify board
+flatness/hinge and horizontal/vertical square spacing, rather than spend more
+human effort on identical captures.
+
+## 2026-10-29 — square-grid correspondence and capture replay
+
+Repeated live fits produced implausible baselines/intrinsics even with 9/9
+coverage. Reproduced a concrete independent-corner-order failure: a board at
+44° in one camera and 46° in its peer crosses the per-image axis switch, so
+corner k no longer means the same physical square. Joint centered-grid symmetry
+matching restores corresponding indices for the upright co-directed rig and
+rejects ambiguous/excessively different shapes. This is a mounting assumption,
+not support for arbitrary camera rotations.
+
+Also found calibration pairing reused one source whenever the other advanced,
+without source-age rejection. Replaced with bounded fresh matching like runtime
+stereo. Saved corner checkpoints on each accepted view and added read-only
+offline fitting/per-view diagnostics so a failed solve need not cost another
+human capture session. No images saved by checkpoints, no pruning or threshold
+relaxation. 408 tests pass; diagonal/relative-roll known rig recovers geometry;
+20-view noisy synthetic replay gives 100.984 mm for true 101 mm, held-out
+.069/.278 px. Live root cause attribution remains unproven because prior
+files retained only fitted parameters. Live validation remains required.
+
+## 2026-10-28 — misleading calibration capture prompts
+
+User could hold still for a long time without capture. The coach accepted a
+diverse pose while the capture loop silently vetoed its already-covered cell
+until nine samples. Removed that cell veto: useful changes in scale/angle
+within a region count toward view diversity. Global coverage remains an
+independent completion/final-gate requirement. Unified readiness conditions
+with prompt semantics, including cooldown and board size; check steadiness in
+both cameras and reset after lost detection. Manual SPACE/c does not bypass
+readiness. Auto-completion now requires the same 70% coverage as the final
+gate, instead of stopping at 6/9 and failing afterward. Final metric quality
+and baseline thresholds unchanged. First attempt ended with 2/15 views;
+no accepted calibration or walking acceptance is claimed.
+
+## 2026-10-28 — OCR diagnostic alongside voice tests
+
+Voice reading remained inaccurate after choosing stereo. Added an opt-in
+`--ocr-preview` demo window showing live source, last capture and actual masked
+OCR text/status. It shares CameraRig and recognition results rather than
+running a competing OCR loop. This isolates framing/capture from recognition
+without adding camera ownership or recurring inference load. Diagnostic raw
+frames stay outside demo recording/model calls. No accuracy fix is claimed.
+
+## 2026-10-28 — shared stereo OCR, wide mapping pending
+
+The user requested leaving the wide lens untouched and using stereo for OCR,
+wide for SLAM after unsuccessful page reads. Reading now uses the left live
+stream for both coaching and capture. This avoids camera mode changes and
+wide stream reopen races during reading, at the cost of 960x600 rather than
+12 MP input. No accuracy improvement is claimed before a real-page trial.
+The source is configurable (left/right/wide); stale frames fail closed and
+owned copies protect depth inputs. 393 tests passed with hardware access;
+live capture followed by stereo-pair acquisition passed (2.70 ms skew).
+
+Metric wide tracking cannot reuse stereo intrinsics or unscaled monocular
+translation. It remains unimplemented pending wide/stereo calibration and
+tracker work. Stereo VO and route gates remain unchanged. The preceding
+600.2 s human soak failed (eight depth outages, three ~20.46 s); camera
+reopen logs do not establish the root cause. Reports are in STATUS.md.
+
 This is a required HCI research artifact. Each entry records the real constraint,
 its user/system impact, alternatives, resolution, and continuing consequence.
 It must be updated with every non-trivial feature decision or setback.

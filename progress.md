@@ -1,5 +1,134 @@
 # ARGUS progress
 
+## Power-off checkpoint — 2026-10-29
+
+Saved restart instructions and latest state in AGENT_HANDOFF.md. Operational
+recording UI completed; conversation prompt and conceptual book/title routing
+improved (84tests). Latest OCR motion uses120ms pairs; live capture succeeded:
+two ready checks,5lines OCR in6.747s (45reading tests). Text accuracy/page Q&A
+and spoken conversational flow remain to test. No recording active.
+
+## Feature recordings — 2026-10-29
+
+Reading take01 saved146.193s but failed coaching, no reading acceptance.
+Fixed premature "capturing" cue, sensor-noise/background-sensitive motion,
+and approved-frame vs captured-frame mismatch for stereo OCR.418 tests pass.
+Take02 prepared; keep failed take as evidence. Conversation/privacy clips
+still next, metric warnings/wideSLAM remain blocked/unimplemented.
+
+Seat take01 finalized:214.274s,video/audio verified. Direction outputs plus
+target loss observed. Reading/page-agent take01 started separately with left
+POV and local OCR preview. No finalized reading clip yet.
+
+User requested individual clips. Plan docs/FEATURE_RECORDING.md; first seat
+direction take launched using new --demo-source left.29 relevant tests pass.
+No finalized clip/success yet. Next OCR,conversation,privacy. Metric incoming
+warnings/navigation blocked by rejected calibration; wide SLAM unimplemented.
+Recorder omits human mic audio; user informed. Recording directory:
+reports/feature-recordings/2026-10-29/.
+
+## 2026-10-29: calibration code diagnosis
+
+User authorized trying alternative detector. Added explicit sector calibration
+option, recorded in observation/candidate metadata, no classic subpixel pass
+on SB corners.46 calibration tests pass; gates unchanged. Fresh sector trial
+next with23mm squares and saved observations; not accepted until checks pass.
+
+Stationary burst checked visually/numerically:grainy images,visible centre
+seam,~7px global motion. Sector detector gives lower motion-compensated local
+repeatability errors:left.368 vs classic.570px,right.216 vs.311px. This is
+repeatability,not absolute corner accuracy or accepted calibration. No detector
+switch/activation yet; report reports/stationary-board-2026-10-29.json.
+
+Stationary stereo burst test launched for user (SPACE starts).16 pairs, raw
+images private under/tmp, numeric report `reports/stationary-board-2026-10-29.json`.
+Classic/sector and local repeatability comparison; synthetic smoke passes.
+No live result/activation yet; preview owns cameras until Q/Esc.
+
+Robust live25-view session rejected, but starts agree and both tilt directions
+pass. Offline check:board-related residuals correlate.907 across cameras;
+lens changes barely help. View20 is worst, but excluding it diagnostically
+still leaves~1.22px mono/1.34px stereo. Learned target geometry improves some
+held-out views but not view20, suggesting inconsistent target/localization
+errors, not just one bad frame or a stable warp correction. No raw images
+to distinguish flex/blur. Keep mounts fixed; next well-lit stationary corner
+repeatability check or verified flat target. No calibration activation.
+
+Implemented optimized multi-start intrinsics and cross-start stability check;
+added explicit top/bottom then side-to-side perspective guidance and completion
+requirement. No RMS/held-out/baseline limit loosened.413 tests pass. Saved
+capture replay now fits99.396mm but still rejects accuracy/held-out/tilt checks;
+`reports/calibration-replay-2026-10-29-robust.json`. No active calibration.
+
+Latest23mm session failed severely. Offline analysis reproduces failure but
+demonstrates numeric initialization instability:600/800/1000px starting guesses
+all optimize to99.396mm baseline and1.089px stereo, vs default2668mm/5.374px.
+This is not accepted (mono.677/.636 also above gates). No production fitter
+change/activation yet. Pair skew remains low and joint correspondence replay
+unchanged. New reports: calibration-replay, calibration-target-analysis and
+calibration-initialization, suffix2026-10-29-23mm-live. Next robust initialization
+and better out-of-plane pose guidance; no evidence to blame a specific mount.
+
+Fixed-code live capture improved baseline to 98.4 mm but still failed RMS
+and held-out gates. Saved observations enable offline study. Lens-model
+variants barely help; train-only released-board geometry cuts held-out errors
+roughly in half and transfers across cameras. Stronger evidence for target
+geometry/localization mismatch than a particular camera mount; not physical
+proof of warp. `reports/calibration-target-analysis-2026-10-29.json`.
+Next check board flatness/hinge and horizontal/vertical square spacing. No
+calibration activated or gates relaxed.
+
+Several live attempts rejected, including post-mount adjustment (15 views,
+full coverage, impossible 83.8 cm fitted baseline). Reproduced independent
+7x7-grid corner numbering mismatch across diagonal poses. Added joint stereo
+ordering with ambiguity rejection and fresh history pairing requiring both
+sources to advance. Numeric observations now checkpoint every accepted view;
+offline diagnostic replay added. No quality gates relaxed or active calibration
+written. 408 tests pass; synthetic 101 mm rig recovered 100.984 mm and passed
+held-out validation. Live confirmation pending; old candidates lack observations
+to establish which defect caused them. Evidence:
+`reports/calibration-code-check-2026-10-29.json`.
+
+## 2026-10-28 continuation
+
+Calibration attempt (7x7 corners, 24 mm squares, ~101 mm baseline) ended at
+2/15. Fixed misleading hold-still coach: removed silent same-cell capture
+veto while retaining pose diversity/final coverage gates; shared readiness,
+clear cooldown/duplicate prompts, SPACE capture. Both-camera steadiness is
+checked. Completion requires 70% grid coverage, matching final gate. No
+accepted calibration; restarting guided capture for user.
+
+User accepted current reading for now and requested moving on. Reliability
+profile (20 s per phase) finished: baseline clean, OCR 316 ms gap, combined
+389 ms gap / tick p95 103.9 ms. No operation errors. Prior long outages did
+not reproduce; old logs identify missing pairs during those intervals, not
+blocked fast-loop work. T1 still partial. Report:
+`reports/reliability-stereo-ocr-2026-10-28-summary.json`. Calibration board
+grid, square size and lens baseline requested; cameras now released.
+
+Added `run --demo --ocr-preview` for the user's ongoing reading test: local
+live source/captured source/masked OCR result window, same voice-triggered
+recognition and camera readers, no extra OCR load. It is separate from the
+demo recorder. Reading accuracy remains partial.
+
+User preferred stereo OCR in three live comparisons. Stereo returned more
+characters and was faster in all three; retain left source. Raw CER favored
+wide but comparison used title-only reference against different full-frame
+text, so accuracy ranking is unresolved. Need matched crops/verified text;
+no 12 MP comparison yet. `reports/ocr-camera-comparison-2026-10-28.json`.
+
+All cameras passed doctor after a left-cable reseat. Human 600.2 s soak failed
+with eight depth outages, three ~20.46 s; model healthy, no page-read success.
+See `reports/soak-human-2026-10-28-continued-summary.json`.
+
+User requested stereo OCR / wide SLAM with focus untouched. Implemented OCR
+from the left live reader for both coaching and capture (960x600), preserving
+camera modes and stereo pairing. Both YAML copies updated. 393 tests pass;
+live frame/pair-continuity smoke passed; actual page accuracy pending.
+Wide metric tracking is NOT implemented: stereo and cross-camera calibration
+are needed first. Next: seated page trial, investigate late camera outages,
+then calibration/tracker work. Current stereo VO and walking gates unchanged.
+
 Updated: 2026-10-21. Short and honest. `STATUS.md` holds the per-component
 table, `AGENT_HANDOFF.md` the continuation plan, and
 `docs/FINDINGS_2026-10.md` the device findings with evidence.

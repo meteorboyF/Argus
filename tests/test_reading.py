@@ -102,7 +102,7 @@ def _box(x0, y0, x1, y1):
     ([_box(400, 200, 960, 240)], "Move the page to your left.", False),
     ([_box(200, 0, 700, 40)], "Move the page down", False),
     ([_box(420, 250, 520, 280)], "Bring the page a little closer.", False),
-    ([_box(200, 150, 760, 190), _box(200, 220, 700, 260)], "Hold still. Capturing.", True),
+    ([_box(200, 150, 760, 190), _box(200, 220, 700, 260)], "The page is framed. Hold it there.", True),
 ])
 def test_framing_advice(boxes, cue, ready):
     msg, ok = framing_advice(FrameCheck(boxes, 960, 540, sharpness=200.0, motion=1.0))
@@ -163,3 +163,25 @@ def test_cjk_noise_is_dropped_but_bangla_and_latin_kept():
     from argus.ocr import plausible
     assert not plausible("米") and not plausible("  ")
     assert plausible("EXIT") and plausible("৳ ১২০") and plausible("9:00AM-5:30PM")
+
+
+def test_white_text_on_dark_cover_can_capture_but_dim_text_cannot():
+    from argus.reading import text_contrast
+    gray = np.full((540, 960), 20, np.uint8)
+    box = _box(200, 150, 700, 250)
+    # Broad white strokes on a dark cover, with a dark overall mean.
+    for x in range(215, 690, 35):
+        gray[165:235, x:x+9] = 210
+    contrast = text_contrast(gray, [box])
+    fc = _page(boxes=[box], region_mean=40, text_contrast=contrast)
+    assert contrast >= 35 and framing_advice(fc)[1]
+    dim = np.full_like(gray, 20)
+    dim[gray == 210] = 27
+    fc.text_contrast = text_contrast(dim, [box])
+    assert not framing_advice(fc)[1]
+    fc.text_contrast = contrast
+    fc.motion = 10
+    assert not framing_advice(fc)[1]
+    fc.motion = 0
+    fc.glare_frac = .1
+    assert not framing_advice(fc)[1]

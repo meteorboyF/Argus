@@ -1,0 +1,234 @@
+{
+  "kind": "stereo-observation-replay",
+  "activated": false,
+  "views": 25,
+  "image_size": [
+    960,
+    600
+  ],
+  "mono_rms_px": {
+    "left": 1.2610263860334088,
+    "right": 1.3162956821451157
+  },
+  "stereo_rms_px": 1.4109692215441025,
+  "baseline_m": 0.09831005007196597,
+  "intrinsic_fit_stability": {
+    "left": {
+      "starts_succeeded": 3,
+      "comparable_starts": 3,
+      "focal_spread_fraction": 2.328280592579526e-08,
+      "stable": true
+    },
+    "right": {
+      "starts_succeeded": 3,
+      "comparable_starts": 3,
+      "focal_spread_fraction": 8.798494146984366e-09,
+      "stable": true
+    }
+  },
+  "perspective_spans": [
+    0.1748635470867157,
+    0.4274035692214966
+  ],
+  "intrinsics_left": [
+    [
+      612.816342417175,
+      0.0,
+      510.3568035841357
+    ],
+    [
+      0.0,
+      621.2962615677951,
+      293.8396706505441
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "intrinsics_right": [
+    [
+      596.995563259199,
+      0.0,
+      448.7503432205895
+    ],
+    [
+      0.0,
+      605.8386782230269,
+      312.52785082393643
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "rotation": [
+    [
+      0.9935825648968852,
+      0.012911212717937067,
+      0.112369868377066
+    ],
+    [
+      -0.010678807624014734,
+      0.9997339292220749,
+      -0.02044587562127278
+    ],
+    [
+      -0.11260395108812231,
+      0.01911468933421236,
+      0.9934560779677178
+    ]
+  ],
+  "translation": [
+    [
+      -0.09740632294484942
+    ],
+    [
+      0.0012122743601129925
+    ],
+    [
+      -0.013244039655330598
+    ]
+  ],
+  "heldout_views": 5,
+  "heldout_mean_px": 0.56954026222229,
+  "heldout_max_px": 1.9529685974121094,
+  "coverage": 0.7777777777777778,
+  "rejection_reasons": [
+    "left camera error 1.26 pixels is above 0.5",
+    "right camera error 1.32 pixels is above 0.5",
+    "stereo error 1.41 pixels is above 0.7",
+    "held-out row error 0.57 pixels is not below 0.5",
+    "worst held-out row error 1.95 pixels is not below 1.0"
+  ],
+  "per_view": [
+    {
+      "view": 1,
+      "left_rms_px": 1.0493292808532715,
+      "right_rms_px": 0.894393265247345
+    },
+    {
+      "view": 2,
+      "left_rms_px": 1.213779091835022,
+      "right_rms_px": 1.0232267379760742
+    },
+    {
+      "view": 3,
+      "left_rms_px": 0.5103963017463684,
+      "right_rms_px": 0.5681110620498657
+    },
+    {
+      "view": 4,
+      "left_rms_px": 1.0116149187088013,
+      "right_rms_px": 0.8818535804748535
+    },
+    {
+      "view": 5,
+      "left_rms_px": 1.3004308938980103,
+      "right_rms_px": 1.1418001651763916
+    },
+    {
+      "view": 6,
+      "left_rms_px": 0.8679178357124329,
+      "right_rms_px": 0.9495100378990173
+    },
+    {
+      "view": 7,
+      "left_rms_px": 1.1219650506973267,
+      "right_rms_px": 1.0276097059249878
+    },
+    {
+      "view": 8,
+      "left_rms_px": 1.0758178234100342,
+      "right_rms_px": 1.0616775751113892
+    },
+    {
+      "view": 9,
+      "left_rms_px": 0.9839245676994324,
+      "right_rms_px": 1.0075289011001587
+    },
+    {
+      "view": 10,
+      "left_rms_px": 1.1017746925354004,
+      "right_rms_px": 0.855536162853241
+    },
+    {
+      "view": 11,
+      "left_rms_px": 2.6687052249908447,
+      "right_rms_px": 1.5963754653930664
+    },
+    {
+      "view": 12,
+      "left_rms_px": 0.8790078163146973,
+      "right_rms_px": 0.8678640723228455
+    },
+    {
+      "view": 13,
+      "left_rms_px": 1.8351484537124634,
+      "right_rms_px": 2.9398398399353027
+    },
+    {
+      "view": 14,
+      "left_rms_px": 0.789593517780304,
+      "right_rms_px": 0.6705325841903687
+    },
+    {
+      "view": 15,
+      "left_rms_px": 0.8034684658050537,
+      "right_rms_px": 0.9336335062980652
+    },
+    {
+      "view": 16,
+      "left_rms_px": 1.1302406787872314,
+      "right_rms_px": 1.3455934524536133
+    },
+    {
+      "view": 17,
+      "left_rms_px": 1.0541021823883057,
+      "right_rms_px": 1.0637118816375732
+    },
+    {
+      "view": 18,
+      "left_rms_px": 1.2429403066635132,
+      "right_rms_px": 1.7390607595443726
+    },
+    {
+      "view": 19,
+      "left_rms_px": 1.316399335861206,
+      "right_rms_px": 1.6339349746704102
+    },
+    {
+      "view": 20,
+      "left_rms_px": 2.0284690856933594,
+      "right_rms_px": 2.704765796661377
+    },
+    {
+      "view": 21,
+      "left_rms_px": 0.8165208101272583,
+      "right_rms_px": 0.7821251749992371
+    },
+    {
+      "view": 22,
+      "left_rms_px": 0.892414927482605,
+      "right_rms_px": 0.9045319557189941
+    },
+    {
+      "view": 23,
+      "left_rms_px": 1.1796241998672485,
+      "right_rms_px": 0.9521041512489319
+    },
+    {
+      "view": 24,
+      "left_rms_px": 1.7130094766616821,
+      "right_rms_px": 1.1902377605438232
+    },
+    {
+      "view": 25,
+      "left_rms_px": 0.8673706650733948,
+      "right_rms_px": 1.1236011981964111
+    }
+  ],
+  "note": "Diagnostic fit only. Never writes active calibration. No views removed."
+}

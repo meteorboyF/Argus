@@ -187,7 +187,8 @@ class GemmaAgent:
                 "If the text is an excerpt, do not claim to summarise the entire document. "
                 "The document text was read by OCR and is given below; [hidden] marks "
                 "private numbers you must not guess. Answer in one short spoken sentence, "
-                "using only the document text. If the answer is not in it, say so.")},
+                "using only the document text. If the answer is not in it, say so. "
+                "Give only the answer; do not offer next steps or ask follow-up questions.")},
             {"role": "user", "content": f"Document text:\n{context}\n\nQuestion: {question}"},
         ]
         data = self._post(messages, None, max_tokens=max_tokens)

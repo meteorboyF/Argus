@@ -36,6 +36,16 @@ def test_small_talk_goes_to_gemma():
     assert rule_route("what can you do?", False, False) is None
 
 
+@pytest.mark.parametrize('text', [
+    'What is the difference between a book and a movie?',
+    'Can you suggest a title for my presentation about technology?',
+    'Recommend a book about space',
+])
+@pytest.mark.parametrize('active', [False, True])
+def test_general_discussion_of_text_does_not_activate_ocr(text, active):
+    assert rule_route(text, active, False) is None
+
+
 @pytest.mark.parametrize("raw,expect", [
     ('{"skill": "chat", "name": "", "say": "I am well, thank you."}', ("chat", "I am well, thank you.")),
     ('Sure! {"skill":"find","name":"remote","say":"Let me look."}', ("find", "Let me look.")),
@@ -122,7 +132,8 @@ def test_book_reading_conversation():
     d.handle("Argus, help me read this book")
     assert o.reader.reads == 1 and d.page_no == 1
     assert o.speaker.said[0].startswith("Sure.")
-    assert "Say next page" in o.speaker.said[-1] and d.expect_reply
+    assert not any("next page" in s.lower() for s in o.speaker.said)
+    assert d.expect_reply
     d.handle("what's the expiry date?")
     assert o.speaker.said[-1] == "It expires in March 2027."
     d.handle("next page")

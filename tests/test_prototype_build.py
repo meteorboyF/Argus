@@ -120,7 +120,7 @@ def test_cancel_during_ocr_discards_result(monkeypatch):
     from argus.ocr import Reading
     monkeypatch.setattr('argus.reading.earcons.play', lambda *_: None)
     speaker = SimpleNamespace(cancel_normal=Mock(), speak=Mock())
-    rig = SimpleNamespace(capture_still=lambda: np.ones((20,20,3), np.uint8))
+    rig = SimpleNamespace(capture_reading_still=lambda: np.ones((20,20,3), np.uint8))
     ocr = SimpleNamespace()
     session = ReadingSession(rig, speaker, ocr=ocr)
     def recognize(*_):
@@ -130,6 +130,8 @@ def test_cancel_during_ocr_discards_result(monkeypatch):
     assert session.read(coach=False, intro=None) is None
     assert session.last is None
     speaker.speak.assert_not_called()
+    from argus.telemetry import bus
+    assert not bus.get('reading_ocr_text')
 
 
 def test_bangla_requires_installed_language(monkeypatch):

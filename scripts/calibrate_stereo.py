@@ -14,11 +14,13 @@ The fix is full stereo calibration + rectification:
   4. Compute Q, the 4x4 reprojection matrix, so depth.py can turn disparity
      straight into metric 3D (handles your geometry automatically).
 
-It is "smart" about setup — ANY camera arrangement works:
+It adapts to mounting differences with configured upright, overlapping views:
   - Auto-detects the stereo pair by V4L2 device name (AR0234) with a
     matching-resolution fallback; no fixed indices needed.
   - Captures at the RUNTIME stereo resolution (from argus.yaml) so the
     rectification maps match what the depth loop actually sees.
+  - Jointly resolves chessboard corner order for roughly co-directed cameras;
+    ambiguous views are rejected. Arbitrary opposing/rolled mounts are unsupported.
   - Auto-detects the checkerboard dimensions from a list of common sizes.
   - Auto-captures a view when the board is detected in BOTH cameras and steady,
     spread across the field of view (you just move the board around).
@@ -46,6 +48,7 @@ Or pin things down explicitly:
 from __future__ import annotations
 
 import argparse
+from collections import deque
 from dataclasses import dataclass
 import os
 import sys
@@ -98,12 +101,14 @@ class ThreadedStereoCapture:
     give us honest arrival timestamps for the calibration skew gate.
     """
 
-    def __init__(self, left, right):
+    def __init__(self, left, right, max_skew_ms=12.0):
         self.caps = (left, right)
+        self.max_skew_ms = max_skew_ms
         self._lock = threading.Lock()
         self._frames = [None, None]
         self._timestamps = [0.0, 0.0]
         self._versions = [0, 0]
+        self._history = [deque(maxlen=3), deque(maxlen=3)]
         self._last_returned = (-1, -1)
         self._stop = threading.Event()
         self._threads = [
@@ -124,16 +129,18 @@ class ThreadedStereoCapture:
                 self._frames[index] = frame
                 self._timestamps[index] = time.monotonic()
                 self._versions[index] += 1
+                self._history[index].append((frame, self._timestamps[index], self._versions[index]))
 
     def pair(self):
+        from argus.stereo_pairing import select_pair
         with self._lock:
-            versions = tuple(self._versions)
-            if (any(frame is None for frame in self._frames)
-                    or versions == self._last_returned):
+            selected = select_pair(self._history[0], self._history[1],
+                                   self._last_returned, time.monotonic(), self.max_skew_ms)
+            if selected is None:
                 return None
-            self._last_returned = versions
-            return (self._frames[0].copy(), self._frames[1].copy(),
-                    abs(self._timestamps[1] - self._timestamps[0]) * 1000.0)
+            (left, lt, ls), (right, rt, rs) = selected
+            self._last_returned = (ls, rs)
+            return left.copy(), right.copy(), abs(rt-lt)*1000
 
     def close(self):
         self._stop.set()
@@ -187,7 +194,15 @@ def usb_port_of(index: int) -> str:
 # ---------------------------------------------------------------------------
 # Board detection
 # ---------------------------------------------------------------------------
-def detect_board(gray, pattern):
+def detect_board(gray, pattern, detector="classic"):
+    if detector == "sector":
+        # Sector-based detection already returns subpixel coordinates. Do not
+        # feed them back through the classic cornerSubPix window.
+        ok, corners = cv2.findChessboardCornersSB(
+            gray,pattern,flags=cv2.CALIB_CB_NORMALIZE_IMAGE)
+        return (True,normalize_corners(corners,pattern)) if ok else (False,None)
+    if detector != "classic":
+        raise ValueError("detector must be classic or sector")
     ok, corners = cv2.findChessboardCorners(gray, pattern, CHESS_FLAGS)
     if ok:
         corners = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), SUBPIX_CRIT)
@@ -195,11 +210,11 @@ def detect_board(gray, pattern):
     return ok, corners
 
 
-def autodetect_board(grayL, grayR) -> tuple[int, int] | None:
+def autodetect_board(grayL, grayR, detector="classic") -> tuple[int, int] | None:
     """Find the checkerboard layout that is visible in BOTH images."""
     for pattern in COMMON_BOARDS:
-        okL, _ = cv2.findChessboardCorners(grayL, pattern, CHESS_FLAGS)
-        okR, _ = cv2.findChessboardCorners(grayR, pattern, CHESS_FLAGS)
+        okL, _ = detect_board(grayL,pattern,detector)
+        okR, _ = detect_board(grayR,pattern,detector)
         if okL and okR:
             return pattern
     return None
@@ -218,8 +233,9 @@ def normalize_corners(corners: np.ndarray, pattern: tuple[int, int]) -> np.ndarr
     orientations, and a 180-degree-symmetric grid in one of two. Left and right
     may then disagree, which silently corrupts the stereo solve. Re-order so
     the first row runs along +x and the first column along +y in image
-    coordinates; both cameras on a rigid rig see the board the same way up, so
-    corner k is the same physical corner in both views.
+    coordinates. This is only an initial per-image ordering: near diagonal
+    poses the two cameras can choose different axes. Stereo consumers MUST
+    call align_stereo_corners before treating corner k as a correspondence.
     """
     cols, rows = pattern
     grid = corners.reshape(rows, cols, 2).astype(np.float32)
@@ -234,6 +250,50 @@ def normalize_corners(corners: np.ndarray, pattern: tuple[int, int]) -> np.ndarr
     if col_vec[1] < 0:
         grid = grid[::-1]
     return np.ascontiguousarray(grid.reshape(-1, 1, 2))
+
+
+def align_stereo_corners(left, right, pattern, max_error=.35, min_margin=.25):
+    """Match square-board symmetry jointly for roughly co-directed cameras.
+
+    Independent image-axis canonicalization can switch by 90 degrees near a
+    diagonal pose. Compare centered, scale-normalized grid shapes instead.
+    This assumes upright, overlapping camera views (relative roll <45 deg),
+    not arbitrary opposing cameras. Reject distorted/ambiguous matches.
+    Returns right corners in left physical order, or None.
+    """
+    cols, rows = pattern
+    if np.asarray(left).shape != (cols*rows, 1, 2) or np.asarray(right).shape != (cols*rows, 1, 2):
+        return None
+    def normalized(points):
+        points = points.reshape(-1, 2).astype(np.float64)
+        points = points - points.mean(axis=0)
+        scale = np.sqrt(np.mean(np.sum(points*points, axis=1)))
+        if not np.isfinite(points).all() or not np.isfinite(scale) or scale < 1e-6:
+            return None
+        return points / scale
+    target = normalized(left)
+    if target is None:
+        return None
+    grid = right.reshape(rows, cols, 2)
+    grids = [grid]
+    if rows == cols:
+        grids.append(grid.transpose(1, 0, 2))
+    candidates = []
+    for g in grids:
+        for flip_y, flip_x in ((False,False),(True,False),(False,True),(True,True)):
+            candidate = g[::-1] if flip_y else g
+            candidate = candidate[:, ::-1] if flip_x else candidate
+            points = np.ascontiguousarray(candidate.reshape(-1, 1, 2))
+            norm = normalized(points)
+            if norm is not None:
+                error = float(np.sqrt(np.mean(np.sum((target-norm)**2, axis=1))))
+                candidates.append((error, points))
+    candidates.sort(key=lambda item: item[0])
+    if len(candidates) < 2 or candidates[0][0] > max_error:
+        return None
+    if candidates[1][0]-candidates[0][0] < min_margin:
+        return None
+    return candidates[0][1]
 
 
 def _coverage_cell(corners, w, h, grid=3):
@@ -258,6 +318,49 @@ def pose_signature(corners, w, h):
 def is_diverse_pose(signature, accepted, threshold=0.055):
     """Reject near-identical frames that make calibration look well sampled."""
     return not accepted or min(np.linalg.norm(signature - old) for old in accepted) >= threshold
+
+
+def tilt_signature(corners, pattern):
+    """Perspective cues, invariant to translation/scale and in-image rotation."""
+    cols, rows = pattern
+    grid = corners.reshape(rows, cols, 2)
+    top = np.linalg.norm(grid[0,-1]-grid[0,0])
+    bottom = np.linalg.norm(grid[-1,-1]-grid[-1,0])
+    left = np.linalg.norm(grid[-1,0]-grid[0,0])
+    right = np.linalg.norm(grid[-1,-1]-grid[0,-1])
+    return np.log(np.maximum([top,left],1e-6)/np.maximum([bottom,right],1e-6))
+
+
+def tilt_spans(signatures):
+    return np.ptp(np.asarray(signatures),axis=0) if signatures else np.zeros(2)
+
+
+def tilt_instruction(signatures):
+    spans = tilt_spans(signatures)
+    if spans[0] < .08:
+        return "TILT TOP THEN BOTTOM", "Tip the top edge toward cameras, then the bottom edge; keep all squares visible"
+    if spans[1] < .08:
+        return "TILT LEFT THEN RIGHT", "Tip one side toward cameras, then the other; do not just spin the board flat"
+    return None
+
+
+def capture_readiness(*, both, steady, diverse, span_frac, since_capture):
+    """One decision for auto/manual capture and the spoken coach.
+
+    Useful scale/tilt changes can share a coverage cell. Coverage is still
+    required at completion and by the independent final quality gate.
+    """
+    if not both:
+        return "ALIGN BOTH"
+    if not .22 <= span_frac <= .85:
+        return "RESIZE"
+    if not diverse:
+        return "MOVE/TILT"
+    if not steady:
+        return "HOLD STILL"
+    if since_capture <= 1.0:
+        return "WAIT"
+    return "READY"
 
 
 class Coach:
@@ -308,7 +411,7 @@ class Coach:
         self._captured_n = n
 
     def advise(self, *, pattern, okcL, okcR, steady, diverse, corners, size, n_views,
-               covered, span_frac) -> tuple[str, str]:
+               covered, span_frac, since_capture=float("inf")) -> tuple[str, str]:
         now = time.time()
         if now - self._captured_at < 1.5:
             head = f"CAPTURED {self._captured_n} of {self.min_views}"
@@ -325,11 +428,9 @@ class Coach:
             return (f"ONLY ONE CAMERA SEES THE BOARD",
                     f"Move the board a little to your {self._side(not only_left)}")
         if span_frac < 0.22:
-            return "BRING THE BOARD CLOSER", "It looks too small; come to about 1 metre"
+            return "BRING THE BOARD CLOSER", "Move closer until the corner grid fills about a quarter of each view"
         if span_frac > 0.85:
             return "MOVE THE BOARD FARTHER AWAY", "The whole board must stay inside both views"
-        if not steady:
-            return "HOLD STILL", "Keep the board exactly where it is for a second"
         if not diverse:
             nxt = self._target(corners, size[0], size[1], covered)
             if nxt:
@@ -337,6 +438,10 @@ class Coach:
             if n_views < 9:
                 return "SAME POSE AS BEFORE", "Move it closer or farther, then hold still"
             return "SAME POSE AS BEFORE", "Tilt the board toward you, away, or rotate it, then hold still"
+        if not steady:
+            return "HOLD STILL", "Keep the board exactly where it is for a second"
+        if since_capture <= 1.0:
+            return "WAIT FOR NEXT CAPTURE", "Keep this position; the next capture is ready shortly"
         return "GOOD, HOLD STILL", "Capturing..."
 
 
@@ -394,18 +499,47 @@ def movement_instruction(view_count):
 # Calibration
 # ---------------------------------------------------------------------------
 LAST_MONO_RMS: dict[str, float] = {}
+LAST_MONO_FIT: dict = {}
+
+
+def fit_intrinsics(objpoints, points, size):
+    """Optimize several starts; never fix guessed intrinsics or tune to tape."""
+    fits = []
+    for scale in (.625, 5/6, 25/24):
+        focal = size[0]*scale
+        guess = np.array([[focal,0,size[0]/2],[0,focal,size[1]/2],[0,0,1]],np.float64)
+        try:
+            result = cv2.calibrateCamera(
+                objpoints,points,size,guess,None,
+                flags=cv2.CALIB_FIX_K3|cv2.CALIB_USE_INTRINSIC_GUESS,
+                criteria=(cv2.TERM_CRITERIA_EPS|cv2.TERM_CRITERIA_MAX_ITER,60,1e-7))
+        except cv2.error:
+            continue
+        rms,k,d,_,_ = result
+        if np.isfinite(rms) and np.isfinite(k).all() and np.isfinite(d).all() and min(k[0,0],k[1,1]) > 0:
+            fits.append(result)
+    if not fits:
+        raise RuntimeError("All intrinsic fitting starts failed; corner observations were preserved")
+    fits.sort(key=lambda result:result[0])
+    best = fits[0]
+    # Similar-error solutions should agree on focal scale. A low residual by
+    # itself is not proof of well-constrained intrinsics.
+    comparable = [r for r in fits if r[0] <= best[0]+max(.01,best[0]*.02)]
+    focals = np.asarray([[r[1][0,0],r[1][1,1]] for r in comparable])
+    spread = float(np.max(np.ptp(focals,axis=0)/np.maximum(np.median(focals,axis=0),1)))
+    return best, {'starts_succeeded':len(fits),'comparable_starts':len(comparable),
+                  'focal_spread_fraction':spread,
+                  'stable':len(comparable)>=2 and spread <= .1}
 
 
 def calibrate(objpoints, ptsL, ptsR, size):
     # k3 is fixed at 0: with free k3 a 0.1 px corner noise produced 2.3 px
     # worst held-out row error on a synthetic rig (16 px at 0.2 px noise);
     # fixed, 0.65 px. k1, k2 and tangential terms model the B0495 lens.
-    mono_flags = cv2.CALIB_FIX_K3
-    rmsL, mtxL, distL, _, _ = cv2.calibrateCamera(objpoints, ptsL, size, None, None,
-                                                  flags=mono_flags)
-    rmsR, mtxR, distR, _, _ = cv2.calibrateCamera(objpoints, ptsR, size, None, None,
-                                                  flags=mono_flags)
+    (rmsL, mtxL, distL, _, _), fitL = fit_intrinsics(objpoints,ptsL,size)
+    (rmsR, mtxR, distR, _, _), fitR = fit_intrinsics(objpoints,ptsR,size)
     LAST_MONO_RMS.update(left=float(rmsL), right=float(rmsR))
+    LAST_MONO_FIT.update(left=fitL,right=fitR)
     crit = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 1e-5)
     rms, mtxL, distL, mtxR, distR, R, T, _, _ = cv2.stereoCalibrate(
         objpoints, ptsL, ptsR, mtxL, distL, mtxR, distR, size,
@@ -466,10 +600,16 @@ class GateLimits:
 
 def quality_gate(*, mono_rms: dict, stereo_rms: float, row_mean: float, row_max: float,
                  baseline_m: float, tape_baseline_m: float | None, n_views: int,
-                 coverage: float, limits: GateLimits = GateLimits()) -> list[str]:
+                 coverage: float, limits: GateLimits = GateLimits(),
+                 intrinsic_fit=None, perspective_spans=None) -> list[str]:
     """Reasons the calibration must NOT be saved; empty means accepted.
     Each reason is a short sentence that can be spoken to the person."""
     why = []
+    for name, fit in (intrinsic_fit or {}).items():
+        if not fit.get('stable',False):
+            why.append(f"{name} intrinsics are unstable across starting estimates; more tilted views needed")
+    if perspective_spans is not None and (not np.isfinite(perspective_spans).all() or np.any(np.asarray(perspective_spans)<.08)):
+        why.append("not enough top/bottom and left/right perspective variation; tilt the board in both directions")
     for cam, v in mono_rms.items():
         if not np.isfinite(v) or v > limits.mono_rms_px:
             why.append(f"{cam} camera error {v:.2f} pixels is above {limits.mono_rms_px}")
@@ -581,6 +721,10 @@ def main():
     ap.add_argument("--baseline-mm", type=float, default=None,
                     help="tape-measured lens-centre distance; the gate requires it")
     ap.add_argument("--out", default=DEFAULT_OUT)
+    ap.add_argument("--observations-out", default=None,
+                    help="checkpoint detected corners (no images) for offline diagnosis")
+    ap.add_argument("--detector",choices=("classic","sector"),default="classic",
+                    help="corner detector; sector is an explicit alternative for noisy images")
     ap.add_argument("--no-auto", action="store_true", help="manual capture (SPACE) only")
     ap.add_argument("--headless", action="store_true", help="no preview window (SSH-friendly)")
     ap.add_argument("--preview-scale", type=float, default=0.45,
@@ -649,7 +793,7 @@ def main():
     capR = _open(right_idx, cw, ch, pixel_format=pixel_format)
     if capL is None or capR is None:
         raise SystemExit(f"Could not open cameras {left_idx}/{right_idx}.")
-    capture = ThreadedStereoCapture(capL, capR)
+    capture = ThreadedStereoCapture(capL, capR, cam_cfg.max_skew_ms if cam_cfg else 12.0)
 
     pattern = (args.cols, args.rows) if (args.cols and args.rows) else None
     square_m = args.square_mm / 1000.0
@@ -668,18 +812,22 @@ def main():
                        "metre away. I will tell you where to move it. Hold still when I say so.")
     objpoints, ptsL, ptsR = [], [], []
     accepted_poses = []
+    accepted_tilts = []
     covered: set[int] = set()
     size = None
     validated_frame_geometry = False
     last_capture = 0.0
     prev_center = None
     t_start = time.time()
+    observations_path = args.observations_out or (
+        args.out + f".observations-{time.time_ns()}.npz")
+    captured_skews = []
 
     print("\nMove the checkerboard slowly around the whole view (corners, center,")
-    print("tilted, near, far) by moving the ENTIRE RIG AS ONE RIGID OBJECT.")
+    print("tilted, near, far). With --coach keep the rig fixed and move the BOARD.")
     print("NEVER adjust either camera hinge: that invalidates all captured views.")
     print("Auto-capture fires when the board is seen in BOTH cameras")
-    print("and held steady. Press 'c' to force-capture, 'q'/ESC to finish.\n")
+    print("and held steady. SPACE/'c' captures when READY; 'q'/ESC finishes.\n")
 
     while True:
         pair = capture.pair()
@@ -718,7 +866,7 @@ def main():
         size = gL.shape[::-1]
 
         if pattern is None:
-            pattern = autodetect_board(gL, gR)
+            pattern = autodetect_board(gL, gR,args.detector)
             if pattern is not None:
                 obj = make_object_points(pattern, square_m)
                 print(f"Detected checkerboard: {pattern[0]}x{pattern[1]} inner corners.")
@@ -726,51 +874,59 @@ def main():
         okcL = okcR = False
         cL = cR = None
         if pattern is not None:
-            okcL, cL = detect_board(gL, pattern)
-            okcR, cR = detect_board(gR, pattern)
+            okcL, cL = detect_board(gL, pattern,args.detector)
+            okcR, cR = detect_board(gR, pattern,args.detector)
 
-        both = okcL and okcR
+        corner_order_ok = True
+        if okcL and okcR:
+            aligned = align_stereo_corners(cL, cR, pattern)
+            corner_order_ok = aligned is not None
+            if corner_order_ok:
+                cR = aligned
+        both = okcL and okcR and corner_order_ok
         # Steadiness: board center barely moved since last frame.
         steady = False
         if both:
-            center = cL.reshape(-1, 2).mean(axis=0)
+            center = np.concatenate((cL.reshape(-1, 2).mean(axis=0),
+                                     cR.reshape(-1, 2).mean(axis=0)))
             if prev_center is not None:
-                steady = np.linalg.norm(center - prev_center) < 3.0
+                shifts = (center - prev_center).reshape(2, 2)
+                steady = bool(np.all(np.linalg.norm(shifts, axis=1) < 3.0))
             prev_center = center
+        else:
+            prev_center = None
 
         do_capture = False
         capture_status = "ALIGN BOTH"
         signature = None
         diverse = False
+        span_frac = 0.0
         if both:
             signature = pose_signature(cL, size[0], size[1])
             diverse = is_diverse_pose(signature, accepted_poses)
-            if not steady:
-                capture_status = "HOLD STILL"
-            elif not diverse:
-                capture_status = "MOVE/TILT"
-            elif (time.time() - last_capture) <= 1.0:
-                capture_status = "WAIT"
-            else:
-                capture_status = "READY"
-        if both and not args.no_auto and steady and (time.time() - last_capture) > 1.0:
-            cell = _coverage_cell(cL, size[0], size[1])
-            # Prefer new coverage cells, but still allow repeats once spread out.
-            if ((cell not in covered or len(objpoints) >= 9)
-                    and diverse):
-                do_capture = True
+            pts = cL.reshape(-1, 2)
+            span_frac = float((pts[:, 0].max() - pts[:, 0].min()) / size[0])
+        since_capture = time.time() - last_capture
+        capture_status = capture_readiness(both=both, steady=steady, diverse=diverse,
+                                           span_frac=span_frac, since_capture=since_capture)
+        do_capture = not args.no_auto and capture_status == "READY"
 
         if coach is not None:
-            span_frac = 0.0
-            if both:
-                pts = cL.reshape(-1, 2)
-                span_frac = float((pts[:, 0].max() - pts[:, 0].min()) / size[0])
             head, detail = coach.advise(
                 pattern=pattern, okcL=okcL, okcR=okcR, steady=steady, diverse=diverse,
                 corners=cL if both else None, size=size, n_views=len(objpoints),
-                covered=covered, span_frac=span_frac)
+                covered=covered, span_frac=span_frac, since_capture=since_capture)
+            if not corner_order_ok:
+                head, detail = "BOARD MATCH AMBIGUOUS", "Reduce the tilt; face the board toward both cameras"
+            elif both and len(objpoints) >= 8 and tilt_instruction(accepted_tilts):
+                head, detail = tilt_instruction(accepted_tilts)
+            if do_capture:
+                # Announce success only after storing the view below; do not
+                # queue a misleading hold-still prompt before the capture.
+                head, detail = "CAPTURING", "Keep the board where it is"
             if voice is not None:
-                voice.say(spoken_instruction(head, detail))
+                if not do_capture:
+                    voice.say(spoken_instruction(head, detail))
             vL, vR = fL.copy(), fR.copy()
             if okcL:
                 cv2.drawChessboardCorners(vL, pattern, cL, True)
@@ -784,7 +940,7 @@ def main():
             key = cv2.waitKey(1) & 0xFF
             if key in (27, ord("q")):
                 break
-            if key == ord("c") and both:
+            if key in (ord("c"), 32) and capture_status == "READY":
                 do_capture = True
         elif not args.headless:
             disp = np.hstack([fL, fR])
@@ -830,7 +986,7 @@ def main():
             key = cv2.waitKey(1) & 0xFF
             if key in (27, ord("q")):
                 break
-            if key == ord("c") and both:
+            if key in (ord("c"), 32) and capture_status == "READY":
                 do_capture = True
 
         if do_capture:
@@ -843,7 +999,21 @@ def main():
             ptsL.append(cL)
             ptsR.append(cR)
             accepted_poses.append(signature)
+            accepted_tilts.append(tilt_signature(cL,pattern))
             covered.add(_coverage_cell(cL, size[0], size[1]))
+            captured_skews.append(skew_ms)
+            # Keep numeric observations even after a failed fit or interrupted
+            # session. No source images/text/face data are saved here.
+            os.makedirs(os.path.dirname(observations_path) or ".", exist_ok=True)
+            np.savez_compressed(
+                observations_path, objpoints=np.asarray(objpoints),
+                ptsL=np.asarray(ptsL), ptsR=np.asarray(ptsR),
+                image_size=np.asarray(size), pattern=np.asarray(pattern),
+                square_mm=args.square_mm, tape_baseline_mm=args.baseline_mm or np.nan,
+                skew_ms=np.asarray(captured_skews), covered=np.asarray(sorted(covered)),
+                tilt_signatures=np.asarray(accepted_tilts),
+                left_port=usb_port_of(left_idx), right_port=usb_port_of(right_idx),
+                correspondence_method="joint-centered-grid-v1",detector=args.detector)
             last_capture = time.time()
             print(f"  captured view {len(objpoints)}/{args.min_views} "
                   f"(coverage {len(covered)}/9)")
@@ -852,7 +1022,8 @@ def main():
             if voice is not None:
                 voice.say(f"Captured {len(objpoints)} of {args.min_views}.", force=True)
             if (args.headless or coach is not None) and len(objpoints) >= args.min_views \
-                    and len(covered) >= 6:
+                    and len(covered) / 9 >= GateLimits().min_coverage \
+                    and tilt_instruction(accepted_tilts) is None:
                 if coach is not None:
                     cv2.imshow("ARGUS stereo calibration",
                                render_coach(fL, fR, "DONE. COMPUTING...",
@@ -881,7 +1052,7 @@ def main():
     # coordinates. T[0] > 0 means the cameras were connected swapped — fix it by
     # swapping the point sets and re-solving, no re-capture needed.
     swapped = False
-    if float(T[0]) > 0:
+    if float(T.reshape(-1)[0]) > 0:
         print("  Detected swapped cameras (baseline sign positive) — auto-correcting.")
         left_idx, right_idx = right_idx, left_idx
         ptsL, ptsR = ptsR, ptsL
@@ -908,11 +1079,13 @@ def main():
     print(f"  inter-camera angle (toe)      : {angle:.2f} deg")
 
     mono_rms = dict(LAST_MONO_RMS)
+    intrinsic_fit = dict(LAST_MONO_FIT)
     row_mean, row_max, n_held = held_out_row_error(objpoints, ptsL, ptsR, size)
     tape_m = args.baseline_mm / 1000.0 if args.baseline_mm else None
     reasons = quality_gate(mono_rms=mono_rms, stereo_rms=rms, row_mean=row_mean,
                            row_max=row_max, baseline_m=baseline_m, tape_baseline_m=tape_m,
-                           n_views=len(objpoints), coverage=len(covered) / 9.0)
+                           n_views=len(objpoints), coverage=len(covered) / 9.0,
+                           intrinsic_fit=intrinsic_fit, perspective_spans=tilt_spans(accepted_tilts))
     print(f"  per-camera RMS                : left {mono_rms.get('left', float('nan')):.3f}  "
           f"right {mono_rms.get('right', float('nan')):.3f} px")
     print(f"  held-out row error ({n_held} views): mean {row_mean:.3f}  max {row_max:.3f} px")
@@ -940,6 +1113,9 @@ def main():
         mono_rms_left=mono_rms.get("left", np.nan), mono_rms_right=mono_rms.get("right", np.nan),
         heldout_row_mean=row_mean, heldout_row_max=row_max,
         tape_baseline_m=np.nan if tape_m is None else tape_m,
+        intrinsic_focal_spread=np.array([intrinsic_fit[n]['focal_spread_fraction'] for n in ('left','right')]),
+        perspective_spans=tilt_spans(accepted_tilts),
+        detector=args.detector,
         left_index=left_idx, right_index=right_idx, pattern=np.array(pattern),
         # stable physical identity so the runtime re-binds left/right correctly
         # across reboots however V4L2 renumbers the devices

@@ -1,0 +1,41 @@
+{
+  "kind": "reading-video-review",
+  "reviewed_video": "reports/feature-recordings/2026-10-29/04-reading-page-agent-take-01.mp4",
+  "observations": [
+    {
+      "approx_seconds": [
+        25,
+        45
+      ],
+      "finding": "Title visibly readable in sampled recorded frames; lower page extends beyond view; coach stalls on motion."
+    },
+    {
+      "approx_seconds": [
+        75,
+        105
+      ],
+      "finding": "Page absent in sampled frames during second read request."
+    },
+    {
+      "approx_seconds": [
+        65,
+        65
+      ],
+      "finding": "Display face-blur area overlaps page; displayed video is not raw OCR input."
+    }
+  ],
+  "take_02_status": "live log inspected; MP4 not finalized",
+  "take_02_reading_events": [
+    {
+      "t": 13151.015810096,
+      "wall": 1793218856.1821587,
+      "event": "reading",
+      "capture_s": 0.0002792089999275049,
+      "ocr_s": 10.248473989000559,
+      "lines": 5,
+      "sensitive": false
+    }
+  ],
+  "take_02_check_count": 5,
+  "note": "Video review uses sampled frames and log alignment, not continuous frame-by-frame/audio verification. OCR accuracy and page-agent success not yet accepted."
+}

@@ -17,13 +17,14 @@ Face blur here is for DISPLAY and recording only (people near the wearer
 appear in the demo video). It runs InsightFace on a background thread at a
 few Hz and applies the latest boxes, padded, to every frame.
 
---record writes the composed frames to a video and every TTS sentence and
-earcon (captured at playback time) to an audio timeline, then muxes them
-with ffmpeg into one MP4.
+--record writes the composed frames, continuous default microphone input,
+and ARGUS playback audio into one MP4.
 """
 from __future__ import annotations
 
 import math
+import re
+import signal
 import subprocess
 import tempfile
 import threading
@@ -154,110 +155,144 @@ def hazard_side(text: str) -> str:
     return "left" if "left" in t else "right" if "right" in t else "ahead"
 
 
+def reading_preview(frame, snap: Snapshot, source: str) -> np.ndarray:
+    """Local diagnostic only; never passed to Recorder or the image model.
+
+    Live camera above the last source capture; right panel shows the actual
+    voice-triggered OCR output. No additional OCR work runs in the UI thread.
+    """
+    from .sensitive import mask_text
+    canvas = np.zeros((900, 1440, 3), np.uint8)
+    canvas[40:410, :720] = _fit(frame, 720, 370)
+    _text(canvas, f"LIVE OCR CAMERA: {source.upper()}" if frame is not None else
+          "OCR CAMERA: waiting for fresh frame", (12, 30), .65, CYAN, 2)
+    capture_at = float(snap.values.get("reading_capture_at", 0))
+    capture = snap.frames.get("reading_capture") if capture_at else None
+    canvas[460:830, :720] = _fit(capture, 720, 370)
+    age = max(0, time.monotonic()-capture_at)
+    label = f"LAST CAPTURE: {age:.0f}s ago" if capture_at else "LAST CAPTURE: none yet"
+    _text(canvas, label, (12, 450), .65, CYAN, 2)
+    _text(canvas, "ACTUAL OCR TEXT (last completed recognition)", (740, 30), .6, YELLOW, 1)
+    status = mask_text(str(snap.values.get("reading_ocr_status", "Say: Argus, read this")))
+    y = 65
+    for line in _wrap(status, .6, 670, 1):
+        _text(canvas, line, (740, y), .6, CYAN, 1)
+        y += 26
+    y += 20
+    text = mask_text(str(snap.values.get("reading_ocr_text", "")))
+    lines = [part for line in text.splitlines() for part in _wrap(line, .65, 670, 1)]
+    limit = max(0, (825-y)//30)
+    for line in lines[:limit]:
+        _text(canvas, line, (740, y), .65, WHITE, 1)
+        y += 30
+    if len(lines) > limit:
+        _text(canvas, "[more text below; page playback continues]", (740, 850), .55, YELLOW, 1)
+    _text(canvas, "Live view + last captured image + recognized text. Say 'Argus, read this' to update.",
+          (12, 880), .6, WHITE, 1)
+    return canvas
+
+
 # ---------------------------------------------------------------------------
 # View
 # ---------------------------------------------------------------------------
 class DemoView(Dashboard):
     def __init__(self, on_question=None, privacy_cfg=None, fullscreen: bool = True,
-                 record_path: str | None = None, fps: float = 15.0):
+                 record_path: str | None = None, fps: float = 15.0, reading_rig=None,
+                 pov_source: str = "wide", feature: str = "auto"):
+        from .recording_layout import RecordingLayout
+        self.layout = RecordingLayout(feature)
+        self.show_diagnostics = False
+        if pov_source not in ("wide","left"):
+            raise ValueError("demo source must be wide or left")
+        self.pov_source = pov_source
         super().__init__(on_question=on_question, width=W, height=H, fullscreen=fullscreen,
                          fps=fps, window="ARGUS demo")
         # A stray Esc/q while switching windows ended two voice tests on
         # 2026-10-21. In the demo nobody at the keyboard should be able to end
         # the wearer's session by accident: stop it with Ctrl+C instead.
         self.allow_key_quit = False
+        self.reading_rig = reading_rig
+        self._reading_window = "ARGUS OCR - live camera and recognition"
+        self._reading_window_open = False
         self.blur = FaceBlurCache(privacy_cfg) if privacy_cfg is not None else None
         if self.blur is not None:
             self.blur.start()
         self.recorder = Recorder(record_path, fps) if record_path else None
+        self._recording_finalizers = []
+        self._reset_at = -10.0
 
     # ------------------------------------------------------------ render
     def render(self, snap: Snapshot) -> np.ndarray:
-        v, f = snap.values, snap.frames
-        now = time.monotonic()
-        canvas = np.zeros((H, W, 3), np.uint8)
-
-        # POV
-        wide = f.get("wide")
-        if wide is not None and self.blur is not None:
-            self.blur.submit(wide)
-            wide = self.blur.apply(wide)
-        canvas[:POV_H, :POV_W] = _fit(wide, POV_W, POV_H)
-        _text(canvas, "ARGUS  first-person view", (24, 44), 0.9, WHITE, 2, bg=BLACK)
-
-        # Hazard banner (2.5 s after the last safety line).
-        safety = [e for e in snap.events if e.kind == "safety"]
-        if safety and now - safety[-1].when < 2.5:
-            ev = safety[-1]
-            flash = int((now - ev.when) * 4) % 2 == 0
-            col = RED if flash else (20, 20, 160)
-            y0, y1 = POV_H - 190, POV_H - 40
-            cv2.rectangle(canvas, (60, y0), (POV_W - 60, y1), col, -1)
-            cv2.rectangle(canvas, (60, y0), (POV_W - 60, y1), WHITE, 4)
-            _arrow(canvas, hazard_side(ev.text), (150, (y0 + y1) // 2), 45, WHITE)
-            _text(canvas, ev.text, (240, (y0 + y1) // 2 + 22), 2.0, WHITE, 5)
-            _earcon_icon(canvas, (POV_W - 140, (y0 + y1) // 2), 60, WHITE)
-
-        # Side column: depth, corridor, chips.
-        inset_h = 250
-        depth = _fit(f.get("depth_color"), SIDE_W, inset_h)
-        _text(depth, "DEPTH" + ("" if v.get("calibrated") else " (uncalibrated)"), (12, 30),
-              0.65, WHITE, 2, bg=BLACK, pad=6)
-        canvas[:inset_h, POV_W:] = depth
-        topdown = _draw_topdown(SIDE_W, inset_h, v)
-        _text(topdown, "CORRIDOR", (12, 30), 0.65, WHITE, 2, bg=BLACK, pad=6)
-        canvas[inset_h:2 * inset_h, POV_W:] = topdown
-        y = 2 * inset_h + 40
-        chips = [
-            ("answer", v.get("query_latency")),
-            ("listen/STT", v.get("stt_latency")),
-            ("depth", f"{v['depth_ms']:.0f} ms" if v.get("depth_ms") else None),
-            ("safety loop", f"{v['fast_hz']:.0f} Hz" if v.get("fast_hz") else None),
-            ("reading", v.get("reading")),
-            ("seat", v.get("seat")),
-            ("people", v.get("movers")),
-        ]
-        for name, val in chips:
-            if not val or y > POV_H - 20:
-                continue
-            s = f"{name}: {val}"
-            s = s if len(s) <= 40 else s[:37] + "..."     # Hershey fonts are ASCII-only
-            _text(canvas, s, (POV_W + 16, y), 0.58, WHITE, 1, bg=(50, 50, 50), pad=6)
-            y += 38
-
-        # Captions.
-        cv2.rectangle(canvas, (0, POV_H), (W, H), (12, 12, 12), -1)
-        user = next((e.text for e in reversed(snap.events) if e.kind == "user"), "")
-        speaking = v.get("speaking") or ""
-        last_argus = next((e.text for e in reversed(snap.events)
-                           if e.kind in ("argus", "safety")), "")
-        argus_text = speaking or last_argus
-        lit = bool(speaking)
-        yy = POV_H + 70
-        _text(canvas, "YOU:", (40, yy), 1.3, CYAN, 3)
-        for line in _wrap(user or "...", 1.3, W - 260)[:1]:
-            _text(canvas, line, (200, yy), 1.3, WHITE, 3)
-        yy += 90
-        _text(canvas, "ARGUS:", (40, yy), 1.3, YELLOW, 3)
-        for line in _wrap(argus_text or "...", 1.3, W - 260)[:2]:
-            if lit:
-                (tw, th), _ = cv2.getTextSize(line, FONT, 1.3, 3)
-                cv2.rectangle(canvas, (190, yy - th - 12), (210 + tw, yy + 14), (0, 90, 120), -1)
-            _text(canvas, line, (200, yy), 1.3, WHITE if lit else (180, 180, 180), 3)
-            yy += 62
+        frame = snap.frames.get(self.pov_source)
+        if frame is not None and self.blur is not None:
+            self.blur.submit(frame)
+            frame = self.blur.apply(frame)
+        canvas = self.layout.render(
+            snap, frame, source=self.pov_source, recording=self.recorder is not None,
+            elapsed=time.monotonic()-self.recorder.t0 if self.recorder else 0,
+            diagnostics=self.show_diagnostics,
+            privacy_ready=bool(self.blur and self.blur.ok),
+            face_count=len(self.blur.boxes) if self.blur and self.blur.ok else None)
         if self.on_question is not None and self.typed:
-            _text(canvas, f"> {self.typed}_", (40, H - 20), 0.8, CYAN, 2)
-        if now < float(v.get("close_hint_until", 0.0)):
-            _text(canvas, "Press Esc again to close ARGUS", (POV_W // 2 - 330, 110), 1.2,
-                  WHITE, 3, bg=(0, 0, 160))
-        if v.get("study_instruction"):
+            cv2.rectangle(canvas,(36,H-62),(W-36,H-12),(20,30,32),-1)
+            _text(canvas, f"> {self.typed}_", (48,H-28),.8,CYAN,2)
+        if snap.values.get("study_instruction"):
             from .guide import draw_banner
-            draw_banner(canvas, v["study_instruction"],
-                        progress=v.get("study_progress"))
+            draw_banner(canvas,snap.values["study_instruction"],
+                        progress=snap.values.get("study_progress"))
         if self.recorder is not None:
-            cv2.circle(canvas, (W - 40, 40), 14, (0, 0, 255), -1)
             self.recorder.write(canvas)
+        if self.reading_rig is not None:
+            if not self._reading_window_open:
+                cv2.namedWindow(self._reading_window,cv2.WINDOW_NORMAL)
+                cv2.resizeWindow(self._reading_window,1440,900)
+                self._reading_window_open=True
+            cv2.imshow(self._reading_window,reading_preview(
+                self.reading_rig.get_reading_frame(),snap,
+                self.reading_rig.cfg.reading_source))
         return canvas
+
+    def _handle_key(self,key):
+        if key in (ord('r'), ord('R')) and self.recorder is not None:
+            self._reset_recording()
+            return True
+        if key == 9:
+            self.show_diagnostics=not self.show_diagnostics
+            return True
+        return super()._handle_key(key)
+
+    def _reset_recording(self):
+        now = time.monotonic()
+        if now - self._reset_at < 1.0 or any(t.is_alive() for t in self._recording_finalizers):
+            return
+        old = self.recorder
+        match = re.match(r'^(.*-take-)(\d+)$', old.out.stem)
+        prefix = match[1] if match else old.out.stem + '-take-'
+        number = int(match[2]) + 1 if match else 2
+        while True:
+            path = old.out.with_name(f'{prefix}{number:02d}{old.out.suffix}')
+            if not path.exists() and not path.with_suffix('.jsonl').exists():
+                break
+            number += 1
+        try:
+            new = Recorder(str(path), old.fps)
+        except Exception as exc:
+            print(f'[demo] recording reset failed: {exc}')
+            return
+        self.recorder = new
+        self.typed = ''
+        bus.clear_interaction_display()
+        self._reset_at = now
+        # Save the previous clip away from rendering and microphone/STT work.
+        def finalize():
+            try:
+                print(f'[demo] recording saved: {old.finish()}')
+            except Exception as exc:
+                print(f'[demo] previous recording failed: {exc}')
+        worker = threading.Thread(target=finalize, name='demo-save-take', daemon=True)
+        self._recording_finalizers = [worker]
+        worker.start()
+        bus.record('recording_reset', previous=str(old.out), current=str(path))
 
     def stop(self):
         super().stop()
@@ -265,6 +300,8 @@ class DemoView(Dashboard):
             self.blur.stop()
 
     def finish(self) -> str | None:
+        for worker in self._recording_finalizers:
+            worker.join()
         return self.recorder.finish() if self.recorder is not None else None
 
 
@@ -297,6 +334,15 @@ class Recorder:
              "-c:v", "libx264", "-preset", "ultrafast", "-crf", "23", "-pix_fmt", "yuv420p",
              str(self.video_path)], stdin=subprocess.PIPE)
         self.t0 = time.monotonic()
+        self.mic_path = self.tmp / "microphone.wav"
+        self._mic_log = open(self.tmp / "microphone.log", "wb")
+        self.mic_started = time.monotonic() - self.t0
+        # PulseAudio shares the source with wake/STT capture. Write to disk,
+        # rather than retaining continuous microphone PCM in Jetson RAM.
+        self.mic_proc = subprocess.Popen(
+            ["ffmpeg", "-y", "-loglevel", "error", "-f", "pulse", "-i", "default",
+             "-ac", "1", "-ar", str(self.SR), "-c:a", "pcm_s16le", str(self.mic_path)],
+            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=self._mic_log)
         self.frames = 0
         self.dropped = 0
         self.audio: list[tuple[float, np.ndarray, int]] = []
@@ -336,6 +382,11 @@ class Recorder:
     def finish(self) -> str:
         if self.on_audio in AUDIO_TAPS:
             AUDIO_TAPS.remove(self.on_audio)
+        mic_stopped = time.monotonic() - self.t0
+        if self.mic_proc.poll() is None:
+            self.mic_proc.send_signal(signal.SIGINT)
+        self.mic_proc.wait(timeout=15)
+        self._mic_log.close()
         self._q.put(None)
         self._thread.join(timeout=30)
         self.proc.stdin.close()
@@ -357,8 +408,21 @@ class Recorder:
             w.setframerate(self.SR)
             w.writeframes((track * 32767).astype(np.int16).tobytes())
         self.out.parent.mkdir(parents=True, exist_ok=True)
+        if not self.mic_path.exists() or self.mic_path.stat().st_size <= 44:
+            raise RuntimeError("Microphone recording failed; raw video and ARGUS audio "
+                               f"are preserved in {self.tmp}. See microphone.log.")
+        with wave.open(str(self.mic_path), "rb") as mic:
+            mic_duration = mic.getnframes() / mic.getframerate()
+        # FFmpeg/Pulse startup is not instantaneous. Anchor the captured
+        # samples to stop time instead of placing them early on the timeline.
+        delay = int(max(self.mic_started, mic_stopped - mic_duration) * 1000)
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(self.video_path),
-                        "-i", str(wav), "-c:v", "copy", "-c:a", "aac", "-shortest",
+                        "-i", str(wav), "-i", str(self.mic_path),
+                        "-filter_complex", f"[2:a]adelay={delay}:all=1[mic];"
+                        "[1:a][mic]amix=inputs=2:duration=first:normalize=0,"
+                        "alimiter=limit=0.95:level=false[mix]",
+                        "-map", "0:v:0", "-map", "[mix]",
+                        "-c:v", "copy", "-c:a", "aac", "-shortest",
                         str(self.out)], check=True)
         return str(self.out)
 

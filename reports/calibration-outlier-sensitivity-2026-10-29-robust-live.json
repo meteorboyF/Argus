@@ -1,0 +1,14 @@
+{
+  "kind": "outlier-sensitivity-diagnostic",
+  "excluded_views": [
+    20
+  ],
+  "mono_rms_px": {
+    "left": 1.2166332154871522,
+    "right": 1.2213962014407012
+  },
+  "stereo_rms_px": 1.3371333816760438,
+  "baseline_mm": 98.86289388947947,
+  "activated": false,
+  "note": "Sensitivity experiment only. Original observations unchanged. No acceptance claimed; exclusion does not remove need for fresh independent validation."
+}

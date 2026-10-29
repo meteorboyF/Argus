@@ -1,0 +1,17 @@
+{
+  "kind": "reading-camera-smoke",
+  "reading_source": "left",
+  "shape": [
+    600,
+    960,
+    3
+  ],
+  "stereo_pair_after_reading": true,
+  "skew_ms": 2.6989530001628736,
+  "rates": {
+    "left": 60.13872232600929,
+    "right": 59.923657500025435,
+    "wide": 17.905647960728697
+  },
+  "config": "/opt/argus/config/argus.yaml"
+}

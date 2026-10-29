@@ -1,0 +1,22 @@
+{
+  "camera": "B0459 wide /dev/video2 USB2-1.4",
+  "capture_resolution": [
+    1920,
+    1080
+  ],
+  "delivered_fps": 30.041,
+  "mean_luma": 252.489,
+  "fraction_luma_at_least_250": 0.89956,
+  "raw_frame": "/tmp/argus-wide-raw-now.jpg",
+  "finding": "Raw camera frame severely washed out; not introduced by display renderer",
+  "controls": {
+    "auto_exposure": 0,
+    "auto_exposure_label": "Auto Mode",
+    "gain": 100,
+    "brightness": 0,
+    "exposure_time_absolute": 5,
+    "exposure_control_inactive": true
+  },
+  "changes": "No camera settings changed",
+  "root_cause": "Not established; exposure/ISP behavior needs investigation"
+}

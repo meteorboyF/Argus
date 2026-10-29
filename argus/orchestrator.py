@@ -490,7 +490,13 @@ class Orchestrator:
             started = time.perf_counter()
             bus.record("query_start", text=question)
             try:
-                self.dialogue.handle(question)
+                from .scripted_demo import seat_reply
+                scripted = seat_reply(question, getattr(self, 'scripted_seat_demo', False))
+                if scripted is not None and not (intent and intent.skill == 'exit'):
+                    bus.record('scripted_demo_response', text=scripted, detected=False)
+                    self.speaker.speak(scripted)
+                else:
+                    self.dialogue.handle(question)
             except UnsupportedObjectError:
                 if not self._query_cancelled():
                     self.speaker.speak("I can't identify that object yet. Try another object.")
@@ -660,9 +666,11 @@ class Orchestrator:
     def run(self, dashboard: bool = False, fullscreen: bool = True,
             ask_file: str | None = None, demo: bool = False,
             record: str | None = None, session_log: str | None = None,
-            startup_summary: bool | None = None):
+            startup_summary: bool | None = None, ocr_preview: bool = False,
+            demo_source: str = "wide", demo_feature: str = "auto"):
         from .telemetry import SessionLogger, TegraStats
         stats = TegraStats()
+        bus.set(scripted_demo=bool(getattr(self, 'scripted_seat_demo', False)))
         stats.start()
         if session_log is None and demo:
             session_log = str(Path(__file__).resolve().parents[1] / "reports" / "sessions" /
@@ -680,7 +688,9 @@ class Orchestrator:
             from .demo_view import DemoView
             self._dashboard = DemoView(on_question=self.submit_query,
                                        privacy_cfg=self.cfg.privacy,
-                                       fullscreen=fullscreen, record_path=record)
+                                       fullscreen=fullscreen, record_path=record,
+                                       reading_rig=self.rig if ocr_preview else None,
+                                       pov_source=demo_source,feature=demo_feature)
             self._dashboard.start()
         elif dashboard:
             from .dashboard import Dashboard
@@ -688,7 +698,7 @@ class Orchestrator:
             self._dashboard.start()
         self.start_fast_loop()
         self.speaker.speak("ARGUS ready.", Priority.SYSTEM)
-        if startup_summary if startup_summary is not None else demo:
+        if startup_summary:
             # One short, privacy-gated sentence about the scene on start-up.
             threading.Thread(target=self.handle_query, name="startup-summary", daemon=True,
                              args=("In one short sentence, what is in front of me?",)).start()

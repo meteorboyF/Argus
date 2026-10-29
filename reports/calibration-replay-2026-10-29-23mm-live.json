@@ -1,0 +1,167 @@
+{
+  "kind": "stereo-observation-replay",
+  "activated": false,
+  "views": 15,
+  "image_size": [
+    960,
+    600
+  ],
+  "mono_rms_px": {
+    "left": 1.085008513656148,
+    "right": 0.6359717924621423
+  },
+  "stereo_rms_px": 5.373684905455461,
+  "baseline_m": 2.6681734636472187,
+  "intrinsics_left": [
+    [
+      7037.404714311852,
+      0.0,
+      469.410716379718
+    ],
+    [
+      0.0,
+      4877.011463689993,
+      290.6727451595698
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "intrinsics_right": [
+    [
+      734.0302447659337,
+      0.0,
+      424.6581146774993
+    ],
+    [
+      0.0,
+      746.1941136013203,
+      344.38811127045705
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "rotation": [
+    [
+      0.6916737637364533,
+      0.013383338670476473,
+      0.7220860688343739
+    ],
+    [
+      0.027514502875268826,
+      0.9986141152166659,
+      -0.04486425104202945
+    ],
+    [
+      -0.7216857742052116,
+      0.05089926459259256,
+      0.6903469476819301
+    ]
+  ],
+  "translation": [
+    [
+      -2.1557823674579146
+    ],
+    [
+      0.10427779718913417
+    ],
+    [
+      -1.5687186354735916
+    ]
+  ],
+  "heldout_views": 3,
+  "heldout_mean_px": 273.684326171875,
+  "heldout_max_px": 8731.6025390625,
+  "coverage": 0.8888888888888888,
+  "rejection_reasons": [
+    "left camera error 1.09 pixels is above 0.5",
+    "right camera error 0.64 pixels is above 0.5",
+    "stereo error 5.37 pixels is above 0.7",
+    "held-out row error 273.68 pixels is not below 0.5",
+    "worst held-out row error 8731.60 pixels is not below 1.0",
+    "baseline 266.8 centimetres differs from the measured 10.1 by more than 10%"
+  ],
+  "per_view": [
+    {
+      "view": 1,
+      "left_rms_px": 1.2543377876281738,
+      "right_rms_px": 0.5508373975753784
+    },
+    {
+      "view": 2,
+      "left_rms_px": 0.771088719367981,
+      "right_rms_px": 0.592816174030304
+    },
+    {
+      "view": 3,
+      "left_rms_px": 0.7115753889083862,
+      "right_rms_px": 0.5231814980506897
+    },
+    {
+      "view": 4,
+      "left_rms_px": 1.2401565313339233,
+      "right_rms_px": 0.6430531740188599
+    },
+    {
+      "view": 5,
+      "left_rms_px": 1.254926323890686,
+      "right_rms_px": 0.6956321001052856
+    },
+    {
+      "view": 6,
+      "left_rms_px": 0.9253178238868713,
+      "right_rms_px": 0.6986511945724487
+    },
+    {
+      "view": 7,
+      "left_rms_px": 1.0581899881362915,
+      "right_rms_px": 0.7004704475402832
+    },
+    {
+      "view": 8,
+      "left_rms_px": 1.4164608716964722,
+      "right_rms_px": 0.7384171485900879
+    },
+    {
+      "view": 9,
+      "left_rms_px": 0.9236130714416504,
+      "right_rms_px": 0.6645658016204834
+    },
+    {
+      "view": 10,
+      "left_rms_px": 1.4236117601394653,
+      "right_rms_px": 0.6701338887214661
+    },
+    {
+      "view": 11,
+      "left_rms_px": 0.8277764320373535,
+      "right_rms_px": 0.6662297248840332
+    },
+    {
+      "view": 12,
+      "left_rms_px": 0.8397407531738281,
+      "right_rms_px": 0.6720302700996399
+    },
+    {
+      "view": 13,
+      "left_rms_px": 0.7871256470680237,
+      "right_rms_px": 0.5667417049407959
+    },
+    {
+      "view": 14,
+      "left_rms_px": 1.2717558145523071,
+      "right_rms_px": 0.5883804559707642
+    },
+    {
+      "view": 15,
+      "left_rms_px": 1.1720399856567383,
+      "right_rms_px": 0.5131031274795532
+    }
+  ],
+  "note": "Diagnostic fit only. Never writes active calibration. No views removed."
+}

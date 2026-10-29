@@ -1,0 +1,2258 @@
+{
+  "kind": "argus-fast-loop-profile",
+  "acceptance": false,
+  "config": "/opt/argus/config/argus.yaml",
+  "cv_threads": 1,
+  "cache_prompt": false,
+  "offscreen": true,
+  "notes": [
+    "Stationary, uncalibrated rig; geometry rules requiring calibration are inactive.",
+    "Phases toggle active work; previously loaded model memory remains resident.",
+    "OCR busy page and Whisper speech are synthetic, not human acceptance."
+  ],
+  "phases": [
+    {
+      "phase": "baseline",
+      "operations": [],
+      "errors": [],
+      "duration_s": 20.36071978100017,
+      "ticks": 203,
+      "valid_depth": 203,
+      "timing": {
+        "tick_ms": {
+          "n": 203,
+          "median": 49.25626200019906,
+          "p95": 60.23160859986092,
+          "max": 82.98769299972264
+        },
+        "interval_ms": {
+          "n": 203,
+          "median": 100.13247200004116,
+          "p95": 100.28519599982246,
+          "max": 102.55173699988518
+        },
+        "capture_wait_ms": {
+          "n": 203,
+          "median": 0.17584500028533512,
+          "p95": 0.2867408001293369,
+          "max": 1.3698930001737608
+        },
+        "depth_ms": {
+          "n": 203,
+          "median": 22.19176199969297,
+          "p95": 29.07133450007677,
+          "max": 35.571127999901364
+        },
+        "hazards_ms": {
+          "n": 203,
+          "median": 0.05952099991191062,
+          "p95": 0.0740435997613531,
+          "max": 0.5070540000815527
+        },
+        "movers_ms": {
+          "n": 203,
+          "median": 26.132443000278727,
+          "p95": 32.62807649985006,
+          "max": 49.45466699973622
+        },
+        "publish_ms": {
+          "n": 203,
+          "median": 0.3427610004109738,
+          "p95": 0.46473199990941766,
+          "max": 0.8546150002075592
+        },
+        "navigation_ms": {
+          "n": 203,
+          "median": 0.009696000233816449,
+          "p95": 0.01170889986497059,
+          "max": 0.035104999824397964
+        },
+        "alarms_health_ms": {
+          "n": 203,
+          "median": 0.023615999907633523,
+          "p95": 0.029497699961211765,
+          "max": 0.18390900004305877
+        },
+        "skew_ms": {
+          "n": 203,
+          "median": 0.44737100006386754,
+          "p95": 1.9509323002239338,
+          "max": 9.050705999925412
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 203,
+          "median": 0.0049599998419580515,
+          "p95": 0.006076799854781711,
+          "max": 0.028000999918731395
+        },
+        "disparity_ms": {
+          "n": 203,
+          "median": 18.10922100003154,
+          "p95": 23.713454099834053,
+          "max": 29.4765329999791
+        }
+      },
+      "depth_gaps": [],
+      "outages": [],
+      "heartbeat_interval_ms": {
+        "n": 203,
+        "median": 99.99582799991913,
+        "p95": 107.72306209992166,
+        "max": 117.41402300003756
+      },
+      "resources": [
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85147,
+            "pswpout": 476475,
+            "pgmajfault": 163825
+          },
+          "stack_rss_mb": 2700.78515625,
+          "available_mb": 1669.09765625,
+          "swap_used_mb": 1482.25,
+          "swap_in": 348762112,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 56
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85147,
+            "pswpout": 476475,
+            "pgmajfault": 163825
+          },
+          "stack_rss_mb": 2701.04296875,
+          "available_mb": 1667.1171875,
+          "swap_used_mb": 1482.25,
+          "swap_in": 348762112,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 87
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85233,
+            "pswpout": 476475,
+            "pgmajfault": 163911
+          },
+          "stack_rss_mb": 2701.0390625,
+          "available_mb": 1664.19140625,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349114368,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 28
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85233,
+            "pswpout": 476475,
+            "pgmajfault": 163911
+          },
+          "stack_rss_mb": 2701.0390625,
+          "available_mb": 1665.265625,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349114368,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 43
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85233,
+            "pswpout": 476475,
+            "pgmajfault": 163911
+          },
+          "stack_rss_mb": 2701.03125,
+          "available_mb": 1663.64453125,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349114368,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 37
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85233,
+            "pswpout": 476475,
+            "pgmajfault": 163911
+          },
+          "stack_rss_mb": 2701.02734375,
+          "available_mb": 1661.2734375,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349114368,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 72
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85233,
+            "pswpout": 476475,
+            "pgmajfault": 163911
+          },
+          "stack_rss_mb": 2701.0234375,
+          "available_mb": 1661.5390625,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349114368,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 76
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85234,
+            "pswpout": 476475,
+            "pgmajfault": 163926
+          },
+          "stack_rss_mb": 2701.015625,
+          "available_mb": 1646.2890625,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349118464,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 16
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85262,
+            "pswpout": 476475,
+            "pgmajfault": 163976
+          },
+          "stack_rss_mb": 2702.55078125,
+          "available_mb": 1655.69140625,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349233152,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 54
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85262,
+            "pswpout": 476475,
+            "pgmajfault": 163977
+          },
+          "stack_rss_mb": 2702.54296875,
+          "available_mb": 1661.42578125,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349233152,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 56
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85262,
+            "pswpout": 476475,
+            "pgmajfault": 163977
+          },
+          "stack_rss_mb": 2702.53125,
+          "available_mb": 1659.6171875,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349233152,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 26
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85263,
+            "pswpout": 476475,
+            "pgmajfault": 163979
+          },
+          "stack_rss_mb": 2702.52734375,
+          "available_mb": 1659.08203125,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349237248,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 18
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85263,
+            "pswpout": 476475,
+            "pgmajfault": 163979
+          },
+          "stack_rss_mb": 2702.5234375,
+          "available_mb": 1658.12109375,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349237248,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 72
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85263,
+            "pswpout": 476475,
+            "pgmajfault": 163979
+          },
+          "stack_rss_mb": 2702.5078125,
+          "available_mb": 1657.4921875,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349237248,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 61
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85263,
+            "pswpout": 476475,
+            "pgmajfault": 163979
+          },
+          "stack_rss_mb": 2702.50390625,
+          "available_mb": 1657.703125,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349237248,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 89
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85263,
+            "pswpout": 476475,
+            "pgmajfault": 163979
+          },
+          "stack_rss_mb": 2702.49609375,
+          "available_mb": 1656.6015625,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349237248,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 50
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85271,
+            "pswpout": 476475,
+            "pgmajfault": 163988
+          },
+          "stack_rss_mb": 2702.48828125,
+          "available_mb": 1658.56640625,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349270016,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 44
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85271,
+            "pswpout": 476475,
+            "pgmajfault": 163988
+          },
+          "stack_rss_mb": 2702.484375,
+          "available_mb": 1657.6015625,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349270016,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 75
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85271,
+            "pswpout": 476475,
+            "pgmajfault": 163988
+          },
+          "stack_rss_mb": 2702.46875,
+          "available_mb": 1657.75,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349270016,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 61
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85271,
+            "pswpout": 476475,
+            "pgmajfault": 163988
+          },
+          "stack_rss_mb": 2702.4609375,
+          "available_mb": 1656.9296875,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349270016,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 92
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85271,
+            "pswpout": 476475,
+            "pgmajfault": 163988
+          },
+          "stack_rss_mb": 2702.45703125,
+          "available_mb": 1658.21484375,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349270016,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 50
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85271,
+            "pswpout": 476475,
+            "pgmajfault": 163988
+          },
+          "stack_rss_mb": 2702.453125,
+          "available_mb": 1658.375,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349270016,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 74
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85280,
+            "pswpout": 476475,
+            "pgmajfault": 163998
+          },
+          "stack_rss_mb": 2702.44140625,
+          "available_mb": 1658.61328125,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349306880,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 36
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85294,
+            "pswpout": 476475,
+            "pgmajfault": 164022
+          },
+          "stack_rss_mb": 2702.4296875,
+          "available_mb": 1659.9765625,
+          "swap_used_mb": 1481.75,
+          "swap_in": 349364224,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 34
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85335,
+            "pswpout": 476475,
+            "pgmajfault": 164153
+          },
+          "stack_rss_mb": 2702.42578125,
+          "available_mb": 1656.65234375,
+          "swap_used_mb": 1481.5,
+          "swap_in": 349532160,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 60
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85335,
+            "pswpout": 476475,
+            "pgmajfault": 164268
+          },
+          "stack_rss_mb": 2702.421875,
+          "available_mb": 1638.34375,
+          "swap_used_mb": 1481.5,
+          "swap_in": 349532160,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 48
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85353,
+            "pswpout": 476475,
+            "pgmajfault": 164476
+          },
+          "stack_rss_mb": 2702.41796875,
+          "available_mb": 1627.453125,
+          "swap_used_mb": 1481.5,
+          "swap_in": 349605888,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 51
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85668,
+            "pswpout": 476475,
+            "pgmajfault": 164793
+          },
+          "stack_rss_mb": 2702.65625,
+          "available_mb": 1626.140625,
+          "swap_used_mb": 1480.5,
+          "swap_in": 350896128,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 67
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85669,
+            "pswpout": 476475,
+            "pgmajfault": 164794
+          },
+          "stack_rss_mb": 2702.640625,
+          "available_mb": 1622.34375,
+          "swap_used_mb": 1480.5,
+          "swap_in": 350900224,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 79
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85669,
+            "pswpout": 476475,
+            "pgmajfault": 164794
+          },
+          "stack_rss_mb": 2702.8984375,
+          "available_mb": 1625.24609375,
+          "swap_used_mb": 1480.5,
+          "swap_in": 350900224,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 90
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85669,
+            "pswpout": 476475,
+            "pgmajfault": 164794
+          },
+          "stack_rss_mb": 2702.8984375,
+          "available_mb": 1625.390625,
+          "swap_used_mb": 1480.5,
+          "swap_in": 350900224,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 57
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 85686,
+            "pswpout": 476475,
+            "pgmajfault": 164811
+          },
+          "stack_rss_mb": 2702.89453125,
+          "available_mb": 1621.71484375,
+          "swap_used_mb": 1480.25,
+          "swap_in": 350969856,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 68
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 86910,
+            "pswpout": 476475,
+            "pgmajfault": 166037
+          },
+          "stack_rss_mb": 2702.890625,
+          "available_mb": 1621.1328125,
+          "swap_used_mb": 1475.5,
+          "swap_in": 355971072,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 45
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 87752,
+            "pswpout": 476475,
+            "pgmajfault": 166955
+          },
+          "stack_rss_mb": 2702.88671875,
+          "available_mb": 1616.8671875,
+          "swap_used_mb": 1472.25,
+          "swap_in": 359432192,
+          "swap_out": 1951641600,
+          "threads": 28,
+          "gr3d": 74
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 1107
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 1107
+      }
+    },
+    {
+      "phase": "ocr",
+      "operations": [
+        {
+          "name": "ocr",
+          "ms": 18966.0299090001
+        },
+        {
+          "name": "ocr",
+          "ms": 16932.359351000287
+        }
+      ],
+      "errors": [],
+      "duration_s": 20.343302417999894,
+      "ticks": 203,
+      "valid_depth": 203,
+      "timing": {
+        "tick_ms": {
+          "n": 203,
+          "median": 48.2876920000308,
+          "p95": 74.48160339999957,
+          "max": 221.92561900010332
+        },
+        "interval_ms": {
+          "n": 203,
+          "median": 100.1429369998732,
+          "p95": 102.8447817000142,
+          "max": 222.0185500000298
+        },
+        "capture_wait_ms": {
+          "n": 203,
+          "median": 0.16656399975545355,
+          "p95": 0.3653827000107407,
+          "max": 5.147721999946953
+        },
+        "depth_ms": {
+          "n": 203,
+          "median": 21.6627879999578,
+          "p95": 32.32575119964167,
+          "max": 190.83579600010125
+        },
+        "hazards_ms": {
+          "n": 203,
+          "median": 0.04451299992069835,
+          "p95": 0.08562759994674697,
+          "max": 0.19040500001210603
+        },
+        "movers_ms": {
+          "n": 203,
+          "median": 25.962455000353657,
+          "p95": 46.285981399751094,
+          "max": 96.23086400006287
+        },
+        "publish_ms": {
+          "n": 203,
+          "median": 0.3394010000192793,
+          "p95": 0.6720402000610171,
+          "max": 1.6416120001849777
+        },
+        "navigation_ms": {
+          "n": 203,
+          "median": 0.008479999905830482,
+          "p95": 0.01234249989465752,
+          "max": 0.17014900004141964
+        },
+        "alarms_health_ms": {
+          "n": 203,
+          "median": 0.022367999918060377,
+          "p95": 0.028983400216020503,
+          "max": 0.29325599962248816
+        },
+        "skew_ms": {
+          "n": 203,
+          "median": 0.5584790001194051,
+          "p95": 2.8134764998867463,
+          "max": 8.6441029998241
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 203,
+          "median": 0.004128000000491738,
+          "p95": 0.006387200028257209,
+          "max": 0.024353000299015548
+        },
+        "disparity_ms": {
+          "n": 203,
+          "median": 17.959264000182884,
+          "p95": 27.370745799862526,
+          "max": 187.6402540001436
+        }
+      },
+      "depth_gaps": [
+        {
+          "t": 3687.603758663,
+          "wall": 1793209392.770108,
+          "event": "depth_gap",
+          "gap_s": 0.283
+        }
+      ],
+      "outages": [
+        {
+          "start": 3687.258776406,
+          "end": 3687.574328019,
+          "gap_s": 0.3155516130000251,
+          "open": false
+        }
+      ],
+      "heartbeat_interval_ms": {
+        "n": 202,
+        "median": 100.02662900001269,
+        "p95": 109.70357709998098,
+        "max": 131.9536429996333
+      },
+      "resources": [
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 87838,
+            "pswpout": 476475,
+            "pgmajfault": 167135
+          },
+          "stack_rss_mb": 2821.94921875,
+          "available_mb": 1610.19140625,
+          "swap_used_mb": 1471.75,
+          "swap_in": 359784448,
+          "swap_out": 1951641600,
+          "threads": 30,
+          "gr3d": 76
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 87840,
+            "pswpout": 476475,
+            "pgmajfault": 167145
+          },
+          "stack_rss_mb": 2916.703125,
+          "available_mb": 1475.92578125,
+          "swap_used_mb": 1471.75,
+          "swap_in": 359792640,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 40
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 87840,
+            "pswpout": 476475,
+            "pgmajfault": 167147
+          },
+          "stack_rss_mb": 2898.453125,
+          "available_mb": 1407.765625,
+          "swap_used_mb": 1471.75,
+          "swap_in": 359792640,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 59
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 87907,
+            "pswpout": 476475,
+            "pgmajfault": 167241
+          },
+          "stack_rss_mb": 2958.7109375,
+          "available_mb": 1440.234375,
+          "swap_used_mb": 1471.25,
+          "swap_in": 360067072,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 94
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 87909,
+            "pswpout": 476475,
+            "pgmajfault": 167246
+          },
+          "stack_rss_mb": 3090.43359375,
+          "available_mb": 1369.40234375,
+          "swap_used_mb": 1471.25,
+          "swap_in": 360075264,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 59
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 88095,
+            "pswpout": 476475,
+            "pgmajfault": 167465
+          },
+          "stack_rss_mb": 3090.51953125,
+          "available_mb": 1265.9375,
+          "swap_used_mb": 1470.75,
+          "swap_in": 360837120,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 81
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 88097,
+            "pswpout": 476475,
+            "pgmajfault": 167478
+          },
+          "stack_rss_mb": 3268.82421875,
+          "available_mb": 1149.1484375,
+          "swap_used_mb": 1470.75,
+          "swap_in": 360845312,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 85
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 88097,
+            "pswpout": 476475,
+            "pgmajfault": 167481
+          },
+          "stack_rss_mb": 3163.5078125,
+          "available_mb": 1161.26171875,
+          "swap_used_mb": 1470.75,
+          "swap_in": 360845312,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 67
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 88099,
+            "pswpout": 476475,
+            "pgmajfault": 167493
+          },
+          "stack_rss_mb": 3197.640625,
+          "available_mb": 1119.46484375,
+          "swap_used_mb": 1470.75,
+          "swap_in": 360853504,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 38
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 88929,
+            "pswpout": 476475,
+            "pgmajfault": 168369
+          },
+          "stack_rss_mb": 3062.33203125,
+          "available_mb": 1233.1953125,
+          "swap_used_mb": 1467.5,
+          "swap_in": 364253184,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 73
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89035,
+            "pswpout": 476475,
+            "pgmajfault": 168475
+          },
+          "stack_rss_mb": 3062.328125,
+          "available_mb": 1226.7734375,
+          "swap_used_mb": 1467.0,
+          "swap_in": 364687360,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 86
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89038,
+            "pswpout": 476475,
+            "pgmajfault": 168506
+          },
+          "stack_rss_mb": 3062.32421875,
+          "available_mb": 1219.8203125,
+          "swap_used_mb": 1467.0,
+          "swap_in": 364699648,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 93
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89039,
+            "pswpout": 476475,
+            "pgmajfault": 168508
+          },
+          "stack_rss_mb": 3062.3203125,
+          "available_mb": 1217.80078125,
+          "swap_used_mb": 1467.0,
+          "swap_in": 364703744,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 17
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89325,
+            "pswpout": 476475,
+            "pgmajfault": 168798
+          },
+          "stack_rss_mb": 3062.3203125,
+          "available_mb": 1214.85546875,
+          "swap_used_mb": 1466.0,
+          "swap_in": 365875200,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 86
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89325,
+            "pswpout": 476475,
+            "pgmajfault": 168803
+          },
+          "stack_rss_mb": 3062.31640625,
+          "available_mb": 1205.83203125,
+          "swap_used_mb": 1466.0,
+          "swap_in": 365875200,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 89
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89773,
+            "pswpout": 476475,
+            "pgmajfault": 169261
+          },
+          "stack_rss_mb": 3062.30859375,
+          "available_mb": 1207.984375,
+          "swap_used_mb": 1464.5,
+          "swap_in": 367710208,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 73
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89852,
+            "pswpout": 476475,
+            "pgmajfault": 169342
+          },
+          "stack_rss_mb": 3062.3046875,
+          "available_mb": 1207.96875,
+          "swap_used_mb": 1464.25,
+          "swap_in": 368033792,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 84
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89852,
+            "pswpout": 476475,
+            "pgmajfault": 169342
+          },
+          "stack_rss_mb": 3062.3046875,
+          "available_mb": 1210.38671875,
+          "swap_used_mb": 1464.25,
+          "swap_in": 368033792,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 30
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89852,
+            "pswpout": 476475,
+            "pgmajfault": 169342
+          },
+          "stack_rss_mb": 3062.3046875,
+          "available_mb": 1212.8671875,
+          "swap_used_mb": 1464.25,
+          "swap_in": 368033792,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 40
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89852,
+            "pswpout": 476475,
+            "pgmajfault": 169342
+          },
+          "stack_rss_mb": 3062.30078125,
+          "available_mb": 1210.8828125,
+          "swap_used_mb": 1464.25,
+          "swap_in": 368033792,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 49
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89852,
+            "pswpout": 476475,
+            "pgmajfault": 169342
+          },
+          "stack_rss_mb": 3062.29296875,
+          "available_mb": 1208.0703125,
+          "swap_used_mb": 1464.25,
+          "swap_in": 368033792,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 39
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89852,
+            "pswpout": 476475,
+            "pgmajfault": 169342
+          },
+          "stack_rss_mb": 3062.29296875,
+          "available_mb": 1208.46875,
+          "swap_used_mb": 1464.25,
+          "swap_in": 368033792,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 27
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89852,
+            "pswpout": 476475,
+            "pgmajfault": 169342
+          },
+          "stack_rss_mb": 3062.29296875,
+          "available_mb": 1208.23046875,
+          "swap_used_mb": 1464.25,
+          "swap_in": 368033792,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 24
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89866,
+            "pswpout": 476475,
+            "pgmajfault": 169358
+          },
+          "stack_rss_mb": 3062.2890625,
+          "available_mb": 1209.921875,
+          "swap_used_mb": 1464.0,
+          "swap_in": 368091136,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 41
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89871,
+            "pswpout": 476475,
+            "pgmajfault": 169363
+          },
+          "stack_rss_mb": 3062.28515625,
+          "available_mb": 1208.72265625,
+          "swap_used_mb": 1464.0,
+          "swap_in": 368111616,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 86
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89881,
+            "pswpout": 476475,
+            "pgmajfault": 169375
+          },
+          "stack_rss_mb": 3062.5390625,
+          "available_mb": 1208.48828125,
+          "swap_used_mb": 1464.0,
+          "swap_in": 368152576,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 70
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 89881,
+            "pswpout": 476475,
+            "pgmajfault": 169376
+          },
+          "stack_rss_mb": 3062.5390625,
+          "available_mb": 1207.73046875,
+          "swap_used_mb": 1464.0,
+          "swap_in": 368152576,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 93
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 90074,
+            "pswpout": 476475,
+            "pgmajfault": 169569
+          },
+          "stack_rss_mb": 3062.53125,
+          "available_mb": 1200.6875,
+          "swap_used_mb": 1463.25,
+          "swap_in": 368943104,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 45
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 90092,
+            "pswpout": 476475,
+            "pgmajfault": 169587
+          },
+          "stack_rss_mb": 3062.52734375,
+          "available_mb": 1198.7890625,
+          "swap_used_mb": 1463.25,
+          "swap_in": 369016832,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 79
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 90092,
+            "pswpout": 476475,
+            "pgmajfault": 169587
+          },
+          "stack_rss_mb": 3062.52734375,
+          "available_mb": 1197.9296875,
+          "swap_used_mb": 1463.25,
+          "swap_in": 369016832,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 94
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 90092,
+            "pswpout": 476475,
+            "pgmajfault": 169587
+          },
+          "stack_rss_mb": 3062.52734375,
+          "available_mb": 1197.4453125,
+          "swap_used_mb": 1463.25,
+          "swap_in": 369016832,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 78
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 90095,
+            "pswpout": 476475,
+            "pgmajfault": 169591
+          },
+          "stack_rss_mb": 3062.52734375,
+          "available_mb": 1198.98828125,
+          "swap_used_mb": 1463.25,
+          "swap_in": 369029120,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 74
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 90095,
+            "pswpout": 476475,
+            "pgmajfault": 169591
+          },
+          "stack_rss_mb": 3165.140625,
+          "available_mb": 1190.390625,
+          "swap_used_mb": 1463.25,
+          "swap_in": 369029120,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 24
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 90095,
+            "pswpout": 476475,
+            "pgmajfault": 169591
+          },
+          "stack_rss_mb": 3315.1015625,
+          "available_mb": 914.8515625,
+          "swap_used_mb": 1463.25,
+          "swap_in": 369029120,
+          "swap_out": 1951641600,
+          "threads": 29,
+          "gr3d": 62
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 1107
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 1107
+      }
+    },
+    {
+      "phase": "combined",
+      "operations": [
+        {
+          "name": "render",
+          "ms": 191.7787969996425
+        },
+        {
+          "name": "render",
+          "ms": 140.15104700001757
+        },
+        {
+          "name": "render",
+          "ms": 257.60350200016546
+        },
+        {
+          "name": "whisper",
+          "ms": 3584.2139759997735
+        },
+        {
+          "name": "render",
+          "ms": 324.2876240001351
+        },
+        {
+          "name": "render",
+          "ms": 190.92427799978395
+        },
+        {
+          "name": "render",
+          "ms": 221.03666800012434
+        },
+        {
+          "name": "render",
+          "ms": 261.44478900005197
+        },
+        {
+          "name": "render",
+          "ms": 157.44370199990954
+        },
+        {
+          "name": "render",
+          "ms": 173.27740600012476
+        },
+        {
+          "name": "gemma",
+          "ms": 4729.899614999795
+        },
+        {
+          "name": "render",
+          "ms": 323.1554970002435
+        },
+        {
+          "name": "render",
+          "ms": 217.62489699995058
+        },
+        {
+          "name": "render",
+          "ms": 236.65503800020815
+        },
+        {
+          "name": "render",
+          "ms": 158.78588199984733
+        },
+        {
+          "name": "render",
+          "ms": 224.78998399992633
+        },
+        {
+          "name": "render",
+          "ms": 395.7280310000897
+        },
+        {
+          "name": "render",
+          "ms": 179.93127999989156
+        },
+        {
+          "name": "render",
+          "ms": 182.6290480003081
+        },
+        {
+          "name": "whisper",
+          "ms": 3153.459951000059
+        },
+        {
+          "name": "render",
+          "ms": 296.0823570001594
+        },
+        {
+          "name": "render",
+          "ms": 193.97933499976716
+        },
+        {
+          "name": "render",
+          "ms": 409.44823800009544
+        },
+        {
+          "name": "render",
+          "ms": 172.70942200002537
+        },
+        {
+          "name": "render",
+          "ms": 162.21042200004376
+        },
+        {
+          "name": "render",
+          "ms": 148.33219399997688
+        },
+        {
+          "name": "render",
+          "ms": 157.48542999972415
+        },
+        {
+          "name": "render",
+          "ms": 186.45641500006604
+        },
+        {
+          "name": "render",
+          "ms": 199.61174199988818
+        },
+        {
+          "name": "render",
+          "ms": 426.99395599993295
+        },
+        {
+          "name": "render",
+          "ms": 219.89241299979767
+        },
+        {
+          "name": "gemma",
+          "ms": 4427.561123000032
+        },
+        {
+          "name": "render",
+          "ms": 306.1566410001433
+        },
+        {
+          "name": "render",
+          "ms": 339.58220899967273
+        },
+        {
+          "name": "render",
+          "ms": 357.76547899968136
+        },
+        {
+          "name": "whisper",
+          "ms": 3277.3395859999255
+        },
+        {
+          "name": "render",
+          "ms": 388.1484039998213
+        },
+        {
+          "name": "render",
+          "ms": 490.83527999982834
+        },
+        {
+          "name": "render",
+          "ms": 218.05095600029745
+        },
+        {
+          "name": "render",
+          "ms": 333.5435829999369
+        },
+        {
+          "name": "render",
+          "ms": 207.28125999994518
+        },
+        {
+          "name": "render",
+          "ms": 224.84323299977405
+        },
+        {
+          "name": "render",
+          "ms": 270.0116099999832
+        },
+        {
+          "name": "render",
+          "ms": 174.6168330000728
+        },
+        {
+          "name": "render",
+          "ms": 265.8832440001788
+        },
+        {
+          "name": "render",
+          "ms": 194.25083099986296
+        },
+        {
+          "name": "render",
+          "ms": 186.53503999985332
+        },
+        {
+          "name": "gemma",
+          "ms": 3794.366159999754
+        },
+        {
+          "name": "whisper",
+          "ms": 2992.361815000095
+        },
+        {
+          "name": "render",
+          "ms": 448.2031319998896
+        },
+        {
+          "name": "render",
+          "ms": 287.825046999842
+        },
+        {
+          "name": "render",
+          "ms": 193.97287199990387
+        },
+        {
+          "name": "render",
+          "ms": 235.13019700021687
+        },
+        {
+          "name": "render",
+          "ms": 219.13568899981328
+        },
+        {
+          "name": "render",
+          "ms": 210.60752499988666
+        },
+        {
+          "name": "render",
+          "ms": 343.24416200024643
+        },
+        {
+          "name": "render",
+          "ms": 174.87664800000857
+        },
+        {
+          "name": "render",
+          "ms": 279.80435300014506
+        },
+        {
+          "name": "render",
+          "ms": 161.06789500008745
+        },
+        {
+          "name": "whisper",
+          "ms": 2377.760662000128
+        },
+        {
+          "name": "render",
+          "ms": 162.80272499989223
+        },
+        {
+          "name": "render",
+          "ms": 322.99091699997007
+        },
+        {
+          "name": "render",
+          "ms": 187.29195699961565
+        },
+        {
+          "name": "render",
+          "ms": 327.5247659998968
+        },
+        {
+          "name": "render",
+          "ms": 165.3329370001302
+        },
+        {
+          "name": "gemma",
+          "ms": 3605.9565410000687
+        },
+        {
+          "name": "render",
+          "ms": 301.7412920003153
+        },
+        {
+          "name": "render",
+          "ms": 228.0216230001315
+        },
+        {
+          "name": "render",
+          "ms": 186.02750599984574
+        },
+        {
+          "name": "render",
+          "ms": 318.3694800000012
+        },
+        {
+          "name": "render",
+          "ms": 152.7805369996713
+        },
+        {
+          "name": "whisper",
+          "ms": 2285.4042379999555
+        },
+        {
+          "name": "render",
+          "ms": 416.5508599999157
+        },
+        {
+          "name": "render",
+          "ms": 285.76678499985064
+        },
+        {
+          "name": "render",
+          "ms": 244.05088299999989
+        },
+        {
+          "name": "render",
+          "ms": 208.41408999967825
+        },
+        {
+          "name": "render",
+          "ms": 245.06422300009945
+        },
+        {
+          "name": "render",
+          "ms": 167.96062399998846
+        },
+        {
+          "name": "render",
+          "ms": 223.15179599991097
+        },
+        {
+          "name": "render",
+          "ms": 354.3633399999635
+        },
+        {
+          "name": "render",
+          "ms": 196.40215199979139
+        },
+        {
+          "name": "gemma",
+          "ms": 3651.91533899997
+        },
+        {
+          "name": "whisper",
+          "ms": 2390.1022410000223
+        },
+        {
+          "name": "render",
+          "ms": 494.2392119996839
+        },
+        {
+          "name": "render",
+          "ms": 205.45372300011877
+        },
+        {
+          "name": "render",
+          "ms": 246.6278169999896
+        },
+        {
+          "name": "render",
+          "ms": 158.1443930003843
+        },
+        {
+          "name": "render",
+          "ms": 132.01946900016992
+        },
+        {
+          "name": "render",
+          "ms": 199.36520800001745
+        },
+        {
+          "name": "render",
+          "ms": 344.88046200021927
+        },
+        {
+          "name": "render",
+          "ms": 208.95388000008097
+        },
+        {
+          "name": "render",
+          "ms": 275.434507999762
+        },
+        {
+          "name": "render",
+          "ms": 155.1549679998061
+        },
+        {
+          "name": "render",
+          "ms": 152.34826999994766
+        },
+        {
+          "name": "whisper",
+          "ms": 2480.7690830002684
+        },
+        {
+          "name": "render",
+          "ms": 300.72142400013036
+        },
+        {
+          "name": "render",
+          "ms": 219.2825410002115
+        },
+        {
+          "name": "gemma",
+          "ms": 3091.2991830000465
+        },
+        {
+          "name": "whisper",
+          "ms": 1491.5602080000099
+        },
+        {
+          "name": "ocr",
+          "ms": 29502.95082799994
+        }
+      ],
+      "errors": [],
+      "duration_s": 20.643209354999726,
+      "ticks": 200,
+      "valid_depth": 199,
+      "timing": {
+        "tick_ms": {
+          "n": 200,
+          "median": 47.31713799992576,
+          "p95": 103.86818834981555,
+          "max": 232.9653709998638
+        },
+        "interval_ms": {
+          "n": 200,
+          "median": 100.13986450007906,
+          "p95": 116.5756282500297,
+          "max": 287.05961900004695
+        },
+        "capture_wait_ms": {
+          "n": 200,
+          "median": 0.13334799996300717,
+          "p95": 0.2795215499645564,
+          "max": 0.6127520000518416
+        },
+        "depth_ms": {
+          "n": 199,
+          "median": 15.533503999904497,
+          "p95": 36.96294099986514,
+          "max": 103.85577099987131
+        },
+        "hazards_ms": {
+          "n": 199,
+          "median": 0.039105000269046286,
+          "p95": 0.18069939987981337,
+          "max": 1.0952610000458662
+        },
+        "movers_ms": {
+          "n": 199,
+          "median": 29.98771400007172,
+          "p95": 64.46353340020323,
+          "max": 190.9282780002286
+        },
+        "publish_ms": {
+          "n": 199,
+          "median": 0.26944699993691756,
+          "p95": 2.310573400154678,
+          "max": 27.902986999833956
+        },
+        "navigation_ms": {
+          "n": 199,
+          "median": 0.0068160002228978556,
+          "p95": 0.017671299883659227,
+          "max": 0.14445200031332206
+        },
+        "alarms_health_ms": {
+          "n": 200,
+          "median": 0.017344499838145566,
+          "p95": 0.03615940013332871,
+          "max": 13.684045999980299
+        },
+        "skew_ms": {
+          "n": 199,
+          "median": 1.1774069998864434,
+          "p95": 5.311031799874397,
+          "max": 10.672476999843639
+        }
+      },
+      "depth_stages": {
+        "rectify_ms": {
+          "n": 199,
+          "median": 0.0040319996514881495,
+          "p95": 0.008396800012633321,
+          "max": 0.05005000002711313
+        },
+        "disparity_ms": {
+          "n": 199,
+          "median": 11.935999999877822,
+          "p95": 31.387979500004803,
+          "max": 97.40587100031917
+        }
+      },
+      "depth_gaps": [
+        {
+          "t": 3750.520537952,
+          "wall": 1793209455.686887,
+          "event": "depth_gap",
+          "gap_s": 0.356
+        }
+      ],
+      "outages": [
+        {
+          "start": 3750.125299918,
+          "end": 3750.513971888,
+          "gap_s": 0.38867196999990483,
+          "open": false
+        }
+      ],
+      "heartbeat_interval_ms": {
+        "n": 198,
+        "median": 100.23137099983614,
+        "p95": 125.88826374962987,
+        "max": 388.67196999990483
+      },
+      "resources": [
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 102849,
+            "pswpout": 548317,
+            "pgmajfault": 183422
+          },
+          "stack_rss_mb": 3490.4609375,
+          "available_mb": 1051.83203125,
+          "swap_used_mb": 1694.5,
+          "swap_in": 421269504,
+          "swap_out": 2245906432,
+          "threads": 50,
+          "gr3d": 63
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 103245,
+            "pswpout": 548317,
+            "pgmajfault": 184039
+          },
+          "stack_rss_mb": 3569.6953125,
+          "available_mb": 783.20703125,
+          "swap_used_mb": 1693.0,
+          "swap_in": 422891520,
+          "swap_out": 2245906432,
+          "threads": 50,
+          "gr3d": 44
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 103250,
+            "pswpout": 548317,
+            "pgmajfault": 184056
+          },
+          "stack_rss_mb": 3676.859375,
+          "available_mb": 552.5390625,
+          "swap_used_mb": 1693.0,
+          "swap_in": 422912000,
+          "swap_out": 2245906432,
+          "threads": 50,
+          "gr3d": 99
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 104034,
+            "pswpout": 548421,
+            "pgmajfault": 184866
+          },
+          "stack_rss_mb": 3700.83203125,
+          "available_mb": 666.65625,
+          "swap_used_mb": 1690.5,
+          "swap_in": 426061824,
+          "swap_out": 2246332416,
+          "threads": 50,
+          "gr3d": 41
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 109304,
+            "pswpout": 548421,
+            "pgmajfault": 190208
+          },
+          "stack_rss_mb": 3815.875,
+          "available_mb": 541.35546875,
+          "swap_used_mb": 1670.0,
+          "swap_in": 447709184,
+          "swap_out": 2246332416,
+          "threads": 50,
+          "gr3d": 99
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 109305,
+            "pswpout": 548421,
+            "pgmajfault": 190213
+          },
+          "stack_rss_mb": 3711.82421875,
+          "available_mb": 638.8125,
+          "swap_used_mb": 1670.0,
+          "swap_in": 447713280,
+          "swap_out": 2246332416,
+          "threads": 50,
+          "gr3d": 99
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 109515,
+            "pswpout": 548421,
+            "pgmajfault": 190454
+          },
+          "stack_rss_mb": 3825.4296875,
+          "available_mb": 448.4453125,
+          "swap_used_mb": 1669.25,
+          "swap_in": 448573440,
+          "swap_out": 2246332416,
+          "threads": 50,
+          "gr3d": 86
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 109520,
+            "pswpout": 548421,
+            "pgmajfault": 190521
+          },
+          "stack_rss_mb": 3823.32421875,
+          "available_mb": 535.51953125,
+          "swap_used_mb": 1669.25,
+          "swap_in": 448593920,
+          "swap_out": 2246332416,
+          "threads": 50,
+          "gr3d": 96
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 109523,
+            "pswpout": 548421,
+            "pgmajfault": 190554
+          },
+          "stack_rss_mb": 3995.1484375,
+          "available_mb": 497.296875,
+          "swap_used_mb": 1669.25,
+          "swap_in": 448606208,
+          "swap_out": 2246332416,
+          "threads": 50,
+          "gr3d": 90
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 109725,
+            "pswpout": 585322,
+            "pgmajfault": 191220
+          },
+          "stack_rss_mb": 4073.3203125,
+          "available_mb": 265.5625,
+          "swap_used_mb": 1812.5,
+          "swap_in": 449433600,
+          "swap_out": 2397478912,
+          "threads": 50,
+          "gr3d": 99
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 110546,
+            "pswpout": 586562,
+            "pgmajfault": 192297
+          },
+          "stack_rss_mb": 3911.08984375,
+          "available_mb": 449.28125,
+          "swap_used_mb": 1813.5,
+          "swap_in": 452796416,
+          "swap_out": 2402557952,
+          "threads": 50,
+          "gr3d": 37
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 117121,
+            "pswpout": 607170,
+            "pgmajfault": 199595
+          },
+          "stack_rss_mb": 4029.953125,
+          "available_mb": 374.64453125,
+          "swap_used_mb": 1869.0,
+          "swap_in": 479727616,
+          "swap_out": 2486927360,
+          "threads": 50,
+          "gr3d": 99
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 117168,
+            "pswpout": 619841,
+            "pgmajfault": 199691
+          },
+          "stack_rss_mb": 3996.6953125,
+          "available_mb": 509.53515625,
+          "swap_used_mb": 1918.0,
+          "swap_in": 479920128,
+          "swap_out": 2538868736,
+          "threads": 50,
+          "gr3d": 99
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 117173,
+            "pswpout": 638655,
+            "pgmajfault": 199703
+          },
+          "stack_rss_mb": 4033.43359375,
+          "available_mb": 378.87109375,
+          "swap_used_mb": 1991.25,
+          "swap_in": 479940608,
+          "swap_out": 2615898112,
+          "threads": 50,
+          "gr3d": 96
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 117259,
+            "pswpout": 638946,
+            "pgmajfault": 199857
+          },
+          "stack_rss_mb": 3770.8671875,
+          "available_mb": 709.9609375,
+          "swap_used_mb": 1992.25,
+          "swap_in": 480292864,
+          "swap_out": 2617122816,
+          "threads": 50,
+          "gr3d": 96
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 120006,
+            "pswpout": 638946,
+            "pgmajfault": 202619
+          },
+          "stack_rss_mb": 3835.17578125,
+          "available_mb": 705.3984375,
+          "swap_used_mb": 1980.85546875,
+          "swap_in": 488361984,
+          "swap_out": 2617122816,
+          "threads": 50,
+          "gr3d": 19
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 120677,
+            "pswpout": 638946,
+            "pgmajfault": 203291
+          },
+          "stack_rss_mb": 3841.00390625,
+          "available_mb": 691.13671875,
+          "swap_used_mb": 1975.25,
+          "swap_in": 494292992,
+          "swap_out": 2617122816,
+          "threads": 50,
+          "gr3d": 99
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 120700,
+            "pswpout": 638946,
+            "pgmajfault": 203314
+          },
+          "stack_rss_mb": 3789.609375,
+          "available_mb": 485.05859375,
+          "swap_used_mb": 1975.0,
+          "swap_in": 494387200,
+          "swap_out": 2617122816,
+          "threads": 50,
+          "gr3d": 98
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 120801,
+            "pswpout": 638946,
+            "pgmajfault": 203633
+          },
+          "stack_rss_mb": 3803.94921875,
+          "available_mb": 543.2109375,
+          "swap_used_mb": 1974.75,
+          "swap_in": 494800896,
+          "swap_out": 2617122816,
+          "threads": 50,
+          "gr3d": 75
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 120852,
+            "pswpout": 638946,
+            "pgmajfault": 203705
+          },
+          "stack_rss_mb": 3839.2109375,
+          "available_mb": 522.265625,
+          "swap_used_mb": 1974.75,
+          "swap_in": 494997504,
+          "swap_out": 2617122816,
+          "threads": 50,
+          "gr3d": 79
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 121111,
+            "pswpout": 638946,
+            "pgmajfault": 203968
+          },
+          "stack_rss_mb": 3803.9375,
+          "available_mb": 438.31640625,
+          "swap_used_mb": 1973.5,
+          "swap_in": 496070656,
+          "swap_out": 2617122816,
+          "threads": 50,
+          "gr3d": 99
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 121152,
+            "pswpout": 638946,
+            "pgmajfault": 204010
+          },
+          "stack_rss_mb": 3834.58203125,
+          "available_mb": 497.7890625,
+          "swap_used_mb": 1973.25,
+          "swap_in": 496238592,
+          "swap_out": 2617122816,
+          "threads": 50,
+          "gr3d": 98
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 121190,
+            "pswpout": 638946,
+            "pgmajfault": 204048
+          },
+          "stack_rss_mb": 3886.0390625,
+          "available_mb": 488.546875,
+          "swap_used_mb": 1973.25,
+          "swap_in": 496394240,
+          "swap_out": 2617122816,
+          "threads": 50,
+          "gr3d": 99
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 121483,
+            "pswpout": 638946,
+            "pgmajfault": 204341
+          },
+          "stack_rss_mb": 3834.78125,
+          "available_mb": 414.75,
+          "swap_used_mb": 1972.0,
+          "swap_in": 497594368,
+          "swap_out": 2617122816,
+          "threads": 50,
+          "gr3d": 99
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 121540,
+            "pswpout": 638946,
+            "pgmajfault": 204400
+          },
+          "stack_rss_mb": 3937.59765625,
+          "available_mb": 454.44921875,
+          "swap_used_mb": 1971.5,
+          "swap_in": 497827840,
+          "swap_out": 2617122816,
+          "threads": 50,
+          "gr3d": 95
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 121574,
+            "pswpout": 638946,
+            "pgmajfault": 204439
+          },
+          "stack_rss_mb": 3835.49609375,
+          "available_mb": 483.4375,
+          "swap_used_mb": 1971.5,
+          "swap_in": 497967104,
+          "swap_out": 2617122816,
+          "threads": 50,
+          "gr3d": 82
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 121639,
+            "pswpout": 641908,
+            "pgmajfault": 204510
+          },
+          "stack_rss_mb": 3829.80078125,
+          "available_mb": 394.5390625,
+          "swap_used_mb": 1983.0,
+          "swap_in": 498233344,
+          "swap_out": 2629255168,
+          "threads": 50,
+          "gr3d": 70
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 125147,
+            "pswpout": 641908,
+            "pgmajfault": 208105
+          },
+          "stack_rss_mb": 3906.1484375,
+          "available_mb": 479.54296875,
+          "swap_used_mb": 1969.25,
+          "swap_in": 512602112,
+          "swap_out": 2629255168,
+          "threads": 51,
+          "gr3d": 99
+        },
+        {
+          "torch_loaded": false,
+          "vmstat": {
+            "pswpin": 125166,
+            "pswpout": 641908,
+            "pgmajfault": 208136
+          },
+          "stack_rss_mb": 3843.421875,
+          "available_mb": 597.0625,
+          "swap_used_mb": 1969.25,
+          "swap_in": 512679936,
+          "swap_out": 2629255168,
+          "threads": 51,
+          "gr3d": 98
+        }
+      ],
+      "oc_before": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 1163
+      },
+      "oc_after": {
+        "oc1": 0,
+        "oc2": 0,
+        "oc3": 2576
+      }
+    }
+  ],
+  "server_commands": [
+    [
+      "/opt/argus/llama.cpp/build/bin/llama-server",
+      "--model",
+      "/opt/argus/models/gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf",
+      "--mmproj",
+      "/opt/argus/models/mmproj-gemma4-e2b-vision-f16.gguf",
+      "--device",
+      "CUDA0",
+      "-ngl",
+      "99",
+      "--parallel",
+      "1",
+      "--fit",
+      "off",
+      "--flash-attn",
+      "on",
+      "--reasoning",
+      "off",
+      "--cache-ram",
+      "0",
+      "--ctx-size",
+      "2048",
+      "--jinja",
+      "--image-max-tokens",
+      "560",
+      "-ub",
+      "256",
+      "-b",
+      "256",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "8080"
+    ]
+  ],
+  "backend": "cuda_sad",
+  "calibrated": false
+}

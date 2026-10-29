@@ -1,6 +1,223 @@
 # ARGUS implementation status
 
+## Power-off checkpoint — 2026-10-29
+
+Latest OCR120ms motion sampling successfully captured live:5lines in6.747s;
+accuracy and page questions unassessed.45reading tests passed. Conversation
+server restored; direct advice and conceptual text routing improved;84tests
+passed. User powering down Jetson; resume via newest AGENT_HANDOFF.md section.
+
+## 2026-10-29 recording interface redesign
+
+Native demo UI redesigned with large camera, feature headings, readable
+masked OCR/transcript and activity states. Tab toggles diagnostics;
+`--demo-feature` selects the presentation. Actual OCR now appears inside the
+recorded composition. Existing privacy and calibration gates remain.
+Live unrecorded reading preview launched successfully; all three cameras
+discovered. Offline screenshots are illustrative. Renderer-only benchmark:
+median20.2ms,p9522.0ms; full-stack performance acceptance not claimed.
+
+## 2026-10-29 feature-recording session
+
+Reading take01 finalized146.193s(video+audio) but coaching timed out; no OCR
+success. User reported misleading hold-still/capturing prompts. Fixed prompt
+semantics (framed!=captured), denoised page-ROI motion instead of raw full-frame
+differences, and use of the approved stereo frame rather than later live frame.
+Brightness/blur/framing gates retained, two consecutive ready checks still
+required. Added numeric reading_frame_check telemetry; no text/images in it.
+418 tests pass including noise/background-motion, exact-frame OCR and cancelled
+result regressions. Real improvement pending take02. Other feature clips pending.
+
+Seat take01 saved/stream-verified:214.274s,H264 960x540+AAC. Log shows
+direction outputs and intermittent target loss; not acceptance. Separate
+reading/page-agent take01 launched; not finalized. See recording manifest.
+
+User switched to separate feature tests/recordings. Plan in
+`docs/FEATURE_RECORDING.md`; manifest and takes under
+`reports/feature-recordings/2026-10-29/`. First stationary seat-direction take
+launched. No finalized/accepted clip yet. Added --demo-source left/wide for
+faithful stereo POV recording (default wide); inference camera routing and
+privacy/calibration gates unchanged.29 relevant tests pass. Recorder includes
+ARGUS audio/request captions, not human microphone audio. Latest sector
+calibration rejected, so metric warnings/walking remain gated. Wide SLAM
+remains unimplemented; existing mapping is calibrated stereo. Reading,
+conversation and privacy demonstrations pending after seat test.
+
+## 2026-10-29 calibration diagnosis and corrections
+
+Added explicit `--detector sector` calibration option using subpixel SB corners
+without classic refinement; default classic retained. Auto-board detection and
+observation/candidate metadata use selected detector.46 calibration tests pass,
+including synthetic board/blank rejection. Quality gates unchanged. Sector
+trial uses23mm,7x7 corners,101mm baseline; live acceptance still pending.
+
+Stationary burst complete:16 pairs,skew<=1.513ms. Images visually grainy,
+center folding seam visible; hand-held target moved~7px globally (cannot
+call perfectly stationary). After projective compensation, median local
+repeatability classic/sector: left.570/.368px,right.311/.216px. Sector
+detected15/16 left,16/16 right; classic16/16 left,15/16 right. Median
+planar-grid RMS classic/sector:left.767/.677,right.652/.632px; this includes
+lens/target effects, NOT calibration acceptance accuracy. Sector improves
+repeatability on these frames but no runtime detector change yet. Fold
+flatness/geometry not established from photos. Private PNGs in
+/tmp/argus-stationary-board-48s2_qfy; report reports/stationary-board-2026-10-29.json.
+No activation. Preview may still own cameras until Q/Esc.
+
+Prepared/launched stationary-board diagnostic (SPACE-triggered16-pair burst,
+classic vs sector detector, motion-compensated repeatability). Private raw
+PNGs under/tmp, numeric report under reports. Synthetic identical-frame smoke
+passed both detectors; live results pending. No calibration activation.
+
+Latest robust live capture:25 views,7/9 coverage,tilt spans.175/.427,arrival
+skew median.56/max3.55ms. Intrinsic starts agree; baseline98.31mm. Still
+rejected:mono1.261/1.316,stereo1.411,held-out.570/1.953px. Offline replay
+confirms; tilt/initialization/pair-skew checks do not explain residual failure.
+View20 is a clear outlier (~2.0/2.7px mono), but diagnostic exclusion still
+gives1.217/1.221px mono and1.337px stereo; not a one-view fix. Original
+observations unchanged; no acceptance from pruning.
+Lens-model variants barely help. Shared board-coordinate residual pattern
+correlation.907; released-board model helps several held-out views but view20
+stays bad (>2px), so a single fixed target correction is insufficient. This
+supports target/localization inconsistencies (possibly flex/blur), not proof
+of a particular physical defect or operator mistake. Raw images were not
+saved, so blur/flex cannot be distinguished from corners alone. Reports:
+`calibration-replay`, `calibration-target-analysis`, `calibration-residual-pattern`,
+`calibration-outlier-sensitivity`, suffix`2026-10-29-robust-live` under reports.
+No activation. Next diagnostic: stationary well-lit capture/corner repeatability,
+or a verified flat rigid printed target, rather than another identical session.
+
+Implemented multi-start intrinsic fitting: three image-size-based focal guesses
+are optimized (not fixed); lowest mono reprojection fit selected independently
+of tape baseline. Similar-error starts must agree within10% focal spread for
+acceptance. Existing RMS/held-out/baseline gates unchanged. Added perspective
+cues from opposite-edge length ratios, invariant to image translation, scale
+and flat rotation. Coach requests top/bottom then side-to-side board tilts;
+auto-completion/final gate also require cue span>=.08 in both directions.
+This is a capture-conditioning heuristic, not proof of pose/metric accuracy.
+Checkpoints save tilt cues; offline replay includes stability/tilt diagnostics.
+
+413 tests pass, including bad-start/stability regressions and no-false-tilt
+tests; compile/diff checks pass. Latest saved capture now fits99.396mm baseline,
+mono.677/.636px,stereo1.089px, but held-out48.19/214.69px and limited top/bottom
+cue span.0536 still reject. Evidence `reports/calibration-replay-2026-10-29-robust.json`.
+No activation; live validation with stronger out-of-plane pose variation pending.
+
+Newest 23mm live session rejected:15 views/8 cells, stereo5.374px,
+baseline2668mm. Offline replay confirms pathological default left intrinsics
+fx7037/fy4877 versus right734/746. Three diagnostic optimizations initialized
+at600/800/1000px all converge to left671/682,right734/746,baseline99.396mm,
+stereo1.089px,mono.677/.636px. Guesses optimized, not fixed; no baseline tuning
+or activation. This directly demonstrates initialization sensitivity; stable
+fit still fails quality gates. Production fitter has NOT yet been changed.
+`reports/calibration-initialization-2026-10-29-23mm-live.json`.
+Pair skews1.14–3.33ms; stored joint corner order unchanged on replay. Estimated
+plane angles using earlier intrinsics suggest limited out-of-plane variation;
+those angles are diagnostic estimates, not ground truth. Prior-intrinsics
+diagnostic fit gives stereo.936px/baseline93.54mm, also not acceptance.
+Next software step: robust intrinsic initialization/stability diagnostics;
+then explicit tilt/distance capture guidance and remaining target/localization
+checks. Do not ask user to change a specific mount based on the bad fit.
+
+Latest fixed-code live session: 15 views/9 cells, baseline 98.41 mm (tape
+101 mm), stereo RMS .988 px, per-camera .818/.835 px, held-out mean/max
+.926/2.971 px. Rejected, no activation. Corners now saved in
+`reports/calibration-observations-2026-10-29-fixed.npz`; replay matches.
+
+Offline target analysis fits 12 views, holds out views 5/10/15. Free-k3 and
+rational lens models barely improve ideal-grid errors. Releasing target
+geometry reduces held-out per-camera RMS: left .80–.97 to .39–.44 px,
+right .73–.87 to .30–.39 px. Left-derived target shape transfers to right
+held-out views (.32–.40 px), and vice versa (.36–.44 px). Supports systematic
+target-related geometry/localization error; does not physically measure warp
+or prove its sole cause. Learned millimetre deviations are model parameters,
+not metrology. `reports/calibration-target-analysis-2026-10-29.json` and
+`scripts/analyze_calibration_target.py`. No threshold/model/active-file change.
+Next: verify horizontal AND vertical square spacing and board/hinge flatness;
+do not repeat identical captures or treat released-board fit as acceptance.
+
+Repeated live calibration attempts rejected; latest post-mount-adjustment fit
+had 15 views/9 cells but estimated 0.838 m baseline, K focal lengths 979/2373 px,
+and 16.65/94.88 px held-out mean/max. No active calibration accepted. Earlier
+failures varied widely; latest rejected NPZ has no observations to replay.
+
+Confirmed code defects: independent square-grid orientation switches at 45°
+can mismatch physical corners between cameras; old capture pairing could reuse
+one source or return stale frames. Added joint grid-symmetry correspondence
+with ambiguous/distorted-match rejection (upright co-directed views assumed),
+bounded fresh stereo histories requiring both sequences to advance, and
+per-capture numeric observation checkpoints. `diagnose_stereo_observations.py`
+replays observations without cameras, pruning, or activation. Fixed NumPy
+translation-scalar deprecation. Final quality thresholds unchanged.
+
+Verification: 408 tests pass with GPU access, including known-rig diagonal
+board/relative-roll regression and stale/reused/skewed pairing tests. Synthetic
+20-view replay recovered 100.984 mm for true 101 mm, stereo RMS .085 px,
+held-out mean/max .069/.278 px. `reports/calibration-code-check-2026-10-29.json`.
+This is software evidence only; not proof these defects explain every live
+failure. Next live session needs real board tilts/distance variation, fixed
+mounts, and rechecked lens spacing after mount adjustment. No walking acceptance.
+
 Last audited: 2026-10-21. This file is the implementation source of truth.
+
+## 2026-10-28 device follow-up
+
+- Guided calibration attempt collected only 2/15 views. User found repeated
+  hold-still prompts without captures difficult. Found hidden pre-nine-view
+  coverage-cell veto inconsistent with coach READY guidance. Removed that
+  veto: diverse scale/angle views can share cells; completion and final gate
+  still require >=70% grid coverage, full quality metrics and >=15 views.
+  Capture readiness now checks visibility, size, diversity, both-camera
+  steadiness and cooldown; prompts explain blockers, SPACE/c honor readiness.
+  Collection no longer auto-finishes at 6/9 coverage (below final gate).
+  Board: confirmed chessboard, assumed 7x7 inner corners, measured 24 mm
+  squares, user lens baseline 100–102 mm (101 mm midpoint used). No accepted
+  calibration yet; metric speech/routes still gated.
+
+- User accepted current OCR as good enough to move on; formal reading CER
+  and controls acceptance remain incomplete. Fresh 20 s stationary profile:
+  baseline no outages, OCR one 316 ms outage, combined one 389 ms outage;
+  combined tick p95 103.9 ms, peak RSS 4073 MiB, minimum available 266 MiB,
+  GR3D 99%, OC3 +1413. No operation errors; not T1 acceptance. Prior ~20 s
+  outages did not reproduce. Their logs show 203/204 ticks without a stereo
+  pair, distinct from shorter detector delays. Root cause still unresolved.
+  `reports/reliability-stereo-ocr-2026-10-28-summary.json`. Profile finished,
+  cameras released; calibration measurements requested from user.
+
+- Added `run --demo --ocr-preview`: a separate local diagnostic window with
+  fresh reading-camera view, last captured source image, and masked actual OCR
+  output/status from each voice-triggered read. It shares existing readers,
+  adds no OCR worker, and stays outside the demo recording and model input.
+  Captured source is not the optional grounder's enhanced crop. No accuracy
+  improvement claimed; use this to diagnose framing vs recognition.
+  Verification: 395 tests pass with GPU access; CLI help and diff checks pass.
+
+- User visually preferred stereo OCR after three live left/wide comparisons.
+  Left OCR 2.83/2.52/4.00 s vs wide 4.62/3.89/4.04 s; left recognized
+  163/146/180 characters vs wide 108/85/54. Keep left reading source.
+  Exact-reference CER is confounded: reference was title-only while captures
+  included different amounts of text, and supplied spelling was unverified.
+  Wide had lower raw CER on all three trials, so no measured accuracy-win
+  claim is justified. No 12 MP trial recorded. Next accuracy comparison needs
+  matched title crops and a verified transcription. Evidence:
+  `reports/ocr-camera-comparison-2026-10-28.json`.
+
+- All cameras passed USB3/rate checks after left-cable reseating:
+  stereo 59.8/59.9 fps, wide 30.0 fps, arrival skew p95 3.42 ms.
+  Evidence: `reports/doctor-2026-10-28-2303.json`.
+- Human 600.2 s soak FAILED: eight depth outages, three ~20.46 s late in
+  the run with camera reopen logs (cause unestablished). Tick median/p95
+  43.3/77.3 ms; stack peak 4172 MiB, minimum available 216 MiB, GR3D peak
+  99%, OC3 +499. Model healthy; two reading attempts, no page success claim.
+  See `reports/soak-human-2026-10-28-continued-summary.json`.
+- Reading now uses the left stereo live stream for coaching and OCR in both
+  config copies. `camera.reading_source` accepts left/right/wide. Stereo
+  reading does not reopen cameras or consume pairs; wide retains 12 MP stills.
+  Stereo reading is 960x600; real-page accuracy remains unaccepted.
+- Verification: 393 tests pass with GPU access; live 960x600 OCR capture then
+  stereo-pair smoke passed (2.70 ms skew). `reports/reading-camera-2026-10-28.json`.
+- Wide-camera SLAM requested but NOT implemented. Metric wide tracking needs
+  wide intrinsics/distortion and stereo-to-wide calibration. Current VO stays
+  stereo and gated on calibration. Lens untouched; routes remain disabled.
 
 Status meanings: **done** means implemented and verified for its stated scope;
 **partial** means useful code/evidence exists but acceptance is incomplete;

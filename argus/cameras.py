@@ -383,6 +383,8 @@ class CameraRig:
     on USB, and stereo skew is measured from real arrival times."""
 
     def __init__(self, cfg: CameraConfig):
+        if cfg.reading_source not in {"left", "right", "wide"}:
+            raise ValueError("camera.reading_source must be left, right, or wide")
         self.cfg = cfg
         if cfg.auto_detect:
             self.left_index, self.right_index, self.wide_index = discover_rig(cfg)
@@ -409,6 +411,24 @@ class CameraRig:
         if frame is None or not 0 <= time.perf_counter()-timestamp <= .5:
             return None
         return frame.copy()
+
+    def get_reading_frame(self) -> np.ndarray | None:
+        """Fresh OCR view from the configured camera, with capture transforms.
+
+        Reading a stereo view does not consume a pair or change either camera's
+        mode. Return an owned copy so OCR cannot alter frames used by depth.
+        """
+        reader = getattr(self, self.cfg.reading_source)
+        frame, timestamp, _ = reader.latest()
+        if frame is None or not 0 <= time.perf_counter() - timestamp <= .5:
+            return None
+        return frame.copy()
+
+    def capture_reading_still(self) -> np.ndarray | None:
+        """Use the live stereo resolution for OCR; wide retains its 12 MP mode."""
+        if self.cfg.reading_source == "wide":
+            return self.capture_still()
+        return self.get_reading_frame()
 
     # ------------------------------------------------------------------ stereo
     def get_stereo_pair(self) -> StereoFrame | None:

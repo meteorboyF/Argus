@@ -1,0 +1,102 @@
+{
+  "kind": "reading-camera-comparison",
+  "trials": [
+    {
+      "trial": 1,
+      "wide_mode": "live",
+      "capture_s": 0.004236273000060464,
+      "arrival_skew_ms": 23.678682000081608,
+      "cameras": {
+        "left": {
+          "shape": [
+            600,
+            960,
+            3
+          ],
+          "ocr_s": 2.827318623999872,
+          "lines": 6,
+          "characters": 163,
+          "mean_confidence": 0.8922756765066613,
+          "cer": 0.5596330275229358
+        },
+        "wide": {
+          "shape": [
+            1080,
+            1920,
+            3
+          ],
+          "ocr_s": 4.618125074999625,
+          "lines": 2,
+          "characters": 108,
+          "mean_confidence": 0.8044608008648668,
+          "cer": 0.1559633027522936
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "wide_mode": "live",
+      "capture_s": 0.0014654800002062984,
+      "arrival_skew_ms": 11.38116899983288,
+      "cameras": {
+        "wide": {
+          "shape": [
+            1080,
+            1920,
+            3
+          ],
+          "ocr_s": 3.887160471000243,
+          "lines": 3,
+          "characters": 85,
+          "mean_confidence": 0.672278732282435,
+          "cer": 0.43119266055045874
+        },
+        "left": {
+          "shape": [
+            600,
+            960,
+            3
+          ],
+          "ocr_s": 2.5166946539998207,
+          "lines": 3,
+          "characters": 146,
+          "mean_confidence": 0.8269702722594418,
+          "cer": 0.47706422018348627
+        }
+      }
+    },
+    {
+      "trial": 3,
+      "wide_mode": "live",
+      "capture_s": 0.0016784770000413118,
+      "arrival_skew_ms": 21.554496999669936,
+      "cameras": {
+        "left": {
+          "shape": [
+            600,
+            960,
+            3
+          ],
+          "ocr_s": 3.998387186999935,
+          "lines": 6,
+          "characters": 180,
+          "mean_confidence": 0.8945705200331809,
+          "cer": 0.7339449541284404
+        },
+        "wide": {
+          "shape": [
+            1080,
+            1920,
+            3
+          ],
+          "ocr_s": 4.038465602999622,
+          "lines": 2,
+          "characters": 54,
+          "mean_confidence": 0.699534807620304,
+          "cer": 0.6513761467889908
+        }
+      }
+    }
+  ],
+  "note": "CER uses exact supplied reference and all recognized text. Confidence is not accuracy. No automatic camera selection. Live and still modes differ in resolution/capture latency."
+}

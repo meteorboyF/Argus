@@ -1,5 +1,343 @@
 # ARGUS agent handoff
 
+## Newest recording checkpoint — 2026-10-29
+
+All runtimes stopped; local Gemma server may still run. User retained reading
+take9, conversation take10, privacy take2, seat take3 in
+reports/feature-recordings/2026-10-29; matching JSONL and session-state.json.
+Reading take9 scene response only; earlier take6 has actual OCR title evidence.
+Conversation take10 six-turn exchange,102.633s H264/AAC. Privacy take2 46.998s,
+H264/AAC, visual review pending. Seat take3 wide display per user request,
+stereo detection unchanged; target loss/directions oscillate. User says seat
+needs work, explicitly deferred. No acceptance. Seat take2 also had wide/left
+camera stalls. Continuous mic+ARGUS mix now in new takes; streams verified,
+voice intelligibility not yet reviewed. Removed distance-guidance unavailable
+footer; runtime safety gates unchanged. Next explain metric alerts still
+blocked by calibration and wide SLAM unimplemented; remaining useful demos
+include general scene description/object finding, or review saved evidence.
+Do not restart calibration or seat work automatically. Preserve uncommitted work.
+
+
+## Latest continuation — microphone recording, 2026-10-29
+
+Runtime stopped; reading takes 3–7 saved, latest 7 verified 89.734s H264/AAC.
+All three cameras passed simultaneous 15s doctor: stereo59.9fps,wide30fps,
+USB3 all,skew p95 7.21ms (report doctor-2026-10-29-0358.json).
+User removed top feature titles and automatic startup scene query. Reading
+coach now checks denoised detected-word contrast before rejecting dark covers;
+take5 captured, take6 OCR University of Alberta and direct title response.
+No overall OCR accuracy acceptance. Removed unsolicited end-of-page speech;
+document prompt requests answer only.53reading+50dialogue+5layout tests passed.
+User requested microphone in clips: Recorder now captures continuous default
+PulseAudio source to disk via FFmpeg and mixes with ARGUS playback. Current
+source is Bluetooth headset. Technical 5s smoke succeeded H264/AAC,4.27s nonzero
+mic PCM; no human speech intelligibility verification. Report/video named
+microphone-mix-check under feature-recordings/2026-10-29. Added timing offset
+based on mic duration/stop to compensate FFmpeg startup; not live rechecked.
+Previous takes remain ARGUS-only. No new feature recording active. Next start
+new take with mic and verify both voices. Preserve all uncommitted changes.
+
+
+## Newest continuation — 2026-10-29
+
+POWER-OFF HANDOFF: user is switching Jetson off for a while. Resume from
+this section, not earlier calibration/recording instructions. Current work:
+operational native UI completed (no taglines/suggested commands/demo numbers),
+conversation prompt/routing improved and local Gemma launcher restored.
+Latest OCR120ms motion fix DID capture live: reports/sessions/2026-10-29-0332*
+log has two ready checks motion5.60/4.14, eight text boxes, followed by
+reading event:5lines, OCR6.747s, capture0.00030s. Accuracy and page Q&A not
+yet assessed.45reading tests passed;84conversation tests passed;full423suite
+passed before latest conversation/OCR edits. No feature recording active.
+Next: start local server with scripts/run_llama_server.sh, then unrecorded
+`python3 -m argus run --demo --windowed --demo-source left --demo-feature reading`
+with DISPLAY=:0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1. Verify OCR accuracy
+and page follow-up; test spoken conversation turn-taking next. Do not resume
+calibration automatically. Metric navigation/incoming danger warnings still
+gated (no accepted calibration); wide-camera SLAM still unimplemented.
+Recordings:reports/feature-recordings/2026-10-29/. Design examples and actual
+text conversation before/after evidence:reports/interface-redesign/.
+Working tree has extensive uncommitted session changes; preserve them.
+
+OCR hold-still stall on live session032832: first frame ready, then26checks
+motion7.3–30 despite sharpness1299–4176 and brightness74–115 with5–10boxes.
+Motion was comparing frames across~1.1–1.5s OCR detector runs. Changed coach
+to sample frame pairs120ms apart BEFORE detection, preserving all quality
+gates and two-ready requirement. Current framing cue now updates main OCR
+status; log adds motion_sample_s. Regression covers stable short pairs with
+brightness change between detector cycles. Reopening unrecorded OCR view;
+new capture success still needs live evidence, do not claim it fixed by tests.
+
+Conversation improvement request: server was offline, launched existing
+`scripts/run_llama_server.sh` with bounded BLAS/OMP threads (session30263;
+log reports/interface-redesign/conversation-server.log). Live production
+text checks via new scripts/check_conversation.py, before/after JSONs in
+same report directory. Two OCR misroutes fixed for conceptual book/title
+questions; persona now direct concrete advice without butler/service filler;
+router budget128tokens. Same10case rerun: chat/model routes1.77–2.33sec,
+name memory and follow-up context worked; visual query routed describe and
+unsupported app action denied. These are text-only, no voice/tool acceptance.
+84dialogue/companion tests passed including6new conceptual routing cases.
+Restarting unrecorded demo in conversation mode to load fixes. Server should
+remain running for voice tests; do not claim microphone flow verified.
+
+User requested operational UI, not promotional demo copy. Removed taglines,
+suggested spoken commands, demonstration numbering and default keyboard
+hints. Plain feature names, actual OCR/status/requests remain; neutral empty
+states. Diagnostics still toggled by Tab. Focused39tests pass. Restarted
+unrecorded reading preview (session23628). Previous runtime reported local
+reasoning server:8080 connection refused; do not imply conversation is healthy.
+
+User authorized native recording-interface redesign. Implemented
+`argus/recording_layout.py` and integrated DemoView: charcoal/cyan 1080p
+composition, larger camera, readable masked OCR/transcript, honest activity
+and recording states, Tab diagnostics, `--demo-feature` CLI selection.
+Recorder remains 960×540; safety overlay stays above diagnostics and existing
+face filtering/calibration gates remain. Offline illustrative screenshots
+and isolated renderer benchmark are in `reports/interface-redesign/`
+(median20.2ms,p9522.0ms; not a full-stack performance acceptance).
+Previous feature recording is stopped. Do not resume recordings/calibration
+automatically. Live unrecorded reading UI preview is now running with
+`--demo --windowed --demo-source left --demo-feature reading` (session43212).
+All three cameras discovered. Final suite:423passed in34.73s with bounded
+BLAS/OMP threads and host GPU-library access. No new recording started.
+
+Conversation05 take01 finalized30MB; log shows brief greeting/how-are-you
+exchange,not broad multi-turn test. User asked next; started privacy06 take01
+wide POV with same feature-recording folder/log names. Runtime owns cameras.
+User should show consenting face, move slowly/turn slightly, ask scene question,
+then shutdown to finalize. Inspect video for missed faces/lag/false blur;
+display blur is not proof of model-input privacy. Incoming metric warnings and
+wideSLAM still blocked/unimplemented; don't claim complete feature coverage.
+
+User deferred further reading work ("later lets move on"). Reading take02
+finalized67MB; actual OCR/spoken reading with errors, no page question tested.
+Started next separate Gemma conversation recording:05-conversation-take-01
+.mp4/.jsonl in feature-recordings/2026-10-29,wide POV. Runtime owns cameras.
+Test open-ended reasoning/chat plus name/follow-up; shutdown to finalize.
+Then privacy clip remains. Don't resume OCR/calibration unless asked; retain
+all existing limitations and blocked features in manifest.
+
+User asked video analysis. Sampled take01:25–45s title visible, lower page
+cut off while old coach stalls;75–105s page absent. Display face blur overlaps
+page around65s; video is not raw OCR input. Don't claim continuous/audio review.
+Review report `reports/feature-recordings/2026-10-29/reading-video-review.json`.
+Take02 currently running, now logged actual OCR reading after five checks
+(ready,not-ready,not-ready,ready,ready); motion~5–7.5,brightness~98–101.
+Capture fix progressed; text accuracy/page agent still unassessed, MP4 not
+finalized. User should ask page question then shutdown to save. Conversation
+and privacy separate clips remain next; privacy display-page overlap merits
+inspection before claiming robust face blur.
+
+CURRENT:Reading recording take01 finalized146.193s(video/audio verified),but
+coach timed out repeatedly and never reached OCR. User reported inconsistent
+hold-still/capture. Fixed raw full-image motion to Gaussian-denoised page ROI;
+kept brightness/blur/framing gates and two ready checks. Changed first-ready
+cue to "The page is framed. Hold it there" and actual selection acknowledgment
+to "Captured. Reading now." Stereo OCR uses owned approved coach frame instead
+of recapturing different live view. Numeric reading_frame_check telemetry added.
+418 tests pass incl exact-frame/cancellation and noise/background regressions.
+Take02 prepared at04-reading-page-agent-take-02.mp4/.jsonl in existing recording
+folder. Restart user trial with left POV+OCR preview, then page-agent question.
+Do not mark reading successful before observed OCR/page question. Seat clip01
+already saved214.274s; conversation/privacy still pending. Calibration/wideSLAM
+limitations unchanged. Retain all failed takes and no overwrites.
+
+Recording progress:Seat take01 finalized,214.274s,H264 960x540+AAC streams
+verified with ffprobe. Seat directions observed (left/ahead), intermittent
+target loss/search; no clean acceptance/walking claim. User asked next; started
+04-reading-page-agent-take-01.mp4/.jsonl using left POV+local OCR preview.
+Runtime now owns cameras. Ask "Argus, read this", then page title question,
+shutdown to finalize. Next separate clips conversation then privacy. Manifest
+updated in reports/feature-recordings/2026-10-29/session-state.json.
+
+ACTIVE OBJECTIVE CHANGED:User wants separate tests/recordings of stereo seat
+finding/navigation, incoming alerts, wide SLAM, OCR+page agent, Gemma conversation,
+privacy face blur. Latest sector calibration rejected(20views,stereo2.299,
+heldout2.101/8.098px), no activation. Explained seat direction-only possible;
+metric warnings/walking blocked; wide SLAM unimplemented(current VO stereo).
+Prepared `docs/FEATURE_RECORDING.md` and manifest under
+reports/feature-recordings/2026-10-29/session-state.json. Added --demo-source
+left/wide (defaultwide), same display face blur, changes recording POV only.
+29 relevant tests+CLI/diff checks pass. First seat take launched with left POV:
+01-seat-direction-take-01.mp4/.jsonl in that folder. Runtime owns cameras.
+User should remain seated, put empty chair in stereo view, say "Argus, where
+is the seat?", stop between position changes, shutdown to finalize. Inspect
+saved MP4/log before marking success; move next to OCR/conversation/privacy,
+keep blocked features honest. Built-in audio records ARGUS,not human mic;
+user was told external recording needed for human speech. No feature accepted
+or video finalized yet. Do not return to calibration without user's direction.
+
+User authorized sector trial. Added `--detector sector` (default classic),
+selected detector used in auto-board detection and both-camera capture, stored
+in observation/candidate metadata. SB provides subpixel corners; no classic
+refinement applied.46 calibration tests pass, including SB synthetic/blank.
+Fresh sector trial command uses23mm/7x7/101mm, output observations suffix
+2026-10-29-sector-live. Gates unchanged, live calibration still pending.
+
+Stationary burst DONE and inspected.16pairs,skewmax1.513ms. Raw images under
+/tmp/argus-stationary-board-48s2_qfy show noisy/grainy board and horizontal
+fold seam; cannot verify flatness from photos. Global motion~7px, so not fully
+stationary. Projective-compensated local repeatability classic->sector median:
+left.570->.368px,right.311->.216px. Sector15/16 left,16/16 right,classic16/16
+left,15/16 right. Report `reports/stationary-board-2026-10-29.json`.
+Sector may improve corner localization but repeatability is not ground-truth
+accuracy/full calibration acceptance. No runtime detector switch yet. Next
+consider opt-in sector detector and improved target lighting/flatness, not
+another identical full capture. Preview process may still own cameras until
+Q/Esc. No activation.
+
+Stationary diagnostic now launched: `scripts/check_stationary_board.py --out
+reports/stationary-board-2026-10-29.json`. User must click preview/press SPACE
+with board held still. Captures16 stereo pairs~5s, keeps raw PNGs in unique
+/tmp/argus-stationary-board-* for local inspection, numeric report in repo.
+Compares classic/sector detectors, planar-grid residual and inter-frame local
+repeatability after projective motion compensation. No activation or camera
+settings changes. Synthetic identical-frame smoke passed both detectors with
+<.001px repeatability. Wait for user burst result; script owns cameras until
+Q/Esc. Inspect saved images before attributing physical cause.
+
+MOST RECENT:User completed robust25-view session,7/9 coverage,tilt.175/.427,
+skews median.56/max3.55ms. Saved `calibration-observations-2026-10-29-robust-live.npz`.
+Fits stable,baseline98.31mm,but mono1.261/1.316,stereo1.411,heldout.570/1.953px
+rejected. Offline replay agrees. Shared residual correlation.907; lens variants
+barely help, released-board geometry improves several held-out views but not
+view20 (>2px). Excluding20 only as sensitivity experiment still leaves mono
+1.217/1.221,stereo1.337; no pruning acceptance or original-data modification.
+Reports named calibration-replay,target-analysis,residual-pattern,outlier-sensitivity
+with2026-10-29-robust-live suffix. Likely shared target/localization issue,
+but cannot prove flex/blur without raw images. User did sufficient tilt;
+do not blame mounts or ask for another identical full session. Next optional
+diagnostic stationary well-lit burst/corner repeatability or verified flat rigid
+printed target. Cameras free,no activation. Offline analyses were extremely slow
+with unconstrained CPU threads; rerun with OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+and cv2.setNumThreads(1). Only own identified slow analysis jobs were stopped.
+
+NOW IMPLEMENTED: optimized3-start intrinsic fitting (lowest mono RMS, no tape
+tuning), similar-residual-start focal agreement gate10%. Explicit perspective
+tilt guidance via opposite-edge ratios; translation/scale/flat rotation do not
+count. Need both cue ranges>=.08 at auto-completion and final acceptance. This
+heuristic supplements original quality gates, which are unchanged.413 tests
+pass, including initialization/stability and tilt regressions. Replay of latest
+old capture:99.396mm baseline,mono.677/.636,stereo1.089,held-out48.19/214.69px;
+still rejected. `reports/calibration-replay-2026-10-29-robust.json`.
+Next live session should use23mm,7x7,baseline101 and stronger top/bottom tilts;
+keep mounts fixed. No accepted calibration or walking readiness.
+
+LATEST: User corrected square size to23mm, confirmed four squares92mm in both
+directions. Keep7x7 inner corners; baseline estimate101mm unchanged. Saved
+corrected copy of old observations as `calibration-observations-2026-10-29-23mm.npz`.
+Fresh23mm capture saved `calibration-observations-2026-10-29-23mm-live.npz`.
+Its default fit exploded: baseline2668mm,leftfx7037/fy4877,stereo5.374px.
+Replayed and analyzed:3 starting guesses600/800/1000px (fully optimized, not
+fixed focal priors) all recover99.396mm baseline,left671/682,right734/746,
+stereo1.089px,mono.677/.636px. This demonstrates initialization sensitivity.
+No production fitting change yet; no active calibration. Evidence:
+`reports/calibration-initialization-2026-10-29-23mm-live.json`, plus replay and
+target-analysis with same suffix. Stable solution still fails gates.
+Camera pairing skew1.14–3.33ms; joint ordering unchanged on replay. Pose
+estimates from earlier intrinsics indicate limited pitch variation, not a
+measured ground-truth diagnosis. Next: improve intrinsic initialization and
+stability checking, improve explicit out-of-plane tilt capture guidance, and
+continue target/localization diagnosis. Do not blame or adjust a specific mount
+based on the pathological fit. User asked analysis, not a fresh capture.
+
+New latest: fixed-code live capture (15 views/9 cells) rejected with stereo
+RMS .988, mono .818/.835, held-out .926/2.971 px, baseline98.41mm. Observations
+saved `reports/calibration-observations-2026-10-29-fixed.npz`; replay report
+`reports/calibration-replay-2026-10-29-fixed.json` matches. User authorized
+offline target/model investigation. `scripts/analyze_calibration_target.py`
+fits views except5/10/15 then tests those held-out. Lens-model variants barely
+help; released-board geometry cuts mono held-out RMS from ~.8–1.0 to .3–.4px.
+Shape learned on one camera transfers to other's unseen views (.32–.44px).
+Report `reports/calibration-target-analysis-2026-10-29.json`. This supports
+target-related systematic mismatch, not proof of measured warp/sole cause.
+Learned shape is diagnostic ONLY, not active calibration. Next: ask/check
+horizontal and vertical square spans (four squares should be96mm) and board
+hinge/flatness before another identical session. Cameras free, no activation.
+
+User authorized calibration code inspection/fixes after repeated failures and
+mount adjustment. No accepted calibration. Latest old solve: 15 views/9 cells,
+83.8 cm baseline, 979/2373 px focal lengths; rejected, no observation replay
+possible for prior runs. Cameras currently free; model server may remain up.
+
+Fixed independently canonicalized 7x7 corner mismatch near 45° using joint
+centered/scale-normalized grid symmetry matching. Assumes upright roughly
+co-directed cameras (<45° relative roll), rejects ambiguous/high-shape-error
+matches. Calibration pairing now uses bounded histories, freshness/skew gate
+and advancing BOTH sequences. New per-capture NPZ checkpoints (corners/geometry
+only) default to active output path plus unique observations timestamp.
+`--observations-out` overrides. `scripts/diagnose_stereo_observations.py FILE
+--out REPORT.json` replays without activation/pruning. Full suite 408 passes;
+known 101 mm synthetic replay recovered 100.984 mm, held-out .069/.278 px.
+Report `reports/calibration-code-check-2026-10-29.json`. No relaxed final gates.
+
+Next: fresh live capture to validate fixes; recheck physical lens spacing after
+mount adjustment (previous user estimate 100–102 mm, 101 midpoint used), use
+24 mm squares and 7x7 corners, good lighting, real out-of-plane tilts and varied
+distance. Do not promise fixes explain all previous failures. Avoid another
+unrecorded capture: preserve new observations even on rejection. Metric speech
+and routes remain gated.
+
+## Latest continuation — 2026-10-28
+
+Calibration inputs received: user says chessboard (assumed 8x8 squares),
+square 24 mm, lens baseline 100–102 mm confirmed cm conversion; use 101 mm
+midpoint. First --coach 7x7 trial ended 2/15. User complained repeated "good,
+hold still" never captured. Fixed hidden same-cell veto before nine views,
+made readiness agree with coach (size/diversity/steadiness/cooldown), check
+both-camera steadiness and reset when board lost. SPACE/c honor readiness.
+No loosened final gate: >=15 diverse views, >=70% coverage, existing RMS,
+held-out row and measured-baseline gates. Auto-finish now also requires 70%.
+Restart guided capture; calibration remains absent until an accepted solve.
+
+User said OCR is good enough and asked to move on. OCR demo ended; stationary
+profile baseline/ocr/combined (20 s each) completed and released cameras.
+Baseline clean, OCR 316 ms gap, combined 389 ms gap / p95 103.9 ms; T1 still
+partial. Prior long outages show ~203/204 ticks without a stereo pair; they
+did not reproduce in this short profile. Do not call them fixed. Evidence:
+`reports/reliability-stereo-ocr-2026-10-28-summary.json`. Asked for flat
+checkerboard inner-corner grid, square mm and stereo lens-centre baseline mm
+to prepare calibration. Do not invent these measurements or enable walking.
+
+User reported inaccurate voice reading and asked to see OCR while testing.
+Use `DISPLAY=:0 python3 -m argus run --demo --windowed --ocr-preview`.
+Separate local window shows live reading camera, last captured source and
+masked actual voice-triggered OCR text/status; no extra OCR pipeline. Raw
+diagnostic camera/capture views do not enter recorder or Gemma. Captured
+source precedes optional grounder crop/enhancement, so no final OCR boxes are
+drawn in misleading coordinates. Camera ownership stays in the runtime.
+
+Three live OCR camera comparisons saved; user says stereo worked much better.
+Keep left source. Stereo returned more characters and was faster; exact CER
+favored wide but is confounded by title-only reference vs full-frame text and
+unverified reference spelling. Do not claim quantitative accuracy superiority.
+No 12 MP trial. Next: matched title crops and verified transcription if scoring
+accuracy. Interactive comparison process may still own cameras; check before
+starting another rig. Report: `reports/ocr-camera-comparison-2026-10-28.json`.
+
+User requested focus untouched, stereo OCR and wide SLAM. OCR routing is built:
+`camera.reading_source: left` in repo and live /opt YAML. Coaching and capture
+share the live left reader (960x600), without reopening cameras or consuming
+stereo pairs. Wide retains optional 12 MP stills. 393 tests pass; live capture
+then stereo-pair smoke passed. Real-page accuracy still pending.
+
+Wide metric SLAM is NOT implemented. It needs wide intrinsics/distortion,
+stereo-to-wide calibration and validated matched geometry. Do not substitute
+wide pixels into stereo intrinsics or feed unscaled monocular poses to metric
+mapping. Current VO stays stereo and gated on calibration. Next: seated OCR
+trial, investigate late camera outages, then calibration/tracker work.
+
+Human 600.2 s soak FAILED: eight depth outages, three ~20.46 s late in run
+with camera reopen logs; cause not established. Model stayed healthy. Summary:
+`reports/soak-human-2026-10-28-continued-summary.json`. Cameras passed doctor
+at 59.8/59.9/30.0 fps, all USB3. Physical bindings left 2-1.2, right 2-1.1,
+wide 2-1.4. Wide enumerated as /dev/video1 in latest smoke: keep discovery.
+The model server was started; verify health before reuse. Soak and camera
+smoke ended. A fresh `run --demo --record reports/sessions/stereo-ocr-2026-10-28.mp4`
+was then launched for the seated reading trial; check runtime ownership before
+opening cameras again. No new walking/metric acceptance.
+
 Last updated: 2026-10-21 (Codex companion/local-mapping build; see newest git commit).
 Read in this order: this file → `STATUS.md` → `docs/FINDINGS_2026-10.md` →
 `ARCHITECTURE.md` → the newest entries at the end of `DECISION_LOG.md`. Material

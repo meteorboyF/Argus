@@ -1,0 +1,126 @@
+{
+  "kind": "local-text-conversation-check",
+  "voice_pipeline_tested": false,
+  "rows": [
+    {
+      "case": "greeting",
+      "user": "Hello, how are you today?",
+      "intent": {
+        "skill": "chat",
+        "name": "",
+        "say": "I am functioning well, thank you for asking. How may I assist you today?",
+        "source": "gemma"
+      },
+      "answer": "I am functioning well, thank you for asking. How may I assist you today?",
+      "seconds": 2.078
+    },
+    {
+      "case": "preference",
+      "user": "My name is Sami",
+      "intent": {
+        "skill": "preference_name",
+        "name": "sami",
+        "say": "",
+        "source": "rule"
+      },
+      "answer": "I will call you sami for this session.",
+      "seconds": 0.0
+    },
+    {
+      "case": "memory",
+      "user": "What is my name?",
+      "intent": {
+        "skill": "answer",
+        "name": "",
+        "say": "You asked me to call you sami.",
+        "source": "rule"
+      },
+      "answer": "You asked me to call you sami.",
+      "seconds": 0.0
+    },
+    {
+      "case": "advice",
+      "user": "I am nervous about presenting my project tomorrow. Any advice?",
+      "intent": {
+        "skill": "chat",
+        "name": "",
+        "say": "I can offer some general suggestions. Tell me more about your project.",
+        "source": "gemma"
+      },
+      "answer": "I can offer some general suggestions. Tell me more about your project.",
+      "seconds": 1.801
+    },
+    {
+      "case": "followup",
+      "user": "Can you give me one concrete example of that?",
+      "intent": {
+        "skill": "chat",
+        "name": "",
+        "say": "Perhaps practicing your presentation out loud can help. Tell me what your project is about.",
+        "source": "gemma"
+      },
+      "answer": "Perhaps practicing your presentation out loud can help. Tell me what your project is about.",
+      "seconds": 1.861
+    },
+    {
+      "case": "knowledge",
+      "user": "Why does ice float on water?",
+      "intent": {
+        "skill": "chat",
+        "name": "",
+        "say": "Ice floats because its structure is less dense than liquid water. It is a fascinating property of water.",
+        "source": "gemma"
+      },
+      "answer": "Ice floats because its structure is less dense than liquid water. It is a fascinating property of water.",
+      "seconds": 2.017
+    },
+    {
+      "case": "abstract_text",
+      "user": "What is the difference between a book and a movie?",
+      "intent": {
+        "skill": "read",
+        "name": "What is the difference between a book and a movie?",
+        "say": "Let me read it.",
+        "source": "rule"
+      },
+      "answer": "",
+      "seconds": 0.001
+    },
+    {
+      "case": "abstract_title",
+      "user": "Can you suggest a title for my presentation about technology?",
+      "intent": {
+        "skill": "read",
+        "name": "Can you suggest a title for my presentation about technology?",
+        "say": "Let me read it.",
+        "source": "rule"
+      },
+      "answer": "",
+      "seconds": 0.0
+    },
+    {
+      "case": "capability",
+      "user": "Can you open YouTube for me?",
+      "intent": {
+        "skill": "chat",
+        "name": "",
+        "say": "I cannot open applications for you right now. I can answer questions or describe things.",
+        "source": "gemma"
+      },
+      "answer": "I cannot open applications for you right now. I can answer questions or describe things.",
+      "seconds": 1.845
+    },
+    {
+      "case": "visual_boundary",
+      "user": "What colour is the shirt I am wearing?",
+      "intent": {
+        "skill": "describe",
+        "name": "",
+        "say": "I can describe what is in front of you.",
+        "source": "gemma"
+      },
+      "answer": "",
+      "seconds": 1.718
+    }
+  ]
+}

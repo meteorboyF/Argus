@@ -1,0 +1,41 @@
+{
+  "selection": "Clips explicitly requested saved or kept in this conversation",
+  "clips": [
+    {
+      "clip": "04-reading-page-agent-take-07.mp4",
+      "session_log": "04-reading-page-agent-take-07.jsonl",
+      "bytes": 36102463
+    },
+    {
+      "clip": "04-reading-page-agent-take-09.mp4",
+      "session_log": "04-reading-page-agent-take-09.jsonl",
+      "bytes": 22373426
+    },
+    {
+      "clip": "05-conversation-take-10.mp4",
+      "session_log": "05-conversation-take-10.jsonl",
+      "bytes": 22500008
+    },
+    {
+      "clip": "06-privacy-face-blur-take-02.mp4",
+      "session_log": "06-privacy-face-blur-take-02.jsonl",
+      "bytes": 9747369
+    },
+    {
+      "clip": "01-seat-direction-take-03.mp4",
+      "session_log": "01-seat-direction-take-03.jsonl",
+      "bytes": 19144580
+    },
+    {
+      "clip": "07-objects-scene-take-32.mp4",
+      "session_log": "07-objects-scene-take-12.jsonl",
+      "bytes": 11819935
+    },
+    {
+      "clip": "07-objects-scene-take-51.mp4",
+      "session_log": "07-objects-scene-take-39.jsonl",
+      "bytes": 1463319
+    }
+  ],
+  "note": "Reset clips share the session JSONL; recording_reset events identify take boundaries."
+}

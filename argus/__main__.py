@@ -16,13 +16,17 @@ from .config import load_config
 
 
 def _cmd_run(args):
+    if args.scripted_seat_demo and not args.demo:
+        raise ValueError('--scripted-seat-demo requires --demo')
     from .orchestrator import Orchestrator
     cfg = load_config(args.config)
     orch = Orchestrator(cfg, enable_audio=not args.no_audio,
                         enable_mic=not (args.no_audio or args.no_mic))
+    orch.scripted_seat_demo = args.scripted_seat_demo
     orch.run(dashboard=args.dashboard, fullscreen=not args.windowed,
              ask_file=args.ask_file, demo=args.demo, record=args.record,
-             session_log=args.session_log)
+             session_log=args.session_log, ocr_preview=args.ocr_preview,
+             demo_source=args.demo_source, demo_feature=args.demo_feature)
     if getattr(orch, "_fast_error", None):
         raise RuntimeError("Safety loop failed") from orch._fast_error
 
@@ -115,6 +119,14 @@ def main(argv=None):
                          "(e.g. echo 'find the monitor' >> PATH)")
     pr.add_argument("--demo", action="store_true",
                     help="first-person demo view (POV, captions, hazard banner) + session log")
+    pr.add_argument('--scripted-seat-demo', action='store_true',
+                    help='explicitly labeled scripted chair response, not live detection')
+    pr.add_argument("--demo-source",choices=("wide","left"),default="wide",
+                    help="camera shown in demo recording; left for stereo feature demonstrations")
+    pr.add_argument("--demo-feature",choices=("auto","seat","objects","hazards","mapping","reading","conversation","privacy"),
+                    default="auto",help="feature title and evidence panel for demo recording")
+    pr.add_argument("--ocr-preview", action="store_true",
+                    help="with --demo: local reading-camera/capture/OCR diagnostic window")
     pr.add_argument("--record", default=None, metavar="OUT.mp4",
                     help="with --demo: record the composed view and spoken audio")
     pr.add_argument("--session-log", default=None, metavar="PATH.jsonl",
